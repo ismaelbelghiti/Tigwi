@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tigwi UI", "Tigwi UI\Tigwi UI.csproj", "{E180314E-3B83-4D62-9E70-DBB6AA17C6D5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tigwi UI.Tests", "Tigwi UI.Tests\Tigwi UI.Tests.csproj", "{9069FEAD-7A27-4886-8C41-68133EB52625}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E180314E-3B83-4D62-9E70-DBB6AA17C6D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E180314E-3B83-4D62-9E70-DBB6AA17C6D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E180314E-3B83-4D62-9E70-DBB6AA17C6D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E180314E-3B83-4D62-9E70-DBB6AA17C6D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9069FEAD-7A27-4886-8C41-68133EB52625}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9069FEAD-7A27-4886-8C41-68133EB52625}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9069FEAD-7A27-4886-8C41-68133EB52625}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9069FEAD-7A27-4886-8C41-68133EB52625}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
