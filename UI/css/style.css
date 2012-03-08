@@ -1,0 +1,12 @@
+.twig {
+  background-color: #eee;
+  text-align: center;
+  -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+          border-radius: 3px;
+  min-height: 30px;
+  line-height: 30px;
+}
+.twig:hover {
+  background: #ddd;
+}
