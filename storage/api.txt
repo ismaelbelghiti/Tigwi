@@ -1,2 +1,16 @@
+// get
+get_user_info(user_id);
+get_follower(user_id);
+get_followed(user_id);
+get_user_msg(user_id, last, num);
+get_user_msg(user_id, date);
+get_followed_msg(user_id, last, num);
+get_followed_msg(user_id, date);
+
 // set
-//get
+create_user(info);
+delete_user(user_id)
+post_msg(user_id);
+update_user_info(user_id, info);
+add_followed(user_id, user_id);
+delete_follower(user_id, user_id);
