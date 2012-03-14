@@ -1,16 +1,39 @@
 // get
+get_user_id(user_name);
 get_user_info(user_id);
 get_follower(user_id);
 get_followed(user_id);
 get_user_msg(user_id, last, num);
-get_user_msg(user_id, date);
+get_user_msg(user_id, date? msg_id?);
 get_followed_msg(user_id, last, num);
-get_followed_msg(user_id, date);
+get_followed_msg(user_id, date? id?);
 
 // set
 create_user(info);
 delete_user(user_id)
 post_msg(user_id);
 update_user_info(user_id, info);
-add_followed(user_id, user_id);
+add_follower(user_id, user_id);
 delete_follower(user_id, user_id);
+
+// optionals
+remove_msg(msg_id);
+update_msg(msg_id);
+
+// data structure
+msg
+{
+	id;
+	date-time;
+	user_id;
+	content;
+}
+
+user_info
+{
+	email;
+	pseudo;
+	id;
+	followers; // ou independament
+	followed;
+}
