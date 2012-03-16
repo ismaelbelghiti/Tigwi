@@ -31,8 +31,9 @@ namespace MvcApplication2
 
         protected void Application_Start()
         {
+            System.Data.Entity.Database.SetInitializer(
+                        new MvcApplication2.Models.SampleData());
             AreaRegistration.RegisterAllAreas();
-
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
         }

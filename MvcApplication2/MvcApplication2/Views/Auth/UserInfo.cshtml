@@ -1,0 +1,10 @@
+﻿@{
+    ViewBag.Title = "ViewPage1";
+}
+
+<h2>Utilisateur courant</h2>
+<ul>
+    <li><b>ID :</b> @Session["UserId"]</li>
+    <li><b>Login :</b> @Session["Username"]</li>
+    <li><a href="/Auth/LogOff">Se déconnecter</a></li>
+</ul>

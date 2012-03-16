@@ -1,0 +1,14 @@
+Z:\tests\MvcApplication2\MvcApplication2\bin\MvcApplication2.dll
+Z:\tests\MvcApplication2\MvcApplication2\bin\MvcApplication2.pdb
+Z:\tests\MvcApplication2\MvcApplication2\bin\EntityFramework.dll
+Z:\tests\MvcApplication2\MvcApplication2\bin\EntityFramework.xml
+Z:\tests\MvcApplication2\MvcApplication2\obj\Debug\ResolveAssemblyReference.cache
+Z:\tests\MvcApplication2\MvcApplication2\obj\Debug\MvcApplication2.dll
+Z:\tests\MvcApplication2\MvcApplication2\obj\Debug\MvcApplication2.pdb
+C:\MvcApplication2\MvcApplication2\bin\MvcApplication2.dll
+C:\MvcApplication2\MvcApplication2\bin\MvcApplication2.pdb
+C:\MvcApplication2\MvcApplication2\bin\EntityFramework.dll
+C:\MvcApplication2\MvcApplication2\bin\EntityFramework.xml
+C:\MvcApplication2\MvcApplication2\obj\Debug\ResolveAssemblyReference.cache
+C:\MvcApplication2\MvcApplication2\obj\Debug\MvcApplication2.dll
+C:\MvcApplication2\MvcApplication2\obj\Debug\MvcApplication2.pdb

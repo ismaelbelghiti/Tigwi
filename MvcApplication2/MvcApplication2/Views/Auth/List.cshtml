@@ -1,0 +1,12 @@
+﻿@model IEnumerable<MvcApplication2.Models.PasswordAuthModel>
+@{
+    ViewBag.Title = "List";
+}
+
+<h2>List</h2>
+<ul>
+@foreach (var user in Model)
+{
+    <li>@user.UserName (@user.UserId)</li>
+}
+</ul>

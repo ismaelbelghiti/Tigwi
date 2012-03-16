@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "Register";
+}
+
+<h2>Register</h2>
+<p>@ViewData["message"]</p>
+<form method="post" action="/Auth/Register">
+    <label>UserId</label> <input type="text" name="userId" /><br />
+    <label>UserName</label> <input type="text" name="username" /> <br />
+    <label>Password</label> <input type="password" name="password" /> <br />
+    <input type="submit" name="submit" value="S'inscrire" />
+</form>
