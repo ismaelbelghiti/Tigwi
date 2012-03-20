@@ -1,39 +1,80 @@
-// get
-get_user_id(user_name);
-get_user_info(user_id);
-get_follower(user_id);
-get_followed(user_id);
-get_user_msg(user_id, last, num);
-get_user_msg(user_id, date? msg_id?);
-get_followed_msg(user_id, last, num);
-get_followed_msg(user_id, date? id?);
+<msg>
+get_msg(account set, first_id; num);
+get_msg(list set, first_id; num);
+get_msg(account set, last_id, num);
+get_msg(list set, last_id, num);
+tag_msg(account_id, msg_id);
+untag_msg(account_id, msg_id);
+get_taged_msg(account_id, first_id, num);
+get_taged_msg(account_id, last_id, num);
+post_msg(account_id, msg);
+copy_msg(account_id, msg_id);
+rmv_msg(msg_id);
 
-// set
+<list>
+create_list(account_id, name, private = false);
+delete_list(list_id);
+set_list_name(list_id, name);
+set_list_acces(list_id, acces_type);
+list_by_name(account_id, name, private = false);
+list_by_name(name); // retourne les liste publiques. Besoin des privées ?
+add_to_list(list_id, account_id);
+rmw_from_list(list_id, account_id);
+get_account_owned_lists(account_id, private = false); // retourne toutes les liste publiques (et privées si private = true) d'un compte.  
+get_account_subscribed_lists(account_id); // retourne les listes auquelles un compte est abonné
+get_list_subscription(list_id); // renvoie les comptes dans la liste
+
+<account/user mngmt methodes>
+get_user_info(id);
+get_user_id(login);
+set_user_info(id, info);
 create_user(info);
-delete_user(user_id)
-post_msg(user_id);
-update_user_info(user_id, info);
-add_follower(user_id, user_id);
-delete_follower(user_id, user_id);
+delete_user(id);
+get_account_info(id);
+get_account_id(name);
+set_account_info(id, info);
+add_account(user_id, account_id);
+rmv_account(user_id, account_id);
+create_account(info);
+delete_account(id);
 
-// optionals
-remove_msg(msg_id);
-update_msg(msg_id);
+<auth methodes>
+get_auth_info(type, string_identifier);
 
-// data structure
+user
+{
+	id;
+	login;
+	email;
+	acounts set;
+}
+
+account
+{
+	name;
+	id;
+	description;
+	lists;
+	admin;
+	?msgs?;
+	?taged?;
+	?appears_in?;
+}
+
 msg
 {
 	id;
-	date-time;
-	user_id;
+	post_time;
+	poster;
 	content;
 }
 
-user_info
+list
 {
-	email;
-	pseudo;
 	id;
-	followers; // ou independament
-	followed;
+	owner_id;
+	name;
+	private;
+	subscriptions set;
+	subscribed set;
 }
