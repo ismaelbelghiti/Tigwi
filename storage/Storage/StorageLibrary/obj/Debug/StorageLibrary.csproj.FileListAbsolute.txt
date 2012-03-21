@@ -1,0 +1,5 @@
+C:\Users\FofO\Desktop\Tigwi\storage\Storage\StorageLibrary\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\FofO\Desktop\Tigwi\storage\Storage\StorageLibrary\bin\Debug\StorageLibrary.dll
+C:\Users\FofO\Desktop\Tigwi\storage\Storage\StorageLibrary\bin\Debug\StorageLibrary.pdb
+C:\Users\FofO\Desktop\Tigwi\storage\Storage\StorageLibrary\obj\Debug\StorageLibrary.dll
+C:\Users\FofO\Desktop\Tigwi\storage\Storage\StorageLibrary\obj\Debug\StorageLibrary.pdb
