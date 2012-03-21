@@ -41,11 +41,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="UserInfo.cs" />
+    <Compile Include="AccountInfo.cs" />
     <Compile Include="IMessage.cs" />
     <Compile Include="IAccount.cs" />
     <Compile Include="IList.cs" />
     <Compile Include="IMsgStorage.cs" />
     <Compile Include="IListStorage.cs" />
+    <Compile Include="IAccountStorage.cs" />
+    <Compile Include="IUserStorage.cs" />
     <Compile Include="IUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
