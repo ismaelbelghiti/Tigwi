@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "Storage", "Storage\Storage.ccproj", "{911ACB1A-6206-4D9D-BC7D-31CEBD09C78C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tester", "tester\tester.csproj", "{010CB7F6-2572-4A41-A095-C2796F59D3B8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{911ACB1A-6206-4D9D-BC7D-31CEBD09C78C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{911ACB1A-6206-4D9D-BC7D-31CEBD09C78C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{911ACB1A-6206-4D9D-BC7D-31CEBD09C78C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{911ACB1A-6206-4D9D-BC7D-31CEBD09C78C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{010CB7F6-2572-4A41-A095-C2796F59D3B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{010CB7F6-2572-4A41-A095-C2796F59D3B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{010CB7F6-2572-4A41-A095-C2796F59D3B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{010CB7F6-2572-4A41-A095-C2796F59D3B8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
