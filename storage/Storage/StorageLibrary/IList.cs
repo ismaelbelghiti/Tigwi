@@ -10,8 +10,8 @@ namespace StorageLibrary
         int List_id { get; set; }
         int List_ownerid { get; set; }
         string List_name { get; set; }
-        List<int> List_subscribers { get; set; }
-        List<int> List_subscription { get; set; }
-        Boolean List_isprivate { get; set; }
+        HashSet<int> List_subscribers { get; set; }
+        HashSet<int> List_subscription { get; set; }
+        bool List_isprivate { get; set; }
     }
 }

@@ -10,6 +10,6 @@ namespace StorageLibrary
         int User_id { get; set; }
         string User_login { get; set; }
         string User_email { get; set; }
-        List<int> User_accounts { get; set; }
+        HashSet<int> User_accounts { get; set; }
     }
 }

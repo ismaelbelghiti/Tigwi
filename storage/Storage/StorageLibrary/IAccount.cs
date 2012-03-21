@@ -9,10 +9,11 @@ namespace StorageLibrary
     {
         int Account_id { get; set; }
         string Account_name { get; set; }
-        List<int> Account_followedlists { get; set; }
-        List<int> Account_followinglists { get; set; }
+        string Account_description { get; set; }
+        HashSet<int> Account_followedlists { get; set; }
+        HashSet<int> Account_followinglists { get; set; }
         int Account_adminid { get; set; }
-        List<int> Account_messages { get; set; }
-        List<int> Account_taggedmsgs { get; set; }
+        HashSet<int> Account_messages { get; set; }
+        HashSet<int> Account_taggedmsgs { get; set; }
     }
 }
