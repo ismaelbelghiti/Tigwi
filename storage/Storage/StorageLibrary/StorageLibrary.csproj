@@ -44,6 +44,7 @@
     <Compile Include="IMessage.cs" />
     <Compile Include="IAccount.cs" />
     <Compile Include="IList.cs" />
+    <Compile Include="IMsgStorage.cs" />
     <Compile Include="IUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
