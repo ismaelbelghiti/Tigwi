@@ -42,14 +42,14 @@
   <ItemGroup>
     <Compile Include="UserInfo.cs" />
     <Compile Include="AccountInfo.cs" />
-    <Compile Include="IMessage.cs" />
-    <Compile Include="IAccount.cs" />
-    <Compile Include="IList.cs" />
-    <Compile Include="IMsgStorage.cs" />
-    <Compile Include="IListStorage.cs" />
-    <Compile Include="IAccountStorage.cs" />
-    <Compile Include="IUserStorage.cs" />
-    <Compile Include="IUser.cs" />
+    <Compile Include="interfaces\IMessage.cs" />
+    <Compile Include="interfaces\IAccount.cs" />
+    <Compile Include="interfaces\IList.cs" />
+    <Compile Include="interfaces\IMsgStorage.cs" />
+    <Compile Include="interfaces\IListStorage.cs" />
+    <Compile Include="interfaces\IAccountStorage.cs" />
+    <Compile Include="interfaces\IUserStorage.cs" />
+    <Compile Include="interfaces\IUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
