@@ -7,6 +7,9 @@ namespace StorageLibrary
 {
     interface IMsgStorage
     {
+        string Get_msg(int msg_id);
+        string Get_poster(int msg_id);
+        DateTime Get_date(int msg_id);
         HashSet<int> Get_accounts_msg_from(HashSet<int> accounts, int first_msg, int msg_number);
         HashSet<int> Get_lists_msg_from(HashSet<int> lists, int first_msg, int msg_number);
         HashSet<int> Get_accounts_msg_to(HashSet<int> accounts, int last_msg, int msg_number);
