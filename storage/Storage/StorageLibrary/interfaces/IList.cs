@@ -5,7 +5,7 @@ using System.Text;
 
 namespace StorageLibrary
 {
-    interface IList
+    interface IListInfo
     {
         int List_id { get; set; }
         int List_ownerid { get; set; }

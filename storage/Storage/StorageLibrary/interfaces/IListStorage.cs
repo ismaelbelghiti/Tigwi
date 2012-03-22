@@ -22,6 +22,7 @@ namespace StorageLibrary
         /// <param name="name"></param>
         /// <returns>ids of the public lists with the given name</returns>
         HashSet<int> Get_lists_by_name(string name);
+        HashSet<int> Get_lists_by_name(string name, HashSet<int> accounts_id);
         void Add_subscriber(int list_id, int account_id);
         void Remove_subscriber(int list_id, int account_id);
         void Add_subscription(int list_id, int account_id);
@@ -47,5 +48,6 @@ namespace StorageLibrary
         /// <param name="list_id"></param>
         /// <returns>ids of the accounts subscribed to the list</returns>
         HashSet<int> Get_list_subscribers(int list_id);
+        IListInfo Get_list(int list_id);
     }
 }
