@@ -1,0 +1,19 @@
+10/03
+Base:
+
+
+Privées: 
+- Tigwir (messages vierges)
+- S'abonner
+
+Publiques:
+- Publier derniers abonnements
+- Publier derniers messages
+- Publier dernières personnes à s'être abonnées.
+
+Next level:
+- Delete
+
+Stratégie de communication internet: ASP NVC
+
+*Basic authentication

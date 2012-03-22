@@ -1,0 +1,27 @@
+ou écrire le code HTTP ?
+
+possibilité : faire des envois par URL 
+
+classe httpRequest en c# pour faire des requetes
+
+FRAPI, un logiciel pour faire des API
+
+faire les requetes en c# en C ou en javascript ?
+
+
+
+Lister les comptes par l'API REST de Azure : 
+http://178.170.116.92/articles/presentation-des-api-rest-de-windows-azure-lister-les-comptes-de-storage
+http://msdn.microsoft.com/fr-fr/library/ee460787.aspx
+
+Présentation des API REST d'Azure :
+http://www.c2idotnet.com/articles/presentation-des-api-rest-de-windows-azure-1ere-etape-le-certificat
+
+MVC par l'exemple : 
+http://www.nicolasesprit.com/post/2011/12/18/ASPNET-Introduction-MVC-4-Part-6-Introduction-a-la-notion-de-modele-et-de-validation-par-lexemple.aspx
+http://www.informit.com/articles/article.aspx?p=1336426
+
+http://omaralzabir.com/create_rest_api_using_asp_net_mvc_that_speaks_both_json_and_plain_xml/
+
+
+
