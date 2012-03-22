@@ -40,7 +40,7 @@ Obtain a number _n_ of the user _name_ 's last subscriptions
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/usersubscriptions/_name_/_numberOfSubscriptions_
+http://api.tigwi.com/usersubscriptions/name/numberOfSubscriptions
 ###Request
 _left empty_
 ###Response
@@ -73,7 +73,7 @@ Obtain a number _n_ of the user _name_ 's last subscribers
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/usersubscribers/_name_/_numberOfSubscribers_
+http://api.tigwi.com/usersubscribers/name/numberOfSubscribers
 ###Request
 _left empty_
 ###Response
