@@ -8,7 +8,7 @@ Obtain a number _n_ of the user _name_ 's last posted messages
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/usertimeline/_name_/_numberOfMessages_
+http://api.tigwi.com/usertimeline/name/numberOfMessages
 ###Request
 _left empty_
 ###Response
