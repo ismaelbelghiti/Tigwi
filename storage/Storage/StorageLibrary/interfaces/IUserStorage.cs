@@ -5,7 +5,7 @@ using System.Text;
 
 namespace StorageLibrary
 {
-    interface IUserStorage
+    public interface IUserStorage
     {
         int GetId(string login);
         IUserInfo GetInfo(int userId);

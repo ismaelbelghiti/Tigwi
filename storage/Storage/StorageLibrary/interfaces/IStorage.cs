@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace StorageLibrary.interfaces
+namespace StorageLibrary
 {
-    interface IStorage
+    public interface IStorage
     {
         IUserStorage User { get; }
         IAccountStorage Account { get; }

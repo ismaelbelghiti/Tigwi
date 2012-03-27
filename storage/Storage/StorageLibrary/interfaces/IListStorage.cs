@@ -5,7 +5,7 @@ using System.Text;
 
 namespace StorageLibrary
 {
-    interface IListStorage
+    public interface IListStorage
     {
         IListInfo GetInfo(int listId);
         void SetInfo(int listId, string name, string description, bool isPrivate);

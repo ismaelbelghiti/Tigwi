@@ -5,7 +5,7 @@ using System.Text;
 
 namespace StorageLibrary
 {
-    interface IAccountStorage
+    public interface IAccountStorage
     {
         int GetId(string name);
         IAccountInfo GetInfo(int accountId);

@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 
 namespace StorageLibrary
 {
-    interface IMessage : ISerializable
+    public interface IMessage
     {
         int Id {get; set;}
         int PosterId {get; set;}

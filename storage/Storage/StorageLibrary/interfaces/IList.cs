@@ -6,7 +6,8 @@ using System.Runtime.Serialization;
 
 namespace StorageLibrary
 {
-    interface IListInfo : ISerializable
+
+    public interface IListInfo
     {
         string Name { get; set; }
         string Description { get; set; }

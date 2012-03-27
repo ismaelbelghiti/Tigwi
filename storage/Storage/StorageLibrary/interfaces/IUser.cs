@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 
 namespace StorageLibrary
 {
-    interface IUserInfo : ISerializable
+    public interface IUserInfo
     {
         string Login { get; set; }
         string Email { get; set; }
