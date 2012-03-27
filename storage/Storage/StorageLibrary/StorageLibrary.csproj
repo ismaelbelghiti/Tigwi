@@ -40,8 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UserInfo.cs" />
-    <Compile Include="AccountInfo.cs" />
     <Compile Include="interfaces\IMessage.cs" />
     <Compile Include="interfaces\IAccount.cs" />
     <Compile Include="interfaces\IList.cs" />

@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace StorageLibrary
 {
-    interface IAccount
+    interface IAccountInfo : ISerializable
     {
-        int Account_id { get; set; }
-        string Account_name { get; set; }
-        string Account_description { get; set; }
-        int Account_adminid { get; set; }
+        string Name { get; set; }
+        string Description { get; set; }
     }
 }

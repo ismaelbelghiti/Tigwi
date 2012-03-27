@@ -1,0 +1,10 @@
+C:\Users\Ismael\Desktop\Genie-Logiciel\Tigwi\storage\Storage\tester\bin\Debug\tester.dll.config
+C:\Users\Ismael\Desktop\Genie-Logiciel\Tigwi\storage\Storage\tester\bin\Debug\tester.dll
+C:\Users\Ismael\Desktop\Genie-Logiciel\Tigwi\storage\Storage\tester\bin\Debug\tester.pdb
+C:\Users\Ismael\Desktop\Genie-Logiciel\Tigwi\storage\Storage\tester\bin\Debug\Microsoft.WindowsAzure.Diagnostics.dll
+C:\Users\Ismael\Desktop\Genie-Logiciel\Tigwi\storage\Storage\tester\bin\Debug\Microsoft.WindowsAzure.StorageClient.dll
+C:\Users\Ismael\Desktop\Genie-Logiciel\Tigwi\storage\Storage\tester\bin\Debug\Microsoft.WindowsAzure.Diagnostics.xml
+C:\Users\Ismael\Desktop\Genie-Logiciel\Tigwi\storage\Storage\tester\bin\Debug\Microsoft.WindowsAzure.StorageClient.xml
+C:\Users\Ismael\Desktop\Genie-Logiciel\Tigwi\storage\Storage\tester\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Ismael\Desktop\Genie-Logiciel\Tigwi\storage\Storage\tester\obj\Debug\tester.dll
+C:\Users\Ismael\Desktop\Genie-Logiciel\Tigwi\storage\Storage\tester\obj\Debug\tester.pdb
