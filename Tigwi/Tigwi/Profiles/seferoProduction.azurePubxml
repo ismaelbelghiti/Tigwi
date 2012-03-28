@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <AzureCredentials>Sefero</AzureCredentials>
+    <AzureHostedServiceName>sefero</AzureHostedServiceName>
+    <AzureHostedServiceLabel>sefero</AzureHostedServiceLabel>
+    <AzureSlot>Production</AzureSlot>
+    <AzureEnableIntelliTrace>False</AzureEnableIntelliTrace>
+    <AzureEnableProfiling>False</AzureEnableProfiling>
+    <AzureEnableWebDeploy>False</AzureEnableWebDeploy>
+    <AzureStorageAccountName>sefero</AzureStorageAccountName>
+    <AzureStorageAccountLabel>sefero</AzureStorageAccountLabel>
+    <AzureDeploymentLabel>Tigwi</AzureDeploymentLabel>
+    <AzureSolutionConfiguration>Release</AzureSolutionConfiguration>
+    <AzureServiceConfiguration>Cloud</AzureServiceConfiguration>
+    <AzureAppendTimestampToDeploymentLabel>True</AzureAppendTimestampToDeploymentLabel>
+    <AzureAllowUpgrade>True</AzureAllowUpgrade>
+    <AzureEnableRemoteDesktop>False</AzureEnableRemoteDesktop>
+  </PropertyGroup>
+</Project>

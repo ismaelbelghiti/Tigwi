@@ -1,0 +1,10 @@
+C:\Users\Guigui\Desktop\Tigwi\Tigwi\Tests\bin\Release\Tests.dll.config
+C:\Users\Guigui\Desktop\Tigwi\Tigwi\Tests\bin\Release\Tests.dll
+C:\Users\Guigui\Desktop\Tigwi\Tigwi\Tests\bin\Release\Tests.pdb
+C:\Users\Guigui\Desktop\Tigwi\Tigwi\Tests\bin\Release\Microsoft.WindowsAzure.Diagnostics.dll
+C:\Users\Guigui\Desktop\Tigwi\Tigwi\Tests\bin\Release\Microsoft.WindowsAzure.StorageClient.dll
+C:\Users\Guigui\Desktop\Tigwi\Tigwi\Tests\bin\Release\Microsoft.WindowsAzure.Diagnostics.xml
+C:\Users\Guigui\Desktop\Tigwi\Tigwi\Tests\bin\Release\Microsoft.WindowsAzure.StorageClient.xml
+C:\Users\Guigui\Desktop\Tigwi\Tigwi\Tests\obj\Release\ResolveAssemblyReference.cache
+C:\Users\Guigui\Desktop\Tigwi\Tigwi\Tests\obj\Release\Tests.dll
+C:\Users\Guigui\Desktop\Tigwi\Tigwi\Tests\obj\Release\Tests.pdb
