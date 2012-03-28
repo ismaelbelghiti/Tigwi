@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<serviceModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Tigwi" generation="1" functional="0" release="0" Id="a55e29f3-f52a-40d4-9230-f4fb507c5dd8" dslVersion="1.2.0.0" xmlns="http://schemas.microsoft.com/dsltools/RDSM">
+<serviceModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Tigwi" generation="1" functional="0" release="0" Id="9d6c691f-8252-485f-bc9b-0e9cca9e03a3" dslVersion="1.2.0.0" xmlns="http://schemas.microsoft.com/dsltools/RDSM">
   <groups>
     <group name="TigwiGroup" generation="1" functional="0" release="0">
       <settings>

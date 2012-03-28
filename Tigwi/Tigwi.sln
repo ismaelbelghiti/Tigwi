@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageLibrary", "..\storag
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{2EF44E26-F408-4766-A534-5AD2F78C7247}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "..\API\Tigwi-API\API.csproj", "{64E04B2A-8FD4-4833-B12A-6FCC521C22BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API-test", "..\API\Tigwi-API.Tests\API-test.csproj", "{4847E34E-159F-4929-8D7B-C5A40C83BD5D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Cloud-Debug|Any CPU = Cloud-Debug|Any CPU
@@ -39,6 +43,22 @@ Global
 		{2EF44E26-F408-4766-A534-5AD2F78C7247}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2EF44E26-F408-4766-A534-5AD2F78C7247}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2EF44E26-F408-4766-A534-5AD2F78C7247}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64E04B2A-8FD4-4833-B12A-6FCC521C22BB}.Cloud-Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64E04B2A-8FD4-4833-B12A-6FCC521C22BB}.Cloud-Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64E04B2A-8FD4-4833-B12A-6FCC521C22BB}.Cloud-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64E04B2A-8FD4-4833-B12A-6FCC521C22BB}.Cloud-Release|Any CPU.Build.0 = Release|Any CPU
+		{64E04B2A-8FD4-4833-B12A-6FCC521C22BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64E04B2A-8FD4-4833-B12A-6FCC521C22BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64E04B2A-8FD4-4833-B12A-6FCC521C22BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64E04B2A-8FD4-4833-B12A-6FCC521C22BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4847E34E-159F-4929-8D7B-C5A40C83BD5D}.Cloud-Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4847E34E-159F-4929-8D7B-C5A40C83BD5D}.Cloud-Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4847E34E-159F-4929-8D7B-C5A40C83BD5D}.Cloud-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4847E34E-159F-4929-8D7B-C5A40C83BD5D}.Cloud-Release|Any CPU.Build.0 = Release|Any CPU
+		{4847E34E-159F-4929-8D7B-C5A40C83BD5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4847E34E-159F-4929-8D7B-C5A40C83BD5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4847E34E-159F-4929-8D7B-C5A40C83BD5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4847E34E-159F-4929-8D7B-C5A40C83BD5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
