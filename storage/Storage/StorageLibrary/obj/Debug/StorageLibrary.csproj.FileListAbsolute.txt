@@ -12,3 +12,6 @@ C:\Users\Ulysse\Desktop\genis_logiciel\Tigwi\storage\Storage\StorageLibrary\bin\
 C:\Users\Ulysse\Desktop\genis_logiciel\Tigwi\storage\Storage\StorageLibrary\bin\Debug\Microsoft.WindowsAzure.Diagnostics.xml
 C:\Users\Ulysse\Desktop\genis_logiciel\Tigwi\storage\Storage\StorageLibrary\bin\Debug\Microsoft.WindowsAzure.StorageClient.xml
 C:\Users\Ulysse\Desktop\genis_logiciel\Tigwi\storage\Storage\StorageLibrary\obj\Debug\StorageLibrary.csprojResolveAssemblyReference.cache
+C:\Users\Guigui\Desktop\Tigwi\storage\Storage\StorageLibrary\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Guigui\Desktop\Tigwi\storage\Storage\StorageLibrary\obj\Debug\StorageLibrary.dll
+C:\Users\Guigui\Desktop\Tigwi\storage\Storage\StorageLibrary\obj\Debug\StorageLibrary.pdb
