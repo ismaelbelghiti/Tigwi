@@ -18,20 +18,11 @@ namespace Tests
             // This is a sample worker implementation. Replace with your logic.
             Trace.WriteLine("$projectname$ entry point called", "Information");
 
-            // Retrieve storage account from connection-string and create blob client
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
-                RoleEnvironment.GetConfigurationSettingValue("StorageConnectionString")); 
-            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+            // Test code here
 
-            // Retrieve a reference to a container 
-            CloudBlobContainer container = blobClient.GetContainerReference("Tests");
-            container.CreateIfNotExist();
 
-            // Create the blob
-            CloudBlob blob = container.GetBlobReference("test1");
 
-            // Write the blob
-            blob.UploadText("foo !");
+            // End test code
 
             while (true)
             {

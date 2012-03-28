@@ -59,20 +59,20 @@
     <ServiceConfiguration Include="ServiceConfiguration.Cloud.cscfg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Tests\Tests.csproj">
-      <Name>Tests</Name>
-      <Project>{2ef44e26-f408-4766-a534-5ad2f78c7247}</Project>
-      <Private>True</Private>
-      <RoleType>Worker</RoleType>
-      <RoleName>Tests</RoleName>
-      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Profiles" />
   </ItemGroup>
   <ItemGroup>
     <PublishProfile Include="Profiles\seferoProduction.azurePubxml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Tests\StorageLibrary_test.csproj">
+      <Name>StorageLibrary_test</Name>
+      <Project>{2ef44e26-f408-4766-a534-5ad2f78c7247}</Project>
+      <Private>True</Private>
+      <RoleType>Worker</RoleType>
+      <RoleName>StorageLibrary_test</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
+    </ProjectReference>
   </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>
