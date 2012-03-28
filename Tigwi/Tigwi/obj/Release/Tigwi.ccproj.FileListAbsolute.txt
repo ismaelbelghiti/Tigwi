@@ -1,6 +1,0 @@
-C:\Users\Guigui\Desktop\Tigwi\Tigwi\Tigwi\bin\Release\ServiceConfiguration.cscfg
-C:\Users\Guigui\Desktop\Tigwi\Tigwi\Tigwi\obj\Release\Tests\Microsoft.WindowsAzure.Diagnostics.dll
-C:\Users\Guigui\Desktop\Tigwi\Tigwi\Tigwi\obj\Release\Tests\Microsoft.WindowsAzure.StorageClient.dll
-C:\Users\Guigui\Desktop\Tigwi\Tigwi\Tigwi\obj\Release\Tests\Tests.dll
-C:\Users\Guigui\Desktop\Tigwi\Tigwi\Tigwi\obj\Release\Tests\Tests.dll.config
-C:\Users\Guigui\Desktop\Tigwi\Tigwi\Tigwi\obj\Release\Tests\Tests.pdb
