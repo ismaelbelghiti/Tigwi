@@ -65,12 +65,12 @@
     <PublishProfile Include="Profiles\seferoProduction.azurePubxml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Tests\StorageLibrary_test.csproj">
-      <Name>StorageLibrary_test</Name>
-      <Project>{2ef44e26-f408-4766-a534-5ad2f78c7247}</Project>
+    <ProjectReference Include="..\Tigwi_test\Tigwi_test.csproj">
+      <Name>Tigwi_test</Name>
+      <Project>{52f3b785-4c0b-4e7b-9dbe-e988cfcd68c8}</Project>
       <Private>True</Private>
       <RoleType>Worker</RoleType>
-      <RoleName>StorageLibrary_test</RoleName>
+      <RoleName>Tigwi_test</RoleName>
       <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
     </ProjectReference>
   </ItemGroup>
