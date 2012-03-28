@@ -1,0 +1,8 @@
+C:\Users\Guigui\Desktop\Tigwi\API\Tigwi-API.Tests\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Guigui\Desktop\Tigwi\API\Tigwi-API.Tests\bin\Debug\API_test.dll.config
+C:\Users\Guigui\Desktop\Tigwi\API\Tigwi-API.Tests\bin\Debug\API_test.dll
+C:\Users\Guigui\Desktop\Tigwi\API\Tigwi-API.Tests\bin\Debug\API_test.pdb
+C:\Users\Guigui\Desktop\Tigwi\API\Tigwi-API.Tests\bin\Debug\API.dll
+C:\Users\Guigui\Desktop\Tigwi\API\Tigwi-API.Tests\bin\Debug\API.pdb
+C:\Users\Guigui\Desktop\Tigwi\API\Tigwi-API.Tests\obj\Debug\API_test.dll
+C:\Users\Guigui\Desktop\Tigwi\API\Tigwi-API.Tests\obj\Debug\API_test.pdb

@@ -1,0 +1,5 @@
+C:\Users\Guigui\Desktop\Tigwi\API\Tigwi-API\bin\API.dll
+C:\Users\Guigui\Desktop\Tigwi\API\Tigwi-API\bin\API.pdb
+C:\Users\Guigui\Desktop\Tigwi\API\Tigwi-API\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Guigui\Desktop\Tigwi\API\Tigwi-API\obj\Debug\API.dll
+C:\Users\Guigui\Desktop\Tigwi\API\Tigwi-API\obj\Debug\API.pdb
