@@ -5,11 +5,11 @@ Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "Tigwi", "Tigwi\Tigwi.ccproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageLibrary", "..\storage\Storage\StorageLibrary\StorageLibrary.csproj", "{2C5E15F5-0DF9-4D0A-AB8F-FB8FEC5B25E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{2EF44E26-F408-4766-A534-5AD2F78C7247}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageLibrary_test", "Tests\StorageLibrary_test.csproj", "{2EF44E26-F408-4766-A534-5AD2F78C7247}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "..\API\Tigwi-API\API.csproj", "{64E04B2A-8FD4-4833-B12A-6FCC521C22BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API-test", "..\API\Tigwi-API.Tests\API-test.csproj", "{4847E34E-159F-4929-8D7B-C5A40C83BD5D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API_test", "..\API\Tigwi-API.Tests\API_test.csproj", "{4847E34E-159F-4929-8D7B-C5A40C83BD5D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

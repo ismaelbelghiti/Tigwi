@@ -9,7 +9,7 @@
   **********************************************************************************************
 -->
 <ServiceDefinition name="Tigwi" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition">
-  <WorkerRole name="Tests" vmsize="Small">
+  <WorkerRole name="StorageLibrary_test" vmsize="Small">
     <Imports>
       <Import moduleName="Diagnostics" />
     </Imports>

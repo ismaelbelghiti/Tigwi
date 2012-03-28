@@ -1,11 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ServiceDefinition name="Tigwi" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition">
-  <WorkerRole name="StorageLibrary_test" vmsize="Small">
+  <WorkerRole name="Tigwi_test" vmsize="Small">
     <Imports>
       <Import moduleName="Diagnostics" />
     </Imports>
-    <ConfigurationSettings>
-      <Setting name="StorageConnectionString" />
-    </ConfigurationSettings>
   </WorkerRole>
 </ServiceDefinition>
