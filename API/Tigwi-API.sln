@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tigwi-API", "Tigwi-API\Tigwi-API.csproj", "{64E04B2A-8FD4-4833-B12A-6FCC521C22BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tigwi-API.Tests", "Tigwi-API.Tests\Tigwi-API.Tests.csproj", "{4847E34E-159F-4929-8D7B-C5A40C83BD5D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{64E04B2A-8FD4-4833-B12A-6FCC521C22BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64E04B2A-8FD4-4833-B12A-6FCC521C22BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64E04B2A-8FD4-4833-B12A-6FCC521C22BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64E04B2A-8FD4-4833-B12A-6FCC521C22BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4847E34E-159F-4929-8D7B-C5A40C83BD5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4847E34E-159F-4929-8D7B-C5A40C83BD5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4847E34E-159F-4929-8D7B-C5A40C83BD5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4847E34E-159F-4929-8D7B-C5A40C83BD5D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
