@@ -1,0 +1,14 @@
+
+# Compiled folders #
+####################
+bin/
+obj/
+csx/
+
+# Resharper folder #
+####################
+_ReSharper*/
+
+# OS genrated files #
+#####################
+Thumbs.db
