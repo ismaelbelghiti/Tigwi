@@ -10,7 +10,7 @@ namespace Tigwi_UI.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Message = "Welcome to the home page of Tigwi !";
+            ViewBag.Message = "Welcome to the home page of Tigwi!";
 
             return View();
         }
