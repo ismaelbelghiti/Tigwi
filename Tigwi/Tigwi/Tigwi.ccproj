@@ -6,6 +6,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <AzureDeployment Condition=" '$(AzureDeployment)' == '' ">false</AzureDeployment>
     <ProductVersion>1.6</ProductVersion>
     <ProjectGuid>{a2cdf8c9-aff3-4abd-80a4-b6d27d791929}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -55,6 +56,12 @@
     <WarningLevel>4</WarningLevel>
     <AzureDeployment>true</AzureDeployment>
   </PropertyGroup>
+  <!-- Azure Deployment properties -->
+  <PropertyGroup Condition =" '$(AzureDesployment)' == 'true' ">
+    <PackageName>$(AssemblyName).cspkg</PackageName>
+    <ServiceConfigName>ServiceConfiguration.Cloud.cscfg</ServiceConfigName>
+    <PackageForComputeEmulator>true</PackageForComputeEmulator>
+  </PropertyGroup>
   
   <!-- Items for the project -->
   <ItemGroup>
@@ -85,4 +92,13 @@
     <CloudExtensionsDir Condition=" '$(CloudExtensionsDir)' == '' ">$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Windows Azure Tools\1.6\</CloudExtensionsDir>
   </PropertyGroup>
   <Import Project="$(CloudExtensionsDir)Microsoft.WindowsAzure.targets" />
+
+  <!-- Azure Deployment code -->
+  <Import Project ="ConnectionInfo.xml" Condition =" '$(AzureDeployment)' == 'true' "/>
+  <Target Name="AzureDeploy" AfterTargets="Build" DependsOnTargets="CorePublish" Condition=" '$(AzureDeployment)' == 'true' ">
+    <Exec 
+      WorkingDirectory="$(MSBuildProjectDirectory)"  
+      Command=" $(windir)\system32\WindowsPowerShell\v1.0\powershell.exe -f \build\AzureDeploy.ps1 $(AzureSubscriptionID) $(AzureCertificateThumbprint) $(PublishDir) $(PackageName) $(ServiceConfigName) $(AzureHostedServiceName) $(AzureStorageAccountName)" />
+  </Target>
+  
 </Project>
