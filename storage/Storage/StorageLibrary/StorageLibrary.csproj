@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  
   <!-- Global/Default Configuration -->
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -15,7 +14,6 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  
   <!-- Configuration properties -->
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -53,7 +51,6 @@
     <WarningLevel>4</WarningLevel>
     <AzureDeployment>true</AzureDeployment>
   </PropertyGroup>
-  
   <!-- Items needed -->
   <ItemGroup>
     <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -77,6 +74,7 @@
     <Compile Include="datastructure\ListInfo.cs" />
     <Compile Include="datastructure\Message.cs" />
     <Compile Include="datastructure\UserInfo.cs" />
+    <Compile Include="exception\StorageLibException.cs" />
     <Compile Include="interfaces\IMessage.cs" />
     <Compile Include="interfaces\IAccount.cs" />
     <Compile Include="interfaces\IList.cs" />
@@ -89,7 +87,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

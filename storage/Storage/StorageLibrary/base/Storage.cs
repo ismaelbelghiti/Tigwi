@@ -36,6 +36,9 @@ namespace StorageLibrary
 
         // Cloud Connection
         public CloudBlobContainer userContainer;
+        public CloudBlobContainer accountContainer;
+        public CloudBlobContainer listContainer;
+        public CloudBlobContainer msgContainer;
 
         void SetUpStorageClient(string azureAccountName, string azureKey)
         {
@@ -45,6 +48,12 @@ namespace StorageLibrary
 
             // Create containers
             userContainer = blobClient.GetContainerReference("user");
+            accountContainer = blobClient.GetContainerReference("account");
+            listContainer = blobClient.GetContainerReference("list");
+            msgContainer = blobClient.GetContainerReference("msg");
+            userContainer.CreateIfNotExist();
+            accountContainer.CreateIfNotExist();
+            listContainer.CreateIfNotExist();
             userContainer.CreateIfNotExist();
         }
     }
