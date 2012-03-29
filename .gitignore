@@ -5,6 +5,11 @@ bin/
 obj/
 csx/
 
+# Swpap files #
+###############
+~*
+*.swp
+
 # Resharper folder #
 ####################
 _ReSharper*/
