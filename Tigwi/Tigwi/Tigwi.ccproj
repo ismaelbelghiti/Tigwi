@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  
   <!-- Global/Default configuration -->
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -16,7 +15,6 @@
     <StartDevelopmentStorage>True</StartDevelopmentStorage>
     <Name>Tigwi</Name>
   </PropertyGroup>
-  
   <!-- Configurations properties -->
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -57,12 +55,11 @@
     <AzureDeployment>true</AzureDeployment>
   </PropertyGroup>
   <!-- Azure Deployment properties -->
-  <PropertyGroup Condition =" '$(AzureDesployment)' == 'true' ">
+  <PropertyGroup Condition=" '$(AzureDesployment)' == 'true' ">
     <PackageName>$(AssemblyName).cspkg</PackageName>
     <ServiceConfigName>ServiceConfiguration.Cloud.cscfg</ServiceConfigName>
     <PackageForComputeEmulator>true</PackageForComputeEmulator>
   </PropertyGroup>
-  
   <!-- Items for the project -->
   <ItemGroup>
     <ServiceDefinition Include="ServiceDefinition.csdef" />
@@ -76,6 +73,14 @@
     <PublishProfile Include="Profiles\seferoProduction.azurePubxml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\StorageWorker\StorageWorker.csproj">
+      <Name>StorageWorker</Name>
+      <Project>{3f7051ee-54d0-4019-aa58-f0ea17396698}</Project>
+      <Private>True</Private>
+      <RoleType>Worker</RoleType>
+      <RoleName>StorageWorker</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
+    </ProjectReference>
     <ProjectReference Include="..\Tigwi_test\Tigwi_test.csproj">
       <Name>Tigwi_test</Name>
       <Project>{52f3b785-4c0b-4e7b-9dbe-e988cfcd68c8}</Project>
@@ -85,20 +90,15 @@
       <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
     </ProjectReference>
   </ItemGroup>
-  
   <!-- Import the target files for this project template -->
   <PropertyGroup>
     <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
     <CloudExtensionsDir Condition=" '$(CloudExtensionsDir)' == '' ">$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Windows Azure Tools\1.6\</CloudExtensionsDir>
   </PropertyGroup>
   <Import Project="$(CloudExtensionsDir)Microsoft.WindowsAzure.targets" />
-
   <!-- Azure Deployment code -->
-  <Import Project ="ConnectionInfo.xml" Condition =" '$(AzureDeployment)' == 'true' "/>
+  <Import Project="ConnectionInfo.xml" Condition=" '$(AzureDeployment)' == 'true' " />
   <Target Name="AzureDeploy" AfterTargets="Build" DependsOnTargets="CorePublish" Condition=" '$(AzureDeployment)' == 'true' ">
-    <Exec 
-      WorkingDirectory="$(MSBuildProjectDirectory)"  
-      Command=" $(windir)\system32\WindowsPowerShell\v1.0\powershell.exe -f \build\AzureDeploy.ps1 $(AzureSubscriptionID) $(AzureCertificateThumbprint) $(PublishDir) $(PackageName) $(ServiceConfigName) $(AzureHostedServiceName) $(AzureStorageAccountName)" />
+    <Exec WorkingDirectory="$(MSBuildProjectDirectory)" Command=" $(windir)\system32\WindowsPowerShell\v1.0\powershell.exe -f \build\AzureDeploy.ps1 $(AzureSubscriptionID) $(AzureCertificateThumbprint) $(PublishDir) $(PackageName) $(ServiceConfigName) $(AzureHostedServiceName) $(AzureStorageAccountName)" />
   </Target>
-  
 </Project>
