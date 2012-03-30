@@ -14,4 +14,9 @@
       <Import moduleName="Diagnostics" />
     </Imports>
   </WorkerRole>
+  <WorkerRole name="StorageWorker" vmsize="Small">
+    <Imports>
+      <Import moduleName="Diagnostics" />
+    </Imports>
+  </WorkerRole>
 </ServiceDefinition>

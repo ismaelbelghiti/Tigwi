@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using StorageCommon;
 
 namespace StorageLibrary
 {
     public class AccountStorage : IAccountStorage
     {
-        Storage storageAcces;
+        StrgConnexion connexion;
 
         // Constuctor
-        public AccountStorage(Storage storageAcces)
+        public AccountStorage(StrgConnexion connexion)
         {
-            this.storageAcces = storageAcces;
+            this.connexion = connexion;
         }
 
         // Interface implementation

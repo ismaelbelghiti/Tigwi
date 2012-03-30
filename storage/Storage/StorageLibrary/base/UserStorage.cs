@@ -6,41 +6,37 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using Microsoft.WindowsAzure.StorageClient;
-
+using StorageCommon;
 
 namespace StorageLibrary
 {
     public class UserStorage : IUserStorage
     {
-        Storage storageAcces;
+        StrgConnexion connexion;
 
         // Constuctor
-        public UserStorage(Storage storageAcces)
+        public UserStorage(StrgConnexion connexion)
         {
-            this.storageAcces = storageAcces;
+            this.connexion = connexion;
         }
 
         // Interface implementation
         public int GetId(string login)
         {
-            throw new NotImplementedException();
+            StrgBlob<int> blob = new StrgBlob<int>(connexion.userContainer, "idbylogin/" + login);
+            return blob.GetIfExists(new StorageLibException(StrgLibErr.UserNotFound));
         }
 
         public IUserInfo GetInfo(int userId)
         {
-            CloudBlob blob = storageAcces.userContainer.GetBlobReference("info/" + userId);
-            BlobStream stream = blob.OpenRead();
-
-            BinaryFormatter formatter = new BinaryFormatter();
-            IUserInfo info = (UserInfo)formatter.Deserialize(stream);
-
-            stream.Close();
-            return info;
+            StrgBlob<IUserInfo> blob = new StrgBlob<IUserInfo>(connexion.userContainer, "info/" + userId);
+            return blob.GetIfExists(new StorageLibException(StrgLibErr.UserNotFound));
         }
 
         public void SetInfo(int userId, string login, string email)
         {
-            CloudBlob blob = storageAcces.userContainer.GetBlobReference("info/" + userId);
+            // TODO : not thread safe and no error handling - for test purpose only
+            CloudBlob blob = connexion.userContainer.GetBlobReference("info/" + userId);
             BlobStream stream = blob.OpenWrite();
 
             BinaryFormatter formatter = new BinaryFormatter();
@@ -51,7 +47,8 @@ namespace StorageLibrary
 
         public HashSet<int> GetAccounts(int userId)
         {
-            throw new NotImplementedException();
+            StrgBlob<HashSet<int>> blob = new StrgBlob<HashSet<int>>(connexion.userContainer, "accounts/" + userId);
+            return blob.GetIfExists(new StorageLibException(StrgLibErr.UserNotFound));
         }
 
         public int Create(string login, string email)
