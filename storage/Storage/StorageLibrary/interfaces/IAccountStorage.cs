@@ -7,6 +7,7 @@ namespace StorageLibrary
 {
     public interface IAccountStorage
     {
+        // TODO : specify the exceptions that each methodes can throw
         int GetId(string name);
         IAccountInfo GetInfo(int accountId);
         void SetInfo(int accountId, string name, string description);

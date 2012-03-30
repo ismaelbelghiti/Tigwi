@@ -23,6 +23,7 @@ namespace StorageCommon
         {
             // TODO : better error handling
             // TODO : replace the exception by an error code
+            // TODO : stream.close est-il important ?
             try
             {
                 BlobStream stream = blob.OpenRead();

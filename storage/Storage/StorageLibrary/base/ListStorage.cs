@@ -19,7 +19,8 @@ namespace StorageLibrary
         // Interface implementation
         public IListInfo GetInfo(int listId)
         {
-            throw new NotImplementedException();
+            StrgBlob<IListInfo> blob = new StrgBlob<IListInfo>(connexion.listContainer, "info/" + listId);
+            return blob.GetIfExists(new StorageLibException(StrgLibErr.ListNotFound));
         }
 
         public void SetInfo(int listId, string name, string description, bool isPrivate)
@@ -29,12 +30,14 @@ namespace StorageLibrary
 
         public int GetOwner(int listId)
         {
-            throw new NotImplementedException();
+            StrgBlob<int> blob = new StrgBlob<int>(connexion.listContainer, "owner/" + listId);
+            return blob.GetIfExists(new StorageLibException(StrgLibErr.ListNotFound));
         }
 
         public int GetPersonalList(int accountId)
         {
-            throw new NotImplementedException();
+            StrgBlob<int> blob = new StrgBlob<int>(connexion.listContainer, "personallist/" + accountId);
+            return blob.GetIfExists(new StorageLibException(StrgLibErr.ListNotFound));
         }
 
         public int Create(int ownerId, string name, string description, bool isPrivate)
@@ -59,7 +62,8 @@ namespace StorageLibrary
 
         public HashSet<int> GetAccounts(int listId)
         {
-            throw new NotImplementedException();
+            StrgBlob<HashSet<int>> blob = new StrgBlob<HashSet<int>>(connexion.listContainer, "accounts/" + listId);
+            return blob.GetIfExists(new StorageLibException(StrgLibErr.ListNotFound));
         }
 
         public void Add(int listId, int accountId)
@@ -84,7 +88,8 @@ namespace StorageLibrary
 
         public HashSet<int> GetFollowingLists(int accountId)
         {
-            throw new NotImplementedException();
+            StrgBlob<HashSet<int>> blob = new StrgBlob<HashSet<int>>(connexion.listContainer, "followinglists/" + accountId);
+            return blob.GetIfExists(new StorageLibException(StrgLibErr.ListNotFound));
         }
     }
 }

@@ -7,6 +7,7 @@ namespace StorageLibrary
 {
     public interface IListStorage
     {
+        // TODO : specify the exceptions that each methodes can throw
         IListInfo GetInfo(int listId);
         void SetInfo(int listId, string name, string description, bool isPrivate);
         int GetOwner(int listId);

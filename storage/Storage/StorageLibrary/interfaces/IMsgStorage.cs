@@ -7,6 +7,7 @@ namespace StorageLibrary
 {
     public interface IMsgStorage
     {
+        // TODO : specify the exceptions that each methodes can throw
         List<IMessage> GetListsMsgFrom(HashSet<int> listsId, int firstMsgId, int msgNumber);
         List<IMessage> GetListsMsgTo(HashSet<int> listsId, int lastMsgId, int msgNumber);
         

@@ -19,12 +19,14 @@ namespace StorageLibrary
         // Interface implementation
         public int GetId(string name)
         {
-            throw new NotImplementedException();
+            StrgBlob<int> blob = new StrgBlob<int>(connexion.accountContainer, "idbylogin/" + name);
+            return blob.GetIfExists(new StorageLibException(StrgLibErr.AccountNotFound));
         }
 
         public IAccountInfo GetInfo(int accountId)
         {
-            throw new NotImplementedException();
+            StrgBlob<IAccountInfo> blob = new StrgBlob<IAccountInfo>(connexion.accountContainer, "info/" + accountId);
+            return blob.GetIfExists(new StorageLibException(StrgLibErr.AccountNotFound));
         }
 
         public void SetInfo(int accountId, string name, string description)
@@ -34,12 +36,14 @@ namespace StorageLibrary
 
         public HashSet<int> GetUsers(int accountId)
         {
-            throw new NotImplementedException();
+            StrgBlob<HashSet<int>> blob = new StrgBlob<HashSet<int>>(connexion.accountContainer, "users/" + accountId);
+            return blob.GetIfExists(new StorageLibException(StrgLibErr.AccountNotFound));
         }
 
         public int GetAdminId(int accountId)
         {
-            throw new NotImplementedException();
+            StrgBlob<int> blob = new StrgBlob<int>(connexion.accountContainer, "adminid/" + accountId);
+            return blob.GetIfExists(new StorageLibException(StrgLibErr.AccountNotFound));
         }
 
         public void SetAdminId(int accountId)
