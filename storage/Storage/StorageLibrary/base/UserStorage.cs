@@ -35,14 +35,9 @@ namespace StorageLibrary
 
         public void SetInfo(int userId, string login, string email)
         {
-            // TODO : not thread safe and no error handling - for test purpose only
-            CloudBlob blob = connexion.userContainer.GetBlobReference("info/" + userId);
-            BlobStream stream = blob.OpenWrite();
+            UserInfo info = new UserInfo(login, email);
 
-            BinaryFormatter formatter = new BinaryFormatter();
-            formatter.Serialize(stream, new UserInfo(login, email));
 
-            stream.Close();
         }
 
         public HashSet<int> GetAccounts(int userId)

@@ -39,7 +39,7 @@ namespace StorageCommon
             // Create queue
             CloudQueueClient queueClient = azureAccount.CreateCloudQueueClient();
 
-            mainQueue = queueClient.GetQueueReference("mainQueue");
+            mainQueue = queueClient.GetQueueReference("mainqueue");
             mainQueue.CreateIfNotExist();
         }
     }
