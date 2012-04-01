@@ -12,9 +12,12 @@ namespace Tigwi_API.Controllers
         //
         // GET: /usertimeline/{name}/{numberOfMessages}
 
-        public ActionResult UserTimeline(string name, int numberOfMessages = 20)
+        public ContentResult UserTimeline(string name, int numberOfMessages = 20)
         {
-           throw new NotImplementedException();
+            var id = get_account_id();
+            var result = new ContentResult();
+            result.Content = "";
+            return result;
         }
 
         //
