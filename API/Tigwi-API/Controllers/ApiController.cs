@@ -1,9 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Xml.Serialization;
+using StorageLibrary;
 
 namespace Tigwi_API.Controllers
 {
@@ -12,11 +14,19 @@ namespace Tigwi_API.Controllers
         //
         // GET: /usertimeline/{name}/{numberOfMessages}
 
-        public ContentResult UserTimeline(string name, int numberOfMessages = 20)
+        public FileStreamResult UserTimeline(string name, int numberOfMessages = 20)
         {
-            var id = get_account_id();
-            var result = new ContentResult();
-            result.Content = "";
+            IStorage storage = new Storage("",""); // connexion
+
+            var id = storage.User.GetId(name);
+            var listMsgs = storage.Msg.GetListsMsgTo(new HashSet<int> {id}, int.MaxValue, numberOfMessages);
+
+            var stream = new MemoryStream();
+            var result = new FileStreamResult(stream, "xml");
+
+            var serialize = new XmlSerializer(typeof (List<IMessage>));
+            serialize.Serialize(stream,listMsgs);
+
             return result;
         }
 
