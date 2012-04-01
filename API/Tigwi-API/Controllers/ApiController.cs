@@ -17,19 +17,24 @@ namespace Tigwi_API.Controllers
 
         public FileStreamResult UserTimeline(string name, int numberOfMessages = 20)
         {
+            // TODO : process errors
+
             IStorage storage = new Storage("",""); // connexion
 
             var id = storage.User.GetId(name);
+            // get lasts messages from user name
             var listMsgs = storage.Msg.GetListsMsgTo(new HashSet<int> {id}, int.MaxValue, numberOfMessages);
+            // convert, looking forward serialization
             var listMsgsOutput = new MessageList(listMsgs);
 
+            // a stream is needed for serialization
             var stream = new MemoryStream();
-            var result = new FileStreamResult(stream, "xml");
+            var result = new FileStreamResult(stream, "xml"); // is "xml" the right contentType ??
 
             var serialize = new XmlSerializer(typeof (MessageList));
             serialize.Serialize(stream,listMsgs);
 
-            stream.Flush();
+            stream.Flush(); // is it necessary ??
             return result;
         }
 
