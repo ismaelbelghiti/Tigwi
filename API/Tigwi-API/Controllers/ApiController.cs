@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Xml.Serialization;
 using StorageLibrary;
+using Tigwi_API.Models;
 
 namespace Tigwi_API.Controllers
 {
@@ -20,13 +21,15 @@ namespace Tigwi_API.Controllers
 
             var id = storage.User.GetId(name);
             var listMsgs = storage.Msg.GetListsMsgTo(new HashSet<int> {id}, int.MaxValue, numberOfMessages);
+            var listMsgsOutput = new MessageList(listMsgs);
 
             var stream = new MemoryStream();
             var result = new FileStreamResult(stream, "xml");
 
-            var serialize = new XmlSerializer(typeof (List<IMessage>));
+            var serialize = new XmlSerializer(typeof (MessageList));
             serialize.Serialize(stream,listMsgs);
 
+            stream.Flush();
             return result;
         }
 

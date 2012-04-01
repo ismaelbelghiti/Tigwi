@@ -11,6 +11,12 @@ namespace Tigwi_API.Models
     [Serializable]
     public class MessageList
     {
+        public MessageList(List<IMessage> msgs)
+        {
+            Message = msgs;
+            Size = msgs.Count();
+        }
+
         [XmlAttribute]
         public int Size { get; set; }
 
