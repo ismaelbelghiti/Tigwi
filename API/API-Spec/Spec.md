@@ -13,7 +13,7 @@ http://api.tigwi.com/usertimeline/name/numberOfMessages
 _left empty_
 ###Response
 
-    <MessageList size="sizeOfList">
+    <MessageList Size="sizeOfList">
 	    <Message> <!-- See below --> </Message>
 	    <Message> ... </Message>
 	    ...
@@ -45,7 +45,7 @@ http://api.tigwi.com/usersubscriptions/name/numberOfSubscriptions
 _left empty_
 ###Response
 
-    <UserList size="sizeOfList">
+    <UserList Size="sizeOfList">
 	    <User> <!-- See below --> </User>
 	    <User> ... </User>
 	    ...
