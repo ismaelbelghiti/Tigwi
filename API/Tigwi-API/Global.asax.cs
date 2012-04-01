@@ -37,19 +37,15 @@ namespace Tigwi_API.Routes
 				);
 			
 			routes.MapRoute("Message",
-				"ApiController/WritePost/{name}/{message}",
+				"ApiController/write",
 				new { controller = "ApiController", 
-					action = "WritePost", 
-					name="",
-					message=""}
+					action = "WritePost"}
 				);
 		
 			routes.MapRoute("Users",
-				"ApiController/Suscribe/{follower}/{followed}",
+				"ApiController/suscribe",
 				new { controller = "ApiController", 
-					action = "Suscribe", 
-					follower="",
-					followed=""}
+					action = "Suscribe"}
 				);
 
 			// default route

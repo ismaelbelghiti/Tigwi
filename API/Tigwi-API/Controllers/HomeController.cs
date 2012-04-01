@@ -11,7 +11,7 @@ namespace Tigwi_API.Controllers
     {
         public ActionResult Index()
         {
-            ViewData["Message"] = "Bienvenue dans ASP.NET MVC !";
+            ViewData["Message"] = "Your request in invalid";
 
             return View();
         }
