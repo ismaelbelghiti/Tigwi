@@ -23,10 +23,10 @@ _left empty_
 Message format:
 
      <Message>
-	     <id> idOfMessage </id>
-	     <post_time> timeOfPost </post_time>
-	     <poster> nameOfUser </poster>
-	     <content> content </content>
+	     <Id> idOfMessage </Id>
+	     <PostTime> timeOfPost </PostTime>
+	     <Poster> nameOfUser </Poster>
+	     <Content> content </Content>
      </Message>
 
 ###Informations
@@ -55,10 +55,8 @@ _left empty_
 User format:
 
      <User>
-	     <id> idOfUser </id>
-	     <name> name </name>
-	     <poster> nameOfUser </poster>
-	     <content> content </content>
+	     <Id> idOfUser </Id>
+	     <Name> name </Name>
      </User>
 
 ###Informations
@@ -88,10 +86,8 @@ _left empty_
 User format:
 
      <User>
-	     <id> idOfUser </id>
-	     <name> name </name>
-	     <poster> nameOfUser </poster>
-	     <content> content </content>
+	     <Id> idOfUser </Id>
+	     <Name> name </Name>
      </User>
 
 ###Informations
@@ -114,9 +110,9 @@ http://api.tigwi.com/write
     <Write>
        <User> name <User> 
        <Message>
-            <content> <!-- your message --> </content>
+            <Content> <!-- your message --> </Content>
        </Message>
-    </write>
+    </Write>
 
 ###Response
 In case an error occurs
