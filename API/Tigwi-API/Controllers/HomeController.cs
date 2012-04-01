@@ -11,7 +11,7 @@ namespace Tigwi_API.Controllers
     {
         public ActionResult Index()
         {
-            ViewData["Message"] = "Your request in invalid";
+            ViewData["Message"] = "Your request is invalid";
 
             return View();
         }

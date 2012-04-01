@@ -13,7 +13,7 @@ namespace Tigwi_API.Routes
 			// customer routes
 
 			routes.MapRoute("Message", 
-				"ApiController/UserTimeline/{name}/{numberOfMessages}",
+				"usertimeline/{name}/{numberOfMessages}",
 				new { controller = "ApiController", 
 					action = "UserTimeline", 
 					name="", 
@@ -21,7 +21,7 @@ namespace Tigwi_API.Routes
 				);
 
 			routes.MapRoute("Users", 
-				"ApiController/UserSubscriptionsList/{name}/{numberOfSubscriptions}",
+				"usersubscriptions/{name}/{numberOfSubscriptions}",
 				new { controller = "ApiController", 
 					action = "UserSubscriptionsList", 
 					name="",
@@ -29,7 +29,7 @@ namespace Tigwi_API.Routes
 				); 
 
 			routes.MapRoute("Users",
-				"ApiController/UserSubscribersList/{name}/{numberOfSubscribers}",
+				"usersubscribers/{name}/{numberOfSubscribers}",
 				new { controller = "ApiController", 
 					action = "UserSubscribersList", 
 					name="",
@@ -37,13 +37,13 @@ namespace Tigwi_API.Routes
 				);
 			
 			routes.MapRoute("Message",
-				"ApiController/write",
+				"write",
 				new { controller = "ApiController", 
 					action = "WritePost"}
 				);
 		
 			routes.MapRoute("Users",
-				"ApiController/suscribe",
+				"suscribe",
 				new { controller = "ApiController", 
 					action = "Suscribe"}
 				);
