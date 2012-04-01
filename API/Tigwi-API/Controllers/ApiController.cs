@@ -15,7 +15,7 @@ namespace Tigwi_API.Controllers
         //
         // GET: /usertimeline/{name}/{numberOfMessages}
 
-        public FileStreamResult UserTimeline(string name, int numberOfMessages = 20)
+        public FileStreamResult UserTimeline(string name, int numberOfMessages)
         {
             // TODO : process errors
 
@@ -41,17 +41,65 @@ namespace Tigwi_API.Controllers
         //
         // GET : /usersubscriptions/{name}/{numberOfSubscriptions}
 
-        public ActionResult UserSubscriptionsList(string name, int numberOfSubscriptions =20)
+        public ActionResult UserSubscriptionsList(string name, int numberOfSubscriptions)
         {
-            throw new NotImplementedException();
+            // TODO : process errors
+
+            IStorage storage = new Storage("", ""); // connexion
+
+            int accountId = storage.Account.GetId(name);
+            // get lasts followers of user name 's list
+
+            //TODO: use right methode once implemented
+            HashSet<int> listsFollowing = storage.List.GetFollowingLists(accountId);
+            UserList listUsers = new UserList();
+
+            //TODO: implement initialization of listUsers
+
+
+            // convert, looking forward serialization
+            
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            var result = new FileStreamResult(stream, "xml"); // is "xml" the right contentType ??
+
+            var serialize = new XmlSerializer(typeof(UserList));
+            serialize.Serialize(stream, listUsers);
+
+            stream.Flush(); // is it necessary ??
+            return result;
         }
 
         //
         // GET : /usersubscribers/{name}/{numberOfSusbscribers}
 
-        public ActionResult UserSubscribersList(string name, int numberOfSubscribers = 20)
+        public ActionResult UserSubscribersList(string name, int numberOfSubscribers)
         {
-            throw new NotImplementedException();
+            // TODO : process errors
+
+            IStorage storage = new Storage("", ""); // connexion
+
+            int accountId = storage.Account.GetId(name);
+            // get lasts followers of user name 's list
+
+            //TODO: use right methode once implemented
+            HashSet<int> listsFollowing = storage.List.GetAccountFollowedLists(accountId, false);
+            UserList listUsers = new UserList();
+
+            //TODO: implement initialization of listUsers
+
+
+            // convert, looking forward serialization
+
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            var result = new FileStreamResult(stream, "xml"); // is "xml" the right contentType ??
+
+            var serialize = new XmlSerializer(typeof(UserList));
+            serialize.Serialize(stream, listUsers);
+
+            stream.Flush(); // is it necessary ??
+            return result;
         }
 
         //
