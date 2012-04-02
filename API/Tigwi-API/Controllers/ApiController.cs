@@ -105,18 +105,35 @@ namespace Tigwi_API.Controllers
         // POST : /write
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult WritePost(/*objet convenable*/)
+        public ActionResult WritePost(MsgToWrite msg)
         {
-            throw new NotImplementedException();
+            // TODO: handle errors (can happen at any time)
+
+            IStorage storage = new Storage("", ""); // connexion
+
+            int accountId = storage.Account.GetId(msg.User);
+
+            storage.Msg.Post(accountId, msg.Message.Content);
+
+            return new EmptyResult();
         }
 
         //
         // POST : /suscribe
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Suscribe(/*objet convenable*/)
+        public ActionResult Subscribe(Subscribe subscribe)
         {
-            throw new NotImplementedException();
+            // TODO: handle errors (can happen at any time)
+
+            IStorage storage = new Storage("", ""); // connexion
+
+            int accountId = storage.Account.GetId(subscribe.User);
+            int subsciptionId = storage.Account.GetId(subscribe.Subscription);
+
+            storage.List.Follow(accountId,subsciptionId); // accountId follow subscriptionId, right ?
+
+            return new EmptyResult();
         }
 
 

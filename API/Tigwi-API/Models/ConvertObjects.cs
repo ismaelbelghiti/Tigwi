@@ -24,7 +24,7 @@ namespace Tigwi_API.Models
     }
 
     [Serializable]
-    [XmlRootAttribute("User")]
+    [XmlTypeAttribute("User")]
     public class UserApi
     {
         public UserApi(int id, string name)
@@ -50,10 +50,10 @@ namespace Tigwi_API.Models
     public class MsgToWrite
     {
         public string User { get; set; }
-        [XmlAttribute("Message")]
         public MsgToPost Message { get; set; }
     }
 
+    [XmlTypeAttribute("Message")]
     public class MsgToPost
     {
         public string Content { get; set; }
