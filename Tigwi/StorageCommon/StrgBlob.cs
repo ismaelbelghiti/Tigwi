@@ -13,6 +13,29 @@ namespace StorageCommon
         BinaryFormatter formatter;
         CloudBlob blob;
 
+        public bool Exists
+        {
+            get{
+                try
+                {
+                    blob.FetchAttributes();
+                    return true;
+                }
+                catch (StorageClientException e)
+                {
+                    if (e.ErrorCode == StorageErrorCode.ResourceNotFound)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+        }
+
+
         public StrgBlob(CloudBlobContainer container, string blobName)
         {
             formatter = new BinaryFormatter();
@@ -23,16 +46,38 @@ namespace StorageCommon
         {
             // TODO : better error handling
             // TODO : replace the exception by an error code
-            // TODO : stream.close est-il important ?
             try
             {
                 BlobStream stream = blob.OpenRead();
-                return (T)formatter.Deserialize(stream);
+                T t = (T)formatter.Deserialize(stream);
+                stream.Close();
+                return t;
             }
             catch (Exception ee)
             {
                 throw e;
             }
+        }
+
+        public T Get()
+        {
+            BlobStream stream = blob.OpenRead();
+            T t = (T)formatter.Deserialize(stream);
+            stream.Close();
+            return t;
+        }
+
+        public bool SetIfExsits(object obj)
+        {
+            if (Exists)
+            {
+                BlobStream stream = blob.OpenWrite();
+                formatter.Serialize(stream, obj);
+                stream.Close();
+                return true;
+            }
+            else
+                return false;
         }
     }
 }

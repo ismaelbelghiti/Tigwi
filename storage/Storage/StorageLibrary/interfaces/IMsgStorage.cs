@@ -8,17 +8,17 @@ namespace StorageLibrary
     public interface IMsgStorage
     {
         // TODO : specify the exceptions that each methodes can throw
-        List<IMessage> GetListsMsgFrom(HashSet<int> listsId, int firstMsgId, int msgNumber);
-        List<IMessage> GetListsMsgTo(HashSet<int> listsId, int lastMsgId, int msgNumber);
+        List<IMessage> GetListsMsgFrom(HashSet<Guid> listsId, DateTime firstMsgId, int msgNumber);
+        List<IMessage> GetListsMsgTo(HashSet<Guid> listsId, DateTime lastMsgId, int msgNumber);
         
-        void Tag(int accountId, int msgId);
-        void Untag(int accoundId, int msgId);
+        void Tag(Guid accountId, Guid msgId);
+        void Untag(Guid accoundId, Guid msgId);
 
-        List<IMessage> GetTaggedFrom(int accoundId, int firstMsgId, int msgNumber);
-        List<IMessage> GetTaggedTo(int accountId, int lastMsgId, int msgNumber);
+        List<IMessage> GetTaggedFrom(Guid accoundId, DateTime firstMsgId, int msgNumber);
+        List<IMessage> GetTaggedTo(Guid accountId, DateTime lastMsgId, int msgNumber);
 
-        int Post(int accountId, string content);
-        int Copy(int accountId, int msgId);
-        void Remove(int id);
+        int Post(Guid accountId, string content);
+        int Copy(Guid accountId, Guid msgId);
+        void Remove(Guid id);
     }
 }

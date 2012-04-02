@@ -17,56 +17,56 @@ namespace StorageLibrary
         }
 
         // Interface implementation
-        public int GetId(string name)
+        public Guid GetId(string name)
         {
-            StrgBlob<int> blob = new StrgBlob<int>(connexion.accountContainer, "idbylogin/" + name);
+            StrgBlob<Guid> blob = new StrgBlob<Guid>(connexion.accountContainer, "idbylogin/" + name);
             return blob.GetIfExists(new StorageLibException(StrgLibErr.AccountNotFound));
         }
 
-        public IAccountInfo GetInfo(int accountId)
+        public IAccountInfo GetInfo(Guid accountId)
         {
             StrgBlob<IAccountInfo> blob = new StrgBlob<IAccountInfo>(connexion.accountContainer, "info/" + accountId);
             return blob.GetIfExists(new StorageLibException(StrgLibErr.AccountNotFound));
         }
 
-        public void SetInfo(int accountId, string name, string description)
+        public void SetInfo(Guid accountId, string name, string description)
         {
             throw new NotImplementedException();
         }
 
-        public HashSet<int> GetUsers(int accountId)
+        public HashSet<Guid> GetUsers(Guid accountId)
         {
-            StrgBlob<HashSet<int>> blob = new StrgBlob<HashSet<int>>(connexion.accountContainer, "users/" + accountId);
+            StrgBlob<HashSet<Guid>> blob = new StrgBlob<HashSet<Guid>>(connexion.accountContainer, "users/" + accountId);
             return blob.GetIfExists(new StorageLibException(StrgLibErr.AccountNotFound));
         }
 
-        public int GetAdminId(int accountId)
+        public Guid GetAdminId(Guid accountId)
         {
-            StrgBlob<int> blob = new StrgBlob<int>(connexion.accountContainer, "adminid/" + accountId);
+            StrgBlob<Guid> blob = new StrgBlob<Guid>(connexion.accountContainer, "adminid/" + accountId);
             return blob.GetIfExists(new StorageLibException(StrgLibErr.AccountNotFound));
         }
 
-        public void SetAdminId(int accountId)
+        public void SetAdminId(Guid accountId)
         {
             throw new NotImplementedException();
         }
 
-        public void Add(int accountId, int userId)
+        public void Add(Guid accountId, Guid userId)
         {
             throw new NotImplementedException();
         }
 
-        public void Remove(int accountId, int userId)
+        public void Remove(Guid accountId, Guid userId)
         {
             throw new NotImplementedException();
         }
 
-        public int Create(int adminId, string name, string description)
+        public Guid Create(Guid adminId, string name, string description)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(int accountId)
+        public void Delete(Guid accountId)
         {
             throw new NotImplementedException();
         }

@@ -8,8 +8,8 @@ namespace StorageLibrary
 {
     public interface IMessage
     {
-        int Id {get; set;}
-        int PosterId {get; set;}
+        Guid Id {get; set;}
+        Guid PosterId {get; set;}
         DateTime Date {get; set;}
         string Content { get; set; }
     }

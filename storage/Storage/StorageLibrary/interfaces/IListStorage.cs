@@ -8,24 +8,25 @@ namespace StorageLibrary
     public interface IListStorage
     {
         // TODO : specify the exceptions that each methode can throw
-        IListInfo GetInfo(int listId);
-        void SetInfo(int listId, string name, string description, bool isPrivate);
-        int GetOwner(int listId);
+        IListInfo GetInfo(Guid listId);
+        void SetInfo(Guid listId, string name, string description, bool isPrivate);
+        Guid GetOwner(Guid listId);
 
-        int GetPersonalList(int accountId);
+        Guid GetPersonalList(Guid accountId);
 
-        int Create(int ownerId, string name, string description, bool isPrivate);
-        void Delete(int id);
+        Guid Create(Guid ownerId, string name, string description, bool isPrivate);
+        void Delete(Guid id);
 
-        void Follow(int listId, int accountId);
-        void Unfollow(int listId, int accountId);
+        void Follow(Guid listId, Guid accountId);
+        void Unfollow(Guid listId, Guid accountId);
 
-        HashSet<int> GetAccounts(int listId);
-        void Add(int listId, int accountId);
-        void Remove(int listId, int accountId);
+        HashSet<Guid> GetAccounts(Guid listId);
+        void Add(Guid listId, Guid accountId);
+        void Remove(Guid listId, Guid accountId);
         
-        HashSet<int> GetAccountOwnedLists(int accountId, bool withPrivate);
-        HashSet<int> GetAccountFollowedLists(int accountId, bool withPrivate);
-        HashSet<int> GetFollowingLists(int accountId);
+        HashSet<Guid> GetAccountOwnedLists(Guid accountId, bool withPrivate);
+        HashSet<Guid> GetAccountFollowedLists(Guid accountId, bool withPrivate);
+        HashSet<Guid> GetFollowingLists(Guid accountId);
+        HashSet<Guid> GetFollowingAccounts(Guid listId);
     }
 }

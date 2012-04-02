@@ -17,47 +17,47 @@ namespace StorageLibrary
         }
 
         // Interface implementation
-        public List<IMessage> GetListsMsgFrom(HashSet<int> listsId, int firstMsgId, int msgNumber)
+        public List<IMessage> GetListsMsgFrom(HashSet<Guid> listsId, DateTime firstMsgId, int msgNumber)
         {
             throw new NotImplementedException();
         }
 
-        public List<IMessage> GetListsMsgTo(HashSet<int> listsId, int lastMsgId, int msgNumber)
+        public List<IMessage> GetListsMsgTo(HashSet<Guid> listsId, DateTime lastMsgId, int msgNumber)
         {
             throw new NotImplementedException();
         }
 
-        public void Tag(int accountId, int msgId)
+        public void Tag(Guid accountId, Guid msgId)
         {
             throw new NotImplementedException();
         }
 
-        public void Untag(int accoundId, int msgId)
+        public void Untag(Guid accoundId, Guid msgId)
         {
             throw new NotImplementedException();
         }
 
-        public List<IMessage> GetTaggedFrom(int accoundId, int firstMsgId, int msgNumber)
+        public List<IMessage> GetTaggedFrom(Guid accoundId, DateTime firstMsgId, int msgNumber)
         {
             throw new NotImplementedException();
         }
 
-        public List<IMessage> GetTaggedTo(int accountId, int lastMsgId, int msgNumber)
+        public List<IMessage> GetTaggedTo(Guid accountId, DateTime lastMsgId, int msgNumber)
         {
             throw new NotImplementedException();
         }
 
-        public int Post(int accountId, string content)
+        public int Post(Guid accountId, string content)
         {
             throw new NotImplementedException();
         }
 
-        public int Copy(int accountId, int msgId)
+        public int Copy(Guid accountId, Guid msgId)
         {
             throw new NotImplementedException();
         }
 
-        public void Remove(int id)
+        public void Remove(Guid id)
         {
             throw new NotImplementedException();
         }

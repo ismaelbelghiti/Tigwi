@@ -17,79 +17,84 @@ namespace StorageLibrary
         }
 
         // Interface implementation
-        public IListInfo GetInfo(int listId)
+        public IListInfo GetInfo(Guid listId)
         {
             StrgBlob<IListInfo> blob = new StrgBlob<IListInfo>(connexion.listContainer, "info/" + listId);
             return blob.GetIfExists(new StorageLibException(StrgLibErr.ListNotFound));
         }
 
-        public void SetInfo(int listId, string name, string description, bool isPrivate)
+        public void SetInfo(Guid listId, string name, string description, bool isPrivate)
         {
             throw new NotImplementedException();
         }
 
-        public int GetOwner(int listId)
+        public Guid GetOwner(Guid listId)
         {
-            StrgBlob<int> blob = new StrgBlob<int>(connexion.listContainer, "owner/" + listId);
+            StrgBlob<Guid> blob = new StrgBlob<Guid>(connexion.listContainer, "owner/" + listId);
             return blob.GetIfExists(new StorageLibException(StrgLibErr.ListNotFound));
         }
 
-        public int GetPersonalList(int accountId)
+        public Guid GetPersonalList(Guid accountId)
         {
-            StrgBlob<int> blob = new StrgBlob<int>(connexion.listContainer, "personallist/" + accountId);
+            StrgBlob<Guid> blob = new StrgBlob<Guid>(connexion.listContainer, "personallist/" + accountId);
             return blob.GetIfExists(new StorageLibException(StrgLibErr.ListNotFound));
         }
 
-        public int Create(int ownerId, string name, string description, bool isPrivate)
+        public Guid Create(Guid ownerId, string name, string description, bool isPrivate)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(int id)
+        public void Delete(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public void Follow(int listId, int accountId)
+        public void Follow(Guid listId, Guid accountId)
         {
             throw new NotImplementedException();
         }
 
-        public void Unfollow(int listId, int accountId)
+        public void Unfollow(Guid listId, Guid accountId)
         {
             throw new NotImplementedException();
         }
 
-        public HashSet<int> GetAccounts(int listId)
+        public HashSet<Guid> GetAccounts(Guid listId)
         {
-            StrgBlob<HashSet<int>> blob = new StrgBlob<HashSet<int>>(connexion.listContainer, "accounts/" + listId);
+            StrgBlob<HashSet<Guid>> blob = new StrgBlob<HashSet<Guid>>(connexion.listContainer, "accounts/" + listId);
             return blob.GetIfExists(new StorageLibException(StrgLibErr.ListNotFound));
         }
 
-        public void Add(int listId, int accountId)
+        public void Add(Guid listId, Guid accountId)
         {
             throw new NotImplementedException();
         }
 
-        public void Remove(int listId, int accountId)
+        public void Remove(Guid listId, Guid accountId)
         {
             throw new NotImplementedException();
         }
 
-        public HashSet<int> GetAccountOwnedLists(int accountId, bool withPrivate)
+        public HashSet<Guid> GetAccountOwnedLists(Guid accountId, bool withPrivate)
         {
             throw new NotImplementedException();
         }
 
-        public HashSet<int> GetAccountFollowedLists(int accountId, bool withPrivate)
+        public HashSet<Guid> GetAccountFollowedLists(Guid accountId, bool withPrivate)
         {
             throw new NotImplementedException();
         }
 
-        public HashSet<int> GetFollowingLists(int accountId)
+        public HashSet<Guid> GetFollowingLists(Guid accountId)
         {
-            StrgBlob<HashSet<int>> blob = new StrgBlob<HashSet<int>>(connexion.listContainer, "followinglists/" + accountId);
+            StrgBlob<HashSet<Guid>> blob = new StrgBlob<HashSet<Guid>>(connexion.listContainer, "followinglists/" + accountId);
             return blob.GetIfExists(new StorageLibException(StrgLibErr.ListNotFound));
+        }
+
+        public HashSet<Guid> GetFollowingAccounts(Guid listId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

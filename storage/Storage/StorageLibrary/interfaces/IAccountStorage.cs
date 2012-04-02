@@ -8,18 +8,18 @@ namespace StorageLibrary
     public interface IAccountStorage
     {
         // TODO : specify the exceptions that each methode can throw
-        int GetId(string name);
-        IAccountInfo GetInfo(int accountId);
-        void SetInfo(int accountId, string name, string description);
+        Guid GetId(string name);
+        IAccountInfo GetInfo(Guid accountId);
+        void SetInfo(Guid accountId, string name, string description);
 
-        HashSet<int> GetUsers(int accountId);
-        int GetAdminId(int accountId);
-        void SetAdminId(int accountId);
+        HashSet<Guid> GetUsers(Guid accountId);
+        Guid GetAdminId(Guid accountId);
+        void SetAdminId(Guid accountId);
         
-        void Add(int accountId, int userId);
-        void Remove(int accountId, int userId);
+        void Add(Guid accountId, Guid userId);
+        void Remove(Guid accountId, Guid userId);
 
-        int Create(int adminId, string name, string description);
-        void Delete(int accountId);
+        Guid Create(Guid adminId, string name, string description);
+        void Delete(Guid accountId);
     }
 }
