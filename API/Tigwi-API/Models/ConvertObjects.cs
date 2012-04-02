@@ -77,6 +77,7 @@ namespace Tigwi_API.Models
             Number = code;
         }
 
+        [XmlAttribute]
         public int? Number { get; set; }
     }
 

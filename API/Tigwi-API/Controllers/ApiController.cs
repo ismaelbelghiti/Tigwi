@@ -14,16 +14,24 @@ namespace Tigwi_API.Controllers
 
         public ActionResult UserTimeline(string name, int numberOfMessages)
         {
-            // TODO : handle errors
+            // TODO : handle errors more precisely
 
             IStorage storage = new Storage("",""); // connexion
 
-            int accountId = storage.User.GetId(name);
-            // get lasts messages from user name
-            var listMsgs = storage.Msg.GetListsMsgTo(new HashSet<int> {accountId}, int.MaxValue, numberOfMessages);
-            // convert, looking forward serialization
-            var listMsgsOutput = new MessageList(listMsgs);
+            MessageList listMsgsOutput;
 
+            try
+            {
+                int accountId = storage.User.GetId(name);
+                // get lasts messages from user name
+                var listMsgs = storage.Msg.GetListsMsgTo(new HashSet<int> {accountId}, int.MaxValue, numberOfMessages);
+                // convert, looking forward serialization
+                listMsgsOutput = new MessageList(listMsgs);
+            }
+            catch // for the moment, all errors result in sending an empty list as a result
+            {
+                listMsgsOutput = new MessageList();
+            }
             // a stream is needed for serialization
             var stream = new MemoryStream();
             var result = new FileStreamResult(stream, "xml"); // is "xml" the right contentType ??
@@ -110,11 +118,28 @@ namespace Tigwi_API.Controllers
 
             IStorage storage = new Storage("", ""); // connexion
 
-            int accountId = storage.Account.GetId(msg.User);
+            ContentResult result;
 
-            storage.Msg.Post(accountId, msg.Message.Content);
+            try
+            {
+                var accountId = storage.Account.GetId(msg.User);
 
-            return new EmptyResult();
+                storage.Msg.Post(accountId, msg.Message.Content);
+
+                // Result is an empty error XML element
+                var stream = new MemoryStream();
+                (new XmlSerializer(typeof (Error))).Serialize(stream, new Error());
+                result = Content(stream.ToString());
+            }
+            catch // exceptions storage can throw description needed
+            {
+                // Result is an non-empty error XML element
+                var stream = new MemoryStream();
+                (new XmlSerializer(typeof(Error))).Serialize(stream, new Error(42));
+                result = Content(stream.ToString());
+            }
+
+            return result;
         }
 
         //
@@ -127,12 +152,28 @@ namespace Tigwi_API.Controllers
 
             IStorage storage = new Storage("", ""); // connexion
 
-            int accountId = storage.Account.GetId(subscribe.User);
-            int subsciptionId = storage.Account.GetId(subscribe.Subscription);
+            ContentResult result;
 
-            storage.List.Follow(accountId,subsciptionId); // accountId follow subscriptionId, right ?
+            try
+            {
+                int accountId = storage.Account.GetId(subscribe.User);
+                int subsciptionId = storage.Account.GetId(subscribe.Subscription);
 
-            return new EmptyResult();
+                storage.List.Follow(accountId, subsciptionId); // accountId follow subscriptionId, right ?
+
+                // Result is an empty error XML element
+                var stream = new MemoryStream();
+                (new XmlSerializer(typeof(Error))).Serialize(stream, new Error());
+                result = Content(stream.ToString());
+            }
+            catch
+            {
+                // Result is an non-empty error XML element
+                var stream = new MemoryStream();
+                (new XmlSerializer(typeof(Error))).Serialize(stream, new Error(42));
+                result = Content(stream.ToString());
+            }
+            return result;
         }
 
 
