@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Xml.Serialization;
@@ -15,7 +14,7 @@ namespace Tigwi_API.Controllers
 
         public ActionResult UserTimeline(string name, int numberOfMessages)
         {
-            // TODO : process errors
+            // TODO : handle errors
 
             IStorage storage = new Storage("",""); // connexion
 
@@ -42,7 +41,7 @@ namespace Tigwi_API.Controllers
 
         public ActionResult UserSubscriptionsList(string name, int numberOfSubscriptions)
         {
-            // TODO : process errors
+            // TODO : handle errors
 
             IStorage storage = new Storage("", ""); // connexion
 
@@ -74,7 +73,7 @@ namespace Tigwi_API.Controllers
 
         public ActionResult UserSubscribersList(string name, int numberOfSubscribers)
         {
-            // TODO : process errors
+            // TODO : handle errors
 
             IStorage storage = new Storage("", ""); // connexion
 
