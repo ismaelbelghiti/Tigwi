@@ -76,7 +76,7 @@ http://api.tigwi.com/usersubscribers/name/numberOfSubscribers
 _left empty_
 ###Response
 
-    <UserList size="sizeOfList">
+    <UserList Size="sizeOfList">
 	    <User> <!-- See below --> </User>
 	    <User> ... </User>
 	    ...
@@ -117,12 +117,12 @@ http://api.tigwi.com/write
 ###Response
 In case an error occurs
 
-    <error number="codeOfError"/>
+    <Error Number="codeOfError"/>
 
 
 If no error occurs
 
-    <error/>
+    <Error/>
 
 ###Informations
 * In **Request**, the size of your message is limited to 140 characters, but this limit is tested by the server. It raises an error if the message is too long.
@@ -145,11 +145,11 @@ http://api.tigwi.com/subscribe/
 ###Response
 In case an error occurs
 
-    <error number="codeOfError"/>
+    <Error Number="codeOfError"/>
 
 If no error occurs
 
-    <error/>
+    <Error/>
 
 
 ###Informations
