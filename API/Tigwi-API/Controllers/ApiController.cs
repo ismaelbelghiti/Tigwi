@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Xml.Serialization;
 using StorageLibrary;
@@ -15,24 +13,25 @@ namespace Tigwi_API.Controllers
         //
         // GET: /usertimeline/{name}/{numberOfMessages}
 
-        public FileStreamResult UserTimeline(string name, int numberOfMessages)
+        public ActionResult UserTimeline(string name, int numberOfMessages)
         {
             // TODO : process errors
 
             IStorage storage = new Storage("",""); // connexion
 
-            var id = storage.User.GetId(name);
+            int accountId = storage.User.GetId(name);
             // get lasts messages from user name
-            var listMsgs = storage.Msg.GetListsMsgTo(new HashSet<int> {id}, int.MaxValue, numberOfMessages);
+            var listMsgs = storage.Msg.GetListsMsgTo(new HashSet<int> {accountId}, int.MaxValue, numberOfMessages);
             // convert, looking forward serialization
             var listMsgsOutput = new MessageList(listMsgs);
 
             // a stream is needed for serialization
             var stream = new MemoryStream();
             var result = new FileStreamResult(stream, "xml"); // is "xml" the right contentType ??
+            // Maybe a ContentResult would be more adequate.
 
             var serialize = new XmlSerializer(typeof (MessageList));
-            serialize.Serialize(stream,listMsgs);
+            serialize.Serialize(stream,listMsgsOutput);
 
             stream.Flush(); // is it necessary ??
             return result;
