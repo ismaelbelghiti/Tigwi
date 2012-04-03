@@ -1,7 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Xml.Serialization;
+using System.Linq;
+using System.Text;
 using StorageLibrary;
 using Tigwi_API.Models;
 
@@ -22,9 +25,9 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                int accountId = storage.User.GetId(name);
+                var accountId = storage.User.GetId(name);
                 // get lasts messages from user name
-                var listMsgs = storage.Msg.GetListsMsgTo(new HashSet<int> {accountId}, int.MaxValue, numberOfMessages);
+                var listMsgs = storage.Msg.GetListsMsgTo(new HashSet<Guid> {accountId}, DateTime.Now , numberOfMessages);
                 // convert, looking forward serialization
                 listMsgsOutput = new MessageList(listMsgs);
             }
@@ -47,62 +50,73 @@ namespace Tigwi_API.Controllers
         //
         // GET : /usersubscriptions/{name}/{numberOfSubscriptions}
 
-        public ActionResult UserSubscriptionsList(string name, int numberOfSubscriptions)
+        public ActionResult UserSubscriberssList(string name, int numberOfSubscribers)
         {
             // TODO : handle errors
 
             IStorage storage = new Storage("", ""); // connexion
 
-            int accountId = storage.Account.GetId(name);
+            var accountId = storage.Account.GetId(name);
+         
             // get lasts followers of user name 's list
-
-            //TODO: use right methode once implemented
-            HashSet<int> listsFollowing = storage.List.GetFollowingLists(accountId);
-            UserList listUsers = new UserList();
-
-            //TODO: implement initialization of listUsers
-
+            var personnalList = storage.List.GetPersonalList(accountId);
+            var hashFollowers = storage.List.GetFollowingAccounts(personnalList);
 
             // convert, looking forward serialization
-            
+            var sizeHash = hashFollowers.Count;
+            int size;
+            size = sizeHash<numberOfSubscribers ? sizeHash : numberOfSubscribers;
+
+                // Get as many followers as possible (maximum: numberOfSubscibers)
+                var userList = new List<UserApi>();
+                int k;
+                for (k=0; k<size; k++)
+                {
+                    var followerId = hashFollowers.First();
+                    var user = new UserApi(followerId, storage.Account.GetInfo(followerId).Name );
+                    userList.Add(user);
+                }
+
+            var userListToReturn = new UserList(userList);    
+
             // a stream is needed for serialization
             var stream = new MemoryStream();
             var result = new FileStreamResult(stream, "xml"); // is "xml" the right contentType ??
 
             var serialize = new XmlSerializer(typeof(UserList));
-            serialize.Serialize(stream, listUsers);
+            serialize.Serialize(stream, userListToReturn);
 
             stream.Flush(); // is it necessary ??
             return result;
         }
 
         //
-        // GET : /usersubscribers/{name}/{numberOfSusbscribers}
+        // GET : /usersubscribers/{name}/{numberOfSusbscribtions}
 
-        public ActionResult UserSubscribersList(string name, int numberOfSubscribers)
+        public ActionResult UserSubscriptionsList(string name, int numberOfSubscribtions)
         {
             // TODO : handle errors
 
             IStorage storage = new Storage("", ""); // connexion
 
-            int accountId = storage.Account.GetId(name);
+            var accountId = storage.Account.GetId(name);
             // get lasts followers of user name 's list
 
             //TODO: use right methode once implemented
-            HashSet<int> listsFollowing = storage.List.GetAccountFollowedLists(accountId, false);
-            UserList listUsers = new UserList();
+
 
             //TODO: implement initialization of listUsers
 
 
             // convert, looking forward serialization
+            var listUsersToReturn = new UserList();
 
             // a stream is needed for serialization
             var stream = new MemoryStream();
             var result = new FileStreamResult(stream, "xml"); // is "xml" the right contentType ??
 
             var serialize = new XmlSerializer(typeof(UserList));
-            serialize.Serialize(stream, listUsers);
+            serialize.Serialize(stream, listUsersToReturn);
 
             stream.Flush(); // is it necessary ??
             return result;
@@ -156,8 +170,8 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                int accountId = storage.Account.GetId(subscribe.User);
-                int subsciptionId = storage.Account.GetId(subscribe.Subscription);
+                var accountId = storage.Account.GetId(subscribe.User);
+                var subsciptionId = storage.Account.GetId(subscribe.Subscription);
 
                 storage.List.Follow(accountId, subsciptionId); // accountId follow subscriptionId, right ?
 

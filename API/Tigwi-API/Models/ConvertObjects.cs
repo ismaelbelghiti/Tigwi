@@ -35,13 +35,13 @@ namespace Tigwi_API.Models
     [XmlTypeAttribute("User")]
     public class UserApi
     {
-        public UserApi(int id, string name)
+        public UserApi(Guid id, string name)
         {
             Id = id;
             Name = name;
         }
 
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
     }
 
