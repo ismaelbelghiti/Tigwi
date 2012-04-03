@@ -47,12 +47,12 @@ namespace StorageLibrary
             throw new NotImplementedException();
         }
 
-        public int Post(Guid accountId, string content)
+        public Guid Post(Guid accountId, string content)
         {
             throw new NotImplementedException();
         }
 
-        public int Copy(Guid accountId, Guid msgId)
+        public Guid Copy(Guid accountId, Guid msgId)
         {
             throw new NotImplementedException();
         }

@@ -11,8 +11,11 @@ namespace StorageLibrary
         UserNotFound,
         AccountNotFound,
         ListNotFound,
+        MessageNotFound,
         UserAlreadyExists,
         AccountAlreadyExist,
+        UserIsAdmin,
+        IsPersonalList,
     }
 
     public class StorageLibException : Exception

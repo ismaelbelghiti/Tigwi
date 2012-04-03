@@ -46,7 +46,7 @@ namespace StorageLibrary
             return blob.GetIfExists(new StorageLibException(StrgLibErr.AccountNotFound));
         }
 
-        public void SetAdminId(Guid accountId)
+        public void SetAdminId(Guid accountId, Guid userId)
         {
             throw new NotImplementedException();
         }
