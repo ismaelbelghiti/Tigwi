@@ -31,8 +31,17 @@ namespace StorageLibrary
 
         public void SetInfo(Guid accountId, string name, string description)
         {
-            // TODO : implement
-            throw new NotImplementedException();
+            // To be moved to the worker
+
+            // check name avaibility
+            StrgBlob<Guid> nameIdBlob = new StrgBlob<Guid>(connexion.accountContainer, "idbyname/" + name);
+            if (nameIdBlob.Exists && nameIdBlob.Get() != accountId)
+                throw new StorageLibException(StrgLibErr.AccountAlreadyExist);
+
+            // store new info
+            StrgBlob<IAccountInfo> bAccountInfo = new StrgBlob<IAccountInfo>(connexion.accountContainer, "info/" + accountId);
+            if (!bAccountInfo.SetIfExsits(new AccountInfo(name, description)))
+                throw new StorageLibException(StrgLibErr.AccountNotFound);
         }
 
         public HashSet<Guid> GetUsers(Guid accountId)
@@ -49,18 +58,45 @@ namespace StorageLibrary
 
         public void SetAdminId(Guid accountId, Guid userId)
         {
-            // TODO : implement
-            throw new NotImplementedException();
+            // To be moved to the worker
+
+            // check admin existence
+            StrgBlob<IUserInfo> userInfo = new StrgBlob<IUserInfo>(connexion.userContainer, "info/" + userId);
+            if (!userInfo.Exists)
+                throw new StorageLibException(StrgLibErr.UserNotFound);
+
+            // store the new admin id
+            StrgBlob<Guid> bAdminId = new StrgBlob<Guid>(connexion.accountContainer, "adminid/" + accountId);
+            if (!bAdminId.SetIfExsits(userId))
+                throw new StorageLibException(StrgLibErr.AccountNotFound);
         }
 
         public void Add(Guid accountId, Guid userId)
         {
-            // TODO : implement
-            throw new NotImplementedException();
+            // To be moved to the worker
+
+            // check userId
+            StrgBlob<IUserInfo> userInfo = new StrgBlob<IUserInfo>(connexion.userContainer, "info/" + userId);
+            if (!userInfo.Exists)
+                throw new StorageLibException(StrgLibErr.UserNotFound);
+
+            // update the data in account
+            StrgBlob<HashSet<Guid>> bUsers = new StrgBlob<HashSet<Guid>>(connexion.accountContainer, "users/" + accountId);
+            HashSet<Guid> users = bUsers.GetIfExists(new StorageLibException(StrgLibErr.AccountNotFound));
+            users.Add(userId);
+            bUsers.Set(users);
+
+            // update the data in user - we have already check account existence while updating its value
+            StrgBlob<HashSet<Guid>> bAccounts = new StrgBlob<HashSet<Guid>>(connexion.userContainer, "accounts/" + userId);
+            HashSet<Guid> accounts = bAccounts.Get();
+            accounts.Add(accountId);
+            bUsers.Set(accounts);
         }
 
         public void Remove(Guid accountId, Guid userId)
         {
+            // To be moved to the worker
+
             // TODO : implement
             throw new NotImplementedException();
         }
@@ -78,7 +114,7 @@ namespace StorageLibrary
             // check admin existence
             StrgBlob<IUserInfo> userInfo = new StrgBlob<IUserInfo>(connexion.userContainer, "info/" + adminId);
             if (!userInfo.Exists)
-                throw new StorageLibException(StrgLibErr.AccountNotFound);
+                throw new StorageLibException(StrgLibErr.UserNotFound);
 
             // Create the data
             Guid id = new Guid();

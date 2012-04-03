@@ -47,7 +47,7 @@ namespace StorageLibrary
         void Add(Guid accountId, Guid userId);
         /// <summary>
         /// Remove the right to the given user to post with the given account
-        /// Can throw : UserNotFound, AccountNotFound, UserIsAdmin
+        /// Can throw : UserIsAdmin
         /// </summary>
         void Remove(Guid accountId, Guid userId);
 
