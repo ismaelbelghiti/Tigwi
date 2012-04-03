@@ -57,7 +57,32 @@ namespace StorageLibrary
 
         public Guid Create(string login, string email)
         {
-            throw new NotImplementedException();
+            // To be transfered to the worker
+            // TODO : complete the object created while we implement accounts, lists and messages
+
+            // Check login avaibility
+            StrgBlob<Guid> loginIdBlob = new StrgBlob<Guid>(connexion.userContainer, "idbylogin/" + login);
+            if (loginIdBlob.Exists)
+                throw new StorageLibException(StrgLibErr.UserAlreadyExists);
+
+            // Create the user
+            // initialize data
+            Guid id = new Guid();
+            IUserInfo info = new UserInfo(login, email);
+            HashSet<Guid> accounts = new HashSet<Guid>();
+
+            // initialize blobs
+            StrgBlob<IUserInfo> bInfo = new StrgBlob<IUserInfo>(connexion.userContainer, "info/" + id);
+            StrgBlob<Guid> bID = new StrgBlob<Guid>(connexion.userContainer, "idbylogin/" + login);
+            StrgBlob<HashSet<Guid>> bAccounts = new StrgBlob<HashSet<Guid>>(connexion.userContainer, "accounts/" + id);
+
+            // Store the data in the right order for the user not to be accessible until the end
+            bInfo.Set(info);
+            bAccounts.Set(accounts);
+            bID.Set(id);
+
+            // return the id
+            return id;
         }
 
         public void Delete(Guid userId)

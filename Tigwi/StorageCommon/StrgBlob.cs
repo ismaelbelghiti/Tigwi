@@ -67,7 +67,7 @@ namespace StorageCommon
             return t;
         }
 
-        public bool SetIfExsits(object obj)
+        public bool SetIfExsits(T obj)
         {
             if (Exists)
             {
@@ -78,6 +78,13 @@ namespace StorageCommon
             }
             else
                 return false;
+        }
+
+        public void Set(T obj)
+        {
+            BlobStream stream = blob.OpenWrite();
+            formatter.Serialize(stream, obj);
+            stream.Close();
         }
     }
 }
