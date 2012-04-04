@@ -13,9 +13,9 @@ namespace Tigwi_API.Routes
 			// customer routes
 
 			routes.MapRoute("Message", 
-				"usertimeline/{name}/{numberOfMessages}",
+				"accountmessages/{accountName}/{numberOfMessages}",
 				new { controller = "ApiController", 
-					action = "UserTimeline", 
+					action = "AccountMessages", 
 					name="", 
 					numberOfMessages="20"} // Par défaut le nombre de messages est 20
 				);

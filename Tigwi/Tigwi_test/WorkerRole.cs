@@ -4,11 +4,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using System.IO;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using Microsoft.WindowsAzure.StorageClient;
 using StorageLibrary;
+using StorageCommon;
 
 namespace Tigwi_test
 {
@@ -19,6 +21,9 @@ namespace Tigwi_test
             // This is a sample worker implementation. Replace with your logic.
             Trace.WriteLine("$projectname$ entry point called", "Information");
 
+            Debug.Listeners.Add(new TextWriterTraceListener(File.Create(
+                                                "StorageTestResult.txt")));
+            
             // Test code here
             Storage storage = new Storage("eyaris", "StorageConnectionString");
 

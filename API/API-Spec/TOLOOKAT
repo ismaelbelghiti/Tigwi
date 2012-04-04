@@ -1,0 +1,2 @@
+IDisposable pour les serializer.
+Encapsuler le resultat des GET dans un noeud racine <Maybe> <Valid> </Valid> <Item> </Item> </Maybe>

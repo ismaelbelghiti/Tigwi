@@ -41,6 +41,7 @@ In case an error occurs:
 ##Get someone's subscriptions list
 ###Purpose
 Obtain a number _n_ of the user _name_ 's subscriptions
+No particular order provided
 ###HTTP method
 *GET*
 ###URL
@@ -76,6 +77,7 @@ In case an error occurs:
 ##Get someone's subscribers list
 ###Purpose
 Obtain a number _n_ of the user _name_ 's subscribers
+No particular order provided
 ###HTTP method
 *GET*
 ###URL
