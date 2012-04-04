@@ -23,5 +23,7 @@ _ReSharper*/
 Thumbs.db
 
 
-#### .suo qui fait chier
+# Local, user-specific configuration #
+######################################
 *.suo
+*.user
