@@ -9,42 +9,38 @@ namespace StorageLibrary
     {
         /// <summary>
         /// Get a user id given its login
-        /// Can raise : 
-        /// UserNotFound
         /// </summary>
+        /// <exception cref="UserNotFound"> if no user has this login</exception>
         Guid GetId(string login);
 
         /// <summary>
         /// get info related to the given user
-        /// Can raise : 
-        /// UserNotFound
         /// </summary>
+        /// <exception cref="UserNotFound">if no user has this ID</exception>
         IUserInfo GetInfo(Guid userId);
 
         /// <summary>
         /// Set the infos related to the given user
-        /// Can raise : 
-        /// UserNotFound
-        /// UserAlreadyExists
         /// </summary>
+        /// <exception cref="UserNotFound">if no user has this ID</exception>
+        /// <exception cref="UserAlreadyExists">if the login is already used by another user</exception>
         void SetInfo(Guid userId, string login, string email);
 
         /// <summary>
         /// get the accounts where the user can post
-        /// Can raise : 
-        /// UserNotFound
         /// </summary>
+        /// <exception cref="UserNotFound">if no user has this ID</exception>
         HashSet<Guid> GetAccounts(Guid userId);
 
         /// <summary>
         /// create a user
-        /// Can raise : 
-        /// UserAlreadyExists
         /// </summary>
+        /// <exception cref="UserAlreadyExists">if the login is already used</exception>
         Guid Create(string login, string email);
        
         /// <summary>
         /// delete a user
+        /// don't do anything if the user doesn't exists
         /// </summary>
         void Delete(Guid userId);
     }
