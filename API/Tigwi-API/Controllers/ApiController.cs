@@ -28,7 +28,7 @@ namespace Tigwi_API.Controllers
         //
         // GET: /usertimeline/{name}/{numberOfMessages}
 
-        public ActionResult UserTimeline(string name, int numberOfMessages)
+        public ActionResult AccountMessages(string accountName, int numberOfMessages)
         {
             // TODO : give the actual connexion informations
             IStorage storage = new Storage("",""); // connexion
@@ -36,10 +36,11 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                var accountId = storage.Account.GetId(name);
+                var accountId = storage.Account.GetId(accountName);
 
                 // get personal list
                 var personalListId = storage.List.GetPersonalList(accountId);
+
                 
                 // get lasts messages from user name
                 var listMsgs = storage.Msg.GetListsMsgTo(new HashSet<Guid> {personalListId}, DateTime.Now , numberOfMessages);

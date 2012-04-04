@@ -19,7 +19,7 @@ namespace StorageLibrary
         void SetInfo(Guid listId, string name, string description, bool isPrivate);
         /// <summary>
         /// Get the owner of a list
-        /// Can throw : ListNotFoud
+        /// Can throw : ListNotFound
         /// </summary>
         Guid GetOwner(Guid listId);
 
