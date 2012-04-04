@@ -1,9 +1,10 @@
 ﻿
 // Les routes pour transmettre les informations aux controllers ;
+
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace Tigwi_API.Routes
+namespace Tigwi_API
 {
     public class MvcApplication : System.Web.HttpApplication
     {
@@ -20,18 +21,18 @@ namespace Tigwi_API.Routes
 					numberOfMessages="20"} // Par défaut le nombre de messages est 20
 				);
 
-			routes.MapRoute("Users", 
-				"usersubscriptions/{name}/{numberOfSubscriptions}",
+			routes.MapRoute("Accounts", 
+				"accountsubscriptions/{accountName}/{numberOfSubscriptions}",
 				new { controller = "ApiController", 
-					action = "UserSubscriptionsList", 
+					action = "AccountSubscriptionsList", 
 					name="",
 					numberOfSubscriptions="20"}
 				); 
 
 			routes.MapRoute("Users",
-				"usersubscribers/{name}/{numberOfSubscribers}",
+				"accountsubscribers/{accountName}/{numberOfSubscribers}",
 				new { controller = "ApiController", 
-					action = "UserSubscribersList", 
+					action = "AccountSubscribersList", 
 					name="",
 					numberOfSubscribers="20"}
 				);
@@ -42,10 +43,10 @@ namespace Tigwi_API.Routes
 					action = "WritePost"}
 				);
 		
-			routes.MapRoute("Users",
-				"suscribe",
+			routes.MapRoute("Accounts",
+				"suscribelist",
 				new { controller = "ApiController", 
-					action = "Suscribe"}
+					action = "SuscribeList"}
 				);
 
 			// default route

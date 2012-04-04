@@ -67,16 +67,16 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // GET : /usersubscribers/{name}/{numberOfSubscribers}
+        // GET : /accountsubscribers/{accountName}/{numberOfSubscribers}
 
-        public ActionResult UserSubscribersList(string name, int numberOfSubscribers)
+        public ActionResult AccountSubscribersList(string accountName, int numberOfSubscribers)
         {
             IStorage storage = new Storage("", ""); // connexion
             ContentResult result;
 
             try
             {
-                var accountId = storage.Account.GetId(name);
+                var accountId = storage.Account.GetId(accountName);
 
                 // get lasts followers of user name 's list
                 var followingLists = storage.List.GetFollowingLists(accountId);
@@ -112,16 +112,16 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // GET : /usersubscriptions/{name}/{numberOfSubscriptions}
+        // GET : /accountsubscriptions/{accountName}/{numberOfSubscriptions}
 
-        public ActionResult UserSubscriptionsList(string name, int numberOfSubscriptions)
+        public ActionResult AccountSubscriptionsList(string accountName, int numberOfSubscriptions)
         {
             IStorage storage = new Storage("", ""); // connexion
             ContentResult result;
 
             try
             {
-                var accountId = storage.Account.GetId(name);
+                var accountId = storage.Account.GetId(accountName);
                 // get public lists followed by user name
 
                 var followedLists = storage.List.GetAccountFollowedLists(accountId, false);
@@ -189,10 +189,10 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // POST : /suscribe
+        // POST : /suscribelist
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Subscribe(Subscribe subscribe)
+        public ActionResult SubscribeList(Subscribe subscribe)
         {
             IStorage storage = new Storage("", ""); // connexion
 
