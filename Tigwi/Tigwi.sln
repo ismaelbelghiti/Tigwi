@@ -15,9 +15,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageWorker", "StorageWor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageCommon", "StorageCommon\StorageCommon.csproj", "{51555566-C2F4-42F0-B978-91D1478B87E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tigwi.UI", "Tigwi.UI\Tigwi.UI.csproj", "{46428462-DB30-44D8-A6BB-7B83F3F211EC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI", "Tigwi.UI\UI.csproj", "{46428462-DB30-44D8-A6BB-7B83F3F211EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tigwi.UI.Tests", "Tigwi.UI.Tests\Tigwi.UI.Tests.csproj", "{5D2BF629-E4C9-4BCF-928F-AD605E9E5684}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI_test", "Tigwi.UI.Tests\UI_test.csproj", "{5D2BF629-E4C9-4BCF-928F-AD605E9E5684}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{43FEE8D7-EE97-40E7-9F64-3B916C949038}"
 	ProjectSection(SolutionItems) = preProject

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Xml.Serialization;
 using System.Linq;
-using System.Text;
 using StorageLibrary;
 using Tigwi_API.Models;
 
@@ -12,38 +11,54 @@ namespace Tigwi_API.Controllers
 {
     public class ApiController : Controller
     {
+        private static UserList BuildUserListFromAccountsHashSet (HashSet<Guid> hashAccounts, int size, IStorage storage )
+        {
+            var userList = new List<UserApi>();
+            int k;
+            for (k = 0; k < size; k++)
+            {
+                var accountId = hashAccounts.First();
+                var user = new UserApi(accountId, storage.Account.GetInfo(accountId).Name);
+                userList.Add(user);
+            }
+
+            return new UserList(userList);  
+        }
+        
         //
         // GET: /usertimeline/{name}/{numberOfMessages}
 
         public ActionResult UserTimeline(string name, int numberOfMessages)
         {
-            // TODO : handle errors more precisely
-
+            // TODO : give the actual connexion informations
             IStorage storage = new Storage("",""); // connexion
-
-            MessageList listMsgsOutput;
+            ContentResult result;
 
             try
             {
                 var accountId = storage.User.GetId(name);
+                
                 // get lasts messages from user name
                 var listMsgs = storage.Msg.GetListsMsgTo(new HashSet<Guid> {accountId}, DateTime.Now , numberOfMessages);
+
                 // convert, looking forward serialization
-                listMsgsOutput = new MessageList(listMsgs);
+                var listMsgsOutput = new MessageList(listMsgs);
+
+                // a stream is needed for serialization
+                var stream = new MemoryStream();
+
+                (new XmlSerializer(typeof(MessageList))).Serialize(stream, listMsgsOutput);
+
+                result = Content(stream.ToString());
             }
-            catch // for the moment, all errors result in sending an empty list as a result
+            catch (StorageLibException exception)
             {
-                listMsgsOutput = new MessageList();
+                // Result is an non-empty error XML element
+                var stream = new MemoryStream();
+                (new XmlSerializer(typeof(Error))).Serialize(stream, new Error(exception.Code.ToString()));
+                result = Content(stream.ToString());
             }
-            // a stream is needed for serialization
-            var stream = new MemoryStream();
-            var result = new FileStreamResult(stream, "xml"); // is "xml" the right contentType ??
-            // Maybe a ContentResult would be more adequate.
 
-            var serialize = new XmlSerializer(typeof (MessageList));
-            serialize.Serialize(stream,listMsgsOutput);
-
-            stream.Flush(); // is it necessary ??
             return result;
         }
 
@@ -52,72 +67,88 @@ namespace Tigwi_API.Controllers
 
         public ActionResult UserSubscribersList(string name, int numberOfSubscribers)
         {
-            // TODO : handle errors
-
             IStorage storage = new Storage("", ""); // connexion
+            ContentResult result;
 
-            var accountId = storage.Account.GetId(name);
-         
-            // get lasts followers of user name 's list
-            var personnalList = storage.List.GetPersonalList(accountId);
-            var hashFollowers = storage.List.GetFollowingAccounts(personnalList);
+            try
+            {
+                var accountId = storage.Account.GetId(name);
 
-            // convert, looking forward serialization
-            var sizeHash = hashFollowers.Count;
-            var size = sizeHash<numberOfSubscribers ? sizeHash : numberOfSubscribers;
-
-                // Get as many followers as possible (maximum: numberOfSubscibers)
-                var userList = new List<UserApi>();
-                int k;
-                for (k=0; k<size; k++)
+                // get lasts followers of user name 's list
+                var followingLists = storage.List.GetFollowingLists(accountId);
+                var hashFollowers = new HashSet<Guid>();
+                foreach (var followingList in followingLists)
                 {
-                    var followerId = hashFollowers.First();
-                    var user = new UserApi(followerId, storage.Account.GetInfo(followerId).Name );
-                    userList.Add(user);
+                    hashFollowers.UnionWith(storage.List.GetFollowingAccounts(followingList));
                 }
 
-            var userListToReturn = new UserList(userList);    
+                // convert, looking forward serialization
+                var sizeHash = hashFollowers.Count;
+                var size = sizeHash < numberOfSubscribers ? sizeHash : numberOfSubscribers;
 
-            // a stream is needed for serialization
-            var stream = new MemoryStream();
-            var result = new FileStreamResult(stream, "xml"); // is "xml" the right contentType ??
+                // Get as many subscribers as possible (maximum: numberOfSubscibers)
+                var userListToReturn = BuildUserListFromAccountsHashSet(hashFollowers, size, storage);
 
-            var serialize = new XmlSerializer(typeof(UserList));
-            serialize.Serialize(stream, userListToReturn);
+                // a stream is needed for serialization
+                var stream = new MemoryStream();
 
-            stream.Flush(); // is it necessary ??
+                (new XmlSerializer(typeof (UserList))).Serialize(stream, userListToReturn);
+
+                result = Content(stream.ToString());
+            }
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                var stream = new MemoryStream();
+                (new XmlSerializer(typeof(Error))).Serialize(stream, new Error(exception.Code.ToString()));
+                result = Content(stream.ToString());
+            }
+
             return result;
         }
 
         //
-        // GET : /usersubscribers/{name}/{numberOfSusbscribtions}
+        // GET : /usersubscriptions/{name}/{numberOfSubscriptions}
 
-        public ActionResult UserSubscriptionsList(string name, int numberOfSubscribtions)
+        public ActionResult UserSubscriptionsList(string name, int numberOfSubscriptions)
         {
-            // TODO : handle errors
-
             IStorage storage = new Storage("", ""); // connexion
+            ContentResult result;
 
-            var accountId = storage.Account.GetId(name);
-            // get lasts followers of user name 's list
+            try
+            {
+                var accountId = storage.Account.GetId(name);
+                // get public lists followed by user name
 
-            //TODO: use right methode once implemented
+                var followedLists = storage.List.GetAccountFollowedLists(accountId, false);
+                var accountsInLists = new HashSet<Guid>();
+                foreach (var followedList in followedLists)
+                {
+                    accountsInLists.UnionWith(storage.List.GetAccounts(followedList));
+                }
 
+                // convert, looking forward serialization
+                var sizeHash = accountsInLists.Count;
+                var size = sizeHash < numberOfSubscriptions ? sizeHash : numberOfSubscriptions;
 
-            //TODO: implement initialization of listUsers
+                // Get as many subscriptions as possible (maximum: numberOfSubscibers)
+                var userListToReturn = BuildUserListFromAccountsHashSet(accountsInLists, size, storage);
 
+                // a stream is needed for serialization
+                var stream = new MemoryStream();
 
-            // convert, looking forward serialization
-            var listUsersToReturn = new UserList();
+                (new XmlSerializer(typeof (UserList))).Serialize(stream, userListToReturn);
 
-            // a stream is needed for serialization
-            var stream = new MemoryStream();
-            var result = new FileStreamResult(stream, "xml"); // is "xml" the right contentType ??
+                result = Content(stream.ToString());
+            }
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                var stream = new MemoryStream();
+                (new XmlSerializer(typeof(Error))).Serialize(stream, new Error(exception.Code.ToString()));
+                result = Content(stream.ToString());
+            }
 
-            var serialize = new XmlSerializer(typeof(UserList));
-            serialize.Serialize(stream, listUsersToReturn);
-
-            stream.Flush(); // is it necessary ??
             return result;
         }
 
@@ -127,8 +158,6 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult WritePost(MsgToWrite msg)
         {
-            // TODO: handle errors (can happen at any time)
-
             IStorage storage = new Storage("", ""); // connexion
 
             ContentResult result;
@@ -144,11 +173,11 @@ namespace Tigwi_API.Controllers
                 (new XmlSerializer(typeof (Error))).Serialize(stream, new Error());
                 result = Content(stream.ToString());
             }
-            catch // exceptions storage can throw description needed
+            catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
                 var stream = new MemoryStream();
-                (new XmlSerializer(typeof(Error))).Serialize(stream, new Error(42));
+                (new XmlSerializer(typeof(Error))).Serialize(stream, new Error(exception.Code.ToString()));
                 result = Content(stream.ToString());
             }
 
@@ -161,8 +190,6 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Subscribe(Subscribe subscribe)
         {
-            // TODO: handle errors (can happen at any time)
-
             IStorage storage = new Storage("", ""); // connexion
 
             ContentResult result;
@@ -179,11 +206,11 @@ namespace Tigwi_API.Controllers
                 (new XmlSerializer(typeof(Error))).Serialize(stream, new Error());
                 result = Content(stream.ToString());
             }
-            catch
+            catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
                 var stream = new MemoryStream();
-                (new XmlSerializer(typeof(Error))).Serialize(stream, new Error(42));
+                (new XmlSerializer(typeof(Error))).Serialize(stream, new Error(exception.Code.ToString()));
                 result = Content(stream.ToString());
             }
             return result;
