@@ -31,33 +31,35 @@ namespace Tigwi_API.Controllers
 
         public ActionResult UserTimeline(string name, int numberOfMessages)
         {
-            // TODO : handle errors more precisely
 
             IStorage storage = new Storage("",""); // connexion
-
-            MessageList listMsgsOutput;
+            ContentResult result;
 
             try
             {
                 var accountId = storage.User.GetId(name);
+                
                 // get lasts messages from user name
                 var listMsgs = storage.Msg.GetListsMsgTo(new HashSet<Guid> {accountId}, DateTime.Now , numberOfMessages);
+
                 // convert, looking forward serialization
-                listMsgsOutput = new MessageList(listMsgs);
+                var listMsgsOutput = new MessageList(listMsgs);
+
+                // a stream is needed for serialization
+                var stream = new MemoryStream();
+
+                (new XmlSerializer(typeof(MessageList))).Serialize(stream, listMsgsOutput);
+
+                result = Content(stream.ToString());
             }
-            catch // for the moment, all errors result in sending an empty list as a result
+            catch (StorageLibException exception)
             {
-                listMsgsOutput = new MessageList();
+                // Result is an non-empty error XML element
+                var stream = new MemoryStream();
+                (new XmlSerializer(typeof(Error))).Serialize(stream, new Error(exception.Code.ToString()));
+                result = Content(stream.ToString());
             }
-            // a stream is needed for serialization
-            var stream = new MemoryStream();
-            var result = new FileStreamResult(stream, "xml"); // is "xml" the right contentType ??
-            // Maybe a ContentResult would be more adequate.
 
-            var serialize = new XmlSerializer(typeof (MessageList));
-            serialize.Serialize(stream,listMsgsOutput);
-
-            stream.Flush(); // is it necessary ??
             return result;
         }
 
@@ -141,8 +143,6 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult WritePost(MsgToWrite msg)
         {
-            // TODO: handle errors (can happen at any time)
-
             IStorage storage = new Storage("", ""); // connexion
 
             ContentResult result;
@@ -158,11 +158,11 @@ namespace Tigwi_API.Controllers
                 (new XmlSerializer(typeof (Error))).Serialize(stream, new Error());
                 result = Content(stream.ToString());
             }
-            catch // exceptions storage can throw description needed
+            catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
                 var stream = new MemoryStream();
-                (new XmlSerializer(typeof(Error))).Serialize(stream, new Error(42));
+                (new XmlSerializer(typeof(Error))).Serialize(stream, new Error(exception.Code.ToString()));
                 result = Content(stream.ToString());
             }
 
@@ -175,8 +175,6 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Subscribe(Subscribe subscribe)
         {
-            // TODO: handle errors (can happen at any time)
-
             IStorage storage = new Storage("", ""); // connexion
 
             ContentResult result;
@@ -193,11 +191,11 @@ namespace Tigwi_API.Controllers
                 (new XmlSerializer(typeof(Error))).Serialize(stream, new Error());
                 result = Content(stream.ToString());
             }
-            catch
+            catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
                 var stream = new MemoryStream();
-                (new XmlSerializer(typeof(Error))).Serialize(stream, new Error(42));
+                (new XmlSerializer(typeof(Error))).Serialize(stream, new Error(exception.Code.ToString()));
                 result = Content(stream.ToString());
             }
             return result;
