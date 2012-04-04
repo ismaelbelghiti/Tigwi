@@ -36,10 +36,13 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                var accountId = storage.User.GetId(name);
+                var accountId = storage.Account.GetId(name);
+
+                // get personal list
+                var personalListId = storage.List.GetPersonalList(accountId);
                 
                 // get lasts messages from user name
-                var listMsgs = storage.Msg.GetListsMsgTo(new HashSet<Guid> {accountId}, DateTime.Now , numberOfMessages);
+                var listMsgs = storage.Msg.GetListsMsgTo(new HashSet<Guid> {personalListId}, DateTime.Now , numberOfMessages);
 
                 // convert, looking forward serialization
                 var listMsgsOutput = new MessageList(listMsgs);
@@ -199,6 +202,7 @@ namespace Tigwi_API.Controllers
                 var accountId = storage.Account.GetId(subscribe.User);
                 var subsciptionId = storage.Account.GetId(subscribe.Subscription);
 
+                // TODO : utilisation incorrecte
                 storage.List.Follow(accountId, subsciptionId); // accountId follow subscriptionId, right ?
 
                 // Result is an empty error XML element
