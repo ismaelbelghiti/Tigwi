@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Xml.Serialization;
 using System.Linq;
-using System.Text;
 using StorageLibrary;
 using Tigwi_API.Models;
 
@@ -12,7 +11,7 @@ namespace Tigwi_API.Controllers
 {
     public class ApiController : Controller
     {
-        private UserList BuildUserListFromAccountsHashSet (HashSet<Guid> hashAccounts, int size, IStorage storage )
+        private static UserList BuildUserListFromAccountsHashSet (HashSet<Guid> hashAccounts, int size, IStorage storage )
         {
             var userList = new List<UserApi>();
             int k;
@@ -31,7 +30,7 @@ namespace Tigwi_API.Controllers
 
         public ActionResult UserTimeline(string name, int numberOfMessages)
         {
-
+            // TODO : give the actual connexion informations
             IStorage storage = new Storage("",""); // connexion
             ContentResult result;
 
@@ -68,35 +67,43 @@ namespace Tigwi_API.Controllers
 
         public ActionResult UserSubscribersList(string name, int numberOfSubscribers)
         {
-            // TODO : handle errors
-
             IStorage storage = new Storage("", ""); // connexion
+            ContentResult result;
 
-            var accountId = storage.Account.GetId(name);
-         
-            // get lasts followers of user name 's list
-            var followingLists = storage.List.GetFollowingLists(accountId);
-            var hashFollowers = new HashSet<Guid>();
-            foreach (var followingList in followingLists)
+            try
             {
-                hashFollowers.UnionWith(storage.List.GetFollowingAccounts(followingList));
-            }
+                var accountId = storage.Account.GetId(name);
 
-            // convert, looking forward serialization
-            var sizeHash = hashFollowers.Count;
-            var size = sizeHash<numberOfSubscribers ? sizeHash : numberOfSubscribers;
+                // get lasts followers of user name 's list
+                var followingLists = storage.List.GetFollowingLists(accountId);
+                var hashFollowers = new HashSet<Guid>();
+                foreach (var followingList in followingLists)
+                {
+                    hashFollowers.UnionWith(storage.List.GetFollowingAccounts(followingList));
+                }
+
+                // convert, looking forward serialization
+                var sizeHash = hashFollowers.Count;
+                var size = sizeHash < numberOfSubscribers ? sizeHash : numberOfSubscribers;
 
                 // Get as many subscribers as possible (maximum: numberOfSubscibers)
-                var userListToReturn = BuildUserListFromAccountsHashSet(hashFollowers, size, storage);   
+                var userListToReturn = BuildUserListFromAccountsHashSet(hashFollowers, size, storage);
 
-            // a stream is needed for serialization
-            var stream = new MemoryStream();
-            var result = new FileStreamResult(stream, "xml"); // is "xml" the right contentType ??
+                // a stream is needed for serialization
+                var stream = new MemoryStream();
 
-            var serialize = new XmlSerializer(typeof(UserList));
-            serialize.Serialize(stream, userListToReturn);
+                (new XmlSerializer(typeof (UserList))).Serialize(stream, userListToReturn);
 
-            stream.Flush(); // is it necessary ??
+                result = Content(stream.ToString());
+            }
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                var stream = new MemoryStream();
+                (new XmlSerializer(typeof(Error))).Serialize(stream, new Error(exception.Code.ToString()));
+                result = Content(stream.ToString());
+            }
+
             return result;
         }
 
@@ -105,35 +112,43 @@ namespace Tigwi_API.Controllers
 
         public ActionResult UserSubscriptionsList(string name, int numberOfSubscriptions)
         {
-            // TODO : handle errors
-
             IStorage storage = new Storage("", ""); // connexion
+            ContentResult result;
 
-            var accountId = storage.Account.GetId(name);
-            // get public lists followed by user name
-
-            var followedLists = storage.List.GetAccountFollowedLists(accountId, false);
-            var accountsInLists = new HashSet<Guid>();
-            foreach (var followedList in followedLists)
+            try
             {
-                accountsInLists.UnionWith(storage.List.GetAccounts(followedList));
+                var accountId = storage.Account.GetId(name);
+                // get public lists followed by user name
+
+                var followedLists = storage.List.GetAccountFollowedLists(accountId, false);
+                var accountsInLists = new HashSet<Guid>();
+                foreach (var followedList in followedLists)
+                {
+                    accountsInLists.UnionWith(storage.List.GetAccounts(followedList));
+                }
+
+                // convert, looking forward serialization
+                var sizeHash = accountsInLists.Count;
+                var size = sizeHash < numberOfSubscriptions ? sizeHash : numberOfSubscriptions;
+
+                // Get as many subscriptions as possible (maximum: numberOfSubscibers)
+                var userListToReturn = BuildUserListFromAccountsHashSet(accountsInLists, size, storage);
+
+                // a stream is needed for serialization
+                var stream = new MemoryStream();
+
+                (new XmlSerializer(typeof (UserList))).Serialize(stream, userListToReturn);
+
+                result = Content(stream.ToString());
+            }
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                var stream = new MemoryStream();
+                (new XmlSerializer(typeof(Error))).Serialize(stream, new Error(exception.Code.ToString()));
+                result = Content(stream.ToString());
             }
 
-            // convert, looking forward serialization
-            var sizeHash = accountsInLists.Count;
-            var size = sizeHash < numberOfSubscriptions ? sizeHash : numberOfSubscriptions;
-                
-                // Get as many subscriptions as possible (maximum: numberOfSubscibers)
-                var userListToReturn = BuildUserListFromAccountsHashSet(accountsInLists, size, storage);  
-           
-            // a stream is needed for serialization
-            var stream = new MemoryStream();
-            var result = new FileStreamResult(stream, "xml"); // is "xml" the right contentType ??
-
-            var serialize = new XmlSerializer(typeof(UserList));
-            serialize.Serialize(stream, userListToReturn);
-
-            stream.Flush(); // is it necessary ??
             return result;
         }
 
