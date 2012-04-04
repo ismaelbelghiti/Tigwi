@@ -70,15 +70,15 @@ namespace Tigwi_API.Models
     {
         public Error()
         {
-            Number = null;
+            Code = null;
         }
-        public Error(int code)
+        public Error(string code)
         {
-            Number = code;
+            Code = code;
         }
 
         [XmlAttribute]
-        public int? Number { get; set; }
+        public String Code { get; set; }
     }
 
     // Models for request bodies
