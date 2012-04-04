@@ -9,83 +9,87 @@ namespace StorageLibrary
     {
         /// <summary>
         /// Get the infos about a list
-        /// Can throw : ListNotFound
         /// </summary>
+        /// <exception cref="ListNotFound">if no list has this ID</exception>
         IListInfo GetInfo(Guid listId);
         /// <summary>
         /// Set the infos about a list
-        /// Can throw : ListNotFound, IsPersonalList
         /// </summary>
+        /// <exception cref="ListNotFound">If no list has this ID</exception>
+        /// <exception cref="IsPersonnalList">If you are trying to modify the list that correspond to the messages from a single user</exception>
         void SetInfo(Guid listId, string name, string description, bool isPrivate);
         /// <summary>
         /// Get the owner of a list
-        /// Can throw : ListNotFound
         /// </summary>
+        /// <exception cref="ListNotFound"> If no list has this ID</exception>
         Guid GetOwner(Guid listId);
 
         /// <summary>
         /// Get the list following only the given account
-        /// Can throw : ListNotFound
         /// </summary>
+        /// <exception cref="ListNotFound">If no list has this ID</exception>
         Guid GetPersonalList(Guid accountId);
 
         /// <summary>
         /// Create a list
-        /// Can throw : AccountNotFound
+        /// Multiple lists can have the same name
         /// </summary>
+        /// <exception cref="AccountNotFound">If no account has this Id</exception>
         Guid Create(Guid ownerId, string name, string description, bool isPrivate);
         /// <summary>
         /// Delete a list
-        /// Can throw : IsPersonalList
         /// </summary>
+        /// <exception cref="IsPersonnalList">If you are trying to delete the list that correspond to the messages from a single user</exception>
         void Delete(Guid id);
 
         /// <summary>
         /// The account accountId follow listId
-        /// Can throw : AccountNotFound, ListNotFound
         /// </summary>
+        /// <exception cref="AccountNotFound">if no account has this ID</exception>
+        /// <exception cref="ListNotFound">if no list has this ID</exception>
         void Follow(Guid listId, Guid accountId);
         /// <summary>
         /// The account accountId does not follow listId anymore
-        /// Can throw : AccountNotFound, ListNotFound
         /// </summary>
+        /// <exception cref="AccountNotFound">if no account has this ID</exception>
+        /// <exception cref="ListNotFound">no list has this ID</exception>
         void Unfollow(Guid listId, Guid accountId);
 
         /// <summary>
         /// Get the accounts that are in the given list
-        /// Can throw : ListNotFound
         /// </summary>
+        /// <exception cref="ListNotFound">No list has this ID</exception>
         HashSet<Guid> GetAccounts(Guid listId);
         /// <summary>
         /// Add an account into the given list
-        /// Can throw : ListNotFound, AccountNotFound
         /// </summary>
+        /// <exception cref="ListNotFound">no list has this ID</exception>
+        /// <exception cref="AccountNotFound">no account has this ID</exception>
         void Add(Guid listId, Guid accountId);
         /// <summary>
         /// Remove an account from the given list
-        /// Can throw : ListNotFound
         /// </summary>
         void Remove(Guid listId, Guid accountId);
 
         /// <summary>
         /// Get the lits created by the given account
-        /// Can throw : AccountNotFound
         /// </summary>
+        /// <exception cref="AccountNotFound">no account has this Id</exception>
         HashSet<Guid> GetAccountOwnedLists(Guid accountId, bool withPrivate);
         /// <summary>
         /// Get the lists Followed by the given account
-        /// Can throw : AccountNotFound
         /// </summary>
+        /// <exception cref="AccountNotFound">no account has this ID</exception>
         HashSet<Guid> GetAccountFollowedLists(Guid accountId, bool withPrivate);
         /// <summary>
         /// Get the lists following the given account
-        /// Can throw : AccountNotFound
         /// </summary>
+        /// <exception cref="AccountNotFound">no account has this ID</exception>
         HashSet<Guid> GetFollowingLists(Guid accountId);
         /// <summary>
         /// Get the accounts following the given list
-        /// Can throw : ListNotFound
         /// </summary>
+        /// <exception cref="ListNotFound">No list has this ID</exception>
         HashSet<Guid> GetFollowingAccounts(Guid listId);
     }
 }

@@ -4,11 +4,11 @@ Tigwi - API Specification by L. de HARO, A. de MYTTENAERE and T. ZIMMERMANN
 
 ##Get someone's messages
 ###Purpose
-Obtain a number _n_ of the user _name_ 's last posted messages
+Obtain a number _n_ of the account _accountname_ 's last posted messages
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/usertimeline/name/numberOfMessages
+http://api.tigwi.com/accountmessages/accountname/numberOfMessages
 ###Request
 _left empty_
 ###Response
@@ -34,78 +34,78 @@ In case an error occurs:
     <Error Number="codeOfError"/>
 
 ###Informations
-* In **URL**, _name_ is the name of the user whose messages you want to get.
+* In **URL**, _accountname_ is the name of the account whose messages you want to get.
 * In **URL**, _numberOfMessages_ is the number of messages you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of messages returned (different from _numberOfMessages_ if there are not enough messages to provide).
 
 ##Get someone's subscriptions list
 ###Purpose
-Obtain a number _n_ of the user _name_ 's subscriptions
+Obtain a number _n_ of the account _accountname_ 's subscriptions
 No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/usersubscriptions/name/numberOfSubscriptions
+http://api.tigwi.com/accountsubscriptions/accountname/numberOfSubscriptions
 ###Request
 _left empty_
 ###Response
 
-    <UserList Size="sizeOfList">
-	    <User> <!-- See below --> </User>
-	    <User> ... </User>
+    <AccountsList Size="sizeOfList">
+	    <Account> <!-- See below --> </Account>
+	    <Acount> ... </Account>
 	    ...
-	    <User> ... </User>
-    </UserList>
+	    <Account> ... </Account>
+    </AccountsList>
 
 User format:
 
-     <User>
-	     <Id> idOfUser </Id>
-	     <Name> name </Name>
-     </User>
+     <Account>
+	     <Id> idOfAccount </Id>
+	     <Name> nameOfAccount </Name>
+     </Account>
 
 In case an error occurs:
 
     <Error Number="codeOfError"/>
 
 ###Informations
-* In **URL**, _name_ is the name of the user whose subscriptions you want to get.
+* In **URL**, _accountname_ is the name of the account whose subscriptions you want to get.
 * In **URL**, _numberOfSubscriptions_ is the number of subscriptions you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of subscription returned (different from _numberOfSubscriptions_ if there are not enough subscriptions to provide).
 
 
 ##Get someone's subscribers list
 ###Purpose
-Obtain a number _n_ of the user _name_ 's subscribers
+Obtain a number _n_ of the account _accountname_ 's subscribers
 No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/usersubscribers/name/numberOfSubscribers
+http://api.tigwi.com/accountsubscribers/name/numberOfSubscribers
 ###Request
 _left empty_
 ###Response
 
-    <UserList Size="sizeOfList">
-	    <User> <!-- See below --> </User>
-	    <User> ... </User>
+    <AccountsList Size="sizeOfList">
+	    <Account> <!-- See below --> </Account>
+	    <Account> ... </Account>
 	    ...
-	    <User> ... </User>
-    </UserList>
+	    <Account> ... </Account>
+    </AccountsList>
 
 User format:
 
-     <User>
-	     <Id> idOfUser </Id>
-	     <Name> name </Name>
-     </User>
+     <Account>
+	     <Id> idOfAccount </Id>
+	     <Name> nameOfAccount </Name>
+     </Account>
 
 In case an error occurs:
 
     <Error Number="codeOfError"/>
 
 ###Informations
-* In **URL**, _name_ is the name of the user whose subscribers you want to get.
+* In **URL**, _accountname_ is the name of the account whose subscribers you want to get.
 * In **URL**, _numberOfSubscribers_ is the number of subscribers you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of subscribers returned (different from _numberOfSubscribers_ if there are not enough subscribers to provide).
 
@@ -122,7 +122,7 @@ http://api.tigwi.com/write
 ###Request
 
     <Write>
-       <User> name <User> 
+       <Account> name <Account> 
        <Message>
             <Content> <!-- your message --> </Content>
        </Message>
@@ -142,17 +142,17 @@ If no error occurs
 * In **Request**, the size of your message is limited to 140 characters, but this limit is tested by the server. It raises an error if the message is too long.
 
 
-##Subscribe to someone's  channel
+##Subscribe to a list
 ###Purpose
 For someone to distantly subscribe to another user's channel.
 ###HTTP method
 *POST*
 ###URL
-http://api.tigwi.com/subscribe/
+http://api.tigwi.com/subscribelist/
 ###Request
     
     <Subscribe>
-        <User> nameOfSubscriber </User>
+        <Account> nameOfSubscriber </Account>
         <Subscription> nameOfSubscription </Suscription>
     </Subscribe>
 
