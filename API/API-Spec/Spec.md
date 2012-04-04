@@ -29,6 +29,10 @@ Message format:
 	     <Content> content </Content>
      </Message>
 
+In case an error occurs:
+
+    <Error Number="codeOfError"/>
+
 ###Informations
 * In **URL**, _name_ is the name of the user whose messages you want to get.
 * In **URL**, _numberOfMessages_ is the number of messages you want to get. It is optional and default is set to 20.
@@ -36,7 +40,7 @@ Message format:
 
 ##Get someone's subscriptions list
 ###Purpose
-Obtain a number _n_ of the user _name_ 's last subscriptions
+Obtain a number _n_ of the user _name_ 's subscriptions
 ###HTTP method
 *GET*
 ###URL
@@ -59,6 +63,10 @@ User format:
 	     <Name> name </Name>
      </User>
 
+In case an error occurs:
+
+    <Error Number="codeOfError"/>
+
 ###Informations
 * In **URL**, _name_ is the name of the user whose subscriptions you want to get.
 * In **URL**, _numberOfSubscriptions_ is the number of subscriptions you want to get. It is optional and default is set to 20.
@@ -67,7 +75,7 @@ User format:
 
 ##Get someone's subscribers list
 ###Purpose
-Obtain a number _n_ of the user _name_ 's last subscribers
+Obtain a number _n_ of the user _name_ 's subscribers
 ###HTTP method
 *GET*
 ###URL
@@ -89,6 +97,10 @@ User format:
 	     <Id> idOfUser </Id>
 	     <Name> name </Name>
      </User>
+
+In case an error occurs:
+
+    <Error Number="codeOfError"/>
 
 ###Informations
 * In **URL**, _name_ is the name of the user whose subscribers you want to get.
