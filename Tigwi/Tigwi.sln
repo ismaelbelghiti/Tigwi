@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageWorker", "StorageWor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageCommon", "StorageCommon\StorageCommon.csproj", "{51555566-C2F4-42F0-B978-91D1478B87E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserInterface", "UserInterface\UserInterface.csproj", "{BD491F81-AE74-4ED8-8C8A-BB4889E06364}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Cloud-Debug|Any CPU = Cloud-Debug|Any CPU
@@ -79,6 +81,14 @@ Global
 		{51555566-C2F4-42F0-B978-91D1478B87E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51555566-C2F4-42F0-B978-91D1478B87E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51555566-C2F4-42F0-B978-91D1478B87E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD491F81-AE74-4ED8-8C8A-BB4889E06364}.Cloud-Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD491F81-AE74-4ED8-8C8A-BB4889E06364}.Cloud-Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD491F81-AE74-4ED8-8C8A-BB4889E06364}.Cloud-Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD491F81-AE74-4ED8-8C8A-BB4889E06364}.Cloud-Release|Any CPU.Build.0 = Release|Any CPU
+		{BD491F81-AE74-4ED8-8C8A-BB4889E06364}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD491F81-AE74-4ED8-8C8A-BB4889E06364}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD491F81-AE74-4ED8-8C8A-BB4889E06364}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD491F81-AE74-4ED8-8C8A-BB4889E06364}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
