@@ -27,3 +27,7 @@ Thumbs.db
 ######################################
 *.suo
 *.user
+
+# NuGet packages. Automatically installed on build. #
+#####################################################
+Tigwi/packages/
