@@ -48,9 +48,9 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // GET : /usersubscriptions/{name}/{numberOfSubscriptions}
+        // GET : /usersubscribers/{name}/{numberOfSubscribers}
 
-        public ActionResult UserSubscriberssList(string name, int numberOfSubscribers)
+        public ActionResult UserSubscribersList(string name, int numberOfSubscribers)
         {
             // TODO : handle errors
 
@@ -64,8 +64,7 @@ namespace Tigwi_API.Controllers
 
             // convert, looking forward serialization
             var sizeHash = hashFollowers.Count;
-            int size;
-            size = sizeHash<numberOfSubscribers ? sizeHash : numberOfSubscribers;
+            var size = sizeHash<numberOfSubscribers ? sizeHash : numberOfSubscribers;
 
                 // Get as many followers as possible (maximum: numberOfSubscibers)
                 var userList = new List<UserApi>();
