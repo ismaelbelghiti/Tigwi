@@ -20,7 +20,7 @@ namespace StorageLibrary
         public IListInfo GetInfo(Guid listId)
         {
             StrgBlob<IListInfo> blob = new StrgBlob<IListInfo>(connexion.listContainer, "info/" + listId);
-            return blob.GetIfExists(new StorageLibException(StrgLibErr.ListNotFound));
+            return blob.GetIfExists(new ListNotFound());
         }
 
         public void SetInfo(Guid listId, string name, string description, bool isPrivate)
@@ -31,13 +31,13 @@ namespace StorageLibrary
         public Guid GetOwner(Guid listId)
         {
             StrgBlob<Guid> blob = new StrgBlob<Guid>(connexion.listContainer, "owner/" + listId);
-            return blob.GetIfExists(new StorageLibException(StrgLibErr.ListNotFound));
+            return blob.GetIfExists(new ListNotFound());
         }
 
         public Guid GetPersonalList(Guid accountId)
         {
             StrgBlob<Guid> blob = new StrgBlob<Guid>(connexion.listContainer, "personallist/" + accountId);
-            return blob.GetIfExists(new StorageLibException(StrgLibErr.ListNotFound));
+            return blob.GetIfExists(new ListNotFound());
         }
 
         public Guid Create(Guid ownerId, string name, string description, bool isPrivate)
@@ -63,7 +63,7 @@ namespace StorageLibrary
         public HashSet<Guid> GetAccounts(Guid listId)
         {
             StrgBlob<HashSet<Guid>> blob = new StrgBlob<HashSet<Guid>>(connexion.listContainer, "accounts/" + listId);
-            return blob.GetIfExists(new StorageLibException(StrgLibErr.ListNotFound));
+            return blob.GetIfExists(new ListNotFound());
         }
 
         public void Add(Guid listId, Guid accountId)
@@ -89,7 +89,7 @@ namespace StorageLibrary
         public HashSet<Guid> GetFollowingLists(Guid accountId)
         {
             StrgBlob<HashSet<Guid>> blob = new StrgBlob<HashSet<Guid>>(connexion.listContainer, "followinglists/" + accountId);
-            return blob.GetIfExists(new StorageLibException(StrgLibErr.ListNotFound));
+            return blob.GetIfExists(new ListNotFound());
         }
 
         public HashSet<Guid> GetFollowingAccounts(Guid listId)

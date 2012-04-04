@@ -24,13 +24,13 @@ namespace StorageLibrary
         public Guid GetId(string login)
         {
             StrgBlob<Guid> blob = new StrgBlob<Guid>(connexion.userContainer, "idbylogin/" + login);
-            return blob.GetIfExists(new StorageLibException(StrgLibErr.UserNotFound));
+            return blob.GetIfExists(new UserNotFound());
         }
 
         public IUserInfo GetInfo(Guid userId)
         {
             StrgBlob<IUserInfo> blob = new StrgBlob<IUserInfo>(connexion.userContainer, "info/" + userId);
-            return blob.GetIfExists(new StorageLibException(StrgLibErr.UserNotFound));
+            return blob.GetIfExists(new UserNotFound());
         }
 
         public void SetInfo(Guid userId, string login, string email)
@@ -40,19 +40,19 @@ namespace StorageLibrary
             // Check login avaibility
             StrgBlob<Guid> loginIdBlob = new StrgBlob<Guid>(connexion.userContainer, "idbylogin/" + login);
             if (loginIdBlob.Exists && loginIdBlob.Get() != userId)
-                throw new StorageLibException(StrgLibErr.UserAlreadyExists);
+                throw new UserAlreadyExists();
 
             // store the data and check existence
             UserInfo info = new UserInfo(login, email);
             StrgBlob<UserInfo> blob = new StrgBlob<UserInfo>(connexion.userContainer, "info/" + userId);
             if (!blob.SetIfExsits(info))
-                throw new StorageLibException(StrgLibErr.UserNotFound);
+                throw new UserNotFound();
         }
 
         public HashSet<Guid> GetAccounts(Guid userId)
         {
             StrgBlob<HashSet<Guid>> blob = new StrgBlob<HashSet<Guid>>(connexion.userContainer, "accounts/" + userId);
-            return blob.GetIfExists(new StorageLibException(StrgLibErr.UserNotFound));
+            return blob.GetIfExists(new UserNotFound());
         }
 
         public Guid Create(string login, string email)
@@ -63,7 +63,7 @@ namespace StorageLibrary
             // Check login avaibility
             StrgBlob<Guid> loginIdBlob = new StrgBlob<Guid>(connexion.userContainer, "idbylogin/" + login);
             if (loginIdBlob.Exists)
-                throw new StorageLibException(StrgLibErr.UserAlreadyExists);
+                throw new UserAlreadyExists();
 
             // Create the user
             // initialize data

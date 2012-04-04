@@ -20,13 +20,13 @@ namespace StorageLibrary
         public Guid GetId(string name)
         {
             StrgBlob<Guid> blob = new StrgBlob<Guid>(connexion.accountContainer, "idbyname/" + name);
-            return blob.GetIfExists(new StorageLibException(StrgLibErr.AccountNotFound));
+            return blob.GetIfExists(new AccountNotFound());
         }
 
         public IAccountInfo GetInfo(Guid accountId)
         {
             StrgBlob<IAccountInfo> blob = new StrgBlob<IAccountInfo>(connexion.accountContainer, "info/" + accountId);
-            return blob.GetIfExists(new StorageLibException(StrgLibErr.AccountNotFound));
+            return blob.GetIfExists(new AccountNotFound());
         }
 
         public void SetInfo(Guid accountId, string name, string description)
@@ -36,24 +36,24 @@ namespace StorageLibrary
             // check name avaibility
             StrgBlob<Guid> nameIdBlob = new StrgBlob<Guid>(connexion.accountContainer, "idbyname/" + name);
             if (nameIdBlob.Exists && nameIdBlob.Get() != accountId)
-                throw new StorageLibException(StrgLibErr.AccountAlreadyExist);
+                throw new AccountAlreadyExists();
 
             // store new info
             StrgBlob<IAccountInfo> bAccountInfo = new StrgBlob<IAccountInfo>(connexion.accountContainer, "info/" + accountId);
             if (!bAccountInfo.SetIfExsits(new AccountInfo(name, description)))
-                throw new StorageLibException(StrgLibErr.AccountNotFound);
+                throw new AccountNotFound();
         }
 
         public HashSet<Guid> GetUsers(Guid accountId)
         {
             StrgBlob<HashSet<Guid>> blob = new StrgBlob<HashSet<Guid>>(connexion.accountContainer, "users/" + accountId);
-            return blob.GetIfExists(new StorageLibException(StrgLibErr.AccountNotFound));
+            return blob.GetIfExists(new AccountNotFound());
         }
 
         public Guid GetAdminId(Guid accountId)
         {
             StrgBlob<Guid> blob = new StrgBlob<Guid>(connexion.accountContainer, "adminid/" + accountId);
-            return blob.GetIfExists(new StorageLibException(StrgLibErr.AccountNotFound));
+            return blob.GetIfExists(new AccountNotFound());
         }
 
         public void SetAdminId(Guid accountId, Guid userId)
@@ -63,12 +63,12 @@ namespace StorageLibrary
             // check admin existence
             StrgBlob<IUserInfo> userInfo = new StrgBlob<IUserInfo>(connexion.userContainer, "info/" + userId);
             if (!userInfo.Exists)
-                throw new StorageLibException(StrgLibErr.UserNotFound);
+                throw new UserNotFound();
 
             // store the new admin id
             StrgBlob<Guid> bAdminId = new StrgBlob<Guid>(connexion.accountContainer, "adminid/" + accountId);
             if (!bAdminId.SetIfExsits(userId))
-                throw new StorageLibException(StrgLibErr.AccountNotFound);
+                throw new AccountNotFound();
         }
 
         public void Add(Guid accountId, Guid userId)
@@ -78,11 +78,11 @@ namespace StorageLibrary
             // check userId
             StrgBlob<IUserInfo> userInfo = new StrgBlob<IUserInfo>(connexion.userContainer, "info/" + userId);
             if (!userInfo.Exists)
-                throw new StorageLibException(StrgLibErr.UserNotFound);
+                throw new UserNotFound();
 
             // update the data in account
             StrgBlob<HashSet<Guid>> bUsers = new StrgBlob<HashSet<Guid>>(connexion.accountContainer, "users/" + accountId);
-            HashSet<Guid> users = bUsers.GetIfExists(new StorageLibException(StrgLibErr.AccountNotFound));
+            HashSet<Guid> users = bUsers.GetIfExists(new AccountNotFound());
             users.Add(userId);
             bUsers.Set(users);
 
@@ -109,12 +109,12 @@ namespace StorageLibrary
             // check name avaibility
             StrgBlob<Guid> nameIdBlob = new StrgBlob<Guid>(connexion.accountContainer, "idbyname/" + name);
             if (nameIdBlob.Exists)
-                throw new StorageLibException(StrgLibErr.AccountAlreadyExist);
+                throw new AccountAlreadyExists();
 
             // check admin existence
             StrgBlob<IUserInfo> userInfo = new StrgBlob<IUserInfo>(connexion.userContainer, "info/" + adminId);
             if (!userInfo.Exists)
-                throw new StorageLibException(StrgLibErr.UserNotFound);
+                throw new UserNotFound();
 
             // Create the data
             Guid id = new Guid();
