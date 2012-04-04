@@ -9,7 +9,7 @@ namespace StorageLibrary
     {
         /// <summary>
         /// Return the id of an account given its name
-        /// Can throw : AccountNotFoud
+        /// Can throw : AccountNotFound
         /// </summary>
         Guid GetId(string name);
         /// <summary>
@@ -19,7 +19,7 @@ namespace StorageLibrary
         IAccountInfo GetInfo(Guid accountId);
         /// <summary>
         /// Update informations about the given account
-        /// Can throw : AccountNotFoud, AccountAlreadyExists
+        /// Can throw : AccountNotFound, AccountAlreadyExists
         /// </summary>
         void SetInfo(Guid accountId, string name, string description);
 
