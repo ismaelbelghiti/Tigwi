@@ -43,7 +43,7 @@ namespace Tigwi.UI.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "The user name or password provided is incorrect.");
+                    ModelState.AddModelError(string.Empty, "The user name or password provided is incorrect.");
                 }
             }
 
@@ -88,7 +88,7 @@ namespace Tigwi.UI.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", ErrorCodeToString(createStatus));
+                    ModelState.AddModelError(string.Empty, ErrorCodeToString(createStatus));
                 }
             }
 
@@ -134,7 +134,7 @@ namespace Tigwi.UI.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
+                    ModelState.AddModelError(string.Empty, "The current password is incorrect or the new password is invalid.");
                 }
             }
 
