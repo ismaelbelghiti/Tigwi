@@ -14,12 +14,12 @@ namespace Tigwi_API.Controllers
         private static AccountList BuildAccountListFromAccountsHashSet (HashSet<Guid> hashAccounts, int size, IStorage storage )
         {
             var accountList = new List<Account>();
-            int k;
-            for (k = 0; k < size; k++)
+            for (var k = 0; k < size; k++)
             {
                 var accountId = hashAccounts.First();
                 var account = new Account(accountId, storage.Account.GetInfo(accountId).Name);
                 accountList.Add(account);
+                hashAccounts.Remove(accountId);
             }
 
             return new AccountList(accountList);  
@@ -36,16 +36,12 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                var accountId = storage.Account.GetId(accountName);
-
-                // get personal list
-                var personalListId = storage.List.GetPersonalList(accountId);
-
-                
                 // get lasts messages from user name
+                var accountId = storage.Account.GetId(accountName);
+                var personalListId = storage.List.GetPersonalList(accountId);
                 var listMsgs = storage.Msg.GetListsMsgTo(new HashSet<Guid> {personalListId}, DateTime.Now , numberOfMessages);
 
-                // convert, looking forward serialization
+                // convert, looking forward XML serialization
                 var listMsgsOutput = new MessageList(listMsgs);
 
                 // a stream is needed for serialization
@@ -86,11 +82,8 @@ namespace Tigwi_API.Controllers
                     hashFollowers.UnionWith(storage.List.GetFollowingAccounts(followingList));
                 }
 
-                // convert, looking forward serialization
-                var sizeHash = hashFollowers.Count;
-                var size = sizeHash < numberOfSubscribers ? sizeHash : numberOfSubscribers;
-
                 // Get as many subscribers as possible (maximum: numberOfSubscibers)
+                var size = Math.Min(hashFollowers.Count, numberOfSubscribers);
                 var accountListToReturn = BuildAccountListFromAccountsHashSet(hashFollowers, size, storage);
 
                 // a stream is needed for serialization
@@ -121,9 +114,9 @@ namespace Tigwi_API.Controllers
 
             try
             {
+                // get the public lists followed by the given account
+                // TODO : if the user is authorized, get also the private lists
                 var accountId = storage.Account.GetId(accountName);
-                // get public lists followed by user name
-
                 var followedLists = storage.List.GetAccountFollowedLists(accountId, false);
                 var accountsInLists = new HashSet<Guid>();
                 foreach (var followedList in followedLists)
@@ -131,11 +124,8 @@ namespace Tigwi_API.Controllers
                     accountsInLists.UnionWith(storage.List.GetAccounts(followedList));
                 }
 
-                // convert, looking forward serialization
-                var sizeHash = accountsInLists.Count;
-                var size = sizeHash < numberOfSubscriptions ? sizeHash : numberOfSubscriptions;
-
-                // Get as many subscriptions as possible (maximum: numberOfSubscibers)
+                // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
+                var size = Math.Min(accountsInLists.Count, numberOfSubscriptions);
                 var accountListToReturn = BuildAccountListFromAccountsHashSet(accountsInLists, size, storage);
 
                 // a stream is needed for serialization
@@ -202,7 +192,7 @@ namespace Tigwi_API.Controllers
             {
                 var accountId = storage.Account.GetId(subscribe.Account);
 
-                storage.List.Follow(accountId, subscribe.Subscription);
+                storage.List.Follow(subscribe.ListID, accountId);
 
                 // Result is an empty error XML element
                 var stream = new MemoryStream();
