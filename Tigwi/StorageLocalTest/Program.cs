@@ -13,14 +13,21 @@ namespace StorageLocalTest
         static void Main(string[] args)
         {
             Storage storage = new Storage("ulyssestorage", "");
-            Mutex m1 = new Mutex(storage.connexion.userContainer, "lock/1");
-            Mutex m2 = new Mutex(storage.connexion.userContainer, "lock/1");
-
             Console.WriteLine("Init ended");
-            m1.Acquire();
+            
+            using(Mutex m1 = new Mutex(storage.connexion.userContainer, "locklogin/main"))
+            {
+                Console.WriteLine("m1 taken");
+
+                using (Mutex m2 = new Mutex(storage.connexion.userContainer, "locklogin/main"))
+                {
+                    Console.WriteLine("m2 taken");
+                }
+                Console.WriteLine("m2 ok");
+            }
             Console.WriteLine("m1 ok");
-            m2.Acquire();
-            Console.WriteLine("m2 ok");
+
+            Console.ReadLine();
         }
     }
 }
