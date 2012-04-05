@@ -12,7 +12,7 @@ namespace StorageLocalTest
     {
         static void Main(string[] args)
         {
-            Storage storage = new Storage("ulyssestorage", "7VkCf60UV8e/OaDAfCixFOSqHQKWm4gZTgsyMhOrdmfgEmeyqoLnL52KLoYv/9zJ+zRmdd2D3uJgD7EArE6byg==");
+            Storage storage = new Storage("ulyssestorage", "");
             Mutex m1 = new Mutex(storage.connexion.userContainer, "lock/1");
             Mutex m2 = new Mutex(storage.connexion.userContainer, "lock/1");
 
