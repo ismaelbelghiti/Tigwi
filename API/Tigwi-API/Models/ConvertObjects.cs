@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using StorageLibrary;
 using System.Xml.Serialization;
-using System.IO;
 
 namespace Tigwi_API.Models
 {
@@ -32,10 +30,10 @@ namespace Tigwi_API.Models
     }
 
     [Serializable]
-    [XmlTypeAttribute("User")]
-    public class UserApi
+    [XmlTypeAttribute("Account")]
+    public class Account
     {
-        public UserApi(Guid id, string name)
+        public Account(Guid id, string name)
         {
             Id = id;
             Name = name;
@@ -45,23 +43,23 @@ namespace Tigwi_API.Models
         public string Name { get; set; }
     }
 
-    public class UserList
+    public class AccountList
     {
-        public UserList()
+        public AccountList()
         {
-            User = new List<UserApi>();
+            Account = new List<Account>();
             Size = 0;
         }
-        public UserList(List<UserApi> users)
+        public AccountList(List<Account> accounts)
         {
-            User = users;
-            Size = users.Count();
+            Account = accounts;
+            Size = accounts.Count();
         }
 
         [XmlAttribute]
         public int Size { get; set; }
 
-        [XmlElement] public List<UserApi> User;
+        [XmlElement] public List<Account> Account;
     }
 
     // models to answer to POST requests
@@ -87,7 +85,7 @@ namespace Tigwi_API.Models
     [XmlRootAttribute("Write")]
     public class MsgToWrite
     {
-        public string User { get; set; }
+        public string Account { get; set; }
         public MsgToPost Message { get; set; }
     }
 
@@ -98,10 +96,10 @@ namespace Tigwi_API.Models
     }
 
     [Serializable]
-    public class Subscribe
+    public class SubscribeList
     {
-        public string User { get; set; }
-        public string Subscription { get; set; }
+        public string Account { get; set; }
+        public Guid Subscription { get; set; }
     }
 
 }

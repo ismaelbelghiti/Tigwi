@@ -11,22 +11,22 @@ namespace Tigwi_API.Controllers
 {
     public class ApiController : Controller
     {
-        private static UserList BuildUserListFromAccountsHashSet (HashSet<Guid> hashAccounts, int size, IStorage storage )
+        private static AccountList BuildAccountListFromAccountsHashSet (HashSet<Guid> hashAccounts, int size, IStorage storage )
         {
-            var userList = new List<UserApi>();
+            var accountList = new List<Account>();
             int k;
             for (k = 0; k < size; k++)
             {
                 var accountId = hashAccounts.First();
-                var user = new UserApi(accountId, storage.Account.GetInfo(accountId).Name);
-                userList.Add(user);
+                var account = new Account(accountId, storage.Account.GetInfo(accountId).Name);
+                accountList.Add(account);
             }
 
-            return new UserList(userList);  
+            return new AccountList(accountList);  
         }
         
         //
-        // GET: /usertimeline/{name}/{numberOfMessages}
+        // GET: /accountmessages/{name}/{numberOfMessages}
 
         public ActionResult AccountMessages(string accountName, int numberOfMessages)
         {
@@ -91,12 +91,12 @@ namespace Tigwi_API.Controllers
                 var size = sizeHash < numberOfSubscribers ? sizeHash : numberOfSubscribers;
 
                 // Get as many subscribers as possible (maximum: numberOfSubscibers)
-                var userListToReturn = BuildUserListFromAccountsHashSet(hashFollowers, size, storage);
+                var accountListToReturn = BuildAccountListFromAccountsHashSet(hashFollowers, size, storage);
 
                 // a stream is needed for serialization
                 var stream = new MemoryStream();
 
-                (new XmlSerializer(typeof (UserList))).Serialize(stream, userListToReturn);
+                (new XmlSerializer(typeof (AccountList))).Serialize(stream, accountListToReturn);
 
                 result = Content(stream.ToString());
             }
@@ -136,12 +136,12 @@ namespace Tigwi_API.Controllers
                 var size = sizeHash < numberOfSubscriptions ? sizeHash : numberOfSubscriptions;
 
                 // Get as many subscriptions as possible (maximum: numberOfSubscibers)
-                var userListToReturn = BuildUserListFromAccountsHashSet(accountsInLists, size, storage);
+                var accountListToReturn = BuildAccountListFromAccountsHashSet(accountsInLists, size, storage);
 
                 // a stream is needed for serialization
                 var stream = new MemoryStream();
 
-                (new XmlSerializer(typeof (UserList))).Serialize(stream, userListToReturn);
+                (new XmlSerializer(typeof (AccountList))).Serialize(stream, accountListToReturn);
 
                 result = Content(stream.ToString());
             }
@@ -168,7 +168,7 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                var accountId = storage.Account.GetId(msg.User);
+                var accountId = storage.Account.GetId(msg.Account);
 
                 storage.Msg.Post(accountId, msg.Message.Content);
 
@@ -192,7 +192,7 @@ namespace Tigwi_API.Controllers
         // POST : /suscribelist
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult SubscribeList(Subscribe subscribe)
+        public ActionResult SubscribeList(SubscribeList subscribe)
         {
             IStorage storage = new Storage("", ""); // connexion
 
@@ -200,11 +200,9 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                var accountId = storage.Account.GetId(subscribe.User);
-                var subsciptionId = storage.Account.GetId(subscribe.Subscription);
+                var accountId = storage.Account.GetId(subscribe.Account);
 
-                // TODO : utilisation incorrecte
-                storage.List.Follow(accountId, subsciptionId); // accountId follow subscriptionId, right ?
+                storage.List.Follow(accountId, subscribe.Subscription);
 
                 // Result is an empty error XML element
                 var stream = new MemoryStream();
