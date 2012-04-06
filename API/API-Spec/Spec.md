@@ -387,9 +387,11 @@ In case an error occurs:
 
 #Send informations to one's Tigwi account
 
+This methods require authentication. You must be authenticated as a _user_ with permissions to use the _account_ you want to modify.
+
 ##Post a message
 ###Purpose
-For someone to send a message on his own account
+For someone to send a message on an authorized account. Authentication required.
 ###HTTP method
 *POST*
 ###URL
@@ -397,7 +399,8 @@ http://api.tigwi.com/write
 ###Request
 
     <Write>
-       <Account> name <Account> 
+       <User> nameOfUser </User>
+	   <Account> nameOfAccount </Account> 
        <Message>
             <Content> <!-- your message --> </Content>
        </Message>
@@ -414,12 +417,13 @@ If no error occurs
     <Error/>
 
 ###Informations
+* You **must** be authenticated as _nameofUser_ and authorized to use _nameOfAccount_ to post a message.
 * In **Request**, the size of your message is limited to 140 characters, but this limit is tested by the server. It raises an error if the message is too long.
 
 
 ##Subscribe to a list
 ###Purpose
-For someone to distantly subscribe to another user's channel.
+For someone to distantly subscribe to a list. Authentication required.
 ###HTTP method
 *POST*
 ###URL
@@ -442,3 +446,5 @@ If no error occurs
 
 
 ###Informations
+* You **must** be authenticated and authorized to use _nameOfSubscribers_ to use this method.
+* In **Request**, _nameOfSubscriber_ is the name of the account who wants to follow the list _nameOfSubscription_.
