@@ -98,8 +98,8 @@
   </PropertyGroup>
   <Import Project="$(CloudExtensionsDir)Microsoft.WindowsAzure.targets" />
   <!-- Azure Deployment code -->
-  <Import Project="ConnectionInfo.xml" Condition=" '$(AzureDeployment)' == 'true' " />
-  <Target Name="ConnectionInfoSetup" BeforeTargets="Build" Condition=" '$(AzureDeployment)' == 'true' ">
+  <!-- <Import Project="ConnectionInfo.xml"/> -->
+  <Target Name="BeforeBuild">
     <FileUpdate
       Files="test.txt"
       Regex ="UseDevelopmentStorage=true"
@@ -109,11 +109,12 @@
   <Target Name="AzureDeploy" AfterTargets="Build" DependsOnTargets="CorePublish" Condition=" '$(AzureDeployment)' == 'true' ">
     <Exec WorkingDirectory="$(MSBuildProjectDirectory)" Command=" $(windir)\system32\WindowsPowerShell\v1.0\powershell.exe -f \build\AzureDeploy.ps1 $(AzureSubscriptionID) $(AzureCertificateThumbprint) $(PublishDir) $(PackageName) $(ServiceConfigName) $(AzureHostedServiceName) $(AzureStorageAccountName)" />
   </Target>
-  -->
+
   <Target Name="ConnectionInfoEraser" AfterTargets="Build" Condition=" '$(AzureDeployment)' == 'true' ">
     <FileUpdate
       Files="test.txt"
       Regex ="DefaultEndpointsProtocol=https;AccountName=$(AzureStorageAccountName);AccountKey=$(AzureStorageAccountKey)"
       ReplacementText="UseDevelopmentStorage=true" />
   </Target>
+  -->
 </Project>
