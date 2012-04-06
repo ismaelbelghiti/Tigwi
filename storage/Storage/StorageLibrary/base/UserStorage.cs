@@ -47,6 +47,7 @@ namespace StorageLibrary
             StrgBlob<UserInfo> blob = new StrgBlob<UserInfo>(connexion.userContainer, "info/" + userId);
             if (!blob.SetIfExsits(info))
                 throw new UserNotFound();
+
         }
 
         public HashSet<Guid> GetAccounts(Guid userId)
