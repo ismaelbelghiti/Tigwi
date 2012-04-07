@@ -24,3 +24,4 @@ de cette forme : ( Ã  complÃ©ter )
 </Project>
 
 Attention : pour que cette mÃ©thode marche, il faut que vous utilisiez des ConnectionString.
+Attention : Dans le cas ou le build échoue, vos clés se retrouvent hardcodées.
