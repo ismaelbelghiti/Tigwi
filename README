@@ -1,1 +1,27 @@
 Tigwi est un site de microblogging conçu pour tourner sur Windows Azure
+
+Dépendances :
+- MSBuild Community Tasks ( à installer )
+
+Afin de ne pas retrouver vos informations confidentielles de connection à Azure,
+il faut un fichier nommé ConnectionInfo.xml à la racine du projet ( dans le même dossier que le README )
+de cette forme : ( à compléter )
+
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<AzureSubscriptionID></AzureSubscriptionID>
+		<AzureCertificateThumbprint></AzureCertificateThumbprint>
+		<AzureHostedServiceName></AzureHostedServiceName>
+		<AzureStorageAccountName></AzureStorageAccountName>
+		<AzureStorageAccountKey></AzureStorageAccountKey>	
+	</PropertyGroup>
+	<ItemGroup>
+		<!-- Comment the next line to use storage emulator on your local machine -->
+		<ConnectionFiles Include="ServiceConfiguration.Local.cscfg" />
+		<ConnectionFiles Include="ServiceConfiguration.Cloud.cscfg" />
+	</ItemGroup>
+</Project>
+
+Attention : pour que cette méthode marche, il faut que vous utilisiez des ConnectionString.
+Attention : Dans le cas ou le build �choue, vos cl�s se retrouvent hardcod�es.
