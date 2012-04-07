@@ -1,11 +1,9 @@
-Tigwi est un site de microblogging conçu pour tourner sur Windows Azure
+Tigwi is a microblogging website designed to work on Windows Azure.
 
-Dépendances :
-- MSBuild Community Tasks ( à installer )
+Dependencies :
+- MSBuild Community Tasks
 
-Afin de ne pas retrouver vos informations confidentielles de connection à Azure,
-il faut un fichier nommé ConnectionInfo.xml à la racine du projet ( dans le même dossier que le README )
-de cette forme : ( à compléter )
+To connect to Azure, you will need a file named ConnectionInfo.xml placed at the root of the project (same directory as the README file) wich loks like this: (To complete with your connection informations)
 
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
@@ -23,5 +21,5 @@ de cette forme : ( à compléter )
 	</ItemGroup>
 </Project>
 
-Attention : pour que cette méthode marche, il faut que vous utilisiez des ConnectionString.
-Attention : Dans le cas ou le build �choue, vos cl�s se retrouvent hardcod�es.
+Warning : For this method to work, you must use ConnectionString.
+Warning : In case the build fails, your keys will be hardcoded.
