@@ -19,7 +19,7 @@ namespace StorageLibrary
         // Interface implementation
         public IListInfo GetInfo(Guid listId)
         {
-            StrgBlob<IListInfo> blob = new StrgBlob<IListInfo>(connexion.listContainer, "info/" + listId);
+            StrgBlob<IListInfo> blob = new StrgBlob<IListInfo>(connexion.listContainer, Path.L_INFO + listId);
             return blob.GetIfExists(new ListNotFound());
         }
 
@@ -30,13 +30,13 @@ namespace StorageLibrary
 
         public Guid GetOwner(Guid listId)
         {
-            StrgBlob<Guid> blob = new StrgBlob<Guid>(connexion.listContainer, "owner/" + listId);
+            StrgBlob<Guid> blob = new StrgBlob<Guid>(connexion.listContainer, Path.L_OWNER + listId);
             return blob.GetIfExists(new ListNotFound());
         }
 
         public Guid GetPersonalList(Guid accountId)
         {
-            StrgBlob<Guid> blob = new StrgBlob<Guid>(connexion.listContainer, "personallist/" + accountId);
+            StrgBlob<Guid> blob = new StrgBlob<Guid>(connexion.listContainer, Path.L_PERSO + accountId);
             return blob.GetIfExists(new ListNotFound());
         }
 
@@ -62,7 +62,7 @@ namespace StorageLibrary
 
         public HashSet<Guid> GetAccounts(Guid listId)
         {
-            StrgBlob<HashSet<Guid>> blob = new StrgBlob<HashSet<Guid>>(connexion.listContainer, "accounts/" + listId);
+            StrgBlob<HashSet<Guid>> blob = new StrgBlob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDACCOUNTS + listId);
             return blob.GetIfExists(new ListNotFound());
         }
 
@@ -88,7 +88,7 @@ namespace StorageLibrary
 
         public HashSet<Guid> GetFollowingLists(Guid accountId)
         {
-            StrgBlob<HashSet<Guid>> blob = new StrgBlob<HashSet<Guid>>(connexion.listContainer, "followinglists/" + accountId);
+            StrgBlob<HashSet<Guid>> blob = new StrgBlob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDBY + accountId);
             return blob.GetIfExists(new ListNotFound());
         }
 
