@@ -1,0 +1,26 @@
+﻿user ->		idbylogin/<login hash>			: Guid (= 0 if the login is reserved but not used)
+			info/<user ID>					: UserInfo
+			accouts/<user ID>/data			: HashSet<Guid> -- you must take the mutex before touching to this
+							 /lock			: Mutex -- must be taken if you add this user to an account->users or if you add an account to this user
+
+
+account ->	idbyname/<name hash>			: Guid (= 0 if the name is reserved but not used)
+			info/<account ID>				: AccountInfo
+			users/<account ID>				: HashSet<Guid> -- you must take the corresponding mutex before touching to this
+			adminid/<account ID>			: Guid
+
+
+list ->		personnallist/<account ID>		: Guid -- refere to a list ID
+			info/<list ID>					: ListInfo
+
+			ownedlists/<account ID>			: HashSet<Guid> -- lists owned by someone
+			owner/<list ID>					: Guid -- refere to an account ID
+
+			followedlists/<account ID>/data	: HashSet<Guid> -- lists followed by someone - you don't follow your personnal list
+									  /lock	: Mutex
+			followingaccounts/<list ID>		: HashSet<Guid> -- accounts following this list publicly
+
+			followedby/<account ID>			: HashSet<Guid> -- list following this account
+			followedaccounts/<list ID>/data	: HashSet<Guid> -- accounts in this list
+									  /lock	: Mutex
+

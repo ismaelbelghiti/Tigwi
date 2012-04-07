@@ -87,7 +87,7 @@ namespace StorageLibrary
         /// <exception cref="AccountNotFound">no account has this ID</exception>
         HashSet<Guid> GetFollowingLists(Guid accountId);
         /// <summary>
-        /// Get the accounts following the given list
+        /// Get the accounts following publicly the given list
         /// </summary>
         /// <exception cref="ListNotFound">No list has this ID</exception>
         HashSet<Guid> GetFollowingAccounts(Guid listId);

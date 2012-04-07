@@ -11,5 +11,6 @@ namespace StorageLibrary
         string Name { get; set; }
         string Description { get; set; }
         bool IsPrivate { get; set; }
+        bool IsPersonnal { get; set; }
     }
 }

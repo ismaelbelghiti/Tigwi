@@ -239,13 +239,13 @@ namespace StorageLibrary
 
          public void SetInfo(Guid listId, string name, string description, bool isPrivate)
          {
-              dico_id_info.Add(listId, new ListInfo(name, description, isPrivate));
+              dico_id_info.Add(listId, new ListInfo(name, description, isPrivate, false));
          }
 
          public Guid Create(Guid ownerId, string name, string description, bool isPrivate)
          {
               Guid newGuid = new Guid(next_free_id, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 });
-              dico_id_info.Add(newGuid, new ListInfo(name, description, isPrivate));
+              dico_id_info.Add(newGuid, new ListInfo(name, description, isPrivate, false));
               dico_id_idowner.Add(newGuid, ownerId);
 
              HashSet<Guid> setOwnedListsId;
