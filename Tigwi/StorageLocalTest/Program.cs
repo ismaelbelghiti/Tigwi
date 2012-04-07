@@ -12,21 +12,10 @@ namespace StorageLocalTest
     {
         static void Main(string[] args)
         {
-            Storage storage = new Storage("ulyssestorage", "REPLACE__MY_KEY");
-            
-            Console.WriteLine("init OK");
-            
-            storage.User.Create("ulysse", "ulysse.beaugnon@free.fr");
-            Guid id = storage.User.GetId("ulysse");
-            Console.WriteLine("Ulysse OK");
-            IUserInfo info = storage.User.GetInfo(id);
-            Console.WriteLine(info.Login);
-            Console.WriteLine(info.Email);
-            
-            storage.User.Create("bob", "bob@ens.fr");
-            
+            StorageTmp storage = new StorageTmp();
 
-            Console.WriteLine("bob OK");
+            storage.InitWithStupidData();
+            storage.afficheDebug();
             
             Console.ReadLine();
         }

@@ -87,6 +87,7 @@
     <Compile Include="interfaces\IUser.cs" />
     <Compile Include="interfaces\IStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StorageTmp.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Tigwi\StorageCommon\StorageCommon.csproj">
