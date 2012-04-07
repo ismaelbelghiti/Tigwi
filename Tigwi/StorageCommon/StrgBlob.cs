@@ -95,5 +95,24 @@ namespace StorageCommon
                 return false;
             }
         }
+
+        public bool SetIfExists(T obj)
+        {
+            BlobRequestOptions reqOpt = new BlobRequestOptions();
+            reqOpt.AccessCondition = AccessCondition.IfMatch("*");
+            try
+            {
+                BlobStream stream = blob.OpenWrite(reqOpt);
+                formatter.Serialize(stream, obj);
+                stream.Close();
+                return true;
+            }
+            catch (StorageClientException e)
+            {
+                if (e.ErrorCode != StorageErrorCode.ConditionFailed && e.ErrorCode != StorageErrorCode.BlobAlreadyExists)
+                    throw;
+                return false;
+            }
+        }
     }
 }

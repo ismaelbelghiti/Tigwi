@@ -23,8 +23,7 @@ namespace StorageLibrary
         /// Set the infos related to the given user
         /// </summary>
         /// <exception cref="UserNotFound">if no user has this ID</exception>
-        /// <exception cref="UserAlreadyExists">if the login is already used by another user</exception>
-        void SetInfo(Guid userId, string login, string email);
+        void SetInfo(Guid userId, string email);
 
         /// <summary>
         /// get the accounts where the user can post

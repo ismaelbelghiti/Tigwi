@@ -82,7 +82,7 @@ namespace Tigwi_test
 
             try
             {
-                storage.User.SetInfo(userid, "test", "email@test2.com");
+                storage.User.SetInfo(userid, "email@test2.com");
                 Trace.WriteLine("Error, User.SetInfo does not detect existing user");
             }
             catch (UserAlreadyExists)
@@ -92,7 +92,7 @@ namespace Tigwi_test
 
             try
             {
-                storage.User.SetInfo(userid, "settest", "email@test.com");
+                storage.User.SetInfo(userid, "email@test.com");
                 IUserInfo newuserinfo = storage.User.GetInfo(userid);
                 if (newuserinfo.Login != "settest" || newuserinfo.Email != "email@test.com")
                     Trace.WriteLine("Error, User.SetInfo");

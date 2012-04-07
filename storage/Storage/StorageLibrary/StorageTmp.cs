@@ -27,10 +27,16 @@ namespace StorageLibrary
             return res;
         }
 
-        public void SetInfo(Guid userId, string login, string email)
+        public void SetInfo(Guid userId, string email)
         {
-            dico_id_info.Add(userId, new UserInfo(login, email));
-            dico_login_id.Add(login, userId);
+            try
+            {
+                dico_id_info[userId].Email = email;
+            }
+            catch (Exception)
+            {
+                throw new UserNotFound();
+            }
         }
 
         public HashSet<Guid> GetAccounts(Guid userId)

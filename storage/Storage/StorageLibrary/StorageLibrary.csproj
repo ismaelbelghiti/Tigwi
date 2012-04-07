@@ -75,6 +75,7 @@
     <Compile Include="datastructure\AccountInfo.cs" />
     <Compile Include="datastructure\ListInfo.cs" />
     <Compile Include="datastructure\Message.cs" />
+    <Compile Include="datastructure\Path.cs" />
     <Compile Include="datastructure\UserInfo.cs" />
     <Compile Include="exception\StorageLibException.cs" />
     <Compile Include="interfaces\IMessage.cs" />
