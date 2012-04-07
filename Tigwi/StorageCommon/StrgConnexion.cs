@@ -34,7 +34,7 @@ namespace StorageCommon
             userContainer.CreateIfNotExist();
             accountContainer.CreateIfNotExist();
             listContainer.CreateIfNotExist();
-            userContainer.CreateIfNotExist();
+            msgContainer.CreateIfNotExist();
 
             // Create queue
             CloudQueueClient queueClient = azureAccount.CreateCloudQueueClient();
