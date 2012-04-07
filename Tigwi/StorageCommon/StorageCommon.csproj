@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Hasher.cs" />
+    <Compile Include="HashSetBlob.cs" />
     <Compile Include="Mutex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StrgBlob.cs" />
