@@ -18,6 +18,29 @@ namespace StorageCommon
             formatter = new BinaryFormatter();
         }
 
+        public bool Exists
+        {
+            get
+            {
+                try
+                {
+                    blob.FetchAttributes();
+                    return true;
+                }
+                catch (StorageClientException e)
+                {
+                    if (e.ErrorCode == StorageErrorCode.ResourceNotFound)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+        }
+
         public bool Add(T item)
         {
             BlobRequestOptions reqOpt = new BlobRequestOptions();
@@ -51,6 +74,48 @@ namespace StorageCommon
                     keepGoing = false;
                 }
                 catch(Exception)
+                {
+                    keepGoing = true;
+                }
+
+            } while (keepGoing);
+
+            return true;
+        }
+
+        public bool Remove(T item)
+        {
+            BlobRequestOptions reqOpt = new BlobRequestOptions();
+            HashSet<T> set;
+            BlobStream stream;
+            string eTag;
+            bool keepGoing;
+
+            do
+            {
+                try
+                {
+                    eTag = blob.Attributes.Properties.ETag;
+                    stream = blob.OpenRead();
+                    set = (HashSet<T>)formatter.Deserialize(stream);
+                    stream.Close();
+                }
+                catch
+                {
+                    return false;
+                }
+
+                set.Remove(item);
+                reqOpt.AccessCondition = AccessCondition.IfMatch(eTag);
+
+                try
+                {
+                    stream = blob.OpenWrite(reqOpt);
+                    formatter.Serialize(stream, set);
+                    stream.Close();
+                    keepGoing = false;
+                }
+                catch (Exception)
                 {
                     keepGoing = true;
                 }

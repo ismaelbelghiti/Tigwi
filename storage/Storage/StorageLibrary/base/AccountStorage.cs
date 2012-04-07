@@ -54,56 +54,78 @@ namespace StorageLibrary
         {
             StrgBlob<Guid> bAdmin = new StrgBlob<Guid>(connexion.accountContainer, Path.A_ADMINID + accountId);
             StrgBlob<HashSet<Guid>> bUserAccounts = new StrgBlob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_DATA);
-            StrgBlob<HashSet<Guid>> bAccountUsers = new StrgBlob<HashSet<Guid>>(connexion.accountContainer, Path.A_USERS + accountId);
 
             using (new Mutex(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_LOCK, new UserNotFound()))
             {
                 HashSet<Guid> userAccounts = bUserAccounts.Get();
                 // we check if the user is already on this account
-                if (userAccounts.Contains(accountId))
+                if (!userAccounts.Contains(accountId))
                 {
-                    // TODO : waiting for etag protection
-                    HashSet<Guid> accountUsers = bAccountUsers.GetIfExists(new UserNotFound());
-                    accountUsers.Add(userId);
-                    bAccountUsers.Set(accountUsers);
+                    HashSetBlob<Guid> accountUsers = new HashSetBlob<Guid>(connexion.accountContainer, Path.A_USERS + accountId);
+                    if (!accountUsers.Add(userId))
+                        throw new AccountNotFound();
 
                     userAccounts.Add(accountId);
                     bUserAccounts.Set(userAccounts);
                 }
 
-                // TODO : ajouter le mec comme user de l`account
-                if(!bAdmin.SetIfExists(userId))
+                if (!bAdmin.SetIfExists(userId))
+                {
+                    userAccounts.Remove(accountId);
+                    bUserAccounts.Set(userAccounts);
                     throw new AccountNotFound();
+                }
             }
         }
 
         public void Add(Guid accountId, Guid userId)
         {
-            // waiting for mutex protection
-            //using (new Mutex(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_LOCK))
+            StrgBlob<HashSet<Guid>> bUserAccounts = new StrgBlob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_DATA);
+
+            using (new Mutex(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_LOCK, new UserNotFound()))
             {
-                StrgBlob<HashSet<Guid>> bUsers = new StrgBlob<HashSet<Guid>>(connexion.accountContainer, Path.A_USERS + accountId);
-                StrgBlob<HashSet<Guid>> bAccounts = new StrgBlob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + userId);
+                HashSetBlob<Guid> accountUsers = new HashSetBlob<Guid>(connexion.accountContainer, Path.A_USERS + accountId);
+                if (!accountUsers.Add(userId))
+                    throw new AccountNotFound();
 
-                HashSet<Guid> users = bUsers.GetIfExists(new AccountNotFound());
-                HashSet<Guid> accounts = bAccounts.GetIfExists(new UserNotFound());
+                HashSet<Guid> userAccounts = bUserAccounts.Get();
+                userAccounts.Add(accountId);
+                bUserAccounts.Set(userAccounts);
 
-                users.Add(userId);
-                accounts.Add(accountId);
-
-                //if user or account destroyed?
-                bUsers.Set(users);
-                bAccounts.Set(accounts);
-                 
+                if (!accountUsers.Exists)
+                {
+                    userAccounts.Remove(accountId);
+                    bUserAccounts.Set(userAccounts);
+                    throw new AccountNotFound();
+                }
             }
         }
 
         public void Remove(Guid accountId, Guid userId)
         {
-            // To be moved to the worker
+            StrgBlob<HashSet<Guid>> bUserAccounts = new StrgBlob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_DATA);
+            StrgBlob<Guid> bAdminId = new StrgBlob<Guid>(connexion.accountContainer, Path.A_ADMINID + accountId);
 
-            // TODO : implement
-            throw new NotImplementedException();
+            try
+            {
+                using (new Mutex(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_DATA, new UserNotFound()))
+                {
+                    if (bAdminId.GetIfExists(new AccountNotFound()).Equals(userId))
+                        throw new UserIsAdmin();
+
+                    HashSetBlob<Guid> accountUsers = new HashSetBlob<Guid>(connexion.accountContainer, Path.A_USERS + accountId);
+                    accountUsers.Remove(userId);
+
+
+                    HashSet<Guid> userAccounts = bUserAccounts.Get();
+                    userAccounts.Remove(accountId);
+                    bUserAccounts.Set(userAccounts);
+                }
+
+            }
+            catch (UserNotFound) { }
+            catch (AccountNotFound) { }
+            
         }
 
         public Guid Create(Guid adminId, string name, string description)
@@ -118,19 +140,28 @@ namespace StorageLibrary
             Guid id = Guid.NewGuid();
             AccountInfo info = new AccountInfo(name, description);
             HashSet<Guid> users = new HashSet<Guid>();
+            users.Add(adminId);
 
             // init blobs
             StrgBlob<IAccountInfo> bInfo = new StrgBlob<IAccountInfo>(connexion.accountContainer, Path.A_INFO + id);
-            StrgBlob<HashSet<Guid>> bUsers = new StrgBlob<HashSet<Guid>>(connexion.accountContainer, Path.A_USERS + id);
+            StrgBlob<HashSet<Guid>> bAccountUsers = new StrgBlob<HashSet<Guid>>(connexion.accountContainer, Path.A_USERS + id);
             StrgBlob<Guid> bAdminId = new StrgBlob<Guid>(connexion.accountContainer, Path.A_ADMINID + id);
+            StrgBlob<HashSet<Guid>> bUserAccounts = new StrgBlob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + adminId + Path.U_ACC_DATA);
 
-            // store the data
-            bInfo.Set(info);
-            bUsers.Set(users);
-            bAdminId.Set(adminId);
+            using (new Mutex(connexion.userContainer, Path.U_ACCOUNTS + adminId + Path.U_ACC_LOCK, new UserNotFound()))
+            {
+                // store the data
+                bInfo.Set(info);
+                bAccountUsers.Set(users);
+                bAdminId.Set(adminId);
 
-            // we finish by unlocking the name
-            bNameById.Set(id);
+                // we finish by unlocking the name
+                bNameById.Set(id);
+
+                HashSet<Guid> userAccounts = bUserAccounts.Get();
+                userAccounts.Add(id);
+                bUserAccounts.Set(userAccounts);
+            }
 
             return id;
         }

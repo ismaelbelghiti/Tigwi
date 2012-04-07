@@ -49,7 +49,7 @@ namespace StorageLibrary
 
         public HashSet<Guid> GetAccounts(Guid userId)
         {
-            StrgBlob<HashSet<Guid>> blob = new StrgBlob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + userId);
+            StrgBlob<HashSet<Guid>> blob = new StrgBlob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_DATA);
             return blob.GetIfExists(new UserNotFound());
         }
 
