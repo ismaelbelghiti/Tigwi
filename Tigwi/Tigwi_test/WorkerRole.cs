@@ -136,25 +136,25 @@ namespace Tigwi_test
 
             try
             {
-                storage.Account.SetInfo(accountid, "test", "descriptiontest2");
+                storage.Account.SetInfo(accountid, "descriptiontest2");
                 Trace.WriteLine("Error, User.SetInfo does not detect existing user");
             }
             catch (UserAlreadyExists)
             {
                 ;
             }
-
-            try
-            {
-                storage.Account.SetInfo(accountid, "nametest", "descriptiontest");
-                IAccountInfo newaccountinfo = storage.Account.GetInfo(accountid);
-                if (newaccountinfo.Name != "nametest" || newaccountinfo.Description != "descriptiontest")
-                    Trace.WriteLine("Error, Account.SetInfo");
-            }
-            catch (UserNotFound)
-            {
-                Trace.WriteLine("Error, Account.GetInfo does not found a new Id.");
-            }
+           // SetInfo has changed, refer to the interface
+           //try
+           // {
+           //    storage.Account.SetInfo(accountid, "nametest", "descriptiontest");
+           //     IAccountInfo newaccountinfo = storage.Account.GetInfo(accountid);
+           //     if (newaccountinfo.Name != "nametest" || newaccountinfo.Description != "descriptiontest")
+           //         Trace.WriteLine("Error, Account.SetInfo");
+           // }
+           // catch (UserNotFound)
+           // {
+           //     Trace.WriteLine("Error, Account.GetInfo does not found a new Id.");
+           // }
             HashSet<Guid> accounts = storage.User.GetAccounts(userid);
             if (! accounts.Contains(accountid))
                 Trace.WriteLine("Error, User.GetAccounts");

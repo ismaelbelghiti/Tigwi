@@ -102,9 +102,9 @@ namespace StorageLibrary
             return res;
         }
 
-        public void SetInfo(Guid Id, string name, string description)
+        public void SetInfo(Guid Id, string description)
         {
-            dico_id_info.Add(Id, new AccountInfo(name, description));
+            dico_id_info.Add(Id, new AccountInfo(GetInfo(Id).Name, description));
         }
 
         public HashSet<Guid> GetUsers(Guid accountId)
