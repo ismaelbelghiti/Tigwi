@@ -14,7 +14,7 @@ namespace StorageCommon
         CloudBlob blob;
 
         // The mutex must already exists
-        public Mutex(CloudBlobContainer container, string mutexName)
+        public Mutex(CloudBlobContainer container, string mutexName, Exception e)
         {
             blob = container.GetBlobReference(mutexName);
 
@@ -25,13 +25,23 @@ namespace StorageCommon
             int lastChange = 0;
             do
             {
-                string eTag = blob.Attributes.Properties.ETag;
-                if (eTag != oldEtag)
+                byte[] b;
+                string eTag;
+                try
                 {
-                    lastChange = Environment.TickCount;
-                    oldEtag = eTag;
+                    eTag = blob.Attributes.Properties.ETag;
+                    if (eTag != oldEtag)
+                    {
+                        lastChange = Environment.TickCount;
+                        oldEtag = eTag;
+                    }
+                    b = blob.DownloadByteArray();
                 }
-                byte[] b = blob.DownloadByteArray();
+                catch (Exception)
+                {
+                    throw e;
+                }
+
                 requestOpt.AccessCondition = AccessCondition.IfMatch(eTag);
                 if (b[0] == 0 || Environment.TickCount - lastChange > 3000) // on ne peut garder un lock plus de 3 s
                 {
@@ -40,9 +50,9 @@ namespace StorageCommon
                         blob.UploadByteArray(b1, requestOpt);
                         keepGoing = false;
                     }
-                    catch (StorageClientException e)
+                    catch (StorageClientException ex)
                     {
-                        if (e.ErrorCode != StorageErrorCode.ConditionFailed)
+                        if (ex.ErrorCode != StorageErrorCode.ConditionFailed)
                             throw;
                     }
                 }
