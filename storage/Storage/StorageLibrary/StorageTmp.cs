@@ -342,8 +342,7 @@ namespace StorageLibrary
             dico_idaccount_idperslist = new Dictionary<Guid, Guid>();
             dico_idaccount_idownedlists = new Dictionary<Guid, HashSet<Guid>>();
             dico_id_idfollowers = new Dictionary<Guid, HashSet<Guid>>();
-            dico_idaccount_idFollowedLists = new Dictionary<Guid,
-HashSet<Guid>>();
+            dico_idaccount_idFollowedLists = new Dictionary<Guid,HashSet<Guid>>();
          }
 
          public void afficheDebug()
