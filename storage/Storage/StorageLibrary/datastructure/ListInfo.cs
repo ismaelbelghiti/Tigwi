@@ -8,11 +8,12 @@ namespace StorageLibrary
     [Serializable]
     class ListInfo : IListInfo
     {
-        public ListInfo(string name, string description, bool isPrivate)
+        public ListInfo(string name, string description, bool isPrivate, bool isPersonnal)
         {
             Name = name;
             Description = description;
-            IsPrivate = isPrivate; 
+            IsPrivate = isPrivate;
+            IsPersonnal = isPersonnal;
         }      
 
         public string Name { get; set; }
@@ -20,5 +21,7 @@ namespace StorageLibrary
         public string Description { get; set; }
 
         public bool IsPrivate { get; set; }
+
+        public bool IsPersonnal { get; set; }
     }
 }

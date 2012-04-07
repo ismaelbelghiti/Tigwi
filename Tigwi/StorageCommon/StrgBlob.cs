@@ -56,7 +56,7 @@ namespace StorageCommon
                 stream.Close();
                 return t;
             }
-            catch (Exception ee)
+            catch (Exception)
             {
                 throw e;
             }
