@@ -33,8 +33,6 @@ namespace StorageCommon
             accountContainer.CreateIfNotExist();
             listContainer.CreateIfNotExist();
             msgContainer.CreateIfNotExist();
-
-            Mutex.InitMutex(userContainer, "locklogin/main");
         }
     }
 }
