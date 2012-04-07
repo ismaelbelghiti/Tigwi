@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.WindowsAzure.StorageClient;
 using StorageCommon;
 
+
 namespace StorageLibrary
 {
     public class UserStorage : IUserStorage
@@ -23,8 +24,12 @@ namespace StorageLibrary
         // Interface implementation
         public Guid GetId(string login)
         {
-            StrgBlob<Guid> blob = new StrgBlob<Guid>(connexion.userContainer, "idbylogin/" + login);
-            return blob.GetIfExists(new UserNotFound());
+            Guid loginHash = Hasher.Hash(login);
+            StrgBlob<Guid> blob = new StrgBlob<Guid>(connexion.userContainer, "idbylogin/" + loginHash);
+            Guid id = blob.GetIfExists(new UserNotFound());
+            if (id.Equals(Guid.Empty))
+                throw new UserNotFound();
+            return id;
         }
 
         public IUserInfo GetInfo(Guid userId)
@@ -35,19 +40,16 @@ namespace StorageLibrary
 
         public void SetInfo(Guid userId, string login, string email)
         {
-            // To be transfered to the worker
+            // Get login hash
+            Guid LoginHash = Hasher.Hash(login);
+            StrgBlob<Guid> bLoginById = new StrgBlob<Guid>(connexion.userContainer, "idbylogin/" + LoginHash);
 
-            // Check login avaibility
-            StrgBlob<Guid> loginIdBlob = new StrgBlob<Guid>(connexion.userContainer, "idbylogin/" + login);
-            if (loginIdBlob.Exists && loginIdBlob.Get() != userId)
-                throw new UserAlreadyExists();
+            using(new Mutex(connexion.userContainer, "locklogin/main"))
+            {
+                // WIP
+            }
 
-            // store the data and check existence
-            UserInfo info = new UserInfo(login, email);
-            StrgBlob<UserInfo> blob = new StrgBlob<UserInfo>(connexion.userContainer, "info/" + userId);
-            if (!blob.SetIfExsits(info))
-                throw new UserNotFound();
-
+            throw new NotImplementedException();
         }
 
         public HashSet<Guid> GetAccounts(Guid userId)
@@ -58,31 +60,35 @@ namespace StorageLibrary
 
         public Guid Create(string login, string email)
         {
-            // To be transfered to the worker
-            // TODO : complete the object created while we implement accounts, lists and messages
+            // TODO unreserve the name if an error occure
+            // TODO scalable mutex for logins
 
-            // Check login avaibility
-            StrgBlob<Guid> loginIdBlob = new StrgBlob<Guid>(connexion.userContainer, "idbylogin/" + login);
-            if (loginIdBlob.Exists)
-                throw new UserAlreadyExists();
+            // reserve the name
+            Guid loginHash = Hasher.Hash(login);
+            StrgBlob<Guid> bLoginById = new StrgBlob<Guid>(connexion.userContainer, "idbylogin/" + loginHash);
+            using (Mutex nameLock = new Mutex(connexion.userContainer, "locklogin/main"))
+            {
+                if (!bLoginById.SetIfNotExists(Guid.Empty))
+                    throw new UserAlreadyExists();
+            }
 
-            // Create the user
-            // initialize data
-            Guid id = new Guid();
-            IUserInfo info = new UserInfo(login, email);
+            // create the data
+            Guid id = Guid.NewGuid();
+            UserInfo info = new UserInfo(login, email);
             HashSet<Guid> accounts = new HashSet<Guid>();
 
-            // initialize blobs
+            // init blobs
             StrgBlob<IUserInfo> bInfo = new StrgBlob<IUserInfo>(connexion.userContainer, "info/" + id);
-            StrgBlob<Guid> bID = new StrgBlob<Guid>(connexion.userContainer, "idbylogin/" + login);
-            StrgBlob<HashSet<Guid>> bAccounts = new StrgBlob<HashSet<Guid>>(connexion.userContainer, "accounts/" + id);
+            StrgBlob<HashSet<Guid>> bAccounts = new StrgBlob<HashSet<Guid>>(connexion.userContainer, "accounts/" + id + "/data");
+            Mutex.InitMutex(connexion.userContainer, "accounts/" + id + "/lock");
 
-            // Store the data in the right order for the user not to be accessible until the end
+            // store the data
             bInfo.Set(info);
             bAccounts.Set(accounts);
-            bID.Set(id);
 
-            // return the id
+            // we finish by unlocking the name
+            bLoginById.Set(id);
+
             return id;
         }
 

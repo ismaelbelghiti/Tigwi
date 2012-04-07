@@ -120,7 +120,7 @@
   -->
   <Target Name="AfterBuild">
     <FileUpdate
-      Files="@(ServiceConfiguration)"
+      Files="@(ConnectionFiles)"
       Regex ="DefaultEndpointsProtocol=https;AccountName=$(AzureStorageAccountName);AccountKey=$(AzureStorageAccountKey)"
       ReplacementText="UseDevelopmentStorage=true" />
   </Target>
