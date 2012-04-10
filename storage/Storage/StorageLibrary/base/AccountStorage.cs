@@ -108,7 +108,7 @@ namespace StorageLibrary
 
             try
             {
-                using (new Mutex(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_DATA, new UserNotFound()))
+                using (new Mutex(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_LOCK, new UserNotFound()))
                 {
                     if (bAdminId.GetIfExists(new AccountNotFound()).Equals(userId))
                         throw new UserIsAdmin();

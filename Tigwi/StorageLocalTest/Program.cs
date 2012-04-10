@@ -103,6 +103,7 @@ namespace StorageLocalTest
 
             Guid useridbis = storage.User.Create("user2", "user@mail.com");
             storage.Account.Add(accountid, useridbis);
+            users = storage.Account.GetUsers(accountid);
             if (!users.Contains(useridbis))
                 Console.WriteLine("Error, Account.Add");
             Console.Write(".");
@@ -142,7 +143,7 @@ namespace StorageLocalTest
                 Guid nonexistent = storage.User.GetId("settest");
                 Console.WriteLine("Error, User.Delete does not delete.");
             } catch (UserNotFound) { }
-            Console.Write(".");
+            Console.Write(".\nEND\n");
             // End test code
 
             Console.ReadLine();
