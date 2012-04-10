@@ -15,8 +15,6 @@ namespace StorageCommon
         public CloudBlobContainer listContainer;
         public CloudBlobContainer msgContainer;
 
-        public CloudQueue mainQueue;
-
         public StrgConnexion(string azureAccountName, string azureKey)
         {
             // initialize Azure Account
@@ -34,13 +32,7 @@ namespace StorageCommon
             userContainer.CreateIfNotExist();
             accountContainer.CreateIfNotExist();
             listContainer.CreateIfNotExist();
-            userContainer.CreateIfNotExist();
-
-            // Create queue
-            CloudQueueClient queueClient = azureAccount.CreateCloudQueueClient();
-
-            mainQueue = queueClient.GetQueueReference("mainqueue");
-            mainQueue.CreateIfNotExist();
+            msgContainer.CreateIfNotExist();
         }
     }
 }

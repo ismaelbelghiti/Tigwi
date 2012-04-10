@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.WindowsAzure.StorageClient;
 using StorageCommon;
 
+
 namespace StorageLibrary
 {
     public class UserStorage : IUserStorage
@@ -23,8 +24,12 @@ namespace StorageLibrary
         // Interface implementation
         public Guid GetId(string login)
         {
-            StrgBlob<Guid> blob = new StrgBlob<Guid>(connexion.userContainer, "idbylogin/" + login);
-            return blob.GetIfExists(new UserNotFound());
+            Guid loginHash = Hasher.Hash(login);
+            StrgBlob<Guid> blob = new StrgBlob<Guid>(connexion.userContainer, Path.U_IDBYLOGIN + loginHash);
+            Guid id = blob.GetIfExists(new UserNotFound());
+            if (id.Equals(Guid.Empty))
+                throw new UserNotFound();
+            return id;
         }
 
         public IUserInfo GetInfo(Guid userId)
@@ -33,56 +38,49 @@ namespace StorageLibrary
             return blob.GetIfExists(new UserNotFound());
         }
 
-        public void SetInfo(Guid userId, string login, string email)
+        public void SetInfo(Guid userId, string email)
         {
-            // To be transfered to the worker
-
-            // Check login avaibility
-            StrgBlob<Guid> loginIdBlob = new StrgBlob<Guid>(connexion.userContainer, "idbylogin/" + login);
-            if (loginIdBlob.Exists && loginIdBlob.Get() != userId)
-                throw new UserAlreadyExists();
-
-            // store the data and check existence
-            UserInfo info = new UserInfo(login, email);
-            StrgBlob<UserInfo> blob = new StrgBlob<UserInfo>(connexion.userContainer, "info/" + userId);
-            if (!blob.SetIfExsits(info))
+            StrgBlob<UserInfo> bInfo = new StrgBlob<UserInfo>(connexion.userContainer, Path.U_INFO + userId);
+            UserInfo info = bInfo.GetIfExists(new UserNotFound());
+            info.Email = email;
+            if (!bInfo.SetIfExists(info))
                 throw new UserNotFound();
-
         }
 
         public HashSet<Guid> GetAccounts(Guid userId)
         {
-            StrgBlob<HashSet<Guid>> blob = new StrgBlob<HashSet<Guid>>(connexion.userContainer, "accounts/" + userId);
+            StrgBlob<HashSet<Guid>> blob = new StrgBlob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_DATA);
             return blob.GetIfExists(new UserNotFound());
         }
 
         public Guid Create(string login, string email)
         {
-            // To be transfered to the worker
-            // TODO : complete the object created while we implement accounts, lists and messages
+            // TODO unreserve the name if an error occure
 
-            // Check login avaibility
-            StrgBlob<Guid> loginIdBlob = new StrgBlob<Guid>(connexion.userContainer, "idbylogin/" + login);
-            if (loginIdBlob.Exists)
+            // reserve the name
+            Guid loginHash = Hasher.Hash(login);
+            StrgBlob<Guid> bLoginById = new StrgBlob<Guid>(connexion.userContainer, Path.U_IDBYLOGIN + loginHash);
+
+            if (!bLoginById.SetIfNotExists(Guid.Empty))
                 throw new UserAlreadyExists();
 
-            // Create the user
-            // initialize data
-            Guid id = new Guid();
-            IUserInfo info = new UserInfo(login, email);
+            // create the data
+            Guid id = Guid.NewGuid();
+            UserInfo info = new UserInfo(login, email);
             HashSet<Guid> accounts = new HashSet<Guid>();
 
-            // initialize blobs
-            StrgBlob<IUserInfo> bInfo = new StrgBlob<IUserInfo>(connexion.userContainer, "info/" + id);
-            StrgBlob<Guid> bID = new StrgBlob<Guid>(connexion.userContainer, "idbylogin/" + login);
-            StrgBlob<HashSet<Guid>> bAccounts = new StrgBlob<HashSet<Guid>>(connexion.userContainer, "accounts/" + id);
+            // init blobs
+            StrgBlob<IUserInfo> bInfo = new StrgBlob<IUserInfo>(connexion.userContainer, Path.U_INFO + id);
+            StrgBlob<HashSet<Guid>> bAccounts = new StrgBlob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + id + Path.U_ACC_DATA);
+            Mutex.InitMutex(connexion.userContainer, Path.U_ACCOUNTS + id + Path.U_ACC_LOCK);
 
-            // Store the data in the right order for the user not to be accessible until the end
+            // store the data
             bInfo.Set(info);
             bAccounts.Set(accounts);
-            bID.Set(id);
 
-            // return the id
+            // we finish by unlocking the name
+            bLoginById.Set(id);
+
             return id;
         }
 

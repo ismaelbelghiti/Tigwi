@@ -22,7 +22,7 @@ namespace StorageLibrary
         /// </summary>
         /// <exception cref="AccountNotFound">if no account has ID=accountId</exception>
         /// <exception cref="AccountAlreadyExists">if the name is already used by another account</exception>
-        void SetInfo(Guid accountId, string name, string description);
+        void SetInfo(Guid accountId, string description);
 
         /// <summary>
         /// Get the users who can post with the given account

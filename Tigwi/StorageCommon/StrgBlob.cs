@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -10,6 +11,9 @@ namespace StorageCommon
 {
     public class StrgBlob<T>
     {
+        // TODO : allow asynchronous upload and download
+        // TODO : see if it is a good thing -> perf tests
+        // TODO : if it is a good thing, use it where we can
         BinaryFormatter formatter;
         CloudBlob blob;
 
@@ -35,7 +39,6 @@ namespace StorageCommon
             }
         }
 
-
         public StrgBlob(CloudBlobContainer container, string blobName)
         {
             formatter = new BinaryFormatter();
@@ -53,7 +56,7 @@ namespace StorageCommon
                 stream.Close();
                 return t;
             }
-            catch (Exception ee)
+            catch (Exception)
             {
                 throw e;
             }
@@ -67,24 +70,49 @@ namespace StorageCommon
             return t;
         }
 
-        public bool SetIfExsits(T obj)
-        {
-            if (Exists)
-            {
-                BlobStream stream = blob.OpenWrite();
-                formatter.Serialize(stream, obj);
-                stream.Close();
-                return true;
-            }
-            else
-                return false;
-        }
-
         public void Set(T obj)
         {
             BlobStream stream = blob.OpenWrite();
             formatter.Serialize(stream, obj);
             stream.Close();
+        }
+
+        public bool SetIfNotExists(T obj)
+        {
+            BlobRequestOptions reqOpt = new BlobRequestOptions();
+            reqOpt.AccessCondition = AccessCondition.IfNoneMatch("*");
+            try
+            {
+                BlobStream stream = blob.OpenWrite(reqOpt);
+                formatter.Serialize(stream, obj);
+                stream.Close();
+                return true;
+            }
+            catch (StorageClientException e)
+            {
+                if (e.ErrorCode != StorageErrorCode.ConditionFailed && e.ErrorCode != StorageErrorCode.BlobAlreadyExists)
+                    throw;
+                return false;
+            }
+        }
+
+        public bool SetIfExists(T obj)
+        {
+            BlobRequestOptions reqOpt = new BlobRequestOptions();
+            reqOpt.AccessCondition = AccessCondition.IfMatch("*");
+            try
+            {
+                BlobStream stream = blob.OpenWrite(reqOpt);
+                formatter.Serialize(stream, obj);
+                stream.Close();
+                return true;
+            }
+            catch (StorageClientException e)
+            {
+                if (e.ErrorCode != StorageErrorCode.ConditionFailed && e.ErrorCode != StorageErrorCode.BlobAlreadyExists)
+                    throw;
+                return false;
+            }
         }
     }
 }

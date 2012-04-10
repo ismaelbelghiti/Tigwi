@@ -109,14 +109,51 @@ In case an error occurs:
 * In **URL**, _numberOfSubscribers_ is the number of subscribers you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of subscribers returned (different from _numberOfSubscribers_ if there are not enough subscribers to provide).
 
-##Get an account's followed lists
+##Get an account's followed public lists
 ###Purpose
-Obtain a number _n_ of the account _accountName_ 's followed lists.
-No particular order provided
+Obtain a number _n_ of the account _accountName_ 's followed public lists.
+No particular order provided.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/accountlistssubscriptions/accountName/numberOfLists
+http://api.tigwi.com/accountsubscribedpubliclists/accountName/numberOfLists
+###Request
+_left empty_
+###Response
+
+    <ListsList Size="sizeOfList">
+	    <List> <!-- See below --> </List>
+	    <List> ... </List>
+	    ...
+	    <List> ... </List>
+    </ListsList>
+
+List format:
+
+     <List>
+	     <Id> idOfList </Id>
+	     <Name> nameOfList </Name>
+     </List>
+
+In case an error occurs:
+
+    <Error Number="codeOfError"/>
+
+###Informations
+* In **URL**, _accountName_ is the name of the account whose followed lists you want to get.
+* In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default is set to 20.
+* In **Response**, _sizeOfList_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
+* You will only receive lists that the owner has declared public.
+
+##Get an account's followed lists
+###Purpose
+Obtain a number _n_ of the account _accountName_ 's followed lists, either public or private.
+No particular order provided.
+Authentication required.
+###HTTP method
+*GET*
+###URL
+http://api.tigwi.com/accountsubscribedlists/accountName/numberOfLists
 ###Request
 _left empty_
 ###Response
@@ -144,7 +181,6 @@ In case an error occurs:
 * In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
 
-
 ##Get an account's owned public lists
 ###Purpose
 Obtain a number _n_ of the account _accountName_ 's owned public lists.
@@ -152,7 +188,7 @@ No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/accountlistspublic/accountName/numberOfLists
+http://api.tigwi.com/accountpubliclists/accountName/numberOfLists
 ###Request
 _left empty_
 ###Response
@@ -181,41 +217,6 @@ In case an error occurs:
 * In **Response**, _sizeOfList_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
 * You will only receive lists that the owner has declared public.
 
-##Get an account's owned private lists
-###Purpose
-Obtain a number _n_ of the account _accountName_ 's owned private lists.
-No particular order provided. Authentication required.
-###HTTP method
-*GET*
-###URL
-http://api.tigwi.com/accountlistsprivate/accountName/numberOfLists
-###Request
-_left empty_
-###Response
-
-    <ListsList Size="sizeOfList">
-	    <List> <!-- See below --> </List>
-	    <List> ... </List>
-	    ...
-	    <List> ... </List>
-    </ListsList>
-
-List format:
-
-     <List>
-	     <Id> idOfList </Id>
-	     <Name> nameOfList </Name>
-     </List>
-
-In case an error occurs:
-
-    <Error Number="codeOfError"/>
-
-###Informations
-* You **must** be authenticated as _accountName_ to have access to these informations. 
-* In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default is set to 20.
-* In **Response**, _sizeOfList_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
-
 
 ##Get an account's owned lists
 ###Purpose
@@ -224,7 +225,7 @@ No particular order provided. Authentication required.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/accountlist/accountName/numberOfLists
+http://api.tigwi.com/accountlists/accountName/numberOfLists
 ###Request
 _left empty_
 ###Response
@@ -257,7 +258,7 @@ In case an error occurs:
 #Get informations about a _List_
 ##Get accounts followed by the list
 ###Purpose
-Obtain a number _n_ of accounts followed by list _nameoflist_.
+Obtain a number _n_ of accounts followed by list _nameOfList_.
 No particular order provided
 ###HTTP method
 *GET*
@@ -297,7 +298,7 @@ No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/listfollowers/nameOfList/numberOfFollowers
+http://api.tigwi.com/listsubscribers/nameOfList/numberOfFollowers
 ###Request
 _left empty_
 ###Response
@@ -327,7 +328,7 @@ In case an error occurs:
 
 ##Get a list's owner informations
 ###Purpose
-Obtain the name and id of list _nameoflist_ 's owner.
+Obtain the name and id of list _nameOfList_ 's owner.
 ###HTTP method
 *GET*
 ###URL
