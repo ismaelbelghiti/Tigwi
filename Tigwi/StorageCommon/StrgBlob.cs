@@ -114,5 +114,10 @@ namespace StorageCommon
                 return false;
             }
         }
+
+        public void Delete()
+        {
+            blob.DeleteIfExists();
+        }
     }
 }
