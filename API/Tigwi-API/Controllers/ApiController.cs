@@ -192,7 +192,7 @@ namespace Tigwi_API.Controllers
             {
                 var accountId = storage.Account.GetId(subscribe.Account);
 
-                storage.List.Follow(subscribe.ListID, accountId);
+                storage.List.Follow(subscribe.Subscription, accountId);
 
                 // Result is an empty error XML element
                 var stream = new MemoryStream();

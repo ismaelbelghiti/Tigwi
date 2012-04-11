@@ -99,7 +99,7 @@ namespace Tigwi_API.Models
     public class SubscribeList
     {
         public string Account { get; set; }
-        public Guid ListID { get; set; }
+        public Guid Subscription { get; set; }
     }
 
 }
