@@ -53,6 +53,7 @@ namespace StorageLibrary
         /// </summary>
         /// <exception cref="AccountNotFound">if no account has this ID</exception>
         /// <exception cref="ListNotFound">no list has this ID</exception>
+        /// <exception cref="AccountIsOwner">you must follow the lists you own</exception>
         void Unfollow(Guid listId, Guid accountId);
 
         /// <summary>

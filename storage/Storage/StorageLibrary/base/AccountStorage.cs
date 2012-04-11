@@ -92,12 +92,13 @@ namespace StorageLibrary
                 userAccounts.Add(accountId);
                 bUserAccounts.Set(userAccounts);
 
-                if (!accountUsers.Exists)
-                {
-                    userAccounts.Remove(accountId);
-                    bUserAccounts.Set(userAccounts);
-                    throw new AccountNotFound();
-                }
+                // not necessary ????
+                //if (!accountUsers.Exists)
+                //{
+                //    userAccounts.Remove(accountId);
+                //    bUserAccounts.Set(userAccounts);
+                //    throw new AccountNotFound();
+                //}
             }
         }
 
@@ -130,6 +131,9 @@ namespace StorageLibrary
 
         public Guid Create(Guid adminId, string name, string description)
         {
+            // TODO : create the personnal list 
+            // TODO : create all the requiered list structures
+
             Guid nameHash = Hasher.Hash(name);
             StrgBlob<Guid> bNameById = new StrgBlob<Guid>(connexion.accountContainer, Path.A_IDBYNAME + nameHash);
 
@@ -147,13 +151,24 @@ namespace StorageLibrary
             StrgBlob<HashSet<Guid>> bAccountUsers = new StrgBlob<HashSet<Guid>>(connexion.accountContainer, Path.A_USERS + id);
             StrgBlob<Guid> bAdminId = new StrgBlob<Guid>(connexion.accountContainer, Path.A_ADMINID + id);
             StrgBlob<HashSet<Guid>> bUserAccounts = new StrgBlob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + adminId + Path.U_ACC_DATA);
+            StrgBlob<HashSet<Guid>> bOwnedListsPublic = new StrgBlob<HashSet<Guid>>(connexion.listContainer, Path.L_OWNEDLISTS_PUBLIC + id);
+            StrgBlob<HashSet<Guid>> bOwnedListsPrivate = new StrgBlob<HashSet<Guid>>(connexion.listContainer, Path.L_OWNEDLISTS_PRIVATE + id);
+            StrgBlob<HashSet<Guid>> bFollowedLists = new StrgBlob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDLISTS + id + Path.L_FOLLOWEDLISTS_LOCK);
+            StrgBlob<HashSet<Guid>> bFollowedBy = new StrgBlob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDBY + id);
 
+            // TODO : we could do it without a lock - or at least store the data before
             using (new Mutex(connexion.userContainer, Path.U_ACCOUNTS + adminId + Path.U_ACC_LOCK, new UserNotFound()))
             {
                 // store the data
                 bInfo.Set(info);
                 bAccountUsers.Set(users);
                 bAdminId.Set(adminId);
+                bOwnedListsPublic.Set(new HashSet<Guid>());
+                bOwnedListsPrivate.Set(new HashSet<Guid>());
+                bFollowedLists.Set(new HashSet<Guid>());
+                bFollowedBy.Set(new HashSet<Guid>());
+
+                Mutex.Init(connexion.listContainer, Path.L_FOLLOWEDLISTS + id + Path.L_FOLLOWEDLISTS_LOCK);
 
                 // we finish by unlocking the name
                 bNameById.Set(id);

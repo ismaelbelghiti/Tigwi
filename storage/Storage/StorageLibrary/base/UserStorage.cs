@@ -72,7 +72,7 @@ namespace StorageLibrary
             // init blobs
             StrgBlob<IUserInfo> bInfo = new StrgBlob<IUserInfo>(connexion.userContainer, Path.U_INFO + id);
             StrgBlob<HashSet<Guid>> bAccounts = new StrgBlob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + id + Path.U_ACC_DATA);
-            Mutex.InitMutex(connexion.userContainer, Path.U_ACCOUNTS + id + Path.U_ACC_LOCK);
+            Mutex.Init(connexion.userContainer, Path.U_ACCOUNTS + id + Path.U_ACC_LOCK);
 
             // store the data
             bInfo.Set(info);
