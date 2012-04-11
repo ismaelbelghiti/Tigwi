@@ -421,6 +421,46 @@ If no error occurs
 * You **must** be authenticated as _nameofUser_ and authorized to use _nameOfAccount_ to post a message.
 * In **Request**, the size of your message is limited to 140 characters, but this limit is tested by the server. It raises an error if the message is too long.
 
+##Create a list
+###Purpose
+For someone to create a new, empty list. Authentication required.
+
+###HTTP method
+*POST*
+
+###URL
+http://api.tigwi.com/createlist/
+
+###Request
+	<CreateList>
+		<Account> nameOfSubscriber </Account>
+		<ListInfo>
+			<Name> nameOfList </Name>
+			<Description> aRapidDescription </Description>
+			<isPrivate> privateSetting </isPrivate>
+		</ListInfo>
+	</CreateList>
+
+###Response
+In case an error occurs
+
+    <Error Number="codeOfError"/>
+
+If no error occurs
+
+    <Error/>
+
+
+###Informations
+* You **must** be authenticated and authorized to use _nameOfSubscriber_ to use this method.
+
+* In **Request**, _nameOfSubscriber_ is the name of the account who wants to follow the list _nameOfSubscription_.
+
+* In **Request**, _nameOfList_ is the name you want to give to the new list.
+
+* In **Request**, _aRapidDescription_ is a short text to remember what the list is about.
+
+* In **Request**, _privateSetting_ value must be _false_ if you want the new list to be public or _true_ if only you can see that list.
 
 ##Subscribe to a list
 ###Purpose
@@ -447,5 +487,5 @@ If no error occurs
 
 
 ###Informations
-* You **must** be authenticated and authorized to use _nameOfSubscribers_ to use this method.
+* You **must** be authenticated and authorized to use _nameOfSubscriber_ to use this method.
 * In **Request**, _nameOfSubscriber_ is the name of the account who wants to follow the list _nameOfSubscription_.
