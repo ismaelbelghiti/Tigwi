@@ -1,33 +1,37 @@
-﻿user ->		idbylogin/<login hash>			: Guid (= 0 if the login is reserved but not used)
-			info/<user ID>					: UserInfo
-			accouts/<user ID>/data			: HashSet<Guid> -- you must take the mutex before touching to this
-							 /lock			: Mutex -- must be taken if you add this user to an account->users or if you add an account to this user
+﻿user ->		idbylogin/<login hash>				: Guid (= 0 if the login is reserved but not used)
+			info/<user ID>						: UserInfo
+			accouts/<user ID>/data				: HashSet<Guid> -- you must take the mutex before touching to this
+							 /lock				: Mutex -- must be taken if you add this user to an account->users or if you add an account to this user
 
 
-account ->	idbyname/<name hash>			: Guid (= 0 if the name is reserved but not used)
-			info/<account ID>				: AccountInfo
-			users/<account ID>				: HashSet<Guid> -- you must take the corresponding mutex before touching to this
-			adminid/<account ID>			: Guid
+account ->	idbyname/<name hash>				: Guid (= 0 if the name is reserved but not used)
+			info/<account ID>					: AccountInfo
+			users/<account ID>					: HashSet<Guid> -- you must take the corresponding mutex before touching to this
+			adminid/<account ID>				: Guid
 
 
 list ->		------------------------------
-			personnallist/<account ID>		: Guid -- refere to a list ID
-			info/<list ID>					: ListInfo
+			personnallist/<account ID>			: Guid -- refere to a list ID
+			info/<list ID>						: ListInfo
 
-			ownedlists/public/<account ID>	: HashSet<Guid> -- public lists owned by someone
-			ownedlists/private/<account ID>	: HashSet<Guid> -- private lists owned by someone
-												
-			owner/<list ID>	S				: Guid -- refere to an account ID
+			ownedlists/public/<account ID>		: HashSet<Guid> -- public lists owned by someone
+			ownedlists/private/<account ID>		: HashSet<Guid> -- private lists owned by someone
+													
+			owner/<list ID>	S					: Guid -- refere to an account ID
 
-			followedlists/<account ID>/data	: HashSet<Guid> -- lists followed by someone - you don't follow your personnal list - without owned lists
-									  /lock	: Mutex
-			followingaccounts/<list ID>		: HashSet<Guid> -- accounts following this list 
+			followedlists/<account ID>/data		: HashSet<Guid> -- lists followed by someone - you don't follow your personnal list - without owned lists
+									  /lock		: Mutex
+			followingaccounts/<list ID>			: HashSet<Guid> -- accounts following this list 
 
-			followedby/<account ID>			: HashSet<Guid> -- list following this account publicly - we also need the private
-			followedaccounts/<list ID>/data	: HashSet<Guid> -- accounts in this list 
-									  /lock	: Mutex
+			followedby/<account ID>				: HashSet<Guid> -- list following this account publicly - we also need the private
+			followedaccounts/<list ID>/data		: HashSet<Guid> -- accounts in this list 
+									  /lock		: Mutex
 
+message ->	listmessages/<list ID>				: List<IMessage> -- 100 last messages of the list
+			accountmessages/<poster ID>/<date>	: List<IMessage> -- ~100 messages from <poster>, the first of the list is dated <date>
+			taggedmessages/<account ID>			: HashSet<Guid>
 
 TODO :
 	- verifier les fonctions en lecture de list storage apres les modifs
 	- implementer la création des bonnes structures pour les listes lors de la création d'un utilisateur
+	- penser au problème de trop de removes (paquets de ~100 avec trop peu d'éléments)
