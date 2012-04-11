@@ -7,6 +7,11 @@ namespace StorageLibrary
 {
     // TODO : is this the best place
 
+    public class AccountIsOwner : StorageLibException
+    {
+        public AccountIsOwner() : base(StrgLibErr.AccountIsOwner) { }
+    }
+
     public class UserNotFound : StorageLibException
     {
         public UserNotFound() : base(StrgLibErr.UserNotFound) { }
@@ -58,16 +63,17 @@ namespace StorageLibrary
         AccountAlreadyExist,
         UserIsAdmin,
         IsPersonalList,
+        AccountIsOwner,
     }
 
     // Deprecated
     public class StorageLibException : Exception
     {
-        public StorageLibException(StrgLibErr code)
+        protected StorageLibException(StrgLibErr code)
         {
             Code = code;
         }
 
-        public StrgLibErr Code { get; private set; }
+        public StrgLibErr Code { get; protected set; }
     }
 }

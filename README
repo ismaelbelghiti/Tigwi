@@ -19,6 +19,9 @@ To connect to Azure, you will need a file named ConnectionInfo.xml placed at the
 		<ConnectionFiles Include="ServiceConfiguration.Local.cscfg" />
 		<ConnectionFiles Include="ServiceConfiguration.Cloud.cscfg" />
 	</ItemGroup>
+	<ItemGroup>
+		<AllFiles Include="..\..\\**\*.*" />
+	</ItemGroup>
 </Project>
 
 Warning : For this method to work, you must use ConnectionString.

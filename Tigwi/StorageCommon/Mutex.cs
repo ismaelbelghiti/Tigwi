@@ -73,21 +73,17 @@ namespace StorageCommon
             blob.UploadByteArray(b0);
         }
 
-        static public void InitMutex(CloudBlobContainer container, string mutexName)
+        static public void Init(CloudBlobContainer container, string mutexName)
         {
             byte[] b0 = { 0 };
             CloudBlob blob = container.GetBlobReference(mutexName);
-            BlobRequestOptions reqOpt = new BlobRequestOptions();
-            reqOpt.AccessCondition = AccessCondition.IfNoneMatch("*");
-            try
-            {
-                blob.UploadByteArray(b0, reqOpt);
-            }
-            catch (StorageClientException e)
-            {
-                if (e.ErrorCode != StorageErrorCode.ConditionFailed && e.ErrorCode != StorageErrorCode.BlobAlreadyExists)
-                    throw;
-            }
+            blob.UploadByteArray(b0);
+        }
+
+        static public void Delete(CloudBlobContainer container, string mutexName)
+        {
+            CloudBlob blob = container.GetBlobReference(mutexName);
+            blob.DeleteIfExists();
         }
     }
 }

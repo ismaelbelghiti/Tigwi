@@ -143,18 +143,18 @@ namespace Tigwi_test
             {
                 ;
             }
-           // SetInfo has changed, refer to the interface
-           //try
-           // {
-           //    storage.Account.SetInfo(accountid, "nametest", "descriptiontest");
-           //     IAccountInfo newaccountinfo = storage.Account.GetInfo(accountid);
-           //     if (newaccountinfo.Name != "nametest" || newaccountinfo.Description != "descriptiontest")
-           //         Trace.WriteLine("Error, Account.SetInfo");
-           // }
-           // catch (UserNotFound)
-           // {
-           //     Trace.WriteLine("Error, Account.GetInfo does not found a new Id.");
-           // }
+
+            try
+            {
+                storage.Account.SetInfo(accountid, "descriptiontest");
+                IAccountInfo newaccountinfo = storage.Account.GetInfo(accountid);
+                if (newaccountinfo.Name != "nametest" || newaccountinfo.Description != "descriptiontest")
+                    Trace.WriteLine("Error, Account.SetInfo");
+            }
+            catch (AccountNotFound)
+            {
+                Trace.WriteLine("Error, Account.GetInfo does not found a new Id.");
+            }
             HashSet<Guid> accounts = storage.User.GetAccounts(userid);
             if (! accounts.Contains(accountid))
                 Trace.WriteLine("Error, User.GetAccounts");
@@ -169,6 +169,8 @@ namespace Tigwi_test
             if (!users.Contains(useridbis))
                 Trace.WriteLine("Error, Account.Add");
 
+            Guid accountidbis = storage.Account.Create(useridbis, "account2", "description2");
+
             Guid admin = storage.Account.GetAdminId(accountid);
             if (admin != userid)
                 Trace.WriteLine("Error, Account.GetAdmin");
@@ -178,6 +180,93 @@ namespace Tigwi_test
             if (admin != useridbis)
                 Trace.WriteLine("Error, Account.SetAdmin");
 
+            try
+            {
+                Guid personalid = storage.List.GetPersonalList(accountid);
+                Guid ownerid = storage.List.GetOwner(personalid);
+                if (ownerid != accountid)
+                    Trace.WriteLine("Error, List.GetOwner doesn't give the right id");
+                IListInfo personalinfo = storage.List.GetInfo(personalid);
+                if ( ! personalinfo.IsPrivate)
+                    Trace.WriteLine("Error, personnal list is not personal");
+                storage.List.SetInfo(personalid, "test", "test", true);
+                Trace.WriteLine("Error, List.SetInfo doesn't detect personal list");
+            }
+            catch (AccountNotFound)
+            {
+                Trace.WriteLine("Error, List.GetPersonalList doesn't find an existing account");
+            }
+            catch (ListNotFound)
+            {
+                Trace.WriteLine("Error, List.GetOwner doesn't find an existing list");
+            }
+            catch (IsPersonnalList)
+            { ;}
+
+            try
+            {
+                Guid listid = storage.List.Create(accountid, "listtest", "listdescription", false);
+                Guid ownerbis = storage.List.GetOwner(listid);
+                if (ownerbis != accountid)
+                    Trace.WriteLine("Error, List.GetOwner returns a wrong id");
+
+                HashSet<Guid> listowned = storage.List.GetAccountOwnedLists(accountid, true);
+                if (!listowned.Contains(listid))
+                    Trace.WriteLine("Error, GetAccountOwnedLists doesn't find an owned list or Create doesn't add it");
+                listowned = storage.List.GetAccountOwnedLists(accountid, false);
+                if (listowned.Contains(listid))
+                    Trace.WriteLine("Error, GetAccountOwnedLists returns private lists where it shouldn't");
+
+                IListInfo listinfo = storage.List.GetInfo(listid);
+                if (listinfo.Name != "listtest" || listinfo.Description != "listdescription" ||
+                    listinfo.IsPrivate || listinfo.IsPersonnal)
+                    Trace.WriteLine("Error, List.GetInfo returns wrong infos");
+                storage.List.SetInfo(listid, "test", "test", true);
+                listinfo = storage.List.GetInfo(listid);
+                if (listinfo.Name != "test" || listinfo.Description != "test" ||
+                    (!listinfo.IsPrivate) || listinfo.IsPersonnal)
+                    Trace.WriteLine("Error, List.SetInfo doesn't set infos");
+
+                storage.List.Follow(listid, accountidbis);
+                HashSet<Guid> listfollowed = storage.List.GetAccountFollowedLists(accountidbis, true);
+                if (!listfollowed.Contains(listid))
+                    Trace.WriteLine("Error, GetAccountFollowedLists doesn't find a followed list or Follow doesn't add it");
+                listfollowed = storage.List.GetAccountFollowedLists(accountidbis, false);
+                if (listfollowed.Contains(listid))
+                    Trace.WriteLine("Error, GetAccountFollowedLists returns private lists where it shouldn't");
+
+                HashSet<Guid> followingaccounts = storage.List.GetFollowingAccounts(listid);
+                if (!followingaccounts.Contains(accountidbis))
+                    Trace.WriteLine("Error, GetFollowingAccounts doesn't find a following account");
+
+                storage.List.Add(listid, accountidbis);
+                HashSet<Guid> listaccounts = storage.List.GetAccounts(listid);
+                if (!listaccounts.Contains(accountidbis))
+                    Trace.WriteLine("Error, List.GetAccounts doesn't find a followed list or List.Add doesn't add it");
+
+                storage.List.Remove(listid, accountidbis);
+                listaccounts = storage.List.GetAccounts(listid);
+                if (listaccounts.Contains(accountidbis))
+                    Trace.WriteLine("Error, List.Remove doesn't remove an account from a list");
+            }
+            catch (ListNotFound)
+            {
+                Trace.WriteLine("Error, an existing list cannot be found");
+            }
+            catch (AccountNotFound)
+            {
+                Trace.WriteLine("Error, an existing account cannot be found");
+            }
+
+            try
+            {
+                Guid listid = storage.List.Create(accountid, "list", "list", false);
+                storage.List.Delete(listid);
+                IListInfo nonexistent = storage.List.GetInfo(listid);
+                Trace.WriteLine("Error, List.Delete doesn't delete the list");
+            }
+            catch (ListNotFound)
+            { ;}
 
             try
             {
