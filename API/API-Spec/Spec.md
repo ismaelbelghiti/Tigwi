@@ -468,12 +468,12 @@ For someone to distantly subscribe to a list. Authentication required.
 ###HTTP method
 *POST*
 ###URL
-http://api.tigwi.com/subscribelist/
+http://api.tigwi.com/accountsubscribelist/
 ###Request
     
     <Subscribe>
         <Account> nameOfSubscriber </Account>
-        <Subscription> nameOfSubscription </Suscription>
+        <Subscription> idOfSubscription </Suscription>
     </Subscribe>
 
 ###Response
@@ -488,4 +488,34 @@ If no error occurs
 
 ###Informations
 * You **must** be authenticated and authorized to use _nameOfSubscriber_ to use this method.
-* In **Request**, _nameOfSubscriber_ is the name of the account who wants to follow the list _nameOfSubscription_.
+* In **Request**, _nameOfSubscriber_ is the name of the account who wants to follow the list _idOfSubscription_.
+
+#Modifying a list
+##Suscribe to an account
+###Purpose
+For a list to add a suscription to a given account. Authentication required.
+
+###HTTP method
+*POST*
+###URL
+http://api.tigwi.com/listsubscribeaccount/
+###Request
+    
+    <ListSubscribe>
+        <List> idOfSuscriber </List>
+        <Subscription> nameOfSubscription </Suscription>
+    </ListSubscribe>
+
+###Response
+In case an error occurs
+
+    <Error Number="codeOfError"/>
+
+If no error occurs
+
+    <Error/>
+
+
+###Informations
+* You **must** be authenticated and authorized to use the owner of the list _idOfSuscriber_ to use this method.
+* In **Request**, _idOfSuscriber_ is the id of the list who wants to follow the account _nameOfSubscription_.
