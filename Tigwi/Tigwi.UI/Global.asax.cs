@@ -20,6 +20,18 @@ namespace Tigwi.UI
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+            // TODO: determine a routing scheme and put it in application
+            /*
+            routes.MapRoute("Log in", "_login", new { controller = "User", action = "LogOn" });
+            routes.MapRoute("Register", "_register", new { controller = "User", action = "Register" });
+            routes.MapRoute("Deactivate", "_deactivate", new { controller = "User", action = "Deactivate" });
+
+            routes.MapRoute(
+                "User info",
+                "{userName}/{controller}/{action}",
+                new { controller = "Home", action = "Index" },
+                new { userName = @"[a-zA-Z0-9][a-zA-Z0-9_]*", controller = @"Followers|Followed|Tweets" }
+            );*/
 
             routes.MapRoute(
                 "Default", // Route name

@@ -13,8 +13,28 @@ namespace Tigwi_API
 			routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 			// customer routes
 
+			routes.MapRoute("Message", 
+				"accountmessages/{accountName}/{numberOfMessages}",
+				new { controller = "ApiController", 
+					action = "AccountMessages", 
+					name="", 
+					numberOfMessages="20"} // Par défaut le nombre de messages est 20
+				);
             //routes to InfoAccount
 
+
+
+
+
+
+
+			routes.MapRoute("Accounts", 
+				"accountsubscriptions/{accountName}/{numberOfSubscriptions}",
+				new { controller = "ApiController", 
+					action = "AccountSubscriptionsList", 
+					name="",
+					numberOfSubscriptions="20"}
+				); 
             routes.MapRoute("InfoAccountMessages",
                             "infoaccount/messages/{accountName}/{numberOfMessages}",
                             new
@@ -26,6 +46,25 @@ namespace Tigwi_API
                                 } 
                 );
 
+			routes.MapRoute("Users",
+				"accountsubscribers/{accountName}/{numberOfSubscribers}",
+				new { controller = "ApiController", 
+					action = "AccountSubscribersList", 
+					name="",
+					numberOfSubscribers="20"}
+				);
+			
+			routes.MapRoute("Message",
+				"write",
+				new { controller = "ApiController", 
+					action = "WritePost"}
+				);
+		
+			routes.MapRoute("Accounts",
+				"suscribelist",
+				new { controller = "ApiController", 
+					action = "SuscribeList"}
+				);
             routes.MapRoute("InfoAccountSubscription",
                             "infoaccount/subscriptions/{accountName}/{numberOfSubscriptions}",
                             new
@@ -36,6 +75,15 @@ namespace Tigwi_API
                                     numberOfSubscriptions = "20"
                                 }
                 );
+
+
+
+
+
+
+
+
+
 
             routes.MapRoute("InfoAccountSubscribers",
                             "infoaccount/subscribers/{accountName}/{numberOfSubscribers}",

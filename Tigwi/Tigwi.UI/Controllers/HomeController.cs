@@ -10,9 +10,7 @@ namespace Tigwi.UI.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Message = "Welcome to ASP.NET MVC!";
-
-            return View();
+            throw new NotImplementedException("HomeController.Index");
         }
 
         public ActionResult About()
