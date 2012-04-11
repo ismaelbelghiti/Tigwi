@@ -22,19 +22,17 @@ namespace Tigwi_API
 				);
             //routes to InfoAccount
 
-
-
-
-
-
-
-			routes.MapRoute("Accounts", 
-				"accountsubscriptions/{accountName}/{numberOfSubscriptions}",
-				new { controller = "ApiController", 
-					action = "AccountSubscriptionsList", 
-					name="",
-					numberOfSubscriptions="20"}
-				); 
+            routes.MapRoute("Accounts",
+                            "accountsubscriptions/{accountName}/{numberOfSubscriptions}",
+                            new
+                                {
+                                    controller = "ApiController",
+                                    action = "AccountSubscriptionsList",
+                                    name = "",
+                                    numberOfSubscriptions = "20"
+                                }
+                ); 
+            
             routes.MapRoute("InfoAccountMessages",
                             "infoaccount/messages/{accountName}/{numberOfMessages}",
                             new
@@ -46,25 +44,35 @@ namespace Tigwi_API
                                 } 
                 );
 
-			routes.MapRoute("Users",
-				"accountsubscribers/{accountName}/{numberOfSubscribers}",
-				new { controller = "ApiController", 
-					action = "AccountSubscribersList", 
-					name="",
-					numberOfSubscribers="20"}
-				);
-			
-			routes.MapRoute("Message",
-				"write",
-				new { controller = "ApiController", 
-					action = "WritePost"}
-				);
-		
-			routes.MapRoute("Accounts",
-				"suscribelist",
-				new { controller = "ApiController", 
-					action = "SuscribeList"}
-				);
+            routes.MapRoute("Users",
+                            "accountsubscribers/{accountName}/{numberOfSubscribers}",
+                            new
+                                {
+                                    controller = "ApiController",
+                                    action = "AccountSubscribersList",
+                                    name = "",
+                                    numberOfSubscribers = "20"
+                                }
+                );
+
+            routes.MapRoute("Message",
+                            "write",
+                            new
+                                {
+                                    controller = "ApiController",
+                                    action = "WritePost"
+                                }
+                );
+
+            routes.MapRoute("Accounts",
+                            "suscribelist",
+                            new
+                                {
+                                    controller = "ApiController",
+                                    action = "SuscribeList"
+                                }
+                );
+
             routes.MapRoute("InfoAccountSubscription",
                             "infoaccount/subscriptions/{accountName}/{numberOfSubscriptions}",
                             new
@@ -75,15 +83,6 @@ namespace Tigwi_API
                                     numberOfSubscriptions = "20"
                                 }
                 );
-
-
-
-
-
-
-
-
-
 
             routes.MapRoute("InfoAccountSubscribers",
                             "infoaccount/subscribers/{accountName}/{numberOfSubscribers}",
@@ -104,37 +103,41 @@ namespace Tigwi_API
                                     action = "SubscribedPublicLists",
                                     accountName = "",
                                     numberOfLists = "20"
-                                });
+                                }
+                );
 
             routes.MapRoute("InfoAccountSubscribedList",
                             "infoaccout/subscribedlists/{accountName}/{numberOfLists}",
                             new
-                            {
-                                controller = "InfoAccountController",
-                                action = "SubscribedLists",
-                                accountName = "",
-                                numberOfLists = "20"
-                            });
+                                {
+                                    controller = "InfoAccountController",
+                                    action = "SubscribedLists",
+                                    accountName = "",
+                                    numberOfLists = "20"
+                                }
+                );
 
             routes.MapRoute("InfoAccountOwnedPublicList",
                             "infoaccout/ownedpubliclists/{accountName}/{numberOfLists}",
                             new
-                            {
-                                controller = "InfoAccountController",
-                                action = "OwnedPublicLists",
-                                accountName = "",
-                                numberOfLists = "20"
-                            });
+                                {
+                                    controller = "InfoAccountController",
+                                    action = "OwnedPublicLists",
+                                    accountName = "",
+                                    numberOfLists = "20"
+                                }
+                );
 
             routes.MapRoute("InfoAccountSubscribedPublicList",
                             "infoaccout/ownedlists/{accountName}/{numberOfLists}",
                             new
-                            {
-                                controller = "InfoAccountController",
-                                action = "OwnedLists",
-                                accountName = "",
-                                numberOfLists = "20"
-                            });
+                                {
+                                    controller = "InfoAccountController",
+                                    action = "OwnedLists",
+                                    accountName = "",
+                                    numberOfLists = "20"
+                                }
+                );
 
 
 
@@ -149,17 +152,19 @@ namespace Tigwi_API
                                     action = "Subscriptions",
                                     accountName = "",
                                     numberOfSubscription = "20"
-                                });
+                                }
+                );
 
             routes.MapRoute("InfoListSubscribers",
                             "infolist/subscribers/{idOfList}/{numberOfSubscribers}",
                             new
-                            {
-                                controller = "InfoListController",
-                                action = "Subscribers",
-                                idOfList = "",
-                                numberOfSubscribers = "20"
-                            });
+                                {
+                                    controller = "InfoListController",
+                                    action = "Subscribers",
+                                    idOfList = "",
+                                    numberOfSubscribers = "20"
+                                }
+                );
 
             routes.MapRoute("InfoListOwner",
                             "infolist/owner/{idOfList}",
@@ -168,7 +173,8 @@ namespace Tigwi_API
                                     controller = "InfoListController",
                                     action = "Owner",
                                     idOfList = "",
-                                });
+                                }
+                );
 
             routes.MapRoute("InfoListMessages",
                             "infolist/messages/{idOfList}/{numberOfMessages}",
@@ -178,7 +184,8 @@ namespace Tigwi_API
                                     action = "Messages",
                                     idOfList = "",
                                     numberOfMessages = "20"
-                                });
+                                }
+                );
 
 
             //routes to Modify
@@ -210,17 +217,18 @@ namespace Tigwi_API
                 );
 
             routes.MapRoute("ModifyListSubscribeAccount",
-                                        "modify/ListSubscribeAccount",
-                                        new
-                                        {
-                                            controller = "ModifyController",
-                                            action = "ListSubscribeAccount"
-                                        }
-                            );
+                            "modify/ListSubscribeAccount",
+                            new
+                                {
+                                    controller = "ModifyController",
+                                    action = "ListSubscribeAccount"
+                                }
+                );
 
 			// default route
-			routes.MapRoute("Default", "{controller}/{action}/{id}",
-				new { controller = "Home", action = "Index", id = ""});
+            routes.MapRoute("Default", "{controller}/{action}/{id}",
+                            new {controller = "Home", action = "Index", id = ""}
+                );
 		}
 
         protected void Application_Start()
