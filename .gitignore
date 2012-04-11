@@ -31,3 +31,7 @@ Thumbs.db
 # NuGet packages. Automatically installed on build. #
 #####################################################
 Tigwi/packages/
+
+# UI specific stuff. #
+######################
+Tigwi/Tigwi.UI/App_Data
