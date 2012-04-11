@@ -116,5 +116,9 @@
       Files="@(ConnectionFiles)"
       Regex ="DefaultEndpointsProtocol=https;AccountName=$(AzureStorageAccountName);AccountKey=$(AzureStorageAccountKey)"
       ReplacementText="UseDevelopmentStorage=true" />
+    <FileUpdate
+      Files="@(AllFiles)"
+      Regex="$(AzureStorageAccountKey)"
+      ReplacementText="__YOUR_STORAGE_ACCOUNT_KEY" />
   </Target>
 </Project>
