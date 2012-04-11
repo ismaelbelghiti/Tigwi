@@ -258,12 +258,12 @@ In case an error occurs:
 #Get informations about a _List_
 ##Get accounts followed by the list
 ###Purpose
-Obtain a number _n_ of accounts followed by list _nameOfList_.
+Obtain a number _n_ of accounts followed by list with id _idOfList_.
 No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/listsubscriptions/nameOfList/numberOfSubscriptions
+http://api.tigwi.com/listsubscriptions/idOfList/numberOfSubscriptions
 ###Request
 _left empty_
 ###Response
@@ -287,18 +287,18 @@ In case an error occurs:
     <Error Number="codeOfError"/>
 
 ###Informations
-* In **URL**, _nameOfList_ is the name of the list whose informations you want to get
+* In **URL**, _idOfList_ is the id of the list whose informations you want to get
 * In **URL**, _numberOfSubscriptions_ is the number of accounts you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of accounts returned (different from _numberOfSubscriptions_ if there are not enough accounts to provide).
 
 ##Get the list of accounts following a given list
 ###Purpose
-Obtain a number _n_ of accounts following the given list _nameoflist_.
+Obtain a number _n_ of accounts following the given list with id _idOflist_.
 No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/listsubscribers/nameOfList/numberOfFollowers
+http://api.tigwi.com/listsubscribers/idOfList/numberOfFollowers
 ###Request
 _left empty_
 ###Response
@@ -322,17 +322,17 @@ In case an error occurs:
     <Error Number="codeOfError"/>
 
 ###Informations
-* In **URL** _nameOfList_ is the name of the list whose followers you want to get.
+* In **URL** _idOfList_ is the id of the list whose followers you want to get.
 * In **URL**, _numberOfFollowers_ is the number of accounts you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of accounts returned (different from _numberOfFollowers_ if there are not enough accounts to provide).
 
 ##Get a list's owner informations
 ###Purpose
-Obtain the name and id of list _nameOfList_ 's owner.
+Obtain the name and id of list with id _idOfList_ 's owner.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/listowner/nameOfList
+http://api.tigwi.com/listowner/idOfList
 ###Request
 _left empty_
 ###Response
@@ -347,15 +347,15 @@ In case an error occurs:
     <Error Number="codeOfError"/>
 
 ###Informations
-* In **URL**, _nameOfList_ is the name of the list whose owner you want to get.
+* In **URL**, _idOfList_ is the id of the list whose owner you want to get.
 
 ##Get last messages sent to a list
 ###Purpose
-Obtain a number _n_ of last messages sent to the list _nameoflist_.
+Obtain a number _n_ of last messages sent to the list with id _idOfList_.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/listtimeline/nameOfList/numberOfMessages
+http://api.tigwi.com/listtimeline/idOfList/numberOfMessages
 ###Request
 _left empty_
 ###Response
@@ -381,7 +381,7 @@ In case an error occurs:
     <Error Number="codeOfError"/>
 
 ###Informations
-* In **URL**, _nameOfList_ is the name of the list whose messages you want to get.
+* In **URL**, _idOfList_ is the id of the list whose messages you want to get.
 * In **URL**, _numberOfMessages_ is the number of messages you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of messages returned (different from _numberOfMessages_ if there are not enough accounts to provide).
 
@@ -436,7 +436,7 @@ http://api.tigwi.com/createlist/
 		<Account> nameOfSubscriber </Account>
 		<ListInfo>
 			<Name> nameOfList </Name>
-			<Description> aRapidDescription </Description>
+			<Description> aQuickDescription </Description>
 			<isPrivate> privateSetting </isPrivate>
 		</ListInfo>
 	</CreateList>
@@ -487,7 +487,7 @@ If no error occurs
 
 
 ###Informations
-* You **must** be authenticated and authorized to use _nameOfSubscriber_ to use this method.
+* You **must** be authenticated and authorized to use the account _nameOfSubscriber_ to use this method.
 * In **Request**, _nameOfSubscriber_ is the name of the account who wants to follow the list _idOfSubscription_.
 
 #Modifying a list
@@ -517,5 +517,5 @@ If no error occurs
 
 
 ###Informations
-* You **must** be authenticated and authorized to use the owner of the list _idOfSuscriber_ to use this method.
+* You **must** be authenticated and authorized to use the owner of the list with id _idOfSuscriber_ to use this method.
 * In **Request**, _idOfSuscriber_ is the id of the list who wants to follow the account _nameOfSubscription_.

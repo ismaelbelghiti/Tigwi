@@ -147,8 +147,81 @@ namespace Tigwi_API.Controllers
         }
 
         //
+        // GET : accountsubscribedpubliclists/{accountName}/{numberOfLists}
+
+        public ActionResult AccountSubscribedPublicLists(string accountName, int numberofLists)
+        {
+            //TODO: implement this
+            throw new NotImplementedException();
+        }
+
+        //
+        // GET : accountsubscribedlists/{accountName}/{numberOfLists}
+
+        public ActionResult AccountSubscribedLists(string accountName, int numberOfLists)
+        {
+            //TODO: implement this
+            throw new NotImplementedException();
+        }
+
+        //
+        // GET : accountpubliclists/{accountName}/{numberOfLists}
+
+        public ActionResult AccountPublicLists(string accountName, int numberOfList)
+        {
+            //TODO: implement this
+            throw new NotImplementedException();
+        }
+
+        //
+        // GET : accountlists/{accountName}/{numberOfLists}
+
+        public ActionResult AccountLists(string accountName, int numberOfList)
+        {
+            //TODO: implement this
+            throw new NotImplementedException();
+        }
+
+        //
+        // GET : listsubscriptions/{idOfList}/{numberOfSubscriptions}
+
+        public ActionResult ListSubscriptions(Guid idOfList, int numberOfSubscriptions)
+        {
+            //TODO: Implement this
+            throw new NotImplementedException();
+        }
+        
+        //
+        // GET : listsubscribers/{idOfList}/{numberOfSubscribers}
+
+        public ActionResult ListSubscribers(Guid idOfList, int numberOfSubscribers)
+        {
+            //TODO: Implement this
+            throw new NotImplementedException();
+        }
+
+        //
+        // GET : listowner/{idOfList}
+
+        public ActionResult ListOwner(Guid idOfList)
+        {
+            //TODO: implement this
+            throw new NotImplementedException();
+        }
+
+        //
+        // GET : listtimeline/{idOfList}/{numberOfMessages}
+
+        public ActionResult ListTimeline(Guid idOfList, int numberOfMessages)
+        {
+            //TODO: implement this
+            throw new NotImplementedException();
+        }
+        
+        //
         // POST : /write
 
+        //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult WritePost(MsgToWrite msg)
         {
@@ -179,10 +252,11 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // POST : /suscribelist
+        // POST : /accountsuscribelist
 
+        //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult SubscribeList(SubscribeList subscribe)
+        public ActionResult AccountSubscribeList(SubscribeList subscribe)
         {
             IStorage storage = new Storage("", ""); // connexion
 
@@ -207,6 +281,28 @@ namespace Tigwi_API.Controllers
                 result = Content(stream.ToString());
             }
             return result;
+        }
+
+        //
+        // POST /createlist
+
+        //[Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult CreateList(/*to be implemented)*/)
+        {
+            //TODO : implement this
+            throw new NotImplementedException();
+        }
+
+        //
+        // POST : listsubscribeaccount/
+
+        //[Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult ListSubscribeAccount(/*to be implemented*/)
+        {
+            //TODO: implement this
+            throw new NotImplementedException();
         }
 
 
