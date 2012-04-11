@@ -6,7 +6,7 @@ MSBuild Community Tasks
 ConnectionInformation :
 To connect to Azure, you will need a file named ConnectionInfo.xml placed at the root of the project (same directory as the README file) which looks like Example.ConnectionInfo.xml (To complete with your connection informations)
 
-There is a list, named ConnectionInfoFiles of files in which the strings __AZURE_STORAGE_ACCOUNT_NAME and __AZURE_STORAGE_ACCOUNT_KEY will be replaced by the values read in ConnectionInfo.xml
+There is a list, named ConnectionFiles of files in which the strings __AZURE_STORAGE_ACCOUNT_NAME and __AZURE_STORAGE_ACCOUNT_KEY will be replaced by the values read in ConnectionInfo.xml
 You can customize this list.
 Warning : The position of the files in the list must be given relatively to the position of the file Tigwi.ccproj
 
