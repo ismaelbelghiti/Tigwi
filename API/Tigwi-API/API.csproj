@@ -93,6 +93,11 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InfoAccountController.cs" />
+    <Compile Include="Controllers\InfoListController.cs" />
+    <Compile Include="Controllers\ModifyController.cs">
+      <DependentUpon>InfoListController.cs</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

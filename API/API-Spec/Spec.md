@@ -4,11 +4,11 @@ Tigwi - API Specification by L. de HARO, A. de MYTTENAERE and T. ZIMMERMANN
 
 ##Get someone's recently sent messages
 ###Purpose
-Obtain a number _n_ of the account _accountname_ 's last posted messages
+Obtain a number _n_ of the account _accountName_ 's last posted messages
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/accountmessages/accountname/numberOfMessages
+http://api.tigwi.com/infoaccount/messages/accountName/numberOfMessages
 ###Request
 _left empty_
 ###Response
@@ -34,7 +34,7 @@ In case an error occurs:
     <Error Number="codeOfError"/>
 
 ###Informations
-* In **URL**, _accountname_ is the name of the account whose messages you want to get.
+* In **URL**, _accountName_ is the name of the account whose messages you want to get.
 * In **URL**, _numberOfMessages_ is the number of messages you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of messages returned (different from _numberOfMessages_ if there are not enough messages to provide).
 
@@ -45,7 +45,7 @@ No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/accountsubscriptions/accountname/numberOfSubscriptions
+http://api.tigwi.com/infoaccount/subscriptions/accountName/numberOfSubscriptions
 ###Request
 _left empty_
 ###Response
@@ -69,19 +69,19 @@ In case an error occurs:
     <Error Number="codeOfError"/>
 
 ###Informations
-* In **URL**, _accountname_ is the name of the account whose subscriptions you want to get.
+* In **URL**, _accountName_ is the name of the account whose subscriptions you want to get.
 * In **URL**, _numberOfSubscriptions_ is the number of subscriptions you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of subscription returned (different from _numberOfSubscriptions_ if there are not enough subscriptions to provide).
 
 
 ##Get someone's subscribers list
 ###Purpose
-Obtain a number _n_ of the account _accountname_ 's subscribers.
+Obtain a number _n_ of the account _accountName_ 's subscribers.
 No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/accountsubscribers/name/numberOfSubscribers
+http://api.tigwi.com/infoaccount/subscribers/accountName/numberOfSubscribers
 ###Request
 _left empty_
 ###Response
@@ -116,7 +116,7 @@ No particular order provided.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/accountsubscribedpubliclists/accountName/numberOfLists
+http://api.tigwi.com/infoaccount/subscribedpubliclists/accountName/numberOfLists
 ###Request
 _left empty_
 ###Response
@@ -153,7 +153,7 @@ Authentication required.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/accountsubscribedlists/accountName/numberOfLists
+http://api.tigwi.com/infoaccount/subscribedlists/accountName/numberOfLists
 ###Request
 _left empty_
 ###Response
@@ -177,6 +177,7 @@ In case an error occurs:
     <Error Number="codeOfError"/>
 
 ###Informations
+* You **must** be authenticated and authorize to use _accountName_ account to use this method.
 * In **URL**, _accountName_ is the name of the account whose followed lists you want to get.
 * In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
@@ -188,7 +189,7 @@ No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/accountpubliclists/accountName/numberOfLists
+http://api.tigwi.com/infoaccount/ownedpubliclists/accountName/numberOfLists
 ###Request
 _left empty_
 ###Response
@@ -225,7 +226,7 @@ No particular order provided. Authentication required.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/accountlists/accountName/numberOfLists
+http://api.tigwi.com/infoaccount/ownedlists/accountName/numberOfLists
 ###Request
 _left empty_
 ###Response
@@ -263,7 +264,7 @@ No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/listsubscriptions/idOfList/numberOfSubscriptions
+http://api.tigwi.com/infolist/subscriptions/idOfList/numberOfSubscriptions
 ###Request
 _left empty_
 ###Response
@@ -298,7 +299,7 @@ No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/listsubscribers/idOfList/numberOfFollowers
+http://api.tigwi.com/infolist/subscribers/idOfList/numberOfFollowers
 ###Request
 _left empty_
 ###Response
@@ -332,7 +333,7 @@ Obtain the name and id of list with id _idOfList_ 's owner.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/listowner/idOfList
+http://api.tigwi.com/infolist/owner/idOfList
 ###Request
 _left empty_
 ###Response
@@ -355,7 +356,7 @@ Obtain a number _n_ of last messages sent to the list with id _idOfList_.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/listtimeline/idOfList/numberOfMessages
+http://api.tigwi.com/infolist/messages/idOfList/numberOfMessages
 ###Request
 _left empty_
 ###Response
@@ -396,7 +397,7 @@ For someone to send a message on an authorized account. Authentication required.
 ###HTTP method
 *POST*
 ###URL
-http://api.tigwi.com/write
+http://api.tigwi.com/modify/write
 ###Request
 
     <Write>
@@ -429,7 +430,7 @@ For someone to create a new, empty list. Authentication required.
 *POST*
 
 ###URL
-http://api.tigwi.com/createlist/
+http://api.tigwi.com//modify/createlist/
 
 ###Request
 	<CreateList>
@@ -468,7 +469,7 @@ For someone to distantly subscribe to a list. Authentication required.
 ###HTTP method
 *POST*
 ###URL
-http://api.tigwi.com/accountsubscribelist/
+http://api.tigwi.com/modify/accountsubscribelist/
 ###Request
     
     <Subscribe>
@@ -498,7 +499,7 @@ For a list to add a suscription to a given account. Authentication required.
 ###HTTP method
 *POST*
 ###URL
-http://api.tigwi.com/listsubscribeaccount/
+http://api.tigwi.com/modify/listsubscribeaccount/
 ###Request
     
     <ListSubscribe>
