@@ -2,15 +2,20 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
 		<AzureSubscriptionID></AzureSubscriptionID>
-		<AzureCertificateThumbprint></AzureCertificateThumbprint>
+		<AzureCertificateThumbprint>‎</AzureCertificateThumbprint>
 		<AzureHostedServiceName></AzureHostedServiceName>
 		<AzureStorageAccountName></AzureStorageAccountName>
-		<AzureStorageAccountKey></AzureStorageAccountKey>	
+		<AzureStorageAccountKey></AzureStorageAccountKey>
 	</PropertyGroup>
 	<ItemGroup>
 		<!-- Comment the next line to use storage emulator on your local machine -->
-		<ConnectionFiles Include="ServiceConfiguration.Local.cscfg" />
-		<ConnectionFiles Include="ServiceConfiguration.Cloud.cscfg" />
+		<ServiceConfigurationFiles Include="ServiceConfiguration.Local.cscfg" />
+		<ServiceConfigurationFiles Include="ServiceConfiguration.Cloud.cscfg" />
+	</ItemGroup>
+	<ItemGroup>
+		<!-- Edit the list of files where to replace __AZURE_STORAGE_ACCOUNT_NAME and __AZURE_STORAGE_ACCOUNT_KEY by their values,
+		put the relative position to Tigwi.ccproj -->
+		<!-- Example : <ConnectionFiles Include="myfile.*" /> -->
 	</ItemGroup>
 	<ItemGroup>
 		<AllFiles Include="..\..\\**\*.*" />
