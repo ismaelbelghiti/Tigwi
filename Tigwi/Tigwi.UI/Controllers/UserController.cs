@@ -24,7 +24,7 @@ namespace Tigwi.UI.Controllers
         /// <param name="userLogOnViewModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult LogOn(UserLogOnViewModel userLogOnViewModel)
+        public ActionResult LogOn(/*UserLogOnViewModel*/object userLogOnViewModel)
         {
             throw new NotImplementedException("UserController.LogOn[POST]");
         }

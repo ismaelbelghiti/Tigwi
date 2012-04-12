@@ -45,7 +45,7 @@ namespace Tigwi.UI.Controllers
         /// <param name="accountCreation"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Create(AccountCreationModel accountCreation)
+        public ActionResult Create(/*AccountCreationModel*/object accountCreation)
         {
             throw new NotImplementedException("AccountController.Create[POST]");
         }
@@ -66,7 +66,7 @@ namespace Tigwi.UI.Controllers
         /// <param name="accountEdit"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Edit(AccountEditModel accountEdit)
+        public ActionResult Edit(/*AccountEditModel*/object accountEdit)
         {
             throw new NotImplementedException("AccountController.Edit");
         }

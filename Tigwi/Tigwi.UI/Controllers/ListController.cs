@@ -43,7 +43,7 @@ namespace Tigwi.UI.Controllers
         /// <param name="listCreateViewModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Create(ListCreateViewModel listCreateViewModel)
+        public ActionResult Create(/*ListCreateViewModel*/object listCreateViewModel)
         {
             throw new NotImplementedException("ListController.Create[POST]");
         }
@@ -73,7 +73,7 @@ namespace Tigwi.UI.Controllers
         /// <param name="listEditViewModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Edit(ListEditViewModel listEditViewModel)
+        public ActionResult Edit(/*ListEditViewModel*/object listEditViewModel)
         {
             throw new NotImplementedException("ListController.Edit[POST]");
         }
