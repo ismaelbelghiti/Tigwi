@@ -9,7 +9,7 @@ using Tigwi_API.Models;
 
 namespace Tigwi_API.Controllers
 {
-    public class InfoListController : Controller
+    public class InfoListController : ApiController
     {
         //
         // GET : /infolist/subscriptions/{idOfList}/{numberOfSubscriptions}

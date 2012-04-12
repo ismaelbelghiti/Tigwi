@@ -3,28 +3,13 @@ using System.IO;
 using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Xml.Serialization;
-using System.Linq;
 using StorageLibrary;
 using Tigwi_API.Models;
 
 namespace Tigwi_API.Controllers
 {
-    public class InfoAccountController : Controller
+    public class InfoAccountController : ApiController
     {
-        //often needed in following methods
-        private static AccountList BuildAccountListFromAccountsHashSet(HashSet<Guid> hashAccounts, int size, IStorage storage)
-        {
-            var accountList = new List<Account>();
-            for (var k = 0; k < size; k++)
-            {
-                var accountId = hashAccounts.First();
-                var account = new Account(accountId, storage.Account.GetInfo(accountId).Name);
-                accountList.Add(account);
-                hashAccounts.Remove(accountId);
-            }
-
-            return new AccountList(accountList);
-        }
 
         //
         // GET: /infoaccount/messages/{name}/{numberOfMessages}
@@ -32,7 +17,7 @@ namespace Tigwi_API.Controllers
         public ActionResult Messages(string accountName, int numberOfMessages)
         {
             // TODO : give the actual connexion informations
-            IStorage storage = new Storage("", ""); // connexion
+            IStorage storage = new StorageTmp(); // connexion
             ContentResult result;
 
             try
@@ -68,7 +53,7 @@ namespace Tigwi_API.Controllers
 
         public ActionResult Subscribers(string accountName, int numberOfSubscribers)
         {
-            IStorage storage = new Storage("", ""); // connexion
+            IStorage storage = new StorageTmp(); // connexion
             ContentResult result;
 
             try
@@ -85,7 +70,7 @@ namespace Tigwi_API.Controllers
 
                 // Get as many subscribers as possible (maximum: numberOfSubscibers)
                 var size = Math.Min(hashFollowers.Count, numberOfSubscribers);
-                var accountListToReturn = BuildAccountListFromAccountsHashSet(hashFollowers, size, storage);
+                var accountListToReturn = BuildAccountListFromGuidCollection(hashFollowers, size, storage);
 
                 // a stream is needed for serialization
                 var stream = new MemoryStream();
@@ -127,7 +112,7 @@ namespace Tigwi_API.Controllers
 
                 // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
                 var size = Math.Min(accountsInLists.Count, numberOfSubscriptions);
-                var accountListToReturn = BuildAccountListFromAccountsHashSet(accountsInLists, size, storage);
+                var accountListToReturn = BuildAccountListFromGuidCollection(accountsInLists, size, storage);
 
                 // a stream is needed for serialization
                 var stream = new MemoryStream();

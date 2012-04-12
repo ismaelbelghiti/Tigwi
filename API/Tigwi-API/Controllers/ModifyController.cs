@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Xml.Serialization;
 using StorageLibrary;
@@ -10,7 +7,7 @@ using Tigwi_API.Models;
 
 namespace Tigwi_API.Controllers
 {
-    public class ModifyController : Controller
+    public class ModifyController : ApiController
     {
         //
         // POST : modify/write
@@ -19,7 +16,7 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Write(MsgToWrite msg)
         {
-            IStorage storage = new Storage("", ""); // connexion
+            IStorage storage = new StorageTmp(); // connexion
 
             ContentResult result;
 
@@ -52,7 +49,7 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult AccountSubscribeList(SubscribeList subscribe)
         {
-            IStorage storage = new Storage("", ""); // connexion
+            IStorage storage = new StorageTmp(); // connexion
 
             ContentResult result;
 
