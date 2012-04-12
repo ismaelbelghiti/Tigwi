@@ -42,5 +42,9 @@ namespace StorageLibrary
         /// don't do anything if the user doesn't exists
         /// </summary>
         void Delete(Guid userId);
+
+        // TODO :
+        // add the possibility (not obligation) to have an openID url
+        // + une string avec le hash du mot de passe (from ID)
     }
 }

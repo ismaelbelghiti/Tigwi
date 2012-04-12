@@ -67,6 +67,7 @@ namespace StorageLibrary
     }
 
     // Deprecated
+    [Serializable]
     public class StorageLibException : Exception
     {
         protected StorageLibException(StrgLibErr code)
