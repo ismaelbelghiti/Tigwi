@@ -10,23 +10,50 @@ namespace Tigwi_API.Models
     // models for answers to GET requests
 
     [Serializable]
+    public class Message
+    {
+        public Message(IMessage msg, IStorage storage)
+        {
+            Id = msg.Id;
+            PostTime = msg.Date;
+            Poster = storage.Account.GetInfo(msg.PosterId).Name;
+            Content = msg.Content;
+        }
+
+        public Guid Id { get; set; }
+
+        public DateTime PostTime { get; set; }
+
+        public string Poster { get; set; }
+
+        public string Content { get; set; }
+    }
+
     public class MessageList
     {
         public MessageList()
         {
-            Message = new List<IMessage>();
+            Message = new List<Message>();
             Size = 0;
         }
-        public MessageList(List<IMessage> msgs)
+
+        public MessageList(List<Message> msgs)
         {
             Message = msgs;
+            Size = msgs.Count();
+        }
+
+        public MessageList(List<IMessage> msgs, IStorage storage)
+        {
+            Message = msgs.ConvertAll(ancient => new Message(ancient, storage));
             Size = msgs.Count();
         }
 
         [XmlAttribute]
         public int Size { get; set; }
 
-        [XmlElement] public List<IMessage> Message;
+        [XmlElement]
+        public List<Message> Message;
     }
 
     [Serializable]
@@ -62,7 +89,7 @@ namespace Tigwi_API.Models
         [XmlElement] public List<Account> Account;
     }
 
-    // models to answer to POST requests
+    // models to answer to requests with errors (can be empty) messages
 
     public class Error
     {
@@ -78,28 +105,4 @@ namespace Tigwi_API.Models
         [XmlAttribute]
         public String Code { get; set; }
     }
-
-    // Models for request bodies
-
-    [Serializable]
-    [XmlRootAttribute("Write")]
-    public class MsgToWrite
-    {
-        public string Account { get; set; }
-        public MsgToPost Message { get; set; }
-    }
-
-    [XmlTypeAttribute("Message")]
-    public class MsgToPost
-    {
-        public string Content { get; set; }
-    }
-
-    [Serializable]
-    public class SubscribeList
-    {
-        public string Account { get; set; }
-        public Guid Subscription { get; set; }
-    }
-
 }
