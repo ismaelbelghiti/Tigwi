@@ -12,7 +12,7 @@ namespace Tigwi_API.Controllers
     {
 
         //
-        // GET: /infoaccount/messages/{name}/{numberOfMessages}
+        // GET: /infoaccount/messages/{accountName}/{numberOfMessages}
 
         public ActionResult Messages(string accountName, int numberOfMessages)
         {
@@ -28,7 +28,7 @@ namespace Tigwi_API.Controllers
                 var listMsgs = storage.Msg.GetListsMsgTo(new HashSet<Guid> { personalListId }, DateTime.Now, numberOfMessages);
 
                 // convert, looking forward XML serialization
-                var listMsgsOutput = new MessageList(listMsgs);
+                var listMsgsOutput = new MessageList(listMsgs, storage);
 
                 // a stream is needed for serialization
                 var stream = new MemoryStream();
