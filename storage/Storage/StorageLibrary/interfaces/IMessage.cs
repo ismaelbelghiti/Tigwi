@@ -10,6 +10,8 @@ namespace StorageLibrary
     {
         Guid Id {get; set;}
         Guid PosterId {get; set;}
+        string PosterName { get; set; }
+        string PosterAvatar { get; set; }
         DateTime Date {get; set;}
         string Content { get; set; }
     }

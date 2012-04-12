@@ -9,6 +9,7 @@ namespace StorageLibrary
     public interface IUserInfo
     {
         string Login { get; set; }
+        string Avatar { get; set; }
         string Email { get; set; }
     }
 }

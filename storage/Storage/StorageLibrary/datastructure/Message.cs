@@ -8,7 +8,7 @@ namespace StorageLibrary
     [Serializable]
     class Message : IMessage
     {
-        public Message(Guid id, Guid posterId, DateTime date, string content)
+        public Message(Guid id, Guid posterId, string PosterName, string PosterAvatar, DateTime date, string content)
         {
             Id = id;
             PosterId = posterId;
@@ -19,6 +19,10 @@ namespace StorageLibrary
         public Guid Id { get; set; }
 
         public Guid PosterId { get; set; }
+
+        public string PosterName { get; set; }
+
+        public string PosterAvatar { get; set; }
 
         public DateTime Date { get; set; }
 

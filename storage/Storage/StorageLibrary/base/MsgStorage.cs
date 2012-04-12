@@ -24,7 +24,20 @@ namespace StorageLibrary
 
         public List<IMessage> GetListsMsgTo(HashSet<Guid> listsId, DateTime lastMsgId, int msgNumber)
         {
-            throw new NotImplementedException();
+            if (DateTime.Now - lastMsgId < new TimeSpan(60000000000))
+            {
+                List<IMessage> messages = listsId.Aggregate<Guid, List<IMessage>>(new List<IMessage>(), (messagelist, list) =>
+                (System.Collections.Generic.List<IMessage>)
+                messagelist.Union<IMessage>(new StrgBlob<List<IMessage>>
+                    (connexion.msgContainer, list.ToString()).Get()));
+                messages.Sort();
+                messages.Reverse();
+                return messages.GetRange(0, 100);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public void Tag(Guid accountId, Guid msgId)
