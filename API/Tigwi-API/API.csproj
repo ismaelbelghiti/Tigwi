@@ -101,6 +101,9 @@
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\ConvertObjects.cs" />
+    <Compile Include="Models\InfoAccountModel.cs" />
+    <Compile Include="Models\InfoListModel.cs" />
+    <Compile Include="Models\ModifyModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -62,7 +62,7 @@ namespace Tigwi_API.Models
         [XmlElement] public List<Account> Account;
     }
 
-    // models to answer to POST requests
+    // models to answer to requests with errors (can be empty) messages
 
     public class Error
     {
@@ -78,28 +78,4 @@ namespace Tigwi_API.Models
         [XmlAttribute]
         public String Code { get; set; }
     }
-
-    // Models for request bodies
-
-    [Serializable]
-    [XmlRootAttribute("Write")]
-    public class MsgToWrite
-    {
-        public string Account { get; set; }
-        public MsgToPost Message { get; set; }
-    }
-
-    [XmlTypeAttribute("Message")]
-    public class MsgToPost
-    {
-        public string Content { get; set; }
-    }
-
-    [Serializable]
-    public class SubscribeList
-    {
-        public string Account { get; set; }
-        public Guid Subscription { get; set; }
-    }
-
 }
