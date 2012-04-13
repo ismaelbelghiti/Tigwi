@@ -90,10 +90,7 @@ namespace Tigwi_API.Controllers
             return result;
         }
 
-        //
-        // GET : /infoaccount/subscriptions/{accountName}/{numberOfSubscriptions}
-
-        public ActionResult Subscriptions(string accountName, int numberOfSubscriptions)
+        private ContentResult SubscriptionsEitherPublicOrAll(string accountName, int numberOfSubscriptions, bool withPrivate)
         {
             IStorage storage = new StorageTmp(); // connexion
             ContentResult result;
@@ -101,9 +98,9 @@ namespace Tigwi_API.Controllers
             try
             {
                 // get the public lists followed by the given account
-                // TODO : if the user is authorized, get also the private lists
+
                 var accountId = storage.Account.GetId(accountName);
-                var followedLists = storage.List.GetAccountFollowedLists(accountId, false);
+                var followedLists = storage.List.GetAccountFollowedLists(accountId, withPrivate);
                 var accountsInLists = new HashSet<Guid>();
                 foreach (var followedList in followedLists)
                 {
@@ -132,13 +129,39 @@ namespace Tigwi_API.Controllers
             return result;
         }
 
+
+        //
+        // GET : /infoaccount/publicsubscriptions/{accountName}/{numberOfSubscriptions}
+
+        public ActionResult PublicSubscriptions(string accountName, int numberOfSubscriptions)
+        {
+            return SubscriptionsEitherPublicOrAll(accountName, numberOfSubscriptions, false);
+        }
+
+
+        //
+        // GET : /infoaccount/subscriptions/{accountName}/{numberOfSubscriptions}
+        // [authorize]
+        public ActionResult Subscriptions(string accountName, int numberOfSubscriptions)
+        {
+            return SubscriptionsEitherPublicOrAll(accountName, numberOfSubscriptions, true);
+        }
+
+
+        
+        private ActionResult SubscribedListsEitherPublicOrAll(string accountName, int numberofLists, bool withPrivate)
+        {
+            //TODO: implement this
+            throw new NotImplementedException();
+        }
+
+        
         //
         // GET : /infoaccount/subscribedpubliclists/{accountName}/{numberOfLists}
 
         public ActionResult SubscribedPublicLists(string accountName, int numberofLists)
         {
-            //TODO: implement this
-            throw new NotImplementedException();
+            return SubscribedListsEitherPublicOrAll(accountName, numberofLists, false);
         }
 
         //
@@ -147,17 +170,24 @@ namespace Tigwi_API.Controllers
         //[Authorize]
         public ActionResult SubscribedLists(string accountName, int numberofLists)
         {
+            return SubscribedListsEitherPublicOrAll(accountName, numberofLists, true);
+        }
+
+
+
+        private ActionResult OwnedListsEitherPublicOrAll(string accountName, int numberOfList, bool withPrivate)
+        {
             //TODO: implement this
             throw new NotImplementedException();
         }
+
 
         //
         // GET : infoaccount/ownedpubliclists/{accountName}/{numberOfLists}
 
         public ActionResult OwnedPublicLists(string accountName, int numberOfList)
         {
-            //TODO: implement this
-            throw new NotImplementedException();
+            return OwnedListsEitherPublicOrAll(accountName, numberOfList, false);
         }
 
         //
@@ -166,8 +196,7 @@ namespace Tigwi_API.Controllers
         //[Authorize]
         public ActionResult OwnedLists(string accountName, int numberOfList)
         {
-            //TODO: implement this
-            throw new NotImplementedException();
+            return OwnedListsEitherPublicOrAll(accountName, numberOfList, true);
         }
 
     }

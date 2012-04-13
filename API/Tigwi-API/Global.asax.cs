@@ -26,15 +26,26 @@ namespace Tigwi_API
                                 } 
                 );
             
-            routes.MapRoute("InfoAccountSubscription",
-                            "infoaccount/subscriptions/{accountName}/{numberOfSubscriptions}",
+            routes.MapRoute("InfoAccountPublicSubscription",
+                            "infoaccount/publicsubscriptions/{accountName}/{numberOfSubscriptions}",
                             new
                                 {
                                     controller = "InfoAccountController",
-                                    action = "SubscriptionsList",
+                                    action = "PublicSubscriptions",
                                     accountName = "",
                                     numberOfSubscriptions = "20"
                                 }
+                );
+
+            routes.MapRoute("InfoAccountSubscription",
+                            "infoaccount/subscriptions/{accountName}/{numberOfSubscriptions}",
+                            new
+                            {
+                                controller = "InfoAccountController",
+                                action = "Subscriptions",
+                                accountName = "",
+                                numberOfSubscriptions = "20"
+                            }
                 );
 
             routes.MapRoute("InfoAccountSubscribers",

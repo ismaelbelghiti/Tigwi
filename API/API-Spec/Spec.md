@@ -38,10 +38,48 @@ In case an error occurs:
 * In **URL**, _numberOfMessages_ is the number of messages you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of messages returned (different from _numberOfMessages_ if there are not enough messages to provide).
 
+##Get someone's public subscriptions list
+###Purpose
+Obtain a number _n_ of the account _accountname_ 's public subscriptions. 
+No particular order provided
+###HTTP method
+*GET*
+###URL
+http://api.tigwi.com/infoaccount/publicsubscriptions/accountName/numberOfSubscriptions
+###Request
+_left empty_
+###Response
+
+    <AccountsList Size="sizeOfList">
+	    <Account> <!-- See below --> </Account>
+	    <Acount> ... </Account>
+	    ...
+	    <Account> ... </Account>
+    </AccountsList>
+
+Account format:
+
+     <Account>
+	     <Id> idOfAccount </Id>
+	     <Name> nameOfAccount </Name>
+     </Account>
+
+In case an error occurs:
+
+    <Error Number="codeOfError"/>
+
+###Informations
+* In **URL**, _accountName_ is the name of the account whose subscriptions you want to get.
+* In **URL**, _numberOfSubscriptions_ is the number of subscriptions you want to get. It is optional and default is set to 20.
+* In **Response**, _sizeOfList_ is the number of subscription returned (different from _numberOfSubscriptions_ if there are not enough subscriptions to provide).
+* You will only receive subscriptions from lists that the owner has declared public.
+
+
 ##Get someone's subscriptions list
 ###Purpose
 Obtain a number _n_ of the account _accountname_ 's subscriptions. 
-No particular order provided
+No particular order provided.
+Authentication required.
 ###HTTP method
 *GET*
 ###URL
@@ -69,6 +107,7 @@ In case an error occurs:
     <Error Number="codeOfError"/>
 
 ###Informations
+* You **must** be authenticated as _accountName_ to have access to these informations. 
 * In **URL**, _accountName_ is the name of the account whose subscriptions you want to get.
 * In **URL**, _numberOfSubscriptions_ is the number of subscriptions you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of subscription returned (different from _numberOfSubscriptions_ if there are not enough subscriptions to provide).
