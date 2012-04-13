@@ -46,7 +46,7 @@ namespace StorageLibrary
 
         public Guid Create(string login, string email)
         {
-            dico_id_info.Add( new Guid(next_free_id, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 }), new UserInfo(login, email));
+            dico_id_info.Add( new Guid(next_free_id, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 }), new UserInfo(login, email, ""));
             dico_login_id.Add(login, new Guid(next_free_id, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 }));
             next_free_id++;
             return  new Guid(next_free_id - 1, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 });
@@ -446,7 +446,8 @@ namespace StorageLibrary
             dico_idaccount_listIdMess.TryGetValue(accountId, out list_mess);
             list_mess.Add(new Guid(nextFreeMsgId, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 }));
 
-            Message curMessage = new Message(new Guid(nextFreeMsgId, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 }), accountId, new DateTime(0), content);
+            // TODO : set user name
+            Message curMessage = new Message(new Guid(nextFreeMsgId, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 }), accountId, "", "", new DateTime(0), content);
             dico_idMess_mess.Add(new Guid(nextFreeMsgId, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 }), curMessage);
 
             nextFreeMsgId++;
