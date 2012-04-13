@@ -26,7 +26,7 @@ namespace Tigwi_API
                                 } 
                 );
             
-            routes.MapRoute("InfoAccountPublicSubscription",
+            routes.MapRoute("InfoAccountPublicSubscriptions",
                             "infoaccount/publicsubscriptions/{accountName}/{numberOfSubscriptions}",
                             new
                                 {
@@ -37,7 +37,7 @@ namespace Tigwi_API
                                 }
                 );
 
-            routes.MapRoute("InfoAccountSubscription",
+            routes.MapRoute("InfoAccountSubscriptions",
                             "infoaccount/subscriptions/{accountName}/{numberOfSubscriptions}",
                             new
                             {
@@ -92,7 +92,7 @@ namespace Tigwi_API
                                 }
                 );
 
-            routes.MapRoute("InfoAccountSubscribedPublicList",
+            routes.MapRoute("InfoAccountOwnedList",
                             "infoaccout/ownedlists/{accountName}/{numberOfLists}",
                             new
                                 {
