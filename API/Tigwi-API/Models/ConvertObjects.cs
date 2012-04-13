@@ -29,6 +29,7 @@ namespace Tigwi_API.Models
         public string Content { get; set; }
     }
 
+    [Serializable]
     public class MessageList
     {
         public MessageList()
@@ -57,7 +58,6 @@ namespace Tigwi_API.Models
     }
 
     [Serializable]
-    [XmlTypeAttribute("Account")]
     public class Account
     {
         public Account(Guid id, string name)
@@ -70,6 +70,7 @@ namespace Tigwi_API.Models
         public string Name { get; set; }
     }
 
+    [Serializable]
     public class AccountList
     {
         public AccountList()
@@ -91,6 +92,7 @@ namespace Tigwi_API.Models
 
     // models to answer to requests with errors (can be empty) messages
 
+    [Serializable]
     public class Error
     {
         public Error()

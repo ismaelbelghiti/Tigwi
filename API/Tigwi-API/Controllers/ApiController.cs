@@ -9,7 +9,7 @@ namespace Tigwi_API.Controllers
 {
     public abstract class ApiController : Controller
     {
-        protected static AccountList BuildAccountListFromGuidCollection (ICollection<Guid> hashAccounts, int size, IStorage storage )
+        protected static AccountList BuildAccountListFromGuidCollection(ICollection<Guid> hashAccounts, int size, IStorage storage)
         {
             var accountList = new List<Account>();
             for (var k = 0; k < size; k++)

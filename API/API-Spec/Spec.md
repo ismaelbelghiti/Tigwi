@@ -13,12 +13,12 @@ http://api.tigwi.com/infoaccount/messages/accountName/numberOfMessages
 _left empty_
 ###Response
 
-    <MessageList Size="sizeOfList">
+    <Messages Size="sizeOfList">
 	    <Message> <!-- See below --> </Message>
 	    <Message> ... </Message>
 	    ...
 	    <Message> ... </Message>
-    </MessageList>
+    </Messages>
 
 Message format:
 
@@ -31,7 +31,7 @@ Message format:
 
 In case an error occurs:
 
-    <Error Number="codeOfError"/>
+    <Error Code="codeOfError"/>
 
 ###Informations
 * In **URL**, _accountName_ is the name of the account whose messages you want to get.
@@ -50,12 +50,12 @@ http://api.tigwi.com/infoaccount/publicsubscriptions/accountName/numberOfSubscri
 _left empty_
 ###Response
 
-    <AccountsList Size="sizeOfList">
+    <Accounts Size="sizeOfList">
 	    <Account> <!-- See below --> </Account>
 	    <Acount> ... </Account>
 	    ...
 	    <Account> ... </Account>
-    </AccountsList>
+    </Accounts>
 
 Account format:
 
@@ -66,7 +66,7 @@ Account format:
 
 In case an error occurs:
 
-    <Error Number="codeOfError"/>
+    <Error Code="codeOfError"/>
 
 ###Informations
 * In **URL**, _accountName_ is the name of the account whose subscriptions you want to get.
@@ -88,12 +88,12 @@ http://api.tigwi.com/infoaccount/subscriptions/accountName/numberOfSubscriptions
 _left empty_
 ###Response
 
-    <AccountsList Size="sizeOfList">
+    <Accounts Size="sizeOfList">
 	    <Account> <!-- See below --> </Account>
 	    <Acount> ... </Account>
 	    ...
 	    <Account> ... </Account>
-    </AccountsList>
+    </Accounts>
 
 Account format:
 
@@ -104,7 +104,7 @@ Account format:
 
 In case an error occurs:
 
-    <Error Number="codeOfError"/>
+    <Error Code="codeOfError"/>
 
 ###Informations
 * You **must** be authenticated as _accountName_ to have access to these informations. 
@@ -125,12 +125,12 @@ http://api.tigwi.com/infoaccount/subscribers/accountName/numberOfSubscribers
 _left empty_
 ###Response
 
-    <AccountsList Size="sizeOfList">
+    <Accounts Size="sizeOfList">
 	    <Account> <!-- See below --> </Account>
 	    <Account> ... </Account>
 	    ...
 	    <Account> ... </Account>
-    </AccountsList>
+    </Accounts>
 
 Account format:
 
@@ -141,7 +141,7 @@ Account format:
 
 In case an error occurs:
 
-    <Error Number="codeOfError"/>
+    <Error Code="codeOfError"/>
 
 ###Informations
 * In **URL**, _accountname_ is the name of the account whose subscribers you want to get.
@@ -160,12 +160,12 @@ http://api.tigwi.com/infoaccount/subscribedpubliclists/accountName/numberOfLists
 _left empty_
 ###Response
 
-    <ListsList Size="sizeOfList">
+    <Lists Size="sizeOfList">
 	    <List> <!-- See below --> </List>
 	    <List> ... </List>
 	    ...
 	    <List> ... </List>
-    </ListsList>
+    </Lists>
 
 List format:
 
@@ -176,7 +176,7 @@ List format:
 
 In case an error occurs:
 
-    <Error Number="codeOfError"/>
+    <Error Code="codeOfError"/>
 
 ###Informations
 * In **URL**, _accountName_ is the name of the account whose followed lists you want to get.
@@ -197,12 +197,12 @@ http://api.tigwi.com/infoaccount/subscribedlists/accountName/numberOfLists
 _left empty_
 ###Response
 
-    <ListsList Size="sizeOfList">
+    <Lists Size="sizeOfList">
 	    <List> <!-- See below --> </List>
 	    <List> ... </List>
 	    ...
 	    <List> ... </List>
-    </ListsList>
+    </Lists>
 
 List format:
 
@@ -213,7 +213,7 @@ List format:
 
 In case an error occurs:
 
-    <Error Number="codeOfError"/>
+    <Error Code="codeOfError"/>
 
 ###Informations
 * You **must** be authenticated and authorize to use _accountName_ account to use this method.
@@ -233,12 +233,12 @@ http://api.tigwi.com/infoaccount/ownedpubliclists/accountName/numberOfLists
 _left empty_
 ###Response
 
-    <ListsList Size="sizeOfList">
+    <Lists Size="sizeOfList">
 	    <List> <!-- See below --> </List>
 	    <List> ... </List>
 	    ...
 	    <List> ... </List>
-    </ListsList>
+    </Lists>
 
 List format:
 
@@ -249,7 +249,7 @@ List format:
 
 In case an error occurs:
 
-    <Error Number="codeOfError"/>
+    <Error Code="codeOfError"/>
 
 ###Informations
 * In **URL**, _accountName_ is the name of the account whose lists you want to get.
@@ -270,12 +270,12 @@ http://api.tigwi.com/infoaccount/ownedlists/accountName/numberOfLists
 _left empty_
 ###Response
 
-    <ListsList Size="sizeOfList">
+    <Lists Size="sizeOfList">
 	    <List> <!-- See below --> </List>
 	    <List> ... </List>
 	    ...
 	    <List> ... </List>
-    </ListsList>
+    </Lists>
 
 List format:
 
@@ -286,7 +286,7 @@ List format:
 
 In case an error occurs:
 
-    <Error Number="codeOfError"/>
+    <Error Code="codeOfError"/>
 
 ###Informations
 * You **must** be authenticated as _accountName_ to have access to these informations. 
@@ -308,12 +308,12 @@ http://api.tigwi.com/infolist/subscriptions/idOfList/numberOfSubscriptions
 _left empty_
 ###Response
 
-    <AccountsList Size="sizeOfList">
+    <Accounts Size="sizeOfList">
 	    <Account> <!-- See below --> </Account>
 	    <Account> ... </Account>
 	    ...
 	    <Account> ... </Account>
-    </AccountsList>
+    </Accounts>
 
 Account format:
 
@@ -324,7 +324,7 @@ Account format:
 
 In case an error occurs:
 
-    <Error Number="codeOfError"/>
+    <Error Code="codeOfError"/>
 
 ###Informations
 * In **URL**, _idOfList_ is the id of the list whose informations you want to get
@@ -343,12 +343,12 @@ http://api.tigwi.com/infolist/subscribers/idOfList/numberOfFollowers
 _left empty_
 ###Response
 
-    <AccountsList Size="sizeOfList">
+    <Accounts Size="sizeOfList">
 	    <Account> <!-- See below --> </Account>
 	    <Account> ... </Account>
 	    ...
 	    <Account> ... </Account>
-    </AccountsList>
+    </Accounts>
 
 Account format:
 
@@ -359,7 +359,7 @@ Account format:
 
 In case an error occurs:
 
-    <Error Number="codeOfError"/>
+    <Error Code="codeOfError"/>
 
 ###Informations
 * In **URL** _idOfList_ is the id of the list whose followers you want to get.
@@ -384,7 +384,7 @@ _left empty_
 
 In case an error occurs:
 
-    <Error Number="codeOfError"/>
+    <Error Code="codeOfError"/>
 
 ###Informations
 * In **URL**, _idOfList_ is the id of the list whose owner you want to get.
@@ -400,12 +400,12 @@ http://api.tigwi.com/infolist/messages/idOfList/numberOfMessages
 _left empty_
 ###Response
 
-    <MessageList Size="sizeOfList">
+    <Messages Size="sizeOfList">
 	    <Message> <!-- See below --> </Message>
 	    <Message> ... </Message>
 	    ...
 	    <Message> ... </Message>
-    </MessageList>
+    </Messages>
 
 Message format:
 
@@ -418,7 +418,7 @@ Message format:
 
 In case an error occurs:
 
-    <Error Number="codeOfError"/>
+    <Error Code="codeOfError"/>
 
 ###Informations
 * In **URL**, _idOfList_ is the id of the list whose messages you want to get.
@@ -450,7 +450,7 @@ http://api.tigwi.com/modify/write
 ###Response
 In case an error occurs
 
-    <Error Number="codeOfError"/>
+    <Error Code="codeOfError"/>
 
 
 If no error occurs
@@ -484,7 +484,7 @@ http://api.tigwi.com//modify/createlist/
 ###Response
 In case an error occurs
 
-    <Error Number="codeOfError"/>
+    <Error Code="codeOfError"/>
 
 If no error occurs
 
@@ -519,7 +519,7 @@ http://api.tigwi.com/modify/accountsubscribelist/
 ###Response
 In case an error occurs
 
-    <Error Number="codeOfError"/>
+    <Error Code="codeOfError"/>
 
 If no error occurs
 
@@ -549,7 +549,7 @@ http://api.tigwi.com/modify/listsubscribeaccount/
 ###Response
 In case an error occurs
 
-    <Error Number="codeOfError"/>
+    <Error Code="codeOfError"/>
 
 If no error occurs
 

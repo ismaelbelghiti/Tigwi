@@ -16,6 +16,7 @@ namespace Tigwi_API.Models
         public MsgToPost Message { get; set; }
     }
 
+    [Serializable]
     [XmlTypeAttribute("Message")]
     public class MsgToPost
     {
