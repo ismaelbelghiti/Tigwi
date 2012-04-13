@@ -30,21 +30,21 @@ namespace Tigwi_API.Models
     }
 
     [Serializable]
-    public class MessageList
+    public class Messages
     {
-        public MessageList()
+        public Messages()
         {
             Message = new List<Message>();
             Size = 0;
         }
 
-        public MessageList(List<Message> msgs)
+        public Messages(List<Message> msgs)
         {
             Message = msgs;
             Size = msgs.Count();
         }
 
-        public MessageList(List<IMessage> msgs, IStorage storage)
+        public Messages(List<IMessage> msgs, IStorage storage)
         {
             Message = msgs.ConvertAll(ancient => new Message(ancient, storage));
             Size = msgs.Count();
@@ -71,14 +71,14 @@ namespace Tigwi_API.Models
     }
 
     [Serializable]
-    public class AccountList
+    public class Accounts
     {
-        public AccountList()
+        public Accounts()
         {
             Account = new List<Account>();
             Size = 0;
         }
-        public AccountList(List<Account> accounts)
+        public Accounts(List<Account> accounts)
         {
             Account = accounts;
             Size = accounts.Count();

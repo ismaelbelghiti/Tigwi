@@ -28,12 +28,12 @@ namespace Tigwi_API.Controllers
                 var listMsgs = storage.Msg.GetListsMsgTo(new HashSet<Guid> { personalListId }, DateTime.Now, numberOfMessages);
 
                 // convert, looking forward XML serialization
-                var listMsgsOutput = new MessageList(listMsgs, storage);
+                var listMsgsOutput = new Messages(listMsgs, storage);
 
                 // a stream is needed for serialization
                 var stream = new MemoryStream();
 
-                (new XmlSerializer(typeof(MessageList))).Serialize(stream, listMsgsOutput);
+                (new XmlSerializer(typeof(Messages))).Serialize(stream, listMsgsOutput);
 
                 result = Content(stream.ToString());
             }
@@ -75,7 +75,7 @@ namespace Tigwi_API.Controllers
                 // a stream is needed for serialization
                 var stream = new MemoryStream();
 
-                (new XmlSerializer(typeof(AccountList))).Serialize(stream, accountListToReturn);
+                (new XmlSerializer(typeof(Accounts))).Serialize(stream, accountListToReturn);
 
                 result = Content(stream.ToString());
             }
@@ -114,7 +114,7 @@ namespace Tigwi_API.Controllers
                 // a stream is needed for serialization
                 var stream = new MemoryStream();
 
-                (new XmlSerializer(typeof(AccountList))).Serialize(stream, accountListToReturn);
+                (new XmlSerializer(typeof(Accounts))).Serialize(stream, accountListToReturn);
 
                 result = Content(stream.ToString());
             }
