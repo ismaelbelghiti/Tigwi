@@ -66,7 +66,8 @@ namespace StorageLibrary
 
             // create the data
             Guid id = Guid.NewGuid();
-            UserInfo info = new UserInfo(login, email);
+            // TODO : add the avatar
+            UserInfo info = new UserInfo(login, "", email);
             HashSet<Guid> accounts = new HashSet<Guid>();
 
             // init blobs
