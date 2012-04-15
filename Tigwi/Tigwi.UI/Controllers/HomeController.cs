@@ -10,7 +10,8 @@ namespace Tigwi.UI.Controllers
     {
         public ActionResult Index()
         {
-            throw new NotImplementedException("HomeController.Index");
+            this.ViewBag.CurrentUser = "Zak";
+            return this.View();
         }
 
         public ActionResult About()
