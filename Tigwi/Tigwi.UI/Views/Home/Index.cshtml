@@ -2,7 +2,14 @@
     ViewBag.Title = "Home Page";
 }
 
-<h2>@ViewBag.Message</h2>
-<p>
-    To learn more about ASP.NET MVC visit <a href="http://asp.net/mvc" title="ASP.NET MVC Website">http://asp.net/mvc</a>.
-</p>
+<!--<p>@ViewContext.Controller.ValueProvider.GetValue("controller").RawValue</p>-->
+
+<div class="row-fluid">
+    <section class="span2">
+        @Html.Partial("_ListView")
+    </section>
+    <section class="span5">
+        @Html.Partial("_WriteMessage")
+        @Html.Partial("_ViewMessages")
+    </section>
+</div>
