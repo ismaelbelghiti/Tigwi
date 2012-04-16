@@ -1,0 +1,30 @@
+﻿
+<script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+<script>
+    $(document).ready(function () {
+        $('#inputMessage').attr("rows", 1);
+        $('#inputMessage').focus(function () {
+            $(this).attr("rows", 5);
+            if (this.value == this.defaultValue) {
+                this.value = '';
+            }
+            if (this.value != this.defaultValue) {
+                this.select();
+            }
+        });
+        $('#inputMessage').blur(function () {
+            $(this).attr("rows", 1);
+            if ($.trim(this.value == '')) {
+                this.value = (this.defaultValue ? this.defaultValue : '');
+            }
+        });
+    });  
+ </script>
+
+ <article>
+        <div class="row-fluid">
+            <textarea class="input-xlarge span11" 
+          id="inputMessage" 
+          placeholder="Write a new Tweet !"></textarea>
+        </div>
+    </article>
