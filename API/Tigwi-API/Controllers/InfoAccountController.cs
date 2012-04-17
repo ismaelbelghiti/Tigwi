@@ -12,10 +12,11 @@ namespace Tigwi_API.Controllers
     {
 
         //
-        // GET: /infoaccount/messages/{accountName}/{numberOfMessages}
+        // GET: /infoaccount/messages/{accountName}/{number}
 
-        public ActionResult Messages(string accountName, int numberOfMessages)
+        public ActionResult Messages(string accountName, int number)
         {
+
             // TODO : give the actual connexion informations
             IStorage storage = new StorageTmp(); // connexion
             ContentResult result;
@@ -25,7 +26,7 @@ namespace Tigwi_API.Controllers
                 // get lasts messages from user name
                 var accountId = storage.Account.GetId(accountName);
                 var personalListId = storage.List.GetPersonalList(accountId);
-                var listMsgs = storage.Msg.GetListsMsgTo(new HashSet<Guid> { personalListId }, DateTime.Now, numberOfMessages);
+                var listMsgs = storage.Msg.GetListsMsgTo(new HashSet<Guid> { personalListId }, DateTime.Now, number);
 
                 // convert, looking forward XML serialization
                 var listMsgsOutput = new Messages(listMsgs, storage);
@@ -49,10 +50,11 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // GET : /infoaccount/subscribers/{accountName}/{numberOfSubscribers}
+        // GET : /infoaccount/subscribers/{accountName}/{number}
 
-        public ActionResult Subscribers(string accountName, int numberOfSubscribers)
+        public ActionResult Subscribers(string accountName, int number)
         {
+
             IStorage storage = new StorageTmp(); // connexion
             ContentResult result;
 
@@ -68,8 +70,8 @@ namespace Tigwi_API.Controllers
                     hashFollowers.UnionWith(storage.List.GetFollowingAccounts(followingList));
                 }
 
-                // Get as many subscribers as possible (maximum: numberOfSubscibers)
-                var size = Math.Min(hashFollowers.Count, numberOfSubscribers);
+                // Get as many subscribers as possible (maximum: number)
+                var size = Math.Min(hashFollowers.Count, number);
                 var accountListToReturn = BuildAccountListFromGuidCollection(hashFollowers, size, storage);
 
                 // a stream is needed for serialization
@@ -92,6 +94,7 @@ namespace Tigwi_API.Controllers
 
         private ContentResult SubscriptionsEitherPublicOrAll(string accountName, int numberOfSubscriptions, bool withPrivate)
         {
+
             IStorage storage = new StorageTmp(); // connexion
             ContentResult result;
 
@@ -131,20 +134,20 @@ namespace Tigwi_API.Controllers
 
 
         //
-        // GET : /infoaccount/publicsubscriptions/{accountName}/{numberOfSubscriptions}
+        // GET : /infoaccount/publicsubscriptions/{accountName}/{number}
 
-        public ActionResult PublicSubscriptions(string accountName, int numberOfSubscriptions)
+        public ActionResult PublicSubscriptions(string accountName, int number)
         {
-            return SubscriptionsEitherPublicOrAll(accountName, numberOfSubscriptions, false);
+            return SubscriptionsEitherPublicOrAll(accountName, number, false);
         }
 
 
         //
-        // GET : /infoaccount/subscriptions/{accountName}/{numberOfSubscriptions}
+        // GET : /infoaccount/subscriptions/{accountName}/{number}
         // [authorize]
-        public ActionResult Subscriptions(string accountName, int numberOfSubscriptions)
+        public ActionResult Subscriptions(string accountName, int number)
         {
-            return SubscriptionsEitherPublicOrAll(accountName, numberOfSubscriptions, true);
+            return SubscriptionsEitherPublicOrAll(accountName, number, true);
         }
 
 
@@ -157,20 +160,20 @@ namespace Tigwi_API.Controllers
 
         
         //
-        // GET : /infoaccount/subscribedpubliclists/{accountName}/{numberOfLists}
+        // GET : /infoaccount/subscribedpubliclists/{accountName}/{number}
 
-        public ActionResult SubscribedPublicLists(string accountName, int numberofLists)
+        public ActionResult SubscribedPublicLists(string accountName, int number)
         {
-            return SubscribedListsEitherPublicOrAll(accountName, numberofLists, false);
+            return SubscribedListsEitherPublicOrAll(accountName, number, false);
         }
 
         //
-        // GET : /infoaccount/subscribedlists/{accountName}/{numberOfLists}
+        // GET : /infoaccount/subscribedlists/{accountName}/{number}
 
         //[Authorize]
-        public ActionResult SubscribedLists(string accountName, int numberofLists)
+        public ActionResult SubscribedLists(string accountName, int number)
         {
-            return SubscribedListsEitherPublicOrAll(accountName, numberofLists, true);
+            return SubscribedListsEitherPublicOrAll(accountName, number, true);
         }
 
 
@@ -183,20 +186,20 @@ namespace Tigwi_API.Controllers
 
 
         //
-        // GET : infoaccount/ownedpubliclists/{accountName}/{numberOfLists}
+        // GET : infoaccount/ownedpubliclists/{accountName}/{number}
 
-        public ActionResult OwnedPublicLists(string accountName, int numberOfList)
+        public ActionResult OwnedPublicLists(string accountName, int number)
         {
-            return OwnedListsEitherPublicOrAll(accountName, numberOfList, false);
+            return OwnedListsEitherPublicOrAll(accountName, number, false);
         }
 
         //
-        // GET : /infoaccount/ownedlists/{accountName}/{numberOfLists}
+        // GET : /infoaccount/ownedlists/{accountName}/{number}
 
         //[Authorize]
-        public ActionResult OwnedLists(string accountName, int numberOfList)
+        public ActionResult OwnedLists(string accountName, int number)
         {
-            return OwnedListsEitherPublicOrAll(accountName, numberOfList, true);
+            return OwnedListsEitherPublicOrAll(accountName, number, true);
         }
 
     }
