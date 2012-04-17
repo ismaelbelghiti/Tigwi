@@ -19,7 +19,7 @@ namespace Tigwi_API.Controllers
 
             // TODO : give the actual connexion informations
             IStorage storage = new StorageTmp(); // connexion
-            ContentResult result;
+            Answer output;
 
             try
             {
@@ -30,23 +30,20 @@ namespace Tigwi_API.Controllers
 
                 // convert, looking forward XML serialization
                 var listMsgsOutput = new Messages(listMsgs, storage);
-
-                // a stream is needed for serialization
-                var stream = new MemoryStream();
-
-                (new XmlSerializer(typeof(Messages))).Serialize(stream, listMsgsOutput);
-
-                result = Content(stream.ToString());
+                output = new Answer(listMsgsOutput);
             }
+
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
-                var stream = new MemoryStream();
-                (new XmlSerializer(typeof(Error))).Serialize(stream, new Error(exception.Code.ToString()));
-                result = Content(stream.ToString());
+                output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            return result;
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
+
+            return Content(stream.ToString());
         }
 
         //
@@ -54,9 +51,9 @@ namespace Tigwi_API.Controllers
 
         public ActionResult SubscribersAccounts(string accountName, int number)
         {
-
+            //TODO : use appropriate storage connexion
             IStorage storage = new StorageTmp(); // connexion
-            ContentResult result;
+            Answer output;
 
             try
             {
@@ -74,29 +71,27 @@ namespace Tigwi_API.Controllers
                 var size = Math.Min(hashFollowers.Count, number);
                 var accountListToReturn = BuildAccountListFromGuidCollection(hashFollowers, size, storage);
 
-                // a stream is needed for serialization
-                var stream = new MemoryStream();
-
-                (new XmlSerializer(typeof(Accounts))).Serialize(stream, accountListToReturn);
-
-                result = Content(stream.ToString());
+                output = new Answer(accountListToReturn);
             }
+
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
-                var stream = new MemoryStream();
-                (new XmlSerializer(typeof(Error))).Serialize(stream, new Error(exception.Code.ToString()));
-                result = Content(stream.ToString());
+                output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            return result;
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
+
+            return Content(stream.ToString());
         }
 
         private ContentResult SubscriptionsEitherPublicOrAll(string accountName, int numberOfSubscriptions, bool withPrivate)
         {
-
+            //TODO : use appropriate storage connexion
             IStorage storage = new StorageTmp(); // connexion
-            ContentResult result;
+            Answer output;
 
             try
             {
@@ -114,24 +109,21 @@ namespace Tigwi_API.Controllers
                 var size = Math.Min(accountsInLists.Count, numberOfSubscriptions);
                 var accountListToReturn = BuildAccountListFromGuidCollection(accountsInLists, size, storage);
 
-                // a stream is needed for serialization
-                var stream = new MemoryStream();
-
-                (new XmlSerializer(typeof(Accounts))).Serialize(stream, accountListToReturn);
-
-                result = Content(stream.ToString());
+                output = new Answer(accountListToReturn);
             }
+
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
-                var stream = new MemoryStream();
-                (new XmlSerializer(typeof(Error))).Serialize(stream, new Error(exception.Code.ToString()));
-                result = Content(stream.ToString());
+                output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            return result;
-        }
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
 
+            return Content(stream.ToString());
+        }
 
         //
         // GET : /infoaccount/publicsubscriptionsaccounts/{accountName}/{number}
@@ -154,8 +146,9 @@ namespace Tigwi_API.Controllers
         
         private ActionResult SubscribedListsEitherPublicOrAll(string accountName, int numberofLists, bool withPrivate)
         {
+            //TODO : use appropriate storage connexion
             IStorage storage = new StorageTmp(); // connexion
-            ContentResult result;
+            Answer output;
 
             try
             {
@@ -169,23 +162,20 @@ namespace Tigwi_API.Controllers
                 var size = Math.Min(followedLists.Count, numberofLists);
                 var listsToReturn = BuildListsFromGuidCollection(followedLists, size, storage);
 
-                // a stream is needed for serialization
-                var stream = new MemoryStream();
-
-                (new XmlSerializer(typeof(Accounts))).Serialize(stream, listsToReturn);
-
-                result = Content(stream.ToString());
+                output = new Answer(listsToReturn);
             }
+
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
-                var stream = new MemoryStream();
-                (new XmlSerializer(typeof(Error))).Serialize(stream, new Error(exception.Code.ToString()));
-                result = Content(stream.ToString());
+                output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            return result;
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
 
+            return Content(stream.ToString());
         }
 
         
@@ -211,8 +201,9 @@ namespace Tigwi_API.Controllers
 
         public ActionResult Subscribers(string name, int numberOfSubscribers)
         {
+            //TODO : use appropriate storage connexion
             IStorage storage = new StorageTmp(); // connexion
-            ContentResult result;
+            Answer output;
 
             try
             {
@@ -225,28 +216,27 @@ namespace Tigwi_API.Controllers
                 var size = Math.Min(followingLists.Count, numberOfSubscribers);
                 var accountListToReturn = BuildAccountListFromGuidCollection(followingLists, size, storage);
 
-                // a stream is needed for serialization
-                var stream = new MemoryStream();
-
-                (new XmlSerializer(typeof(Accounts))).Serialize(stream, accountListToReturn);
-
-                result = Content(stream.ToString());
+                output = new Answer(accountListToReturn);
             }
+
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
-                var stream = new MemoryStream();
-                (new XmlSerializer(typeof(Error))).Serialize(stream, new Error(exception.Code.ToString()));
-                result = Content(stream.ToString());
+                output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            return result;
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
+
+            return Content(stream.ToString());
         }
 
         private ActionResult OwnedListsEitherPublicOrAll(string accountName, int numberOfLists, bool withPrivate)
         {
+            //TODO : use appropriate storage connexion
             IStorage storage = new StorageTmp(); // connexion
-            ContentResult result;
+            Answer output;
 
             try
             {
@@ -260,24 +250,21 @@ namespace Tigwi_API.Controllers
                 var size = Math.Min(ownedLists.Count, numberOfLists);
                 var listsToReturn = BuildListsFromGuidCollection(ownedLists, size, storage);
 
-                // a stream is needed for serialization
-                var stream = new MemoryStream();
-
-                (new XmlSerializer(typeof(Accounts))).Serialize(stream, listsToReturn);
-
-                result = Content(stream.ToString());
+                output = new Answer(listsToReturn);
             }
+
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
-                var stream = new MemoryStream();
-                (new XmlSerializer(typeof(Error))).Serialize(stream, new Error(exception.Code.ToString()));
-                result = Content(stream.ToString());
+                output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            return result;
-        }
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
 
+            return Content(stream.ToString());
+        }
 
         //
         // GET : infoaccount/ownedpubliclists/{accountName}/{number}

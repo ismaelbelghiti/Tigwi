@@ -16,8 +16,8 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Write(MsgToWrite msg)
         {
+            //TODO : use appropriate storage connexion
             IStorage storage = new StorageTmp(); // connexion
-
             ContentResult result;
 
             try
@@ -49,8 +49,8 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult AccountSubscribeList(SubscribeList subscribe)
         {
+            //TODO : use appropriate storage connexion
             IStorage storage = new StorageTmp(); // connexion
-
             ContentResult result;
 
             try

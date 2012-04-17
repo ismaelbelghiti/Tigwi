@@ -8,6 +8,9 @@ namespace Tigwi_API.Models
 {
 
     // models for answers to GET requests
+    [Serializable]
+    public abstract class Content
+    {}
 
     [Serializable]
     public class Message 
@@ -30,7 +33,7 @@ namespace Tigwi_API.Models
     }
 
     [Serializable]
-    public class Messages
+    public class Messages : Content
     {
         public Messages()
         {
@@ -71,7 +74,7 @@ namespace Tigwi_API.Models
     }
 
     [Serializable]
-    public class Accounts
+    public class Accounts : Content
     {
         public Accounts()
         {
@@ -109,4 +112,28 @@ namespace Tigwi_API.Models
         public String Code { get; set; }
     }
 
+    //General class to send
+    [Serializable]
+    public class Answer
+    {
+        public Answer()
+        {
+            Error = null;
+            Content = null;
+        }
+
+        public Answer(Error error)
+        {
+            Error = error;
+            Content = null;
+        }
+
+        public Answer(Content content)
+        {
+            Error = null;
+            Content = content;
+        }   
+        public Error Error;
+        public Content Content;
+    }
 }

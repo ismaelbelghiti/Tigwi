@@ -20,7 +20,7 @@ namespace Tigwi_API.Models
     }
 
     [Serializable]
-    public class Lists
+    public class Lists : Content
     {
         public Lists()
         {
