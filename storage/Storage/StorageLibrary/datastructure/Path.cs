@@ -36,6 +36,9 @@ namespace StorageLibrary
         public const string L_FOLLOWEDACC_LOCK = "/lock";
 
         // message container
+        public const string M_LISTMESSAGES = "listmessages/";
+        public const string M_ACCOUNTMESSAGES = "accountmessages/";
+        public const string M_TAGGEDMESSAGES = "taggedmessages/";
 
     }
 }
