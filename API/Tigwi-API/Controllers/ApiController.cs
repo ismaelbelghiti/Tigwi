@@ -22,6 +22,20 @@ namespace Tigwi_API.Controllers
 
             return new Accounts(accountList);  
         }
+
+        protected static Lists BuildListsFromGuidCollection(ICollection<Guid> hashLists, int size, IStorage storage )
+        {
+            var lists = new List<ListApi>();
+            for (var k = 0; k < size; k++)
+            {
+                var listId = hashLists.First();
+                var list = new ListApi(listId, storage.List.GetInfo(listId).Name);
+                lists.Add(list);
+                hashLists.Remove(listId);
+            }
+
+            return new Lists(lists);  
+        }
      
     }
 }
