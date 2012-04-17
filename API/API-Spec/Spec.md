@@ -38,14 +38,14 @@ In case an error occurs:
 * In **URL**, _numberOfMessages_ is the number of messages you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of messages returned (different from _numberOfMessages_ if there are not enough messages to provide).
 
-##Get someone's public subscriptions list
+##Get someone's public subscriptions (accounts) list
 ###Purpose
-Obtain a number _n_ of the account _accountname_ 's public subscriptions. 
+Obtain a number _numberOfSubscriptions_ of accounts in any of the account _accountName_'s followed public lists. 
 No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/publicsubscriptions/accountName/numberOfSubscriptions
+http://api.tigwi.com/infoaccount/publicsubscriptionsaccounts/accountName/numberOfSubscriptions
 ###Request
 _left empty_
 ###Response
@@ -75,15 +75,15 @@ In case an error occurs:
 * You will only receive subscriptions from lists that the owner has declared public.
 
 
-##Get someone's subscriptions list
+##Get someone's subscriptions (accounts) list
 ###Purpose
-Obtain a number _n_ of the account _accountname_ 's subscriptions. 
+Obtain a number _numberOfSubscriptions_ of accounts in any of the account _accountName_'s followed lists.
 No particular order provided.
 Authentication required.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/subscriptions/accountName/numberOfSubscriptions
+http://api.tigwi.com/infoaccount/subscriptionsaccounts/accountName/numberOfSubscriptions
 ###Request
 _left empty_
 ###Response
@@ -113,14 +113,14 @@ In case an error occurs:
 * In **Response**, _sizeOfList_ is the number of subscription returned (different from _numberOfSubscriptions_ if there are not enough subscriptions to provide).
 
 
-##Get someone's subscribers list
+##Get someone's subscribers (accounts)
 ###Purpose
-Obtain a number _n_ of the account _accountName_ 's subscribers.
+Obtain a number _numberOfSubsribers_ of accounts that subscribed to any of account _accountName_ owned public lists.
 No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/subscribers/accountName/numberOfSubscribers
+http://api.tigwi.com/infoaccount/subscribersaccounts/accountName/numberOfSubscribers
 ###Request
 _left empty_
 ###Response
@@ -155,7 +155,7 @@ No particular order provided.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/subscribedpubliclists/accountName/numberOfLists
+http://api.tigwi.com/infoaccount/subscribedpublic/accountName/numberOfLists
 ###Request
 _left empty_
 ###Response
@@ -192,7 +192,7 @@ Authentication required.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/subscribedlists/accountName/numberOfLists
+http://api.tigwi.com/infoaccount/subscribed/accountName/numberOfLists
 ###Request
 _left empty_
 ###Response
@@ -220,6 +220,42 @@ In case an error occurs:
 * In **URL**, _accountName_ is the name of the account whose followed lists you want to get.
 * In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
+
+##Get someone's subscribers (lists)
+###Purpose
+Obtain a number _numberOfSubsribers_ of public lists that subscribed to account _accountName_ .
+No particular order provided
+###HTTP method
+*GET*
+###URL
+http://api.tigwi.com/infoaccount/subscribers/accountName/numberOfSubscribers
+###Request
+_left empty_
+###Response
+
+    <Lists Size="sizeOfList">
+	    <List> <!-- See below --> </List>
+	    <List> ... </List>
+	    ...
+	    <List> ... </List>
+    </Lists>
+
+List format:
+
+     <List>
+	     <Id> idOfList </Id>
+	     <Name> nameOfList </Name>
+     </List>
+
+In case an error occurs:
+
+    <Error Code="codeOfError"/>
+
+###Informations
+* In **URL**, _accountName_ is the name of the account whose subscribers you want to get.
+* In **URL**, _numberOfSubscribers_ is the number of subscribers you want to get. It is optional and default is set to 20.
+* In **Response**, _sizeOfList_ is the number of subscribers returned (different from _numberOfSubscribers_ if there are not enough subscribers to provide).
+* There is no way to get private lists who subscribed to an account.
 
 ##Get an account's owned public lists
 ###Purpose

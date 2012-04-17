@@ -10,7 +10,7 @@ namespace Tigwi_API.Models
     // models for answers to GET requests
 
     [Serializable]
-    public class Message
+    public class Message 
     {
         public Message(IMessage msg, IStorage storage)
         {
@@ -78,6 +78,7 @@ namespace Tigwi_API.Models
             Account = new List<Account>();
             Size = 0;
         }
+
         public Accounts(List<Account> accounts)
         {
             Account = accounts;
@@ -107,4 +108,5 @@ namespace Tigwi_API.Models
         [XmlAttribute]
         public String Code { get; set; }
     }
+
 }
