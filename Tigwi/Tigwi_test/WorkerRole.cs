@@ -48,7 +48,7 @@ namespace Tigwi_test
             }
 
 
-            Guid userid = storage.User.Create("test", "bidon@test.com");
+            Guid userid = storage.User.Create("test", "bidon@test.com", "pass1");
             try 
             {
                 Guid sameid = storage.User.GetId("test");
@@ -61,7 +61,7 @@ namespace Tigwi_test
 
             try
             {
-                Guid sameuser = storage.User.Create("test", "bidon@test2.com");
+                Guid sameuser = storage.User.Create("test", "bidon@test2.com", "pass2");
                 Trace.WriteLine("Error, User.Create does not detect existing user");
             }
             catch (UserAlreadyExists)
@@ -164,7 +164,7 @@ namespace Tigwi_test
                 Trace.WriteLine("Error, Account.GetUsers");
 
 
-            Guid useridbis = storage.User.Create("user2", "user@mail.com");
+            Guid useridbis = storage.User.Create("user2", "user@mail.com", "pass");
             storage.Account.Add(accountid, useridbis);
             if (!users.Contains(useridbis))
                 Trace.WriteLine("Error, Account.Add");

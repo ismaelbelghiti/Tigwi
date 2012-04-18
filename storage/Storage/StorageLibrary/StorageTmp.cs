@@ -44,7 +44,7 @@ namespace StorageLibrary
             return motherStorage.account.GetAccounts(userId);
         }
 
-        public Guid Create(string login, string email)
+        public Guid Create(string login, string email, string pass)
         {
             dico_id_info.Add( new Guid(next_free_id, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 }), new UserInfo(login, email, ""));
             dico_login_id.Add(login, new Guid(next_free_id, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 }));
@@ -76,6 +76,16 @@ namespace StorageLibrary
                 Console.WriteLine(myUserInfo.Login);
             }
             Console.WriteLine("");
+        }
+
+        public string GetPassword(Guid userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetPassword(Guid userId, string pass)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -509,19 +519,19 @@ namespace StorageLibrary
 
         public void InitWithStupidData()
         {
-            User.Create("Ismael", "isma.proj@gmail.com");
+            User.Create("Ismael", "isma.proj@gmail.com", "");
             Account.Create(User.GetId("Ismael"), "La vie d'Isma", "Suivez un mec cool ...");
             Account.Create(User.GetId("Ismael"), "Algorea", "Suivez les news d'Algorea ...");
             Account.Add(Account.GetId("La vie d'Isma"), User.GetId("Ismael"));
             Account.Add(Account.GetId("Algorea"), User.GetId("Ismael"));
 
-            User.Create("Ulysse", "ulysse.beaugnon@ens.fr");
+            User.Create("Ulysse", "ulysse.beaugnon@ens.fr", "");
             Account.Create(User.GetId("Ulysse"), "Ulysse a la plage", "");
             Account.Create(User.GetId("Ulysse"), "Ulysse a la montagne", "");
             Account.Add(Account.GetId("Ulysse a la plage"), User.GetId("Ulysse"));
             Account.Add(Account.GetId("Ulysse a la montagne"), User.GetId("Ulysse"));
 
-            User.Create("Basile", "basile@ens.fr");
+            User.Create("Basile", "basile@ens.fr", "");
             Account.Create(User.GetId("Basile"), "Basile le surfeur", "");
             Account.Add(Account.GetId("Basile le surfeur"), User.GetId("Basile"));
 

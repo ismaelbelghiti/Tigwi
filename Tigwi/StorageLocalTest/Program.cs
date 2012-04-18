@@ -33,7 +33,7 @@ namespace StorageLocalTest
             } catch (AccountNotFound) { }
 
             Console.Write(".");
-            Guid userid = storage.User.Create("test", "bidon@test.com");
+            Guid userid = storage.User.Create("test", "bidon@test.com", "pass");
 
             try
             {
@@ -44,7 +44,7 @@ namespace StorageLocalTest
 
             try
             {
-                Guid sameuser = storage.User.Create("test", "bidon@test2.com");
+                Guid sameuser = storage.User.Create("test", "bidon@test2.com", "pass");
                 Console.WriteLine("Error, User.Create does not detect existing user");
             }
             catch (UserAlreadyExists) { }
@@ -101,7 +101,7 @@ namespace StorageLocalTest
                 Console.WriteLine("Error, Account.GetUsers");
             Console.Write(".");
 
-            Guid useridbis = storage.User.Create("user2", "user@mail.com");
+            Guid useridbis = storage.User.Create("user2", "user@mail.com", "pass");
             storage.Account.Add(accountid, useridbis);
             users = storage.Account.GetUsers(accountid);
             if (!users.Contains(useridbis))
