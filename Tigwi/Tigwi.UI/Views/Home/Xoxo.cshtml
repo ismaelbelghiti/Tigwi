@@ -1,0 +1,47 @@
+﻿@model Tigwi.UI.Models.AccountModel
+
+@{
+    ViewBag.Title = "title";
+}
+
+<h2>Coucou :-)</h2>
+
+@using (Html.BeginForm())
+{
+    <div>
+        <fieldset>
+            <legend>User Information @if (ViewBag.ModelValid)
+                                     {
+                                         @:(Valide !)
+                                     }</legend>
+                                     @Html.EditorFor(m => m.Id)
+            <div class="editor-label">
+                @Html.LabelFor(m => m.Name)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(m => m.Name)
+                @Html.ValidationMessageFor(m => m.Name)
+            </div>
+
+            <div class="editor-label">
+                @Html.LabelFor(m => m.Description)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(m => m.Description)
+                @Html.ValidationMessageFor(m => m.Description)
+            </div>
+            
+            <div class="editor-label">
+                @Html.LabelFor(m => m.Admin)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(m => m.Admin)
+                @Html.ValidationMessageFor(m => m.Admin)
+            </div>
+
+            <p>
+                <input type="submit" value="Ok, gogogo !" />
+            </p>
+        </fieldset>
+    </div>
+}

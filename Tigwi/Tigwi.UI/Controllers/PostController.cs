@@ -6,15 +6,39 @@ using System.Web.Mvc;
 
 namespace Tigwi.UI.Controllers
 {
-    public class PostController : Controller
+    using Tigwi.UI.Models;
+
+    public class PostController : HomeController
     {
+        public PostController()
+        {
+        }
+
+        public PostController(IStorageContext storageContext)
+            : base(storageContext)
+        {
+        }
+
         /// <summary>
         /// Tags (favorites) a post.
         /// </summary>
         /// <returns></returns>
-        public ActionResult Tag()
+        public ActionResult Tag(Guid postId)
         {
-            throw new NotImplementedException("PostController.Tag");
+            var currentAccount = this.CurrentAccount;
+
+            // Check for connection
+            if (currentAccount == null)
+            {
+                // TODO: redirect to login/sign up page
+                throw new Exception("Must be connected.");
+            }
+
+            // Actually tag the post
+            var post = this.Storage.Posts.Find(postId);
+            post.TagBy(currentAccount);
+
+            return this.View(post);
         }
 
         /// <summary>

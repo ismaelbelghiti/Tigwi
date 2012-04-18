@@ -9,24 +9,54 @@ using Tigwi.UI.Models;
 
 namespace Tigwi.UI.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : HomeController
     {
+        public AccountController()
+        {
+        }
+
+        public AccountController(IStorageContext storageContext)
+            : base(storageContext)
+        {
+        }
+
         /// <summary>
         /// Shows a page listing all the accounts of the active user.
         /// </summary>
         /// <returns></returns>
         public ActionResult List()
         {
-            throw new NotImplementedException("AccountController.List");
+            if (this.CurrentUser != null)
+            {
+                return this.View(this.CurrentUser.Accounts);
+            }
+
+            // User must be connected
+            throw new NotImplementedException();
         }
 
         /// <summary>
         /// Makes the given account active (the one which will post things by default, etc.)
         /// </summary>
         /// <returns></returns>
-        public ActionResult MakeActive()
+        public ActionResult MakeActive(Guid accountId)
         {
-            throw new NotImplementedException("AccountController.MakeActive");
+            this.CheckForConnection();
+            var account = this.Storage.Accounts.Find(accountId);
+
+            try
+            {
+                // Set current account with automatic validation
+                this.CurrentAccount = account;
+
+                // Tell the user everything went OK
+                throw new NotImplementedException();
+            }
+            catch (Exception)
+            {
+                // Tell the user he must be connected
+                throw new NotImplementedException();
+            }
         }
 
         /// <summary>
