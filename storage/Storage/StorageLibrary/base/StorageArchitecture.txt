@@ -7,7 +7,6 @@
 				
 // TODO :
 // add the possibility (not obligation) to have an openID url
-// + une string avec le hash du mot de passe (from ID)
 
 account ->	idbyname/<name hash>				: Guid (= 0 if the name is reserved but not used)
 			info/<account ID>					: AccountInfo
