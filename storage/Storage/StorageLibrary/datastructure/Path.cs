@@ -13,6 +13,7 @@ namespace StorageLibrary
         public const string U_IDBYLOGIN = "idbylogin/";
         public const string U_ACC_DATA = "/data";
         public const string U_ACC_LOCK = "/lock";
+        public const string U_PASSWORD = "password/";
 
         // account container
         public const string A_IDBYNAME = "idbyname/";

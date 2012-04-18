@@ -53,7 +53,7 @@ namespace StorageLibrary
             return blob.GetIfExists(new UserNotFound());
         }
 
-        public Guid Create(string login, string email)
+        public Guid Create(string login, string email, string password)
         {
             // TODO unreserve the name if an error occure
 
@@ -73,11 +73,13 @@ namespace StorageLibrary
             // init blobs
             StrgBlob<IUserInfo> bInfo = new StrgBlob<IUserInfo>(connexion.userContainer, Path.U_INFO + id);
             StrgBlob<HashSet<Guid>> bAccounts = new StrgBlob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + id + Path.U_ACC_DATA);
+            StrgBlob<string> bPassword = new StrgBlob<string>(connexion.userContainer, Path.U_PASSWORD + id);
             Mutex.Init(connexion.userContainer, Path.U_ACCOUNTS + id + Path.U_ACC_LOCK);
 
             // store the data
             bInfo.Set(info);
             bAccounts.Set(accounts);
+            bPassword.Set(password);
 
             // we finish by unlocking the name
             bLoginById.Set(id);
@@ -89,6 +91,19 @@ namespace StorageLibrary
         {
             // TODO : to be implemented
             throw new NotImplementedException();
+        }
+
+        public string GetPassword(Guid userId)
+        {
+            StrgBlob<string> bPass = new StrgBlob<string>(connexion.userContainer, Path.U_PASSWORD + userId);
+            return bPass.GetIfExists(new UserNotFound());
+        }
+
+        public void SetPassword(Guid userId, string pass)
+        {
+            StrgBlob<string> bPass = new StrgBlob<string>(connexion.userContainer, Path.U_PASSWORD + userId);
+            if (!bPass.SetIfExists(pass))
+                throw new UserNotFound();
         }
     }
 }
