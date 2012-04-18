@@ -30,4 +30,26 @@ namespace Tigwi_API.Models
         public Guid Subscription { get; set; }
     }
 
+    [Serializable]
+    public class ListInfo
+    {
+        public string Name;
+        public string Description;
+        public bool IsPrivate;
+    }
+
+    [Serializable]
+    public class CreateList
+    {
+        public string Account { get; set; }
+        public ListInfo ListInfo { get; set; }
+    }
+
+    [Serializable]
+    public class ListSubscribe
+    {
+        public Guid List;
+        public string Subscription;
+    }
+
 }

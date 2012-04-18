@@ -462,7 +462,7 @@ In case an error occurs:
 * In **Response**, _sizeOfList_ is the number of messages returned (different from _numberOfMessages_ if there are not enough accounts to provide).
 
 
-#Send informations to one's Tigwi account
+#Modifying one's account or owned lists
 
 This methods require authentication. You must be authenticated as a _user_ with permissions to use the _account_ you want to modify.
 
@@ -505,7 +505,7 @@ For someone to create a new, empty list. Authentication required.
 *POST*
 
 ###URL
-http://api.tigwi.com//modify/createlist/
+http://api.tigwi.com/modify/createlist/
 
 ###Request
 	<CreateList>
@@ -538,7 +538,7 @@ If no error occurs
 
 * In **Request**, _privateSetting_ value must be _false_ if you want the new list to be public or _true_ if only you can see that list.
 
-##Subscribe to a list
+##Make an account subscribe to a list
 ###Purpose
 For someone to distantly subscribe to a list. Authentication required.
 ###HTTP method
@@ -566,8 +566,8 @@ If no error occurs
 * You **must** be authenticated and authorized to use the account _nameOfSubscriber_ to use this method.
 * In **Request**, _nameOfSubscriber_ is the name of the account who wants to follow the list _idOfSubscription_.
 
-#Modifying a list
-##Suscribe to an account
+
+##Make a list suscribe to an account
 ###Purpose
 For a list to add a suscription to a given account. Authentication required.
 
