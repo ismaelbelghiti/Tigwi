@@ -8,9 +8,12 @@ namespace Tigwi_API.Models
 {
 
     // models for answers to GET requests
+    [Serializable]
+    public abstract class Content
+    {}
 
     [Serializable]
-    public class Message
+    public class Message 
     {
         public Message(IMessage msg, IStorage storage)
         {
@@ -30,7 +33,7 @@ namespace Tigwi_API.Models
     }
 
     [Serializable]
-    public class Messages
+    public class Messages : Content
     {
         public Messages()
         {
@@ -71,13 +74,14 @@ namespace Tigwi_API.Models
     }
 
     [Serializable]
-    public class Accounts
+    public class Accounts : Content
     {
         public Accounts()
         {
             Account = new List<Account>();
             Size = 0;
         }
+
         public Accounts(List<Account> accounts)
         {
             Account = accounts;
@@ -106,5 +110,30 @@ namespace Tigwi_API.Models
 
         [XmlAttribute]
         public String Code { get; set; }
+    }
+
+    //General class to send
+    [Serializable]
+    public class Answer
+    {
+        public Answer()
+        {
+            Error = null;
+            Content = null;
+        }
+
+        public Answer(Error error)
+        {
+            Error = error;
+            Content = null;
+        }
+
+        public Answer(Content content)
+        {
+            Error = null;
+            Content = content;
+        }   
+        public Error Error;
+        public Content Content;
     }
 }

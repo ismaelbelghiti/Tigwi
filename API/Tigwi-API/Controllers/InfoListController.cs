@@ -12,18 +12,18 @@ namespace Tigwi_API.Controllers
     public class InfoListController : ApiController
     {
         //
-        // GET : /infolist/subscriptions/{idOfList}/{numberOfSubscriptions}
+        // GET : /infolist/subscriptions/{idOfList}/{number}
 
-        public ActionResult Subscriptions(Guid idOfList, int numberOfSubscriptions)
+        public ActionResult Subscriptions(Guid idOfList, int number)
         {
             //TODO: Implement this
             throw new NotImplementedException();
         }
 
         //
-        // GET : /infolist/subscribers/{idOfList}/{numberOfSubscribers}
+        // GET : /infolist/subscribers/{idOfList}/{number}
 
-        public ActionResult Subscribers(Guid idOfList, int numberOfSubscribers)
+        public ActionResult Subscribers(Guid idOfList, int number)
         {
             //TODO: Implement this
             throw new NotImplementedException();
@@ -39,9 +39,9 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // GET : /infolist/messages/{idOfList}/{numberOfMessages}
+        // GET : /infolist/messages/{idOfList}/{number}
 
-        public ActionResult Messages(Guid idOfList, int numberOfMessages)
+        public ActionResult Messages(Guid idOfList, int number)
         {
             //TODO: implement this
             throw new NotImplementedException();
