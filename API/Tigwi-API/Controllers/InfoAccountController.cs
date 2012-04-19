@@ -47,9 +47,9 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // GET : /infoaccount/subscribers/{accountName}/{number}
+        // GET : /infoaccount/subscriberaccounts/{accountName}/{number}
 
-        public ActionResult SubscribersAccounts(string accountName, int number)
+        public ActionResult SubscriberAccounts(string accountName, int number)
         {
             //TODO : use appropriate storage connexion
             IStorage storage = new StorageTmp(); // connexion
@@ -126,18 +126,19 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // GET : /infoaccount/publicsubscriptionsaccounts/{accountName}/{number}
+        // GET : /infoaccount/publiclysubscribedaccounts/{accountName}/{number}
+        // or publicsubscriptions ??
 
-        public ActionResult PublicSubscriptionsAccounts(string accountName, int number)
+        public ActionResult PubliclySubscribedAccounts(string accountName, int number)
         {
             return SubscriptionsEitherPublicOrAll(accountName, number, false);
         }
 
 
         //
-        // GET : /infoaccount/subscriptionaccounts/{accountName}/{number}
+        // GET : /infoaccount/subscribedaccounts/{accountName}/{number}
         // [Authorize]
-        public ActionResult SubscriptionsAccounts(string accountName, int number)
+        public ActionResult SubscribedAccounts(string accountName, int number)
         {
             return SubscriptionsEitherPublicOrAll(accountName, number, true);
         }
@@ -181,23 +182,26 @@ namespace Tigwi_API.Controllers
         
         //
         // GET : /infoaccount/subscribedpubliclists/{accountName}/{number}
+        // or publicsubscriptions but subcribedpublic isn't correct
 
-        public ActionResult SubscribedPublic(string accountName, int number)
+        public ActionResult SubscribedPublicLists(string accountName, int number)
         {
             return SubscribedListsEitherPublicOrAll(accountName, number, false);
         }
 
         //
         // GET : /infoaccount/subscribedlists/{accountName}/{number}
+        // or subscriptions but subscribed isn't correct
 
         //[Authorize]
-        public ActionResult Subscribed(string accountName, int number)
+        public ActionResult SubscribedLists(string accountName, int number)
         {
             return SubscribedListsEitherPublicOrAll(accountName, number, true);
         }
 
         //
-        //Get : /infoaccount/subscribers/{accountName}/{number}
+        // GET : /infoaccount/subscribers/{accountName}/{number}
+        // To clarify : subscriberlists ??
 
         public ActionResult Subscribers(string name, int numberOfSubscribers)
         {
