@@ -16,20 +16,17 @@ namespace Tigwi_API.Controllers
 
         public ActionResult Messages(string accountName, int number)
         {
-
-            // TODO : give the actual connexion informations
-            IStorage storage = new StorageTmp(); // connexion
             Answer output;
 
             try
             {
                 // get lasts messages from user name
-                var accountId = storage.Account.GetId(accountName);
-                var personalListId = storage.List.GetPersonalList(accountId);
-                var listMsgs = storage.Msg.GetListsMsgTo(new HashSet<Guid> { personalListId }, DateTime.Now, number);
+                var accountId = Storage.Account.GetId(accountName);
+                var personalListId = Storage.List.GetPersonalList(accountId);
+                var listMsgs = Storage.Msg.GetListsMsgTo(new HashSet<Guid> { personalListId }, DateTime.Now, number);
 
                 // convert, looking forward XML serialization
-                var listMsgsOutput = new Messages(listMsgs, storage);
+                var listMsgsOutput = new Messages(listMsgs, Storage);
                 output = new Answer(listMsgsOutput);
             }
 
@@ -51,25 +48,23 @@ namespace Tigwi_API.Controllers
 
         public ActionResult SubscriberAccounts(string accountName, int number)
         {
-            //TODO : use appropriate storage connexion
-            IStorage storage = new StorageTmp(); // connexion
             Answer output;
 
             try
             {
-                var accountId = storage.Account.GetId(accountName);
+                var accountId = Storage.Account.GetId(accountName);
 
                 // get lasts followers of user name 's list
-                var followingLists = storage.List.GetFollowingLists(accountId);
+                var followingLists = Storage.List.GetFollowingLists(accountId);
                 var hashFollowers = new HashSet<Guid>();
                 foreach (var followingList in followingLists)
                 {
-                    hashFollowers.UnionWith(storage.List.GetFollowingAccounts(followingList));
+                    hashFollowers.UnionWith(Storage.List.GetFollowingAccounts(followingList));
                 }
 
                 // Get as many subscribers as possible (maximum: number)
                 var size = Math.Min(hashFollowers.Count, number);
-                var accountListToReturn = BuildAccountListFromGuidCollection(hashFollowers, size, storage);
+                var accountListToReturn = BuildAccountListFromGuidCollection(hashFollowers, size, Storage);
 
                 output = new Answer(accountListToReturn);
             }
@@ -89,25 +84,23 @@ namespace Tigwi_API.Controllers
 
         private ContentResult SubscriptionsEitherPublicOrAll(string accountName, int numberOfSubscriptions, bool withPrivate)
         {
-            //TODO : use appropriate storage connexion
-            IStorage storage = new StorageTmp(); // connexion
             Answer output;
 
             try
             {
                 // get the public lists followed by the given account
 
-                var accountId = storage.Account.GetId(accountName);
-                var followedLists = storage.List.GetAccountFollowedLists(accountId, withPrivate);
+                var accountId = Storage.Account.GetId(accountName);
+                var followedLists = Storage.List.GetAccountFollowedLists(accountId, withPrivate);
                 var accountsInLists = new HashSet<Guid>();
                 foreach (var followedList in followedLists)
                 {
-                    accountsInLists.UnionWith(storage.List.GetAccounts(followedList));
+                    accountsInLists.UnionWith(Storage.List.GetAccounts(followedList));
                 }
 
                 // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
                 var size = Math.Min(accountsInLists.Count, numberOfSubscriptions);
-                var accountListToReturn = BuildAccountListFromGuidCollection(accountsInLists, size, storage);
+                var accountListToReturn = BuildAccountListFromGuidCollection(accountsInLists, size, Storage);
 
                 output = new Answer(accountListToReturn);
             }
@@ -147,21 +140,19 @@ namespace Tigwi_API.Controllers
         
         private ActionResult SubscribedListsEitherPublicOrAll(string accountName, int numberofLists, bool withPrivate)
         {
-            //TODO : use appropriate storage connexion
-            IStorage storage = new StorageTmp(); // connexion
             Answer output;
 
             try
             {
                 // get the public lists followed by the given account
 
-                var accountId = storage.Account.GetId(accountName);
-                var followedLists = storage.List.GetAccountFollowedLists(accountId, withPrivate);
+                var accountId = Storage.Account.GetId(accountName);
+                var followedLists = Storage.List.GetAccountFollowedLists(accountId, withPrivate);
 
 
                 // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
                 var size = Math.Min(followedLists.Count, numberofLists);
-                var listsToReturn = BuildListsFromGuidCollection(followedLists, size, storage);
+                var listsToReturn = BuildListsFromGuidCollection(followedLists, size, Storage);
 
                 output = new Answer(listsToReturn);
             }
@@ -205,20 +196,18 @@ namespace Tigwi_API.Controllers
 
         public ActionResult Subscribers(string name, int numberOfSubscribers)
         {
-            //TODO : use appropriate storage connexion
-            IStorage storage = new StorageTmp(); // connexion
             Answer output;
 
             try
             {
-                var accountId = storage.Account.GetId(name);
+                var accountId = Storage.Account.GetId(name);
 
                 // get lasts followers of user name 's list
-                var followingLists = storage.List.GetFollowingLists(accountId);
+                var followingLists = Storage.List.GetFollowingLists(accountId);
 
                 // Get as many subscribers as possible (maximum: number)
                 var size = Math.Min(followingLists.Count, numberOfSubscribers);
-                var accountListToReturn = BuildAccountListFromGuidCollection(followingLists, size, storage);
+                var accountListToReturn = BuildAccountListFromGuidCollection(followingLists, size, Storage);
 
                 output = new Answer(accountListToReturn);
             }
@@ -238,21 +227,19 @@ namespace Tigwi_API.Controllers
 
         private ActionResult OwnedListsEitherPublicOrAll(string accountName, int numberOfLists, bool withPrivate)
         {
-            //TODO : use appropriate storage connexion
-            IStorage storage = new StorageTmp(); // connexion
             Answer output;
 
             try
             {
                 // get the public lists owned by the given account
 
-                var accountId = storage.Account.GetId(accountName);
-                var ownedLists = storage.List.GetAccountOwnedLists(accountId, withPrivate);
+                var accountId = Storage.Account.GetId(accountName);
+                var ownedLists = Storage.List.GetAccountOwnedLists(accountId, withPrivate);
 
 
                 // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
                 var size = Math.Min(ownedLists.Count, numberOfLists);
-                var listsToReturn = BuildListsFromGuidCollection(ownedLists, size, storage);
+                var listsToReturn = BuildListsFromGuidCollection(ownedLists, size, Storage);
 
                 output = new Answer(listsToReturn);
             }

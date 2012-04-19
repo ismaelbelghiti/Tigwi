@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Web;
+﻿using System.IO;
 using System.Web.Mvc;
 using System.Xml.Serialization;
 using Tigwi_API.Models;
@@ -19,14 +15,12 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult SubscribeAccount(SubscribeAccount subscribeAccount)
         {
-            //TODO : use appropriate storage connexion
-            IStorage storage = new StorageTmp(); // connexion
             Error error;
 
             try
             {
-                var accountId = storage.Account.GetId(subscribeAccount.Subscription);
-                storage.List.Add(subscribeAccount.List, accountId);
+                var accountId = Storage.Account.GetId(subscribeAccount.Subscription);
+                Storage.List.Add(subscribeAccount.List, accountId);
 
                 // Result is an empty error XML element
                 error = new Error();

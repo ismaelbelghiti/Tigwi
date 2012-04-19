@@ -9,6 +9,12 @@ namespace Tigwi_API.Controllers
 {
     public abstract class ApiController : Controller
     {
+        protected ApiController ()
+        {
+            // TODO : give the actual connexion informations
+            Storage = new Storage("devstoreaccount1","Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==");
+        }
+
         protected static Accounts BuildAccountListFromGuidCollection(ICollection<Guid> hashAccounts, int size, IStorage storage)
         {
             var accountList = new List<Account>();
@@ -36,6 +42,8 @@ namespace Tigwi_API.Controllers
 
             return new Lists(lists);  
         }
-     
+
+        protected IStorage Storage;
+
     }
 }
