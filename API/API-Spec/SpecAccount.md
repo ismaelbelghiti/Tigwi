@@ -466,6 +466,50 @@ Error Type:
 * In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
 
+
+##Get an account's unique id
+###Purpose
+Obtain the account _accountName_ 's unique id.
+You need to be authenticated and authorize to use this account to get its id.
+###HTTP method
+*GET*
+###URL
+http://api.tigwi.com/infoaccount/id/accountName
+###Request
+_left empty_
+###Response
+General structure of the response :
+
+    <Answer>
+        <!-- Error Type -->
+		<Content> 
+            <!-- See below -->
+        </Content> 
+    </Answer>    
+  
+Content:
+
+     <Account>
+	     <Id> idOfAccount </Id>
+	     <Name> nameOfAccount </Name>
+     </Account>
+
+Error Type:
+*In case an error occurs:
+
+    <Error Code="codeOfError"/>
+
+*Otherwise:
+   
+    <Error/>
+
+###Informations
+* You **must** be authenticated as an authorized user of _accountName_ to access this information.
+* In **URL**, _accountName_ is the name of the account whose id you want to get.
+
+
+
+
 #Modifying an _account_
 
 These methods require authentication. You must be authenticated as a _user_ with permissions to use the _account_ you want to modify.

@@ -39,4 +39,5 @@ namespace Tigwi_API.Models
         [XmlElement]
         public List<ListApi> List;
     }
+
 }

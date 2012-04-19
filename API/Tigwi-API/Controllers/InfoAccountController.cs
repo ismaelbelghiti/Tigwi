@@ -283,5 +283,36 @@ namespace Tigwi_API.Controllers
             return OwnedListsEitherPublicOrAll(accountName, number, true);
         }
 
+        //
+        //GET infoaccount/id/{accountName}
+        
+        //[Authorize]
+        public ActionResult GetId(string accountName)
+        {
+            //TODO : use appropriate storage connexion
+            IStorage storage = new StorageTmp(); // connexion
+            Answer output;
+
+            try
+            {
+                // get the public lists owned by the given account
+
+                var accountId = storage.Account.GetId(accountName);
+                var accountToReturn = new Account(accountId, accountName);
+                output = new Answer(accountToReturn);
+            }
+
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
+
+            return Content(stream.ToString());
+        }
     }
 }
