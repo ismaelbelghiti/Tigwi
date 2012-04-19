@@ -595,10 +595,10 @@ For someone to distantly subscribe to a list. Authentication required.
 http://api.tigwi.com/modifyaccount/subscribelist/
 ###Request
     
-    <Subscribe>
+    <SubscribeList>
         <Account> nameOfSubscriber </Account>
         <Subscription> idOfSubscription </Suscription>
-    </Subscribe>
+    </SubscribeList>
 
 ###Response
 In case an error occurs

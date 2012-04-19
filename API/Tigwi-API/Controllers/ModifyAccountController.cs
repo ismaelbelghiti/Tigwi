@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Web.Mvc;
 using System.Xml.Serialization;
 using StorageLibrary;
@@ -10,7 +9,7 @@ namespace Tigwi_API.Controllers
     public class ModifyAccountController : ApiController
     {
         //
-        // POST : modify/write
+        // POST : modifyaccount/write
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -42,7 +41,7 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // POST : /modify/suscribelist
+        // POST : /modifyaccount/suscribelist
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -74,7 +73,7 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // POST /modify/createlist
+        // POST /modifyaccount/createlist
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]

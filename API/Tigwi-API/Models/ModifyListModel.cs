@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 namespace Tigwi_API.Models
 {
     [Serializable]
-    public class ListSubscribe
+    public class SubscribeAccount
     {
         public Guid List;
         public string Subscription;
