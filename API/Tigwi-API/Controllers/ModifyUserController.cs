@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace Tigwi_API.Controllers
 {
-    public class ModifyUserController : Controller
+    public class ModifyUserController : ApiController
     {
 
 

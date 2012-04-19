@@ -10,7 +10,7 @@ using StorageLibrary;
 
 namespace Tigwi_API.Controllers
 {
-    public class ModifyListController : Controller
+    public class ModifyListController : ApiController
     {
         //
         // POST : /modify/listsubscribeaccount/

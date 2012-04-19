@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace Tigwi_API.Controllers
 {
-    public class InfoUserController : Controller
+    public class InfoUserController : ApiController
     {
 
 
