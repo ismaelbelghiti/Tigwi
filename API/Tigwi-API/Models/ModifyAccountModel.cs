@@ -45,11 +45,4 @@ namespace Tigwi_API.Models
         public ListInfo ListInfo { get; set; }
     }
 
-    [Serializable]
-    public class ListSubscribe
-    {
-        public Guid List;
-        public string Subscription;
-    }
-
 }

@@ -12,7 +12,17 @@ http://api.tigwi.com/infoaccount/messages/accountName/numberOfMessages
 ###Request
 _left empty_
 ###Response
+General structure of the response :
 
+    <Answer>
+        <!-- Error Type -->
+		<Content> 
+            <!-- See below -->
+        </Content> 
+    </Answer>    
+  
+Content:
+   
     <Messages Size="sizeOfList">
 	    <Message> <!-- See below --> </Message>
 	    <Message> ... </Message>
@@ -29,9 +39,16 @@ Message format:
 	     <Content> content </Content>
      </Message>
 
-In case an error occurs:
+Error type:
+*In case an error occurs:
+
 
     <Error Code="codeOfError"/>
+
+
+*Otherwise:
+   
+    <Error/>
 
 ###Informations
 * In **URL**, _accountName_ is the name of the account whose messages you want to get.
@@ -49,6 +66,16 @@ http://api.tigwi.com/infoaccount/publicsubscriptionsaccounts/accountName/numberO
 ###Request
 _left empty_
 ###Response
+General structure of the response :
+
+    <Answer>
+        <!-- Error Type -->
+		<Content> 
+            <!-- See below -->
+        </Content> 
+    </Answer>    
+  
+Content:
 
     <Accounts Size="sizeOfList">
 	    <Account> <!-- See below --> </Account>
@@ -64,10 +91,15 @@ Account format:
 	     <Name> nameOfAccount </Name>
      </Account>
 
-In case an error occurs:
+Error Type:
+*In case an error occurs:
 
     <Error Code="codeOfError"/>
 
+*Otherwise:
+   
+    <Error/>
+ 
 ###Informations
 * In **URL**, _accountName_ is the name of the account whose subscriptions you want to get.
 * In **URL**, _numberOfSubscriptions_ is the number of subscriptions you want to get. It is optional and default is set to 20.
@@ -87,6 +119,16 @@ http://api.tigwi.com/infoaccount/subscriptionsaccounts/accountName/numberOfSubsc
 ###Request
 _left empty_
 ###Response
+General structure of the response :
+
+    <Answer>
+        <!-- Error Type -->
+		<Content> 
+            <!-- See below -->
+        </Content> 
+    </Answer>    
+  
+Content:
 
     <Accounts Size="sizeOfList">
 	    <Account> <!-- See below --> </Account>
@@ -102,9 +144,14 @@ Account format:
 	     <Name> nameOfAccount </Name>
      </Account>
 
-In case an error occurs:
+Error Type:
+*In case an error occurs:
 
     <Error Code="codeOfError"/>
+
+*Otherwise
+
+    <Error/>
 
 ###Informations
 * You **must** be authenticated as _accountName_ to have access to these informations. 
@@ -124,6 +171,16 @@ http://api.tigwi.com/infoaccount/subscribersaccounts/accountName/numberOfSubscri
 ###Request
 _left empty_
 ###Response
+General structure of the response :
+
+    <Answer>
+        <!-- Error Type -->
+		<Content> 
+            <!-- See below -->
+        </Content> 
+    </Answer>    
+  
+Content:
 
     <Accounts Size="sizeOfList">
 	    <Account> <!-- See below --> </Account>
@@ -139,9 +196,14 @@ Account format:
 	     <Name> nameOfAccount </Name>
      </Account>
 
-In case an error occurs:
+Error Type:
+*In case an error occurs:
 
     <Error Code="codeOfError"/>
+
+*Otherwise:
+
+    <Error/>
 
 ###Informations
 * In **URL**, _accountname_ is the name of the account whose subscribers you want to get.
@@ -159,6 +221,16 @@ http://api.tigwi.com/infoaccount/subscribedpublic/accountName/numberOfLists
 ###Request
 _left empty_
 ###Response
+General structure of the response :
+
+    <Answer>
+        <!-- Error Type -->
+		<Content> 
+            <!-- See below -->
+        </Content> 
+    </Answer>    
+  
+Content:
 
     <Lists Size="sizeOfList">
 	    <List> <!-- See below --> </List>
@@ -174,9 +246,14 @@ List format:
 	     <Name> nameOfList </Name>
      </List>
 
-In case an error occurs:
+Error Type:
+*In case an error occurs:
 
     <Error Code="codeOfError"/>
+
+*Otherwise:
+
+    <Error/>
 
 ###Informations
 * In **URL**, _accountName_ is the name of the account whose followed lists you want to get.
@@ -196,6 +273,16 @@ http://api.tigwi.com/infoaccount/subscribed/accountName/numberOfLists
 ###Request
 _left empty_
 ###Response
+General structure of the response :
+
+    <Answer>
+        <!-- Error Type -->
+		<Content> 
+            <!-- See below -->
+        </Content> 
+    </Answer>    
+  
+Content:
 
     <Lists Size="sizeOfList">
 	    <List> <!-- See below --> </List>
@@ -211,9 +298,14 @@ List format:
 	     <Name> nameOfList </Name>
      </List>
 
-In case an error occurs:
+Error Type:
+*In case an error occurs:
 
     <Error Code="codeOfError"/>
+
+*Otherwise:
+
+    <Error/>
 
 ###Informations
 * You **must** be authenticated and authorize to use _accountName_ account to use this method.
@@ -232,6 +324,16 @@ http://api.tigwi.com/infoaccount/subscribers/accountName/numberOfSubscribers
 ###Request
 _left empty_
 ###Response
+General structure of the response :
+
+    <Answer>
+        <!-- Error Type -->
+		<Content> 
+            <!-- See below -->
+        </Content> 
+    </Answer>    
+  
+Content:
 
     <Lists Size="sizeOfList">
 	    <List> <!-- See below --> </List>
@@ -247,9 +349,14 @@ List format:
 	     <Name> nameOfList </Name>
      </List>
 
-In case an error occurs:
+Error Type:
+*In case an error occurs:
 
     <Error Code="codeOfError"/>
+
+*Otherwise:
+
+    <Error/>
 
 ###Informations
 * In **URL**, _accountName_ is the name of the account whose subscribers you want to get.
@@ -268,6 +375,16 @@ http://api.tigwi.com/infoaccount/ownedpubliclists/accountName/numberOfLists
 ###Request
 _left empty_
 ###Response
+General structure of the response :
+
+    <Answer>
+        <!-- Error Type -->
+		<Content> 
+            <!-- See below -->
+        </Content> 
+    </Answer>    
+  
+Content:
 
     <Lists Size="sizeOfList">
 	    <List> <!-- See below --> </List>
@@ -283,9 +400,14 @@ List format:
 	     <Name> nameOfList </Name>
      </List>
 
-In case an error occurs:
+Error Type:
+*In case an error occurs:
 
     <Error Code="codeOfError"/>
+
+*Otherwise:
+   
+    <Error/>
 
 ###Informations
 * In **URL**, _accountName_ is the name of the account whose lists you want to get.
@@ -305,6 +427,16 @@ http://api.tigwi.com/infoaccount/ownedlists/accountName/numberOfLists
 ###Request
 _left empty_
 ###Response
+General structure of the response :
+
+    <Answer>
+        <!-- Error Type -->
+		<Content> 
+            <!-- See below -->
+        </Content> 
+    </Answer>    
+  
+Content:
 
     <Lists Size="sizeOfList">
 	    <List> <!-- See below --> </List>
@@ -320,9 +452,14 @@ List format:
 	     <Name> nameOfList </Name>
      </List>
 
-In case an error occurs:
+Error Type:
+*In case an error occurs:
 
     <Error Code="codeOfError"/>
+
+*Otherwise
+
+    <Error/>
 
 ###Informations
 * You **must** be authenticated as _accountName_ to have access to these informations. 
@@ -343,6 +480,16 @@ http://api.tigwi.com/infolist/subscriptions/idOfList/numberOfSubscriptions
 ###Request
 _left empty_
 ###Response
+General structure of the response :
+
+    <Answer>
+        <!-- Error Type -->
+		<Content> 
+            <!-- See below -->
+        </Content> 
+    </Answer>    
+  
+Content:
 
     <Accounts Size="sizeOfList">
 	    <Account> <!-- See below --> </Account>
@@ -358,9 +505,14 @@ Account format:
 	     <Name> nameOfAccount </Name>
      </Account>
 
-In case an error occurs:
+Error Type:
+*In case an error occurs:
 
     <Error Code="codeOfError"/>
+
+*Otherwise
+
+    <Error/>
 
 ###Informations
 * In **URL**, _idOfList_ is the id of the list whose informations you want to get
@@ -378,6 +530,16 @@ http://api.tigwi.com/infolist/subscribers/idOfList/numberOfFollowers
 ###Request
 _left empty_
 ###Response
+General structure of the response :
+
+    <Answer>
+        <!-- Error Type -->
+		<Content> 
+            <!-- See below -->
+        </Content> 
+    </Answer>    
+  
+Content:
 
     <Accounts Size="sizeOfList">
 	    <Account> <!-- See below --> </Account>
@@ -393,9 +555,14 @@ Account format:
 	     <Name> nameOfAccount </Name>
      </Account>
 
-In case an error occurs:
+Erro Type:
+*In case an error occurs:
 
     <Error Code="codeOfError"/>
+
+*Otherwise:
+
+    <Error/>
 
 ###Informations
 * In **URL** _idOfList_ is the id of the list whose followers you want to get.
@@ -412,15 +579,30 @@ http://api.tigwi.com/infolist/owner/idOfList
 ###Request
 _left empty_
 ###Response
+General structure of the response :
+
+    <Answer>
+        <!-- Error Type -->
+		<Content> 
+            <!-- See below -->
+        </Content> 
+    </Answer>    
+  
+Content:
 
      <Account>
 	     <Id> idOfAccount </Id>
 	     <Name> nameOfAccount </Name>
      </Account>
 
-In case an error occurs:
+Error Type:
+*In case an error occurs:
 
     <Error Code="codeOfError"/>
+
+*Otherwise:
+
+    <Error/>
 
 ###Informations
 * In **URL**, _idOfList_ is the id of the list whose owner you want to get.
@@ -435,6 +617,16 @@ http://api.tigwi.com/infolist/messages/idOfList/numberOfMessages
 ###Request
 _left empty_
 ###Response
+General structure of the response :
+
+    <Answer>
+        <!-- Error Type -->
+		<Content> 
+            <!-- See below -->
+        </Content> 
+    </Answer>    
+  
+Content:
 
     <Messages Size="sizeOfList">
 	    <Message> <!-- See below --> </Message>
@@ -452,9 +644,14 @@ Message format:
 	     <Content> content </Content>
      </Message>
 
-In case an error occurs:
+Error Type:
+*In case an error occurs:
 
     <Error Code="codeOfError"/>
+
+*Otherwise:
+
+    <Error/>
 
 ###Informations
 * In **URL**, _idOfList_ is the id of the list whose messages you want to get.
@@ -462,9 +659,9 @@ In case an error occurs:
 * In **Response**, _sizeOfList_ is the number of messages returned (different from _numberOfMessages_ if there are not enough accounts to provide).
 
 
-#Modifying one's account or owned lists
+#Modifying Accounts
 
-This methods require authentication. You must be authenticated as a _user_ with permissions to use the _account_ you want to modify.
+These methods require authentication. You must be authenticated as a _user_ with permissions to use the _account_ you want to modify.
 
 ##Post a message
 ###Purpose
@@ -472,7 +669,7 @@ For someone to send a message on an authorized account. Authentication required.
 ###HTTP method
 *POST*
 ###URL
-http://api.tigwi.com/modify/write
+http://api.tigwi.com/modifyaccount/write
 ###Request
 
     <Write>
@@ -505,7 +702,7 @@ For someone to create a new, empty list. Authentication required.
 *POST*
 
 ###URL
-http://api.tigwi.com/modify/createlist/
+http://api.tigwi.com/modifyaccount/createlist/
 
 ###Request
 	<CreateList>
@@ -544,7 +741,7 @@ For someone to distantly subscribe to a list. Authentication required.
 ###HTTP method
 *POST*
 ###URL
-http://api.tigwi.com/modify/accountsubscribelist/
+http://api.tigwi.com/modifyaccount/subscribelist/
 ###Request
     
     <Subscribe>
@@ -566,6 +763,9 @@ If no error occurs
 * You **must** be authenticated and authorized to use the account _nameOfSubscriber_ to use this method.
 * In **Request**, _nameOfSubscriber_ is the name of the account who wants to follow the list _idOfSubscription_.
 
+#Modifying a list
+
+These methods require authentication. You must be authenticated as an user with appropriate autorization on the list you want to modify.
 
 ##Make a list suscribe to an account
 ###Purpose
@@ -574,7 +774,7 @@ For a list to add a suscription to a given account. Authentication required.
 ###HTTP method
 *POST*
 ###URL
-http://api.tigwi.com/modify/listsubscribeaccount/
+http://api.tigwi.com/modifylist/listsubscribeaccount/
 ###Request
     
     <ListSubscribe>

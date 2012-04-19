@@ -39,7 +39,7 @@ namespace StorageLibrary
        
         /// <summary>
         /// delete a user
-        /// don't do anything if the user doesn't exists
+        /// doesn't do anything if the user doesn't exists
         /// </summary>
         void Delete(Guid userId);
 
