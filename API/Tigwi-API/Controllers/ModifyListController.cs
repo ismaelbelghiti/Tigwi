@@ -13,11 +13,11 @@ namespace Tigwi_API.Controllers
     public class ModifyListController : ApiController
     {
         //
-        // POST : /modify/listsubscribeaccount/
+        // POST : /modifylist/subscribeaccount/
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult ListSubscribeAccount(ListSubscribe listSubscribe)
+        public ActionResult SubscribeAccount(SubscribeAccount subscribeAccount)
         {
             //TODO : use appropriate storage connexion
             IStorage storage = new StorageTmp(); // connexion
@@ -25,8 +25,8 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                var accountId = storage.Account.GetId(listSubscribe.Subscription);
-                storage.List.Add(listSubscribe.List, accountId);
+                var accountId = storage.Account.GetId(subscribeAccount.Subscription);
+                storage.List.Add(subscribeAccount.List, accountId);
 
                 // Result is an empty error XML element
                 error = new Error();

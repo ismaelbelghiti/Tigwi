@@ -204,13 +204,13 @@ For a list to add a suscription to a given account. Authentication required.
 ###HTTP method
 *POST*
 ###URL
-http://api.tigwi.com/modifylist/listsubscribeaccount/
+http://api.tigwi.com/modifylist/subscribeaccount/
 ###Request
     
-    <ListSubscribe>
+    <SubscribeAccount>
         <List> idOfSuscriber </List>
         <Subscription> nameOfSubscription </Suscription>
-    </ListSubscribe>
+    </SubscribeAccount>
 
 ###Response
 In case an error occurs
