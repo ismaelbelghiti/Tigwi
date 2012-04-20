@@ -558,5 +558,72 @@ namespace Tigwi_API.Controllers
 
             return Content(stream.ToString());
         }
+
+        //
+        // GET : infoaccount/users/{accountName}/{number}
+        //[Authorize] (?)
+        public ActionResult UsersAllowed(string accountName, int number)
+        {
+            Answer output;
+
+            try
+            {
+                var accountId = Storage.Account.GetId(accountName);
+
+                // get users posting on this account
+                var users = Storage.Account.GetUsers(accountId);
+
+                // Get as many users as possible (maximum: number)
+                var size = Math.Min(users.Count, number);
+                var userListToReturn = BuilUserListFormGuidCollection(users, size, Storage);
+
+                output = new Answer(userListToReturn);
+            }
+
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
+
+            return Content(stream.ToString());
+        }
+
+        //
+        // GET : infoaccount/users/{accountID}/{number}
+        //[Authorize] (?)
+        public ActionResult UsersAllowed(Guid accountId, int number)
+        {
+            Answer output;
+
+            try
+            {
+                // get users posting on this account
+                var users = Storage.Account.GetUsers(accountId);
+
+                // Get as many users as possible (maximum: number)
+                var size = Math.Min(users.Count, number);
+                var userListToReturn = BuilUserListFormGuidCollection(users, size, Storage);
+
+                output = new Answer(userListToReturn);
+            }
+
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
+
+            return Content(stream.ToString());
+        }
+
     }
 }

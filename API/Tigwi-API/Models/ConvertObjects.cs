@@ -96,6 +96,35 @@ namespace Tigwi_API.Models
         [XmlElement] public List<Account> Account;
     }
 
+    [Serializable]
+    public class User : Content
+    {
+        public User (IUserInfo user)
+        {
+            Login = user.Login;
+            Avatar = user.Avatar;
+            Email = user.Email;
+        }
+
+        string Login { get; set; }
+        string Avatar { get; set; }
+        string Email { get; set; }
+    }
+
+    [Serializable]
+    public class Users : Content
+    {
+        public Users(List<User> listUsers)
+        {
+            Size = listUsers.Count();
+            User = listUsers;
+        }
+
+        [XmlAttribute]
+        public int Size;
+        [XmlElement]
+        public List<User> User;
+    }
     // models to answer to requests with errors (can be empty) messages
 
     [Serializable]
@@ -114,7 +143,7 @@ namespace Tigwi_API.Models
         public String Code { get; set; }
     }
 
-    //General class to send
+    //General class to send informations
     [Serializable]
     public class Answer
     {

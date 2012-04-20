@@ -543,6 +543,56 @@ Error Type:
 * In **URL**, _accountId_ is the name of the account whose main informations you want to get.
 
 
+##Get an account's users
+###Purpose
+Obtain a number _numberOfUsers_ of the account _accountName_ users.
+You need to be authenticated and authorize to use this account to get this information.
+###HTTP method
+*GET*
+###URL
+http://api.tigwi.com/infoaccount/usersallowed/accountName/numberOfUsers  
+or  
+http://api.tigwi.com/infoaccount/usersallowed/accountId/numberOfUsers
+###Request
+_left empty_
+###Response
+General structure of the response :
+
+    <Answer>
+        <!-- Error Type -->
+		<Content> 
+            <!-- See below -->
+        </Content> 
+    </Answer>    
+  
+Content:
+
+     <Users>
+	     <User> <!-- See below --> </User>
+         <User> ... </User>
+     </Users>
+
+User:
+
+    <User>
+        <Login> ... </Login>
+        <Avatar> ... </Avatar>
+        <Email> ... </Emain>
+    </User>
+ 
+Error Type:
+*In case an error occurs:
+
+    <Error Code="codeOfError"/>
+
+*Otherwise:
+   
+    <Error/>
+
+###Informations
+* You **must** be authenticated as an authorized user of _accountName_ to access this information.
+* In **URL**, _accountName_ is the name of the account whose main informations you want to get.
+* In **URL**, _accountId_ is the name of the account whose main informations you want to get.
 
 
 #Modifying an _account_
