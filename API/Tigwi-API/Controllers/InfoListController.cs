@@ -20,12 +20,14 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                // get accounts following a given list 
-                list listFollowedAccounts = storage.List.GetAccounts(idOfList);
-                var numberToReturn = Math.Min(number, listFollowedAccounts.count);
-                List<user> listFollowedAccountsOutput = listFollowedAccounts.GetRange(numberToReturn, 1);
+                // get accounts followed by the given list 
+                var FollowedAccounts = new HashSet<Guid>();
+                FollowedAccounts.UnionWith(Storage.List.GetAccounts(idOfList));
 
-                output = new Answer(listFollowedAccountsOutput);
+                var numberToReturn = Math.Min(number, FollowedAccounts.Count);
+                var FollowedAccountsToReturn = BuildAccountListFromGuidCollection(FollowedAccounts, numberToReturn, Storage);
+
+                output = new Answer(FollowedAccountsToReturn);
             }
 
             catch (StorageLibException exception)
@@ -49,11 +51,13 @@ namespace Tigwi_API.Controllers
             try
             {
                 // get accounts following a given list 
-                list listSuscribersAccount = storage.List.GetFollowingAccounts(idOfList);
-                var numberToReturn = Math.Min(number, listSuscribersAccount.count);
-                List<user> listSuscribersOutput = listSuscribersAccount.GetRange(numberToReturn, 1);
+                var listSuscriberAccounts = new HashSet<Guid>();
+                listSuscriberAccounts.UnionWith(Storage.List.GetFollowingAccounts(idOfList));
 
-                output = new Answer(listSuscribersOutput);
+                var numberToReturn = Math.Min(number, listSuscriberAccounts.Count);
+                var listSuscribersOutputToReturn = BuildAccountListFromGuidCollection(listSuscriberAccounts, numberToReturn, Storage);
+
+                output = new Answer(listSuscribersOutputToReturn);
             }
             catch (StorageLibException exception)
             {
@@ -77,9 +81,10 @@ namespace Tigwi_API.Controllers
             try
             {
                 // get accounts following a given list 
-                var owner = storage.List.GetOwner(idOfList);
-
-                output = new Answer(owner);
+                var ownerId = Storage.List.GetOwner(idOfList);
+                var ownerInfo = Storage.Account.GetInfo(ownerId);
+                var ownerToReturn = new Account(ownerId, ownerInfo.Name, ownerInfo.Description);
+                output = new Answer(ownerToReturn);
             }
 
             catch (StorageLibException exception)
@@ -103,10 +108,10 @@ namespace Tigwi_API.Controllers
             try
             {
                 // get lasts messages from list defined by idOfList
-                list listMsgs = storage.Msg.GetListsMsgTo(new HashSet<Guid> { idOfList }, DateTime.Now, number);
+                var listMsgs = Storage.Msg.GetListsMsgTo(new HashSet<Guid> { idOfList }, DateTime.Now, number);
 
                 // convert, looking forward XML serialization
-                var listMsgsOutput = new Messages(listMsgs, storage);
+                var listMsgsOutput = new Messages(listMsgs, Storage);
 
                 output = new Answer(listMsgsOutput);
             }
