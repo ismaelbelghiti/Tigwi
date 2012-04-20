@@ -65,9 +65,9 @@ No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/publicsubscriptionsaccounts/accountName/numberOfSubscriptions  
+http://api.tigwi.com/infoaccount/publiclysubscribedsaccounts/accountName/numberOfSubscriptions  
 or  
-http://api.tigwi.com/infoaccount/publicsubscriptionsaccounts/accountId/numberOfSubscriptions
+http://api.tigwi.com/infoaccount/publiclysubscribedaccounts/accountId/numberOfSubscriptions
 ###Request
 _left empty_
 ###Response
@@ -122,9 +122,9 @@ Authentication required.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/subscriptionsaccounts/accountName/numberOfSubscriptions  
+http://api.tigwi.com/infoaccount/subscribedaccounts/accountName/numberOfSubscriptions  
 or  
-http://api.tigwi.com/infoaccount/subscriptionsaccounts/accountId/numberOfSubscriptions
+http://api.tigwi.com/infoaccount/subscribedaccounts/accountId/numberOfSubscriptions
 ###Request
 _left empty_
 ###Response
@@ -232,9 +232,9 @@ No particular order provided.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/subscribedpublic/accountName/numberOfLists  
+http://api.tigwi.com/infoaccount/subscribedpubliclists/accountName/numberOfLists  
 or  
-http://api.tigwi.com/infoaccount/subscribedpublic/accountId/numberOfLists
+http://api.tigwi.com/infoaccount/subscribedpubliclists/accountId/numberOfLists
 ###Request
 _left empty_
 ###Response
@@ -287,9 +287,9 @@ Authentication required.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/subscribed/accountName/numberOfLists  
+http://api.tigwi.com/infoaccount/subscribedlists/accountName/numberOfLists  
 or  
-http://api.tigwi.com/infoaccount/subscribed/accountId/numberOfLists
+http://api.tigwi.com/infoaccount/subscribedlists/accountId/numberOfLists
 ###Request
 _left empty_
 ###Response
@@ -341,9 +341,9 @@ No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/subscribers/accountName/numberOfSubscribers  
+http://api.tigwi.com/infoaccount/subscriberlists/accountName/numberOfSubscribers  
 or  
-http://api.tigwi.com/infoaccount/subscribers/accountId/numberOfSubscribers
+http://api.tigwi.com/infoaccount/subscriberlists/accountId/numberOfSubscribers
 ###Request
 _left empty_
 ###Response
@@ -505,7 +505,9 @@ You need to be authenticated and authorize to use this account to get its id.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/main/accountName
+http://api.tigwi.com/infoaccount/main/accountName  
+or  
+http://api.tigwi.com/infoaccount/main/accountId
 ###Request
 _left empty_
 ###Response

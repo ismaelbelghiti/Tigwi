@@ -13,7 +13,6 @@ namespace Tigwi_API.Controllers
 
         //
         // GET: /infoaccount/messages/{accountName}/{number}
-
         public ActionResult Messages(string accountName, int number)
         {
             Answer output;
@@ -44,8 +43,37 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // GET : /infoaccount/subscriberaccounts/{accountName}/{number}
+        // GET: /infoaccount/messages/{accountId}/{number}
+        public ActionResult Messages(Guid accountId, int number)
+        {
+            Answer output;
 
+            try
+            {
+                // get lasts messages from user name
+                var personalListId = Storage.List.GetPersonalList(accountId);
+                var listMsgs = Storage.Msg.GetListsMsgTo(new HashSet<Guid> { personalListId }, DateTime.Now, number);
+
+                // convert, looking forward XML serialization
+                var listMsgsOutput = new Messages(listMsgs, Storage);
+                output = new Answer(listMsgsOutput);
+            }
+
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
+
+            return Content(stream.ToString());
+        }
+        
+        //
+        // GET : /infoaccount/subscriberaccounts/{accountName}/{number}
         public ActionResult SubscriberAccounts(string accountName, int number)
         {
             Answer output;
@@ -82,6 +110,43 @@ namespace Tigwi_API.Controllers
             return Content(stream.ToString());
         }
 
+        //
+        // GET : /infoaccount/subscriberaccounts/{accountId}/{number}
+        public ActionResult SubscriberAccounts(Guid accountId, int number)
+        {
+            Answer output;
+
+            try
+            {
+                // get lasts followers of user name 's list
+                var followingLists = Storage.List.GetFollowingLists(accountId);
+                var hashFollowers = new HashSet<Guid>();
+                foreach (var followingList in followingLists)
+                {
+                    hashFollowers.UnionWith(Storage.List.GetFollowingAccounts(followingList));
+                }
+
+                // Get as many subscribers as possible (maximum: number)
+                var size = Math.Min(hashFollowers.Count, number);
+                var accountListToReturn = BuildAccountListFromGuidCollection(hashFollowers, size, Storage);
+
+                output = new Answer(accountListToReturn);
+            }
+
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
+
+            return Content(stream.ToString());
+        }
+
+        //To be used in following methods
         private ContentResult SubscriptionsEitherPublicOrAll(string accountName, int numberOfSubscriptions, bool withPrivate)
         {
             Answer output;
@@ -117,27 +182,73 @@ namespace Tigwi_API.Controllers
 
             return Content(stream.ToString());
         }
+        private ContentResult SubscriptionsEitherPublicOrAll(Guid accountId, int numberOfSubscriptions, bool withPrivate)
+        {
+            Answer output;
+
+            try
+            {
+                // get the public lists followed by the given account
+                var followedLists = Storage.List.GetAccountFollowedLists(accountId, withPrivate);
+                var accountsInLists = new HashSet<Guid>();
+                foreach (var followedList in followedLists)
+                {
+                    accountsInLists.UnionWith(Storage.List.GetAccounts(followedList));
+                }
+
+                // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
+                var size = Math.Min(accountsInLists.Count, numberOfSubscriptions);
+                var accountListToReturn = BuildAccountListFromGuidCollection(accountsInLists, size, Storage);
+
+                output = new Answer(accountListToReturn);
+            }
+
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
+
+            return Content(stream.ToString());
+        }
 
         //
         // GET : /infoaccount/publiclysubscribedaccounts/{accountName}/{number}
-        // or publicsubscriptions ??
-
         public ActionResult PubliclySubscribedAccounts(string accountName, int number)
         {
             return SubscriptionsEitherPublicOrAll(accountName, number, false);
         }
 
+        //
+        // GET : /infoaccount/publiclysubscribedaccounts/{accountId}/{number}
+        public ActionResult PubliclySubscribedAccounts(Guid accountId, int number)
+        {
+            return SubscriptionsEitherPublicOrAll(accountId, number, false);
+        }
 
         //
         // GET : /infoaccount/subscribedaccounts/{accountName}/{number}
+
         // [Authorize]
         public ActionResult SubscribedAccounts(string accountName, int number)
         {
             return SubscriptionsEitherPublicOrAll(accountName, number, true);
         }
 
+        //
+        // GET : /infoaccount/subscribedaccounts/{accountId}/{number}
 
-        
+        // [Authorize]
+        public ActionResult SubscribedAccounts(Guid accountId, int number)
+        {
+            return SubscriptionsEitherPublicOrAll(accountId, number, true);
+        }
+
+        //to be used in following methods
         private ActionResult SubscribedListsEitherPublicOrAll(string accountName, int numberofLists, bool withPrivate)
         {
             Answer output;
@@ -169,20 +280,53 @@ namespace Tigwi_API.Controllers
 
             return Content(stream.ToString());
         }
+        private ActionResult SubscribedListsEitherPublicOrAll(Guid accountId, int numberofLists, bool withPrivate)
+        {
+            Answer output;
 
+            try
+            {
+                // get the public lists followed by the given account
+
+                var followedLists = Storage.List.GetAccountFollowedLists(accountId, withPrivate);
+
+
+                // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
+                var size = Math.Min(followedLists.Count, numberofLists);
+                var listsToReturn = BuildListsFromGuidCollection(followedLists, size, Storage);
+
+                output = new Answer(listsToReturn);
+            }
+
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
+
+            return Content(stream.ToString());
+        }
         
         //
         // GET : /infoaccount/subscribedpubliclists/{accountName}/{number}
-        // or publicsubscriptions but subcribedpublic isn't correct
-
         public ActionResult SubscribedPublicLists(string accountName, int number)
         {
             return SubscribedListsEitherPublicOrAll(accountName, number, false);
         }
 
         //
+        // GET : /infoaccount/subscribedpubliclists/{accountId}/{number}
+        public ActionResult SubscribedPublicLists(Guid accountId, int number)
+        {
+            return SubscribedListsEitherPublicOrAll(accountId, number, false);
+        }
+
+        //
         // GET : /infoaccount/subscribedlists/{accountName}/{number}
-        // or subscriptions but subscribed isn't correct
 
         //[Authorize]
         public ActionResult SubscribedLists(string accountName, int number)
@@ -191,10 +335,17 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // GET : /infoaccount/subscribers/{accountName}/{number}
-        // To clarify : subscriberlists ??
+        // GET : /infoaccount/subscribedlists/{accountId}/{number}
 
-        public ActionResult Subscribers(string name, int numberOfSubscribers)
+        //[Authorize]
+        public ActionResult SubscribedLists(Guid accountId, int number)
+        {
+            return SubscribedListsEitherPublicOrAll(accountId, number, true);
+        }
+
+        //
+        // GET : /infoaccount/subscriberLists/{accountName}/{number}
+        public ActionResult SubscriberLists(string name, int numberOfSubscribers)
         {
             Answer output;
 
@@ -225,6 +376,38 @@ namespace Tigwi_API.Controllers
             return Content(stream.ToString());
         }
 
+        //
+        // GET : /infoaccount/subscriberLists/{accountName}/{number}
+        public ActionResult SubscriberLists(Guid accountId, int numberOfSubscribers)
+        {
+            Answer output;
+
+            try
+            {
+                // get lasts followers of user name 's list
+                var followingLists = Storage.List.GetFollowingLists(accountId);
+
+                // Get as many subscribers as possible (maximum: number)
+                var size = Math.Min(followingLists.Count, numberOfSubscribers);
+                var accountListToReturn = BuildAccountListFromGuidCollection(followingLists, size, Storage);
+
+                output = new Answer(accountListToReturn);
+            }
+
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
+
+            return Content(stream.ToString());
+        }
+
+        //to be used in following methods
         private ActionResult OwnedListsEitherPublicOrAll(string accountName, int numberOfLists, bool withPrivate)
         {
             Answer output;
@@ -256,13 +439,48 @@ namespace Tigwi_API.Controllers
 
             return Content(stream.ToString());
         }
+        private ActionResult OwnedListsEitherPublicOrAll(Guid accountId, int numberOfLists, bool withPrivate)
+        {
+            Answer output;
+
+            try
+            {
+                // get the public lists owned by the given account
+                var ownedLists = Storage.List.GetAccountOwnedLists(accountId, withPrivate);
+
+
+                // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
+                var size = Math.Min(ownedLists.Count, numberOfLists);
+                var listsToReturn = BuildListsFromGuidCollection(ownedLists, size, Storage);
+
+                output = new Answer(listsToReturn);
+            }
+
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
+
+            return Content(stream.ToString());
+        }
 
         //
         // GET : infoaccount/ownedpubliclists/{accountName}/{number}
-
         public ActionResult OwnedPublicLists(string accountName, int number)
         {
             return OwnedListsEitherPublicOrAll(accountName, number, false);
+        }
+
+        //
+        // GET : infoaccount/ownedpubliclists/{accountId}/{number}
+        public ActionResult OwnedPublicLists(Guid accountId, int number)
+        {
+            return OwnedListsEitherPublicOrAll(accountId, number, false);
         }
 
         //
@@ -275,21 +493,56 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        //GET infoaccount/id/{accountName}
+        // GET : /infoaccount/ownedlists/{accountId}/{number}
+
+        //[Authorize]
+        public ActionResult OwnedLists(Guid accountId, int number)
+        {
+            return OwnedListsEitherPublicOrAll(accountId, number, true);
+        }
+
+        //
+        //GET infoaccount/main/{accountName}
         
         //[Authorize]
         public ActionResult Main(string accountName)
         {
-            //TODO : use appropriate storage connexion
-            IStorage storage = new StorageTmp(); // connexion
             Answer output;
 
             try
             {
                 // get the public lists owned by the given account
 
-                var accountId = storage.Account.GetId(accountName);
-                var accountToReturn = new Account(accountId, accountName);
+                var accountId = Storage.Account.GetId(accountName);
+                var accountInfo = Storage.Account.GetInfo(accountId);
+                var accountToReturn = new Account(accountId, accountName,accountInfo.Description);
+                output = new Answer(accountToReturn);
+            }
+
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
+
+            return Content(stream.ToString());
+        }
+
+        //
+        //GET infoaccount/main/{accountName}
+        public ActionResult Main(Guid accountId)
+        {
+            Answer output;
+
+            try
+            {
+                // get the public lists owned by the given account
+                var accountInfo = Storage.Account.GetInfo(accountId);
+                var accountToReturn = new Account(accountId, accountInfo.Name, accountInfo.Description);
                 output = new Answer(accountToReturn);
             }
 
