@@ -15,15 +15,13 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Write(MsgToWrite msg)
         {
-            //TODO : use appropriate storage connexion
-            IStorage storage = new StorageTmp(); // connexion
             Error error;
 
             try
             {
-                var accountId = storage.Account.GetId(msg.Account);
+                var accountId = Storage.Account.GetId(msg.Account);
 
-                storage.Msg.Post(accountId, msg.Message.Content);
+                Storage.Msg.Post(accountId, msg.Message.Content);
 
                 // Result is an empty error XML element
                 error = new Error();
@@ -47,15 +45,13 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult SubscribeList(SubscribeList subscribe)
         {
-            //TODO : use appropriate storage connexion
-            IStorage storage = new StorageTmp(); // connexion
             Error error;
 
             try
             {
-                var accountId = storage.Account.GetId(subscribe.Account);
+                var accountId = Storage.Account.GetId(subscribe.Account);
 
-                storage.List.Follow(subscribe.Subscription, accountId);
+                Storage.List.Follow(subscribe.Subscription, accountId);
 
                 // Result is an empty error XML element
                 error = new Error();
@@ -79,16 +75,14 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CreateList(CreateList listCreation)
         {
-            //TODO : use appropriate storage connexion
-            IStorage storage = new StorageTmp(); // connexion
             Error error;
 
             try
             {
-                var accountId = storage.Account.GetId(listCreation.Account);
+                var accountId = Storage.Account.GetId(listCreation.Account);
                 var listToCreate = listCreation.ListInfo;
 
-                storage.List.Create(accountId,listToCreate.Name, listToCreate.Description,
+                Storage.List.Create(accountId,listToCreate.Name, listToCreate.Description,
                                     listToCreate.IsPrivate);
 
                 // Result is an empty error XML element
