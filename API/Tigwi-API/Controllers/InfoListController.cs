@@ -21,13 +21,12 @@ namespace Tigwi_API.Controllers
             try
             {
                 // get accounts followed by the given list 
-                var FollowedAccounts = new HashSet<Guid>();
-                FollowedAccounts.UnionWith(Storage.List.GetAccounts(idOfList));
+                var followedAccounts = Storage.List.GetAccounts(idOfList);
 
-                var numberToReturn = Math.Min(number, FollowedAccounts.Count);
-                var FollowedAccountsToReturn = BuildAccountListFromGuidCollection(FollowedAccounts, numberToReturn, Storage);
+                var numberToReturn = Math.Min(number, followedAccounts.Count);
+                var followedAccountsToReturn = BuildAccountListFromGuidCollection(followedAccounts, numberToReturn, Storage);
 
-                output = new Answer(FollowedAccountsToReturn);
+                output = new Answer(followedAccountsToReturn);
             }
 
             catch (StorageLibException exception)
@@ -51,8 +50,7 @@ namespace Tigwi_API.Controllers
             try
             {
                 // get accounts following a given list 
-                var listSuscriberAccounts = new HashSet<Guid>();
-                listSuscriberAccounts.UnionWith(Storage.List.GetFollowingAccounts(idOfList));
+                var listSuscriberAccounts = Storage.List.GetFollowingAccounts(idOfList);
 
                 var numberToReturn = Math.Min(number, listSuscriberAccounts.Count);
                 var listSuscribersOutputToReturn = BuildAccountListFromGuidCollection(listSuscriberAccounts, numberToReturn, Storage);

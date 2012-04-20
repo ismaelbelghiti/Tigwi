@@ -21,9 +21,20 @@ namespace Tigwi_API
                                 {
                                     controller = "InfoAccount",
                                     action = "",
-                                    accountName = "",
+                                    accountName = @"\s+",
                                     number = "20" // Par défaut le nombre de messages est 20
-                                } 
+                                }
+                );
+
+            routes.MapRoute("InfoAccount",
+                            "infoaccount/{action}/{accountId}/{number}",
+                            new
+                            {
+                                controller = "InfoAccount",
+                                action = @"\d+",
+                                accountName = @"\s+",
+                                number = "20" // Par défaut le nombre de messages est 20
+                            }
                 );
 
             // routes to InfoList
