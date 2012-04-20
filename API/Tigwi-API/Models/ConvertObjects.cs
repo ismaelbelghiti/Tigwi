@@ -63,14 +63,16 @@ namespace Tigwi_API.Models
     [Serializable]
     public class Account : Content
     {
-        public Account(Guid id, string name)
+        public Account(Guid id, string name, string description)
         {
             Id = id;
             Name = name;
+            Description = description;
         }
 
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
     }
 
     [Serializable]

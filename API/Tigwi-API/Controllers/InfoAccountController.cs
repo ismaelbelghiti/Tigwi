@@ -291,7 +291,7 @@ namespace Tigwi_API.Controllers
         //GET infoaccount/id/{accountName}
         
         //[Authorize]
-        public ActionResult GetId(string accountName)
+        public ActionResult Main(string accountName)
         {
             //TODO : use appropriate storage connexion
             IStorage storage = new StorageTmp(); // connexion

@@ -37,6 +37,7 @@ Account format:
      <Account>
 	     <Id> idOfAccount </Id>
 	     <Name> nameOfAccount </Name>
+         <Description> <!-- Description of the account --> </Description>
      </Account>
 
 Error Type:
@@ -87,6 +88,7 @@ Account format:
      <Account>
 	     <Id> idOfAccount </Id>
 	     <Name> nameOfAccount </Name>
+         <Description> <!-- Description of the account --> </Description>
      </Account>
 
 Erro Type:
@@ -127,6 +129,7 @@ Content:
      <Account>
 	     <Id> idOfAccount </Id>
 	     <Name> nameOfAccount </Name>
+         <Description> <!-- Description of the account --> </Description>
      </Account>
 
 Error Type:

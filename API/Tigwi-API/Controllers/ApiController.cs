@@ -15,7 +15,8 @@ namespace Tigwi_API.Controllers
             for (var k = 0; k < size; k++)
             {
                 var accountId = hashAccounts.First();
-                var account = new Account(accountId, storage.Account.GetInfo(accountId).Name);
+                var accountInfo = storage.Account.GetInfo(accountId);
+                var account = new Account(accountId, accountInfo.Name, accountInfo.Description);
                 accountList.Add(account);
                 hashAccounts.Remove(accountId);
             }
