@@ -35,16 +35,25 @@ namespace StorageLibrary
         /// create a user
         /// </summary>
         /// <exception cref="UserAlreadyExists">if the login is already used</exception>
-        Guid Create(string login, string email);
+        Guid Create(string login, string email, string password);
        
         /// <summary>
         /// delete a user
-        /// don't do anything if the user doesn't exists
+        /// doesn't do anything if the user doesn't exists
         /// </summary>
         void Delete(Guid userId);
 
-        // TODO :
-        // add the possibility (not obligation) to have an openID url
-        // + une string avec le hash du mot de passe (from ID)
+        // TODO : implement this
+        /// <summary>
+        /// To be used to check a user password
+        /// </summary>
+        /// <exception cref="UserNotFound"></exception>
+        string GetPassword(Guid userID);
+
+        /// <summary>
+        /// Change a user password
+        /// </summary>
+        /// <exception cref="UserNotFound"></exception>
+        void SetPassword(Guid userID, string password);
     }
 }

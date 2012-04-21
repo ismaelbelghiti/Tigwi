@@ -3,6 +3,7 @@
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" Condition="Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets')" />
   <Import Project="..\..\ConnectionInfo.xml" Condition="Exists('..\..\ConnectionInfo.xml')" />
+
   <!-- Global/Default configuration -->
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -83,14 +84,6 @@
       <RoleName>StorageWorker</RoleName>
       <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
     </ProjectReference>
-    <ProjectReference Include="..\Tigwi.UI\UI.csproj">
-      <Name>UI</Name>
-      <Project>{46428462-db30-44d8-a6bb-7b83f3f211ec}</Project>
-      <Private>True</Private>
-      <RoleType>Web</RoleType>
-      <RoleName>UI</RoleName>
-      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
-    </ProjectReference>
     <ProjectReference Include="..\Tigwi_test\Tigwi_test.csproj">
       <Name>Tigwi_test</Name>
       <Project>{52f3b785-4c0b-4e7b-9dbe-e988cfcd68c8}</Project>
@@ -107,19 +100,37 @@
   </PropertyGroup>
   <Import Project="$(CloudExtensionsDir)Microsoft.WindowsAzure.targets" />
   <!-- Azure Deployment code -->
-  <Target Name="BeforeBuild" Condition=" '$(AzureStorageAccountKey)' != '' And '$(AzureStorageAccountName)' != '' And Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets')">
-    <FileUpdate Files="@(ServiceConfigurationFiles)" Regex="UseDevelopmentStorage=true" ReplacementText="DefaultEndpointsProtocol=https;AccountName=$(AzureStorageAccountName);AccountKey=$(AzureStorageAccountKey)" />
-    <FileUpdate Files="@(ConnectionFiles)" Regex="__AZURE_STORAGE_ACCOUNT_NAME" ReplacementText="$(AzureStorageAccountName)" />
-    <FileUpdate Files="@(ConnectionFiles)" Regex="__AZURE_STORAGE_ACCOUNT_KEY" ReplacementText="$(AzureStorageAccountKey)" />
+  <Target Name="BeforeBuild" Condition=" '$(AzureStorageAccountKey)' != '' And '$(AzureStorageAccountName)' != '' And Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets')" >
+    <FileUpdate
+      Files="@(ServiceConfigurationFiles)"
+      Regex ="UseDevelopmentStorage=true"
+      ReplacementText="DefaultEndpointsProtocol=https;AccountName=$(AzureStorageAccountName);AccountKey=$(AzureStorageAccountKey)" />
+    <FileUpdate
+      Files="@(ConnectionFiles)"
+      Regex ="__AZURE_STORAGE_ACCOUNT_NAME"
+      ReplacementText="$(AzureStorageAccountName)" />
+    <FileUpdate
+      Files="@(ConnectionFiles)"
+      Regex ="__AZURE_STORAGE_ACCOUNT_KEY"
+      ReplacementText="$(AzureStorageAccountKey)" />
   </Target>
   <!--
   <Target Name="AzureDeploy" AfterTargets="Build" DependsOnTargets="CorePublish" Condition=" '$(AzureDeployment)' == 'true' ">
     <Exec WorkingDirectory="$(MSBuildProjectDirectory)" Command=" $(windir)\system32\WindowsPowerShell\v1.0\powershell.exe -f \build\AzureDeploy.ps1 $(AzureSubscriptionID) $(AzureCertificateThumbprint) $(PublishDir) $(PackageName) $(ServiceConfigName) $(AzureHostedServiceName) $(AzureStorageAccountName)" />
   </Target>
   -->
-  <Target Name="AfterBuild" Condition=" '$(AzureStorageAccountKey)' != '' And '$(AzureStorageAccountName)' != '' And Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets')">
-    <FileUpdate Files="@(ServiceConfiguration)" Regex="DefaultEndpointsProtocol=https;AccountName=$(AzureStorageAccountName);AccountKey=$(AzureStorageAccountKey)" ReplacementText="UseDevelopmentStorage=true" />
-    <FileUpdate Files="@(ConnectionFiles)" Regex="$(AzureStorageAccountName)" ReplacementText="__AZURE_STORAGE_ACCOUNT_NAME" />
-    <FileUpdate Files="@(AllFiles)" Regex="$(AzureStorageAccountKey)" ReplacementText="__AZURE_STORAGE_ACCOUNT_KEY" />
+  <Target Name="AfterBuild" Condition=" '$(AzureStorageAccountKey)' != '' And '$(AzureStorageAccountName)' != '' And Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets')" >
+    <FileUpdate
+      Files="@(ServiceConfiguration)"
+      Regex ="DefaultEndpointsProtocol=https;AccountName=$(AzureStorageAccountName);AccountKey=$(AzureStorageAccountKey)"
+      ReplacementText="UseDevelopmentStorage=true" />
+    <FileUpdate
+      Files="@(ConnectionFiles)"
+      Regex ="$(AzureStorageAccountName)"
+      ReplacementText="__AZURE_STORAGE_ACCOUNT_NAME" />
+    <FileUpdate
+      Files="@(AllFiles)"
+      Regex="$(AzureStorageAccountKey)"
+      ReplacementText="__AZURE_STORAGE_ACCOUNT_KEY" />
   </Target>
 </Project>

@@ -16,19 +16,18 @@ namespace Tigwi.UI.Tests.Models
     [TestFixture]
     public class StorageUserModelTest
     {
-        protected Mock<IStorage> MockStorage { get; set; }
-
         protected StorageUserModel UserModel { get; set; }
+
+        protected IStorage Storage { get; set; }
+
         #region SetUp / TearDown
 
         [SetUp]
         public void Init()
         {
-            var mock = new Mock<IStorage>();
-            this.MockStorage = mock;
-
-            var istorage = mock.Object;
-            var guid = istorage.User.Create("Elarnon", "cbasile06@gmail.com");
+            var istorage = new StorageTmp();
+            this.Storage = istorage;
+            var guid = istorage.User.Create("Elarnon", "cbasile06@gmail.com", string.Empty);
 
             this.UserModel = new StorageUserModel(istorage, guid);
         }
@@ -60,7 +59,7 @@ namespace Tigwi.UI.Tests.Models
 
             storageUserModel.Save();
 
-            var otherModel = new StorageUserModel(this.MockStorage.Object, storageUserModel.Id);
+            var otherModel = new StorageUserModel(this.Storage, storageUserModel.Id);
             Assert.That(otherModel.Email, Is.EqualTo("basile.clement@ens.fr"));
         }
 

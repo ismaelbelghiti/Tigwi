@@ -92,10 +92,13 @@
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApiController.cs" />
+    <Compile Include="Controllers\InfoUserController.cs" />
+    <Compile Include="Controllers\ModifyListController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InfoAccountController.cs" />
     <Compile Include="Controllers\InfoListController.cs" />
-    <Compile Include="Controllers\ModifyController.cs" />
+    <Compile Include="Controllers\ModifyAccountController.cs" />
+    <Compile Include="Controllers\ModifyUserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -103,7 +106,10 @@
     <Compile Include="Models\ConvertObjects.cs" />
     <Compile Include="Models\InfoAccountModel.cs" />
     <Compile Include="Models\InfoListModel.cs" />
-    <Compile Include="Models\ModifyModel.cs" />
+    <Compile Include="Models\InfoUserModel.cs" />
+    <Compile Include="Models\ModifyListModel.cs" />
+    <Compile Include="Models\ModifyAccountModel.cs" />
+    <Compile Include="Models\ModifyUserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

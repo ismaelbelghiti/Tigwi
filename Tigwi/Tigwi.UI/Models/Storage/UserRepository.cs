@@ -23,7 +23,7 @@ namespace Tigwi.UI.Models.Storage
         {
             try
             {
-                var id = this.Storage.User.Create(login, email);
+                var id = this.Storage.User.Create(login, email, string.Empty);
                 return this.Find(id);
             }
             catch (UserAlreadyExists userAlreadyExists)

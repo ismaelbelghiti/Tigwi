@@ -20,7 +20,7 @@ namespace Tigwi_API.Models
     }
 
     [Serializable]
-    public class Lists
+    public class Lists : Content
     {
         public Lists()
         {
@@ -39,4 +39,5 @@ namespace Tigwi_API.Models
         [XmlElement]
         public List<ListApi> List;
     }
+
 }

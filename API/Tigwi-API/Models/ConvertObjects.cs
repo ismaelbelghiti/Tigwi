@@ -8,9 +8,12 @@ namespace Tigwi_API.Models
 {
 
     // models for answers to GET requests
+    [Serializable]
+    public abstract class Content
+    {}
 
     [Serializable]
-    public class Message
+    public class Message 
     {
         public Message(IMessage msg, IStorage storage)
         {
@@ -30,7 +33,7 @@ namespace Tigwi_API.Models
     }
 
     [Serializable]
-    public class Messages
+    public class Messages : Content
     {
         public Messages()
         {
@@ -58,26 +61,29 @@ namespace Tigwi_API.Models
     }
 
     [Serializable]
-    public class Account
+    public class Account : Content
     {
-        public Account(Guid id, string name)
+        public Account(Guid id, string name, string description)
         {
             Id = id;
             Name = name;
+            Description = description;
         }
 
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
     }
 
     [Serializable]
-    public class Accounts
+    public class Accounts : Content
     {
         public Accounts()
         {
             Account = new List<Account>();
             Size = 0;
         }
+
         public Accounts(List<Account> accounts)
         {
             Account = accounts;
@@ -90,6 +96,35 @@ namespace Tigwi_API.Models
         [XmlElement] public List<Account> Account;
     }
 
+    [Serializable]
+    public class User : Content
+    {
+        public User (IUserInfo user)
+        {
+            Login = user.Login;
+            Avatar = user.Avatar;
+            Email = user.Email;
+        }
+
+        string Login { get; set; }
+        string Avatar { get; set; }
+        string Email { get; set; }
+    }
+
+    [Serializable]
+    public class Users : Content
+    {
+        public Users(List<User> listUsers)
+        {
+            Size = listUsers.Count();
+            User = listUsers;
+        }
+
+        [XmlAttribute]
+        public int Size;
+        [XmlElement]
+        public List<User> User;
+    }
     // models to answer to requests with errors (can be empty) messages
 
     [Serializable]
@@ -106,5 +141,30 @@ namespace Tigwi_API.Models
 
         [XmlAttribute]
         public String Code { get; set; }
+    }
+
+    //General class to send informations
+    [Serializable]
+    public class Answer
+    {
+        public Answer()
+        {
+            Error = null;
+            Content = null;
+        }
+
+        public Answer(Error error)
+        {
+            Error = error;
+            Content = null;
+        }
+
+        public Answer(Content content)
+        {
+            Error = null;
+            Content = content;
+        }   
+        public Error Error;
+        public Content Content;
     }
 }

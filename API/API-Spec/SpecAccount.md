@@ -8,7 +8,9 @@ Obtain a number _n_ of the account _accountName_ 's last posted messages
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/messages/accountName/numberOfMessages
+http://api.tigwi.com/infoaccount/messages/accountName/numberOfMessages  
+or  
+http://api.tigwi.com/infoaccount/messages/accountId/numberOfMessages
 ###Request
 _left empty_
 ###Response
@@ -52,6 +54,7 @@ Error type:
 
 ###Informations
 * In **URL**, _accountName_ is the name of the account whose messages you want to get.
+* In **URL**, _accountId is the unique identifier of the account whose messages you want to get.
 * In **URL**, _numberOfMessages_ is the number of messages you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of messages returned (different from _numberOfMessages_ if there are not enough messages to provide).
 
@@ -62,7 +65,9 @@ No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/publicsubscriptionsaccounts/accountName/numberOfSubscriptions
+http://api.tigwi.com/infoaccount/publiclysubscribedsaccounts/accountName/numberOfSubscriptions  
+or  
+http://api.tigwi.com/infoaccount/publiclysubscribedaccounts/accountId/numberOfSubscriptions
 ###Request
 _left empty_
 ###Response
@@ -89,6 +94,7 @@ Account format:
      <Account>
 	     <Id> idOfAccount </Id>
 	     <Name> nameOfAccount </Name>
+         <Description> <!-- Description of the account --> </Description>
      </Account>
 
 Error Type:
@@ -102,6 +108,7 @@ Error Type:
  
 ###Informations
 * In **URL**, _accountName_ is the name of the account whose subscriptions you want to get.
+* In **URL**, _accountId_ is the unique identifier of the account whose subscriptions you want to get.
 * In **URL**, _numberOfSubscriptions_ is the number of subscriptions you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of subscription returned (different from _numberOfSubscriptions_ if there are not enough subscriptions to provide).
 * You will only receive subscriptions from lists that the owner has declared public.
@@ -115,7 +122,9 @@ Authentication required.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/subscriptionsaccounts/accountName/numberOfSubscriptions
+http://api.tigwi.com/infoaccount/subscribedaccounts/accountName/numberOfSubscriptions  
+or  
+http://api.tigwi.com/infoaccount/subscribedaccounts/accountId/numberOfSubscriptions
 ###Request
 _left empty_
 ###Response
@@ -142,6 +151,7 @@ Account format:
      <Account>
 	     <Id> idOfAccount </Id>
 	     <Name> nameOfAccount </Name>
+         <Description> <!-- Description of the account --> </Description>
      </Account>
 
 Error Type:
@@ -156,6 +166,7 @@ Error Type:
 ###Informations
 * You **must** be authenticated as _accountName_ to have access to these informations. 
 * In **URL**, _accountName_ is the name of the account whose subscriptions you want to get.
+* In **URL**, _accountId_ is the unique identifier of the account whose subscriptions you want to get.
 * In **URL**, _numberOfSubscriptions_ is the number of subscriptions you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of subscription returned (different from _numberOfSubscriptions_ if there are not enough subscriptions to provide).
 
@@ -167,7 +178,9 @@ No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/subscribersaccounts/accountName/numberOfSubscribers
+http://api.tigwi.com/infoaccount/subscribersaccounts/accountName/numberOfSubscribers  
+or  
+http://api.tigwi.com/infoaccount/subscribersaccounts/accountId/numberOfSubscribers
 ###Request
 _left empty_
 ###Response
@@ -194,6 +207,7 @@ Account format:
      <Account>
 	     <Id> idOfAccount </Id>
 	     <Name> nameOfAccount </Name>
+         <Description> <!-- Description of the account --> </Description>
      </Account>
 
 Error Type:
@@ -206,7 +220,8 @@ Error Type:
     <Error/>
 
 ###Informations
-* In **URL**, _accountname_ is the name of the account whose subscribers you want to get.
+* In **URL**, _accountName_ is the name of the account whose subscribers you want to get.
+* In **URL**, _accountId_ is the unique identifier of the account whose subscribers you want to get.
 * In **URL**, _numberOfSubscribers_ is the number of subscribers you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of subscribers returned (different from _numberOfSubscribers_ if there are not enough subscribers to provide).
 
@@ -217,7 +232,9 @@ No particular order provided.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/subscribedpublic/accountName/numberOfLists
+http://api.tigwi.com/infoaccount/subscribedpubliclists/accountName/numberOfLists  
+or  
+http://api.tigwi.com/infoaccount/subscribedpubliclists/accountId/numberOfLists
 ###Request
 _left empty_
 ###Response
@@ -261,6 +278,7 @@ Error Type:
 * In **Response**, _sizeOfList_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
 * You will only receive lists that the owner has declared public.
 
+
 ##Get an account's followed lists
 ###Purpose
 Obtain a number _n_ of the account _accountName_ 's followed lists, either public or private.
@@ -269,7 +287,9 @@ Authentication required.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/subscribed/accountName/numberOfLists
+http://api.tigwi.com/infoaccount/subscribedlists/accountName/numberOfLists  
+or  
+http://api.tigwi.com/infoaccount/subscribedlists/accountId/numberOfLists
 ###Request
 _left empty_
 ###Response
@@ -310,6 +330,7 @@ Error Type:
 ###Informations
 * You **must** be authenticated and authorize to use _accountName_ account to use this method.
 * In **URL**, _accountName_ is the name of the account whose followed lists you want to get.
+* In **URL**, _accountId_ is the unique Identifier of the account whose followed lists you want to get.
 * In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
 
@@ -320,7 +341,9 @@ No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/subscribers/accountName/numberOfSubscribers
+http://api.tigwi.com/infoaccount/subscriberlists/accountName/numberOfSubscribers  
+or  
+http://api.tigwi.com/infoaccount/subscriberlists/accountId/numberOfSubscribers
 ###Request
 _left empty_
 ###Response
@@ -360,6 +383,7 @@ Error Type:
 
 ###Informations
 * In **URL**, _accountName_ is the name of the account whose subscribers you want to get.
+* In **URL**, _accountId_ is the unique identifier of the account whose subscribers you want to get.
 * In **URL**, _numberOfSubscribers_ is the number of subscribers you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of subscribers returned (different from _numberOfSubscribers_ if there are not enough subscribers to provide).
 * There is no way to get private lists who subscribed to an account.
@@ -371,7 +395,9 @@ No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/ownedpubliclists/accountName/numberOfLists
+http://api.tigwi.com/infoaccount/ownedpubliclists/accountName/numberOfLists  
+or  
+http://api.tigwi.com/infoaccount/ownedpubliclists/accountId/numberOfLists
 ###Request
 _left empty_
 ###Response
@@ -411,6 +437,7 @@ Error Type:
 
 ###Informations
 * In **URL**, _accountName_ is the name of the account whose lists you want to get.
+* In **URL**, _accountId_ is the unique identifier of the account whose lists you want to get.
 * In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
 * You will only receive lists that the owner has declared public.
@@ -423,7 +450,9 @@ No particular order provided. Authentication required.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/ownedlists/accountName/numberOfLists
+http://api.tigwi.com/infoaccount/ownedlists/accountName/numberOfLists  
+or  
+http://api.tigwi.com/infoaccount/ownedlists/accountId/numberOfLists
 ###Request
 _left empty_
 ###Response
@@ -463,119 +492,22 @@ Error Type:
 
 ###Informations
 * You **must** be authenticated as _accountName_ to have access to these informations. 
+* In **URL**, _accountName_ is the name of the account whose lists you want to get.
+* In **URL**, _accountId_ is the unique identifier of the account whose lists you want to get.
 * In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
 
 
-
-#Get informations about a _List_
-##Get accounts followed by the list
+##Get an account's main informations
 ###Purpose
-Obtain a number _n_ of accounts followed by list with id _idOfList_.
-No particular order provided
+Obtain the account _accountName_ 's unique id.
+You need to be authenticated and authorize to use this account to get its id.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infolist/subscriptions/idOfList/numberOfSubscriptions
-###Request
-_left empty_
-###Response
-General structure of the response :
-
-    <Answer>
-        <!-- Error Type -->
-		<Content> 
-            <!-- See below -->
-        </Content> 
-    </Answer>    
-  
-Content:
-
-    <Accounts Size="sizeOfList">
-	    <Account> <!-- See below --> </Account>
-	    <Account> ... </Account>
-	    ...
-	    <Account> ... </Account>
-    </Accounts>
-
-Account format:
-
-     <Account>
-	     <Id> idOfAccount </Id>
-	     <Name> nameOfAccount </Name>
-     </Account>
-
-Error Type:
-*In case an error occurs:
-
-    <Error Code="codeOfError"/>
-
-*Otherwise
-
-    <Error/>
-
-###Informations
-* In **URL**, _idOfList_ is the id of the list whose informations you want to get
-* In **URL**, _numberOfSubscriptions_ is the number of accounts you want to get. It is optional and default is set to 20.
-* In **Response**, _sizeOfList_ is the number of accounts returned (different from _numberOfSubscriptions_ if there are not enough accounts to provide).
-
-##Get the list of accounts following a given list
-###Purpose
-Obtain a number _n_ of accounts following the given list with id _idOflist_.
-No particular order provided
-###HTTP method
-*GET*
-###URL
-http://api.tigwi.com/infolist/subscribers/idOfList/numberOfFollowers
-###Request
-_left empty_
-###Response
-General structure of the response :
-
-    <Answer>
-        <!-- Error Type -->
-		<Content> 
-            <!-- See below -->
-        </Content> 
-    </Answer>    
-  
-Content:
-
-    <Accounts Size="sizeOfList">
-	    <Account> <!-- See below --> </Account>
-	    <Account> ... </Account>
-	    ...
-	    <Account> ... </Account>
-    </Accounts>
-
-Account format:
-
-     <Account>
-	     <Id> idOfAccount </Id>
-	     <Name> nameOfAccount </Name>
-     </Account>
-
-Erro Type:
-*In case an error occurs:
-
-    <Error Code="codeOfError"/>
-
-*Otherwise:
-
-    <Error/>
-
-###Informations
-* In **URL** _idOfList_ is the id of the list whose followers you want to get.
-* In **URL**, _numberOfFollowers_ is the number of accounts you want to get. It is optional and default is set to 20.
-* In **Response**, _sizeOfList_ is the number of accounts returned (different from _numberOfFollowers_ if there are not enough accounts to provide).
-
-##Get a list's owner informations
-###Purpose
-Obtain the name and id of list with id _idOfList_ 's owner.
-###HTTP method
-*GET*
-###URL
-http://api.tigwi.com/infolist/owner/idOfList
+http://api.tigwi.com/infoaccount/main/accountName  
+or  
+http://api.tigwi.com/infoaccount/main/accountId
 ###Request
 _left empty_
 ###Response
@@ -593,6 +525,7 @@ Content:
      <Account>
 	     <Id> idOfAccount </Id>
 	     <Name> nameOfAccount </Name>
+         <Description> DecriptionOfAccount </Description>
      </Account>
 
 Error Type:
@@ -601,19 +534,25 @@ Error Type:
     <Error Code="codeOfError"/>
 
 *Otherwise:
-
+   
     <Error/>
 
 ###Informations
-* In **URL**, _idOfList_ is the id of the list whose owner you want to get.
+* You **must** be authenticated as an authorized user of _accountName_ to access this information.
+* In **URL**, _accountName_ is the name of the account whose main informations you want to get.
+* In **URL**, _accountId_ is the name of the account whose main informations you want to get.
 
-##Get last messages sent to a list
+
+##Get an account's users
 ###Purpose
-Obtain a number _n_ of last messages sent to the list with id _idOfList_.
+Obtain a number _numberOfUsers_ of the account _accountName_ users.
+You need to be authenticated and authorize to use this account to get this information.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infolist/messages/idOfList/numberOfMessages
+http://api.tigwi.com/infoaccount/usersallowed/accountName/numberOfUsers  
+or  
+http://api.tigwi.com/infoaccount/usersallowed/accountId/numberOfUsers
 ###Request
 _left empty_
 ###Response
@@ -628,38 +567,35 @@ General structure of the response :
   
 Content:
 
-    <Messages Size="sizeOfList">
-	    <Message> <!-- See below --> </Message>
-	    <Message> ... </Message>
-	    ...
-	    <Message> ... </Message>
-    </Messages>
+     <Users>
+	     <User> <!-- See below --> </User>
+         <User> ... </User>
+     </Users>
 
-Message format:
+User:
 
-     <Message>
-	     <Id> idOfMessage </Id>
-	     <PostTime> timeOfPost </PostTime>
-	     <Poster> nameOfUser </Poster>
-	     <Content> content </Content>
-     </Message>
-
+    <User>
+        <Login> ... </Login>
+        <Avatar> ... </Avatar>
+        <Email> ... </Emain>
+    </User>
+ 
 Error Type:
 *In case an error occurs:
 
     <Error Code="codeOfError"/>
 
 *Otherwise:
-
+   
     <Error/>
 
 ###Informations
-* In **URL**, _idOfList_ is the id of the list whose messages you want to get.
-* In **URL**, _numberOfMessages_ is the number of messages you want to get. It is optional and default is set to 20.
-* In **Response**, _sizeOfList_ is the number of messages returned (different from _numberOfMessages_ if there are not enough accounts to provide).
+* You **must** be authenticated as an authorized user of _accountName_ to access this information.
+* In **URL**, _accountName_ is the name of the account whose main informations you want to get.
+* In **URL**, _accountId_ is the name of the account whose main informations you want to get.
 
 
-#Modifying Accounts
+#Modifying an _account_
 
 These methods require authentication. You must be authenticated as a _user_ with permissions to use the _account_ you want to modify.
 
@@ -762,36 +698,3 @@ If no error occurs
 ###Informations
 * You **must** be authenticated and authorized to use the account _nameOfSubscriber_ to use this method.
 * In **Request**, _nameOfSubscriber_ is the name of the account who wants to follow the list _idOfSubscription_.
-
-#Modifying a list
-
-These methods require authentication. You must be authenticated as an user with appropriate autorization on the list you want to modify.
-
-##Make a list suscribe to an account
-###Purpose
-For a list to add a suscription to a given account. Authentication required.
-
-###HTTP method
-*POST*
-###URL
-http://api.tigwi.com/modifylist/subscribeaccount/
-###Request
-    
-    <SubscribeAccount>
-        <List> idOfSuscriber </List>
-        <Subscription> nameOfSubscription </Suscription>
-    </SubscribeAccount>
-
-###Response
-In case an error occurs
-
-    <Error Code="codeOfError"/>
-
-If no error occurs
-
-    <Error/>
-
-
-###Informations
-* You **must** be authenticated and authorized to use the owner of the list with id _idOfSuscriber_ to use this method.
-* In **Request**, _idOfSuscriber_ is the id of the list who wants to follow the account _nameOfSubscription_.

@@ -33,8 +33,7 @@ namespace Tigwi.UI.Tests.Models
         [Test]
         public void RepositoriesAreNotNull()
         {
-            var mockStorage = new Mock<IStorage>();
-            var storageContext = new StorageContext(mockStorage.Object);
+            var storageContext = new StorageContext(new StorageTmp());
 
             Assert.That(storageContext.Accounts, Is.Not.Null);
             Assert.That(storageContext.Lists, Is.Not.Null);

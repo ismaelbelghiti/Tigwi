@@ -35,7 +35,7 @@ namespace Tigwi.UI.Tests.Mocks
                     var map = new Dictionary<Guid, IUserInfo>();
                     var loginMap = new Dictionary<string, Guid>();
 
-                    mock.Setup(storage => storage.Create(It.IsAny<string>(), It.IsAny<string>())).Returns(
+                    mock.Setup(storage => storage.Create(It.IsAny<string>(), It.IsAny<string>(), string.Empty)).Returns(
                         (string login, string email) =>
                         {
                             var id = Guid.NewGuid();

@@ -13,6 +13,7 @@ namespace StorageLibrary
         public const string U_IDBYLOGIN = "idbylogin/";
         public const string U_ACC_DATA = "/data";
         public const string U_ACC_LOCK = "/lock";
+        public const string U_PASSWORD = "password/";
 
         // account container
         public const string A_IDBYNAME = "idbyname/";
@@ -36,6 +37,9 @@ namespace StorageLibrary
         public const string L_FOLLOWEDACC_LOCK = "/lock";
 
         // message container
+        public const string M_LISTMESSAGES = "listmessages/";
+        public const string M_ACCOUNTMESSAGES = "accountmessages/";
+        public const string M_TAGGEDMESSAGES = "taggedmessages/";
 
     }
 }

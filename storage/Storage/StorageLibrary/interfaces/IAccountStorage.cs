@@ -50,7 +50,7 @@ namespace StorageLibrary
         void Add(Guid accountId, Guid userId);
         /// <summary>
         /// Remove the right to the given user to post with the given account
-        /// Don't do anything is the user is not in the user group
+        /// Doesn't do anything if the user is not in the user group
         /// </summary>
         /// <exception cref="UserIsAdmin">if you try to remove the administrator from the user groups</exception>
         void Remove(Guid accountId, Guid userId);
@@ -63,7 +63,7 @@ namespace StorageLibrary
         Guid Create(Guid adminId, string name, string description);
         /// <summary>
         /// Delete the given account
-        /// Don't do anything if the account doesn't exists
+        /// Doesn't do anything if the account doesn't exists
         /// </summary>
         void Delete(Guid accountId);
     }
