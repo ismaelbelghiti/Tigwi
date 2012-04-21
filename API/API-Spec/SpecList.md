@@ -223,8 +223,81 @@ In case an error occurs
 If no error occurs
 
     <Error/>
-
-
+	
 ###Informations
 * You **must** be authenticated and authorized to use the owner of the list with id _idOfSuscriber_ to use this method.
 * In **Request**, _idOfSuscriber_ is the id of the list who wants to follow the account _nameOfSubscription_.
+
+
+##Delete an account from a list
+###Purpose
+Delete the suscription of the given account to the list. Authentication required.
+
+###HTTP method
+*POST*
+###URL
+http://api.tigwi.com/modifylist/unsubscribeaccount/{idOfList}/{accountId}
+###Request
+    
+    <UnubscribeAccount>
+        <List> idOfList </List>
+        <Account> accountId </Account>
+    </UnsubscribeAccount>
+
+###Response
+In case an error occurs
+
+    <Error Code="codeOfError"/>
+
+If no error occurs
+
+    <Error/>
+
+
+##Make an account follow a list
+###Purpose
+The given account follows the given list. Authentication required.
+
+###HTTP method
+*POST*
+###URL
+http://api.tigwi.com/modifylist/followlist/{idOfList}/{accountId}
+###Request
+    
+    <FollowList>
+        <List> idOflist </List>
+        <Account> accountId </Account>
+    </FollowList>
+
+###Response
+In case an error occurs
+
+    <Error Code="codeOfError"/>
+
+If no error occurs
+
+    <Error/>
+
+##Make an account unfollow a list
+###Purpose
+The given account does not follow the given list anymore. Authentication required.
+
+###HTTP method
+*POST*
+###URL
+http://api.tigwi.com/modifylist/unfollowlist/{idOfList}/{accountId}
+###Request
+    
+    <UnfollowList>
+        <List> idOflist </List>
+        <Account> accountId </Account>
+    </UnfollowList>
+
+###Response
+In case an error occurs
+
+    <Error Code="codeOfError"/>
+
+If no error occurs
+
+    <Error/>
