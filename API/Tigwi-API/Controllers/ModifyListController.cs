@@ -39,7 +39,7 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // POST : /modifylist/unsubscribeaccount/
+        // POST : /modifylist/unsubscribeaccount/{idOfList}/{accountId}
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -68,7 +68,7 @@ namespace Tigwi_API.Controllers
 
 
         //
-        // POST : /modifylist/followlist/
+        // POST : /modifylist/followlist/{idOfList}/{accountId}
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -96,7 +96,7 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // POST : /modifylist/unfollowlist/
+        // POST : /modifylist/unfollowlist/{idOfList}/{accountId}
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
