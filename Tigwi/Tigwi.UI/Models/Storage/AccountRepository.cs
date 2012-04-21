@@ -10,6 +10,7 @@
 namespace Tigwi.UI.Models.Storage
 {
     using System;
+    using System.Collections.Generic;
 
     using StorageLibrary;
 
@@ -25,21 +26,19 @@ namespace Tigwi.UI.Models.Storage
         /// </summary>
         private readonly IStorage storageObj;
 
+        private readonly IStorageContext storageContext;
+
+        protected IDictionary<Guid, StorageAccountModel> Accounts { get; set; }
+
         #endregion
 
         #region Constructors and Destructors
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AccountRepository"/> class. 
-        /// Initializes a new instance of the <see cref="AccountRepository"/> class. 
-        /// Initializes a new instance of the <see cref="AccountRepository"/> class.
-        /// </summary>
-        /// <param name="storageObj">
-        /// The storage obj.
-        /// </param>
-        public AccountRepository(IStorage storageObj)
+        public AccountRepository(IStorage storageObj, IStorageContext storageContext)
         {
             this.storageObj = storageObj;
+            this.storageContext = storageContext;
+            this.Accounts = new Dictionary<Guid, StorageAccountModel>();
         }
 
         #endregion
@@ -57,50 +56,57 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
+        protected IStorageContext StorageContext
+        {
+            get
+            {
+                return this.storageContext;
+            }
+        }
+
         #endregion
 
         #region Public Methods and Operators
 
         public StorageAccountModel Create(StorageUserModel user, string name, string description)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var id = this.StorageObj.Account.Create(user.Id, name, description);
+                return this.Find(id);
+            }
+            catch (UserNotFound)
+            {
+                throw;
+            }
+            catch (AccountAlreadyExists)
+            {
+                throw;
+            }
         }
 
-        /// <summary>
-        /// The delete.
-        /// </summary>
-        /// <param name="account">
-        /// The account.
-        /// </param>
         public void Delete(StorageAccountModel account)
         {
             this.StorageObj.Account.Delete(account.Id);
+            this.Accounts.Remove(account.Id);
         }
 
-        /// <summary>
-        /// The find.
-        /// </summary>
-        /// <param name="id">
-        /// The id.
-        /// </param>
-        /// <returns>
-        /// </returns>
         public StorageAccountModel Find(Guid id)
         {
-            return new StorageAccountModel(this.StorageObj, id);
+            StorageAccountModel account;
+            if (!this.Accounts.TryGetValue(id, out account))
+            {
+                account = new StorageAccountModel(this.StorageObj, this.StorageContext, id);
+                this.Accounts.Add(id, account);
+            }
+
+            return account;
         }
 
-        /// <summary>
-        /// The find.
-        /// </summary>
-        /// <param name="name">
-        /// The name.
-        /// </param>
-        /// <returns>
-        /// </returns>
         public StorageAccountModel Find(string name)
         {
-            return new StorageAccountModel(this.StorageObj, name);
+            var id = this.StorageObj.Account.GetId(name);
+            return this.Find(id);
         }
 
         #endregion

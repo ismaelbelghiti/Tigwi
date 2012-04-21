@@ -48,7 +48,7 @@ namespace Tigwi.UI.Models.Storage
         {
             get
             {
-                return this.accounts ?? (this.accounts = new AccountRepository(this.StorageObj));
+                return this.accounts ?? (this.accounts = new AccountRepository(this.StorageObj, this));
             }
         }
 
@@ -72,7 +72,7 @@ namespace Tigwi.UI.Models.Storage
         {
             get
             {
-                return this.users ?? (this.users = new UserRepository(this.StorageObj));
+                return this.users ?? (this.users = new UserRepository(this.StorageObj, this));
             }
         }
 

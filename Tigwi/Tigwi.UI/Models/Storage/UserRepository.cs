@@ -7,13 +7,16 @@ namespace Tigwi.UI.Models.Storage
 
     public class UserRepository : IUserRepository
     {
-        public UserRepository(IStorage storage)
+        public UserRepository(IStorage storage, IStorageContext storageContext)
         {
             this.Storage = storage;
+            this.StorageContext = storageContext;
             this.Users = new Dictionary<Guid, StorageUserModel>();
         }
 
         protected IStorage Storage { get; private set; }
+
+        protected IStorageContext StorageContext { get; private set; }
 
         protected Dictionary<Guid, StorageUserModel> Users { get; set; } 
 
@@ -48,7 +51,7 @@ namespace Tigwi.UI.Models.Storage
                 return userModel;
             }
 
-            userModel = new StorageUserModel(this.Storage, user);
+            userModel = new StorageUserModel(this.Storage, this.StorageContext, user);
             this.Users.Add(user, userModel);
             return userModel;
         }

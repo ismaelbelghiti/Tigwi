@@ -18,7 +18,7 @@ namespace Tigwi.UI.Tests.Models
     {
         protected StorageUserModel UserModel { get; set; }
 
-        protected IStorage Storage { get; set; }
+        protected IStorageContext Storage { get; set; }
 
         #region SetUp / TearDown
 
@@ -26,10 +26,9 @@ namespace Tigwi.UI.Tests.Models
         public void Init()
         {
             var istorage = new StorageTmp();
-            this.Storage = istorage;
-            var guid = istorage.User.Create("Elarnon", "cbasile06@gmail.com", string.Empty);
+            this.Storage = new StorageContext(istorage);
 
-            this.UserModel = new StorageUserModel(istorage, guid);
+            this.UserModel = this.Storage.Users.Create("Elarnon", "cbasile06@gmail.com");
         }
 
         [TearDown]
@@ -52,24 +51,37 @@ namespace Tigwi.UI.Tests.Models
         }
 
         [Test]
-        public void TestSave()
-        {
-            var storageUserModel = this.UserModel;
-            storageUserModel.Email = "basile.clement@ens.fr";
-
-            storageUserModel.Save();
-
-            var otherModel = new StorageUserModel(this.Storage, storageUserModel.Id);
-            Assert.That(otherModel.Email, Is.EqualTo("basile.clement@ens.fr"));
-        }
-
-        [Test]
         public void TestSetEmail()
         {
             var storageUserModel = this.UserModel;
             storageUserModel.Email = "basile.clement@ens.fr";
 
             Assert.That(storageUserModel.Email, Is.EqualTo("basile.clement@ens.fr"));
+        }
+
+        [Test]
+        public void TestSaveEmail()
+        {
+            var storageUserModel = this.UserModel;
+            storageUserModel.Email = "basile.clement@ens.fr";
+
+            storageUserModel.Save();
+
+            storageUserModel.Repopulate();
+            Assert.That(storageUserModel.Email, Is.EqualTo("basile.clement@ens.fr"));
+
+            var otherModel = this.Storage.Users.Find(storageUserModel.Id);
+            Assert.That(otherModel.Email, Is.EqualTo("basile.clement@ens.fr"));
+        }
+
+        [Test]
+        public void TestAddAccounts()
+        {
+            var user = this.UserModel;
+
+            var account = this.Storage.Accounts.Create(user, "Koukou", "A stupid account.");
+
+            Assert.That(user.Accounts.Contains(account), Is.True);
         }
 
         #endregion

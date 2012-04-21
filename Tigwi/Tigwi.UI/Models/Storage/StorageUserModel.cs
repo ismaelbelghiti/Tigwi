@@ -28,9 +28,10 @@ namespace Tigwi.UI.Models.Storage
 
         #region Constructors and Destructors
 
-        public StorageUserModel(IStorage storage, Guid id)
+        public StorageUserModel(IStorage storage, IStorageContext storageContext, Guid id)
         {
             this.Storage = storage;
+            this.StorageContext = storageContext;
             this.Id = id;
         }
 
@@ -42,8 +43,7 @@ namespace Tigwi.UI.Models.Storage
         {
             get
             {
-                // TODO: use an AccountRepository
-                return this.accounts ?? (this.accounts = new AccountCollectionAdapter(this.Storage, this.Id));
+                return this.accounts ?? (this.accounts = new AccountCollectionAdapter(this.Storage, this.StorageContext, this.Id));
             }
         }
 
@@ -124,6 +124,8 @@ namespace Tigwi.UI.Models.Storage
 
         protected IStorage Storage { get; private set; }
 
+        protected IStorageContext StorageContext { get; private set; }
+
         #endregion
 
         #region Methods
@@ -178,12 +180,15 @@ namespace Tigwi.UI.Models.Storage
 
             private readonly IStorage storage;
 
+            private readonly IStorageContext storageContext;
+
             #endregion
 
             #region Constructors and Destructors
 
-            public AccountCollectionAdapter(IStorage storage, Guid userId)
+            public AccountCollectionAdapter(IStorage storage, IStorageContext storageContext, Guid userId)
             {
+                this.storageContext = storageContext;
                 this.storage = storage;
                 this.UserId = userId;
             }
@@ -238,8 +243,7 @@ namespace Tigwi.UI.Models.Storage
 
             protected override StorageAccountModel GetModel(Guid id)
             {
-                // TODO: Use an AccountRepository
-                return new StorageAccountModel(this.Storage, id);
+                return this.storageContext.Accounts.Find(id);
             }
 
             #endregion

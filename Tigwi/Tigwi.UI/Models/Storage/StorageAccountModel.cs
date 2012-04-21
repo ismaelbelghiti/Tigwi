@@ -35,14 +35,15 @@ namespace Tigwi.UI.Models.Storage
 
         #region Constructors and Destructors
 
-        public StorageAccountModel(IStorage storage, Guid accountId)
+        public StorageAccountModel(IStorage storage, IStorageContext storageContext, Guid accountId)
         {
             this.Storage = storage;
+            this.StorageContext = storageContext;
             this.Id = accountId;
         }
 
-        public StorageAccountModel(IStorage storage, string name)
-            : this(storage, storage.Account.GetId(name))
+        public StorageAccountModel(IStorage storage, IStorageContext storageContext, string name)
+            : this(storage, storageContext, storage.Account.GetId(name))
         {
         }
 
@@ -54,8 +55,7 @@ namespace Tigwi.UI.Models.Storage
         {
             get
             {
-                return this.admin
-                       ?? (this.admin = new StorageUserModel(this.Storage, this.Storage.Account.GetAdminId(this.Id)));
+                return this.admin ?? (this.admin = this.StorageContext.Users.Find(this.Storage.Account.GetAdminId(this.Id)));
             }
 
             set
@@ -163,7 +163,7 @@ namespace Tigwi.UI.Models.Storage
         {
             get
             {
-                return this.users ?? (this.users = new UserCollectionAdapter(this.Storage, this.Id));
+                return this.users ?? (this.users = new UserCollectionAdapter(this.Storage, this.StorageContext, this.Id));
             }
         }
 
@@ -178,6 +178,8 @@ namespace Tigwi.UI.Models.Storage
         private bool InfosUpdated { get; set; }
 
         private IStorage Storage { get; set; }
+
+        private IStorageContext StorageContext { get; set; }
 
         #endregion
 
@@ -233,13 +235,16 @@ namespace Tigwi.UI.Models.Storage
 
             private readonly IStorage storage;
 
+            private readonly IStorageContext storageContext;
+
             #endregion
 
             #region Constructors and Destructors
 
-            protected AccountMemberCollection(IStorage storage, Guid accountId)
+            protected AccountMemberCollection(IStorage storage, IStorageContext storageContext, Guid accountId)
             {
                 this.storage = storage;
+                this.storageContext = storageContext;
                 this.AccountId = accountId;
             }
 
@@ -254,6 +259,14 @@ namespace Tigwi.UI.Models.Storage
                 get
                 {
                     return this.storage;
+                }
+            }
+
+            protected IStorageContext StorageContext
+            {
+                get
+                {
+                    return this.storageContext;
                 }
             }
 
@@ -272,7 +285,7 @@ namespace Tigwi.UI.Models.Storage
 
             public ListCollectionAdapter(
                 IStorage storage, Guid accountId, Func<ICollection<Guid>> idCollectionFetcher)
-                : base(storage, accountId)
+                : base(storage, null, accountId)
             {
                 this.idCollectionFetcher = idCollectionFetcher;
             }
@@ -330,8 +343,8 @@ namespace Tigwi.UI.Models.Storage
         {
             #region Constructors and Destructors
 
-            public UserCollectionAdapter(IStorage storage, Guid accountId)
-                : base(storage, accountId)
+            public UserCollectionAdapter(IStorage storage, IStorageContext storageContext, Guid accountId)
+                : base(storage, storageContext, accountId)
             {
             }
 
@@ -364,7 +377,7 @@ namespace Tigwi.UI.Models.Storage
 
             protected override StorageUserModel GetModel(Guid id)
             {
-                return new StorageUserModel(this.Storage, id);
+                return this.StorageContext.Users.Find(id);
             }
 
             #endregion

@@ -16,77 +16,16 @@ namespace Tigwi.UI.Tests.Models
     [TestFixture]
     public class UserRepositoryTest
     {
-        protected Mock<IStorage> MockStorage { get; set; }
+        protected IStorage Storage { get; set; }
 
         #region SetUp / TearDown
 
         [SetUp]
         public void Init()
         {
-            var mock = new Mock<IStorage>();
-            this.MockStorage = mock;
-
-            var map = new Dictionary<Guid, IUserInfo>();
-            var loginMap = new Dictionary<string, Guid>();
-
-            mock.Setup(storage => storage.User.Create(It.IsAny<string>(), It.IsAny<string>(), string.Empty)).Returns(
-                (string login, string email) =>
-                    {
-                        var id = Guid.NewGuid();
-                        var mockUser = new Mock<IUserInfo>();
-                        mockUser.SetupAllProperties();
-                        var userInfo = mockUser.Object;
-                        userInfo.Email = email;
-                        userInfo.Login = login;
-                        if (map.ContainsKey(id))
-                        {
-                            throw new UserAlreadyExists();
-                        }
-
-                        map.Add(id, userInfo);
-                        loginMap.Add(login, id);
-
-                        return id;
-                    });
-
-            mock.Setup(storage => storage.User.Delete(It.IsAny<Guid>())).Callback<Guid>(
-                id =>
-                    {
-                        IUserInfo userInfo;
-                        if (!map.TryGetValue(id, out userInfo))
-                        {
-                            return;
-                        }
-
-                        loginMap.Remove(userInfo.Login);
-                        map.Remove(id);
-                    });
-
-            mock.Setup(storage => storage.User.GetId(It.IsAny<string>())).Returns(
-                (string login) =>
-                    {
-                        Guid id;
-                        if (loginMap.TryGetValue(login, out id))
-                        {
-                            return id;
-                        }
-
-                        throw new UserNotFound();
-                    });
-
-            mock.Setup(storage => storage.User.GetInfo(It.IsAny<Guid>())).Returns(
-                (Guid id) =>
-                    {
-                        IUserInfo userInfo;
-                        if (map.TryGetValue(id, out userInfo))
-                        {
-                            return userInfo;
-                        }
-
-                        throw new UserNotFound();
-                    });
-
-            this.Repository = new UserRepository(mock.Object);
+            var istorage = new StorageTmp();
+            this.Storage = istorage;
+            this.Repository = (new StorageContext(istorage)).Users;
         }
 
         protected IUserRepository Repository { get; set; }
@@ -129,9 +68,8 @@ namespace Tigwi.UI.Tests.Models
             var repository = this.Repository;
 
             var account = repository.Create("Elarnon", "cbasile06@gmail.com");
-            repository.Delete(account);
 
-            Assert.Throws<UserNotFound>(() => repository.Find("Elarnon"));
+            Assert.Throws<NotImplementedException>(() => repository.Delete(account));
         }
 
         #endregion
