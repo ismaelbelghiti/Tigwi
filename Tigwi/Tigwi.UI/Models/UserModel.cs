@@ -11,10 +11,8 @@ namespace Tigwi.UI.Models
     [DisplayColumn("Login")]
     public abstract class UserModel
     {
-        [Key, HiddenInput]
         public abstract Guid Id { get; }
 
-        [Key, Required, Display(Name = "Login")]
         public abstract string Login { get; }
 
         [Required]

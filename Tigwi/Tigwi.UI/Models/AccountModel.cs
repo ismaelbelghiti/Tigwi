@@ -1,17 +1,12 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AccountModel.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The account model.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
 namespace Tigwi.UI.Models
 {
+    #region
+
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+
+    #endregion
 
     /// <summary>
     /// The account model.
@@ -27,48 +22,49 @@ namespace Tigwi.UI.Models
             Description =
                 "The owner of an account can add or remove people with access to this account, and can defintely delete the account."
             )]
-        public virtual UserModel Admin { get; set; }
+        public abstract UserModel Admin { get; set; }
+
+        public abstract ICollection<ListModel> AllFollowedLists { get; }
+
+        public abstract ICollection<ListModel> AllOwnedLists { get; }
 
         /// <summary>
         /// Gets or sets Description.
         /// </summary>
         [DataType(DataType.MultilineText)]
-        public virtual string Description { get; set; }
+        public abstract string Description { get; set; }
 
         /// <summary>
-        /// Gets or sets Id.
+        /// Gets Id.
         /// </summary>
         [Key]
         [Editable(false)]
-        public virtual Guid Id { get; protected set; }
+        public abstract Guid Id { get; }
+
+        public abstract ICollection<ListModel> MemberLists { get; }
 
         /// <summary>
-        /// Gets or sets Name.
+        /// Gets Name.
         /// </summary>
         [Key]
         [Required]
         [Editable(false)]
-        public virtual string Name { get; protected set; }
+        public abstract string Name { get; }
 
-        /// <summary>
-        /// Gets or sets Users.
-        /// </summary>
-        public virtual ICollection<UserModel> Users { get; protected set; }
+        public abstract ListModel PersonalList { get; }
 
-        public virtual ICollection<ListModel> PublicOwnedLists { get; protected set; }
+        public abstract ICollection<ListModel> PublicFollowedLists { get; }
 
-        public virtual ICollection<ListModel> AllOwnedLists { get; protected set; }
+        public abstract ICollection<ListModel> PublicOwnedLists { get; }
 
-        public virtual ICollection<ListModel> PublicFollowedLists { get; protected set; }
-
-        public virtual ICollection<ListModel> AllFollowedLists { get; protected set; }
-
-        public virtual ICollection<ListModel> MemberLists { get; protected set; } 
-
-        public virtual ListModel PersonalList { get; protected set; }
+        public abstract ICollection<UserModel> Users { get; }
 
         #endregion
 
+        #region Public Methods and Operators
+
         public abstract void Save();
+
+        #endregion
     }
 }

@@ -1,0 +1,16 @@
+﻿@model Tigwi.UI.Models.UserLogOnViewModel
+
+@{
+    ViewBag.Title = "Logging on";
+}
+
+<h2>You are logging on, so cool !</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.LabelFor(m => m.Login)
+    @Html.EditorFor(m => m.Login)
+    @Html.LabelFor(m => m.Password)
+    @Html.EditorFor(m => m.Password)
+    <button type="submit">Gogogo</button>
+}

@@ -54,10 +54,22 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Data.Entity" />
-    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Web.Helpers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -67,6 +79,12 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.WebPages.Deployment, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -87,18 +105,20 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountModel.cs" />
-    <Compile Include="Models\AccountSet.cs" />
     <Compile Include="Models\ListModel.cs" />
-    <Compile Include="Models\ListSet.cs" />
-    <Compile Include="Models\PostSet.cs" />
-    <Compile Include="Models\StorageAccountModel.cs" />
-    <Compile Include="Models\AccountModels.cs" />
-    <Compile Include="Models\CollectionAdapter.cs" />
     <Compile Include="Models\PostModel.cs" />
-    <Compile Include="Models\StorageContext.cs" />
+    <Compile Include="Models\Storage\AccountRepository.cs" />
+    <Compile Include="Models\Storage\CollectionAdapter.cs" />
+    <Compile Include="Models\Storage\IAccountRepository.cs" />
+    <Compile Include="Models\Storage\IUserRepository.cs" />
+    <Compile Include="Models\Storage\StorageAccountModel.cs" />
+    <Compile Include="Models\Storage\ListSet.cs" />
+    <Compile Include="Models\Storage\PostSet.cs" />
+    <Compile Include="Models\Storage\StorageContext.cs" />
+    <Compile Include="Models\Storage\StorageUserModel.cs" />
+    <Compile Include="Models\Storage\UserRepository.cs" />
+    <Compile Include="Models\UserLogOnViewModel.cs" />
     <Compile Include="Models\UserModel.cs" />
-    <Compile Include="Models\UserModelAdapter.cs" />
-    <Compile Include="Models\UserSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -167,10 +187,6 @@
     <Content Include="Scripts\MicrosoftMvcValidation.js" />
     <Content Include="Scripts\MicrosoftMvcValidation.debug.js" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Account\ChangePassword.cshtml" />
-    <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
-    <Content Include="Views\Account\LogOn.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
@@ -200,7 +216,7 @@
     <Content Include="Views\Shared\_ViewMessages.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Home\Xoxo.cshtml" />
+    <Content Include="Views\User\LogOn.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

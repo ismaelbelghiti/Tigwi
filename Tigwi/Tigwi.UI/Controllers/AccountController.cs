@@ -9,6 +9,8 @@ using Tigwi.UI.Models;
 
 namespace Tigwi.UI.Controllers
 {
+    using Tigwi.UI.Models.Storage;
+
     public class AccountController : HomeController
     {
         public AccountController()

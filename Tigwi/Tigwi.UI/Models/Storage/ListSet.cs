@@ -1,4 +1,4 @@
-namespace Tigwi.UI.Models
+namespace Tigwi.UI.Models.Storage
 {
     using System;
 

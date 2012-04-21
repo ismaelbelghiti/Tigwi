@@ -7,6 +7,7 @@ using System.Web.Mvc;
 namespace Tigwi.UI.Controllers
 {
     using Tigwi.UI.Models;
+    using Tigwi.UI.Models.Storage;
 
     public class PostController : HomeController
     {

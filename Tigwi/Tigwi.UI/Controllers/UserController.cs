@@ -6,7 +6,11 @@ using System.Web.Mvc;
 
 namespace Tigwi.UI.Controllers
 {
-    public class UserController : Controller
+    using System.Web.Security;
+
+    using Tigwi.UI.Models;
+
+    public class UserController : HomeController
     {
         /// <summary>
         /// Show a page proposing the user to log in.
@@ -14,7 +18,7 @@ namespace Tigwi.UI.Controllers
         /// <returns></returns>
         public ActionResult LogOn()
         {
-            throw new NotImplementedException("UserController.LogOn");
+            return this.View();
         }
 
         /// <summary>
@@ -24,8 +28,18 @@ namespace Tigwi.UI.Controllers
         /// <param name="userLogOnViewModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult LogOn(/*UserLogOnViewModel*/object userLogOnViewModel)
+        public ActionResult LogOn(UserLogOnViewModel userLogOnViewModel)
         {
+            // TODO: implement user authentication :-)
+            if (ModelState.IsValid)
+            {
+                this.Storage.Users.Create("Elarnon", "k@o.n");
+                var loggingUser = this.Storage.Users.Find(userLogOnViewModel.Login);
+                this.CurrentUser = loggingUser;
+
+                return this.View("Error");
+            }
+
             throw new NotImplementedException("UserController.LogOn[POST]");
         }
 

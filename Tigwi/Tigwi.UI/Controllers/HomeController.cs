@@ -1,44 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-
-namespace Tigwi.UI.Controllers
+﻿namespace Tigwi.UI.Controllers
 {
-    using Tigwi.UI.Models;
+    #region
+
+    using System;
+    using System.Web.Mvc;
+    using System.Web.Security;
+
+    using StorageLibrary;
+
+    using Tigwi.UI.Models.Storage;
+
+    #endregion
 
     public class HomeController : Controller
     {
+        #region Constants and Fields
+
+        private StorageUserModel currentUser;
+
+        private readonly IStorageContext storage;
+
+        private StorageAccountModel currentAccount;
+
+        #endregion
+
+        #region Constructors and Destructors
+
         public HomeController()
-            : this(new StorageContext(null))
         {
+            this.storage = new StorageContext(new Storage("dev'storeaccount1", "Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw=="));
         }
 
         public HomeController(IStorageContext storageContext)
         {
             this.storage = storageContext;
-
-            // Load session variables
-            var user = (Guid)this.Session["CurrentUser"];
-            var account = (Guid)this.Session["CurrentAccount"];
-            this.currentUser = this.Storage.Users.Find(user);
-            this.currentAccount = this.Storage.Accounts.Find(account);
         }
 
-        private readonly IStorageContext storage;
+        #endregion
 
-        protected IStorageContext Storage
-        {
-            get
-            {
-                return this.storage;
-            }
-        }
+        #region Properties
 
-        private AccountModel currentAccount;
-
-        protected AccountModel CurrentAccount
+        protected StorageAccountModel CurrentAccount
         {
             get
             {
@@ -58,39 +60,50 @@ namespace Tigwi.UI.Controllers
             }
         }
 
-        private readonly UserModel currentUser;
-
-        protected UserModel CurrentUser
+        protected StorageUserModel CurrentUser
         {
             get
             {
                 return this.currentUser;
             }
+
+            set
+            {
+                this.Session["CurrentUser"] = value.Id;
+                this.currentUser = value;
+
+                // TODO: really ?
+                this.CurrentAccount = this.Storage.Accounts.Find(value.Login);
+            }
         }
+
+        protected IStorageContext Storage
+        {
+            get
+            {
+                return this.storage;
+            }
+        }
+
+        #endregion
+
+        #region Public Methods and Operators
 
         public ActionResult Index()
         {
-            ViewBag.CurrentUser = "Zak";
+            this.ViewBag.CurrentUser = "Zak";
             return this.View();
         }
 
-        public ActionResult Xoxo()
-        {
-            ViewBag.ModelValid = true;
-            return this.View(new AccountModel());
-        }
+        #endregion
 
-        [HttpPost]
-        public ActionResult Xoxo(Guid id, string name, string description)
-        {
-            AccountModel account = null; // new AccountModel { Id = id, Name = name, Description = description };
-            ViewBag.ModelValid = ModelState.IsValid;
-            return this.View(account);
-        }
+        #region Methods
 
         protected bool CheckForConnection()
         {
             throw new NotImplementedException("HomeController.CheckForConnection");
         }
+
+        #endregion
     }
 }

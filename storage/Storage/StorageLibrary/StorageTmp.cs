@@ -8,48 +8,68 @@ namespace StorageLibrary
 
     public class UserStorageTmp : IUserStorage
     {
-        private Dictionary<Guid, UserInfo> dico_id_info;
-        private Dictionary<string, Guid> dico_login_id;
-        private StorageTmp motherStorage;
-        int next_free_id = 0;
+        internal class FullUserInfo
+        {
+            public Guid Id { get; set; }
+
+            public IUserInfo UserInfo { get; set; }
+
+            public HashSet<Guid> Accounts { get; set; } 
+        }
+
+        private readonly Dictionary<Guid, FullUserInfo> infoFromId;
+
+        private readonly Dictionary<string, Guid> idFromLogin;
+
+        private readonly StorageTmp storage;
 
         public Guid GetId(string login)
         {
-            Guid res;
-            dico_login_id.TryGetValue(login, out res);
-            return res;
+            Guid id;
+            if (this.idFromLogin.TryGetValue(login, out id))
+            {
+                return id;
+            }
+
+            throw new UserNotFound();
         }
 
-        public IUserInfo GetInfo(Guid user_id)
+        public IUserInfo GetInfo(Guid userId)
         {
-            UserInfo res;
-            dico_id_info.TryGetValue(user_id, out res);
-            return res;
+            return this.GetFullInfo(userId).UserInfo;
         }
 
         public void SetInfo(Guid userId, string email)
         {
-            try
-            {
-                dico_id_info[userId].Email = email;
-            }
-            catch (Exception)
-            {
-                throw new UserNotFound();
-            }
+            var userInfo = this.GetFullInfo(userId);
+            userInfo.UserInfo.Email = email;
         }
 
         public HashSet<Guid> GetAccounts(Guid userId)
         {
-            return motherStorage.account.GetAccounts(userId);
+            throw new NotImplementedException();
+            // return this.motherStorage.account.GetAccounts(userId);
         }
 
         public Guid Create(string login, string email)
         {
-            dico_id_info.Add( new Guid(next_free_id, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 }), new UserInfo(login, email, ""));
-            dico_login_id.Add(login, new Guid(next_free_id, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 }));
-            next_free_id++;
-            return  new Guid(next_free_id - 1, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 });
+            if (this.idFromLogin.ContainsKey(login))
+            {
+                throw new UserAlreadyExists();
+            }
+
+            var id = Guid.NewGuid();
+            var userInfo = new FullUserInfo
+                {
+                    Id = id,
+                    UserInfo = new UserInfo(login: login, email: email, avatar: string.Empty),
+                    Accounts = new HashSet<Guid>()
+                };
+            this.idFromLogin.Add(login, id);
+            this.infoFromId.Add(id, userInfo);
+            this.storage.Account.Create(id, login, "Main account");
+
+            return id;
         }
 
         public void Delete(Guid user_id)
@@ -59,66 +79,91 @@ namespace StorageLibrary
 
         public UserStorageTmp(StorageTmp storage)
         {
-            motherStorage = storage;
-            dico_id_info = new Dictionary<Guid, UserInfo>();
-            dico_login_id = new Dictionary<string, Guid>();
+            this.storage = storage;
+            this.idFromLogin = new Dictionary<string, Guid>();
+            this.infoFromId = new Dictionary<Guid, FullUserInfo>();
         }
 
         public void afficheDebug()
         {
-            Console.WriteLine("Affichage des users");
-            for(int id = 0; id < next_free_id; id++)
+            Console.WriteLine("Printing users...");
+            foreach (var userInfo in this.infoFromId)
             {
-                IUserInfo myUserInfo = GetInfo( new Guid(id, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 }));
-                Console.Write("   ");
-                Console.Write(id);
+                Console.Write("    ");
+                Console.Write(userInfo.Key);
                 Console.Write(" : ");
-                Console.WriteLine(myUserInfo.Login);
+                Console.WriteLine(userInfo.Value.UserInfo.Login);
             }
-            Console.WriteLine("");
+            Console.WriteLine("Users printed.");
+        }
+
+        internal FullUserInfo GetFullInfo(Guid id)
+        {
+            FullUserInfo userInfo;
+            if (this.infoFromId.TryGetValue(id, out userInfo))
+            {
+                return userInfo;
+            }
+
+            throw new UserNotFound();
         }
     }
 
     public class AccountStorageTmp : IAccountStorage
     {
-        private Dictionary<Guid, IAccountInfo> dico_id_info;
-        private Dictionary<string, Guid> dico_name_id;
-        private Dictionary<Guid, HashSet<Guid>> dico_id_users;
-        private Dictionary<Guid, HashSet<Guid>> dico_user_idaccounts;
-        private int next_free_id = 0;
-        private StorageTmp motherStorage;
+        internal class FullAccountInfo
+        {
+            public Guid Id { get; set; }
+
+            public IAccountInfo AccountInfo { get; set; }
+
+            public HashSet<Guid> Users { get; set; }
+
+            public Guid AdminId { get; set; }
+
+            public Guid PersonalListId { get; set; }
+
+            public HashSet<Guid> MemberOfLists { get; set; }
+
+            public HashSet<Guid> FollowerOfLists { get; set; } 
+        }
+
+        private readonly Dictionary<Guid, FullAccountInfo> infoFromId;
+
+        private readonly Dictionary<string, Guid> idFromName;
+
+        private readonly StorageTmp motherStorage;
 
         public Guid GetId(string name)
         {
-            Guid res;
-            dico_name_id.TryGetValue(name, out res);
-            return res;
+            Guid id;
+            if (this.idFromName.TryGetValue(name, out id))
+            {
+                return id;
+            }
+
+            throw new AccountNotFound();
         }
 
         public IAccountInfo GetInfo(Guid accountId)
         {
-            IAccountInfo res;
-            dico_id_info.TryGetValue(accountId, out res);
-            return res;
+            return this.GetFullInfo(accountId).AccountInfo;
         }
 
         public void SetInfo(Guid Id, string description)
         {
-            dico_id_info.Add(Id, new AccountInfo(GetInfo(Id).Name, description));
+            var accountInfo = this.GetFullInfo(Id).AccountInfo;
+            accountInfo.Description = description;
         }
 
         public HashSet<Guid> GetUsers(Guid accountId)
         {
-            HashSet<Guid> res;
-            dico_id_users.TryGetValue(accountId, out res);
-            return res;
+            return this.GetFullInfo(accountId).Users;
         }
 
         public HashSet<Guid> GetAccounts(Guid userId)
         {
-            HashSet<Guid> res;
-            dico_user_idaccounts.TryGetValue(userId, out res);
-            return res;
+            return this.motherStorage.User.GetAccounts(userId);
         }
 
         public Guid GetAdminId(Guid accountId)
@@ -133,21 +178,11 @@ namespace StorageLibrary
 
         public void Add(Guid accountId, Guid userId)
         {
-            HashSet<Guid> setUsers;
-            if(!dico_id_users.TryGetValue(accountId, out setUsers))
-            {
-                setUsers = new HashSet<Guid>();
-                dico_id_users.Add(accountId, setUsers);
-            }
-            setUsers.Add(userId);
+            var accountInfo = this.GetFullInfo(accountId);
+            var userInfo = this.motherStorage.user.GetFullInfo(userId);
 
-            HashSet<Guid> setAccounts;
-            if (!dico_user_idaccounts.TryGetValue(userId, out setAccounts))
-            {
-                setAccounts = new HashSet<Guid>();
-                dico_user_idaccounts.Add(userId, setAccounts);
-            }
-            setAccounts.Add(accountId);
+            accountInfo.Users.Add(userId);
+            userInfo.Accounts.Add(accountId);
         }
 
         public void Remove(Guid userId, Guid accountId)
@@ -164,100 +199,141 @@ namespace StorageLibrary
 
         public Guid Create(Guid adminId, string name, string description)
         {
-            dico_id_info.Add(new Guid(next_free_id, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 }), new AccountInfo(name, description));
-            dico_name_id.Add(name, new Guid(next_free_id, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 }));
-            next_free_id++;
-            return new Guid(next_free_id - 1, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 });
+            var id = Guid.NewGuid();
+            var adminInfos = this.motherStorage.user.GetFullInfo(adminId);
+            var accountInfo = new FullAccountInfo
+                {
+                    Id = id,
+                    AccountInfo = new AccountInfo(name, description),
+                    Users = new HashSet<Guid> { adminId },
+                    AdminId = adminId,
+                    FollowerOfLists = new HashSet<Guid>(),
+                    MemberOfLists = new HashSet<Guid>()
+                };
+
+            this.infoFromId.Add(id, accountInfo);
+            this.idFromName.Add(name, id);
+            adminInfos.Accounts.Add(id);
+            accountInfo.PersonalListId = this.motherStorage.list.CreateList(
+                id, "personal list", "personal list", false, true);
+
+            return id;
         }
 
-        public void Delete(Guid accountId) { }
+        public void Delete(Guid accountId)
+        {
+            throw new NotImplementedException();
+        }
 
         public AccountStorageTmp(StorageTmp storage)
         {
-            motherStorage = storage;
-            dico_id_info = new Dictionary<Guid, IAccountInfo>();
-            dico_name_id = new Dictionary<string, Guid>();
-            dico_user_idaccounts = new Dictionary<Guid, HashSet<Guid>>();
-            dico_id_users = new Dictionary<Guid, HashSet<Guid>>();
+            this.motherStorage = storage;
+            this.infoFromId = new Dictionary<Guid, FullAccountInfo>();
+            this.idFromName = new Dictionary<string, Guid>();
         }
 
         public void afficheDebug()
         {
-            Console.WriteLine("Affichage des comptes");
-            foreach (KeyValuePair<Guid, HashSet<Guid>> kvp in dico_id_users)
+            Console.WriteLine("Printing accounts...");
+            foreach (var item in this.infoFromId)
             {
                 Console.Write("  ");
-                Console.WriteLine( (GetInfo(kvp.Key)).Name);
-                foreach(Guid idUser in kvp.Value)
+                Console.WriteLine(item.Value.AccountInfo.Name);
+                foreach (var userId in item.Value.Users)
                 {
-                   Console.Write("     ");
-                   Console.WriteLine((motherStorage.User.GetInfo(idUser)).Login);
+                    Console.Write("    ");
+                    Console.WriteLine(this.motherStorage.User.GetInfo(userId).Login);
                 }
             }
-            Console.WriteLine("");
+
+            Console.WriteLine("Accounts printed.");
         }
 
+        internal FullAccountInfo GetFullInfo(Guid accountId)
+        {
+            FullAccountInfo accountInfo;
+            if (this.infoFromId.TryGetValue(accountId, out accountInfo))
+            {
+                return accountInfo;
+            }
+
+            throw new AccountNotFound();
+        }
     }
 
     public class ListStorageTmp : IListStorage
-     {
-         private int next_free_id = 0;
-         private StorageTmp motherStorage;
-         private Dictionary<Guid, IListInfo> dico_id_info;
-         private Dictionary<Guid, Guid> dico_id_idowner;
-         private Dictionary<Guid, HashSet<Guid>> dico_id_idaccounts;
-         private Dictionary<Guid, Guid> dico_idaccount_idperslist;
-         private Dictionary<Guid, HashSet<Guid>> dico_idaccount_idownedlists;
-         private Dictionary<Guid, HashSet<Guid>> dico_id_idfollowers;
-         private Dictionary<Guid, HashSet<Guid>> dico_idaccount_idFollowedLists;
+    {
+        internal class FullListInfo
+        {
+            public List<IMessage> Messages { get; set; }
+
+            public Guid Id { get; set; }
+
+            public IListInfo ListInfo { get; set; }
+
+            public Guid OwnerId { get; set; }
+
+            public HashSet<Guid> Members { get; set; }
+
+            public HashSet<Guid> Followers { get; set; }
+        }
+
+        private readonly Dictionary<Guid, FullListInfo> infoFromId; 
+
+         private readonly StorageTmp motherStorage;
 
          public IListInfo GetInfo(Guid listId)
          {
-             IListInfo res;
-             dico_id_info.TryGetValue(listId, out res);
-             return res;
+             return this.GetFullInfo(listId).ListInfo;
          }
 
          public Guid GetOwner(Guid listId)
          {
-             Guid res;
-             dico_id_idowner.TryGetValue(listId, out res);
-             return res;
+             return this.GetFullInfo(listId).OwnerId;
          }
 
          public Guid GetPersonalList(Guid accountId)
          {
-             Guid idPersList;
-             if (!dico_idaccount_idperslist.TryGetValue(accountId, out idPersList))
-             {
-                 idPersList = Create(accountId, "Liste perso de " + motherStorage.Account.GetInfo(accountId).Name, "", false);
-                 dico_idaccount_idperslist.Add(accountId, idPersList);
-                 Add(idPersList, accountId);
-             }
-             return idPersList;
+             return this.motherStorage.account.GetFullInfo(accountId).PersonalListId;
          }
 
          public void SetInfo(Guid listId, string name, string description, bool isPrivate)
          {
-              dico_id_info.Add(listId, new ListInfo(name, description, isPrivate, false));
+             var listInfo = this.GetFullInfo(listId).ListInfo;
+
+             if (listInfo.IsPersonnal)
+             {
+                 throw new IsPersonnalList();
+             }
+
+             listInfo.Name = name;
+             listInfo.Description = description;
+             listInfo.IsPrivate = isPrivate;
          }
 
          public Guid Create(Guid ownerId, string name, string description, bool isPrivate)
          {
-              Guid newGuid = new Guid(next_free_id, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 });
-              dico_id_info.Add(newGuid, new ListInfo(name, description, isPrivate, false));
-              dico_id_idowner.Add(newGuid, ownerId);
+             return this.CreateList(ownerId, name, description, isPrivate, false);
+         }
 
-             HashSet<Guid> setOwnedListsId;
-             if (!dico_idaccount_idownedlists.TryGetValue(ownerId, out setOwnedListsId))
-             {
-                 setOwnedListsId = new HashSet<Guid>();
-                 dico_idaccount_idownedlists.Add(ownerId, setOwnedListsId);
-             }
-             setOwnedListsId.Add(newGuid);
+        internal Guid CreateList(Guid ownerId, string name, string description, bool isPrivate, bool isPersonal)
+        {
+            var id = Guid.NewGuid();
+            var accountInfo = this.motherStorage.account.GetFullInfo(ownerId);
+            var listInfo = new FullListInfo
+                 {
+                     Id = id,
+                     Followers = new HashSet<Guid> { ownerId },
+                     ListInfo = new ListInfo(name, description, isPrivate, isPersonal),
+                     Members = new HashSet<Guid> { ownerId },
+                     OwnerId = ownerId
+                 };
 
-             next_free_id++;
-             return new Guid(next_free_id - 1, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 });
+            accountInfo.MemberOfLists.Add(id);
+            accountInfo.FollowerOfLists.Add(id);
+            this.infoFromId.Add(id, listInfo);
+
+            return id;
          }
 
          public void Delete(Guid ownerId)
@@ -267,50 +343,54 @@ namespace StorageLibrary
 
          public void Follow(Guid listId, Guid accountId)
          {
-             HashSet<Guid> setFollowers;
-             if (!dico_id_idfollowers.TryGetValue(listId, out setFollowers))
-             {
-                 setFollowers = new HashSet<Guid>();
-                 dico_id_idfollowers.Add(listId, setFollowers);
-             }
-             setFollowers.Add(accountId);
+             var listInfo = this.GetFullInfo(listId);
+             var accountInfo = this.motherStorage.account.GetFullInfo(accountId);
 
-             HashSet<Guid> setFollowedLists;
-             if (!dico_idaccount_idFollowedLists.TryGetValue(listId, out setFollowedLists))
-             {
-                 setFollowedLists = new HashSet<Guid>();
-                 dico_idaccount_idFollowedLists.Add(accountId, setFollowedLists);
-             }
-             setFollowedLists.Add(listId);
+             listInfo.Followers.Add(accountId);
+             accountInfo.FollowerOfLists.Add(listId);
          }
 
          public void Unfollow(Guid listId, Guid accountId)
          {
-             throw new NotImplementedException();
+             var listInfo = this.GetFullInfo(listId);
+             var accountInfo = this.motherStorage.account.GetFullInfo(accountId);
+
+             listInfo.Followers.Remove(accountId);
+             accountInfo.FollowerOfLists.Remove(listId);
          }
 
 
          public HashSet<Guid> GetAccounts(Guid listId)
          {
-             HashSet<Guid> res;
-             dico_id_idaccounts.TryGetValue(listId, out res);
-             return res;
+             return this.GetFullInfo(listId).Members;
          }
 
          public void Add(Guid listId, Guid accountId)
          {
-             HashSet<Guid> setAccounts;
-             if (!dico_id_idaccounts.TryGetValue(listId, out setAccounts))
-             {
-                 setAccounts = new HashSet<Guid>();
-                 dico_id_idaccounts.Add(listId, setAccounts);
-             }
-             setAccounts.Add(accountId);
+             var listInfo = this.GetFullInfo(listId);
+             var accountInfo = this.motherStorage.account.GetFullInfo(accountId);
+
+             listInfo.Members.Add(accountId);
+             accountInfo.MemberOfLists.Add(listId);
          }
 
          public void Remove(Guid listId, Guid accountId)
          {
-             throw new NotImplementedException();
+             try
+             {
+                 this.GetFullInfo(listId).Members.Remove(accountId);
+             }
+             catch (ListNotFound)
+             {
+             }
+
+             try
+             {
+                 this.motherStorage.account.GetFullInfo(accountId).MemberOfLists.Remove(listId);
+             }
+             catch (AccountNotFound)
+             {
+             }
          }
 
          public HashSet<Guid> GetAccountOwnedLists(Guid accountId, bool withPrivate)
@@ -335,86 +415,81 @@ namespace StorageLibrary
 
          public ListStorageTmp(StorageTmp storage)
          {
-            motherStorage = storage;
-            dico_id_info = new Dictionary<Guid, IListInfo>();
-            dico_id_idaccounts = new Dictionary<Guid, HashSet<Guid>>();
-            dico_id_idowner = new Dictionary<Guid, Guid>();
-            dico_idaccount_idperslist = new Dictionary<Guid, Guid>();
-            dico_idaccount_idownedlists = new Dictionary<Guid, HashSet<Guid>>();
-            dico_id_idfollowers = new Dictionary<Guid, HashSet<Guid>>();
-            dico_idaccount_idFollowedLists = new Dictionary<Guid,HashSet<Guid>>();
+             this.motherStorage = storage;
+             this.infoFromId = new Dictionary<Guid, FullListInfo>();
          }
 
          public void afficheDebug()
          {
-             Console.WriteLine("Affichage des listes");
-             foreach (KeyValuePair<Guid, HashSet<Guid>> kvp in dico_id_idaccounts)
+             Console.WriteLine("Printing lists...");
+             foreach (var item in this.infoFromId)
              {
                  Console.Write("  ");
-                 Console.WriteLine((GetInfo(kvp.Key)).Name);
-                 foreach (Guid idAccount in kvp.Value)
+                 Console.WriteLine(item.Value.ListInfo.Name);
+                 foreach (var accountId in item.Value.Members)
                  {
-                     Console.Write("     ");
-                     Console.WriteLine((motherStorage.Account.GetInfo(idAccount)).Name);
+                     Console.Write("    ");
+                     Console.WriteLine(this.motherStorage.Account.GetInfo(accountId).Name);
                  }
              }
-             Console.WriteLine("");
 
+             Console.WriteLine("Printed lists.");
          }
 
+        internal FullListInfo GetFullInfo(Guid id)
+        {
+            FullListInfo listInfo;
+            if (this.infoFromId.TryGetValue(id, out listInfo))
+            {
+                return listInfo;
+            }
+
+            throw new ListNotFound();
+        }
      }
 
     public class MsgStorageTmp : IMsgStorage
     {
-        private int nextFreeMsgId = 0;
+        internal class FullMessageInfo
+        {
+            public Guid Id { get; set; }
+
+            public IMessage MessageInfo { get; set; }
+        }
+
+        private readonly SortedDictionary<Guid, FullMessageInfo> infoFromId;
+  
         private StorageTmp motherStorage;
         private SortedDictionary<Guid,List<Guid>> dico_idaccount_listIdMess;
         private SortedDictionary<Guid, Message> dico_idMess_mess;
 
         public List<IMessage> GetListsMsgFrom(HashSet<Guid> listsId, DateTime firstMsgDate, int msgNumber)
         {
-            List<IMessage> listMess= new List<IMessage>();
-            int nbMess = 0;
-            for(int idMess = 0; idMess < nextFreeMsgId && nbMess < msgNumber; idMess++)
+            var messages = new List<IMessage>();
+            foreach (var listId in listsId)
             {
-                Message curMess;
-                dico_idMess_mess.TryGetValue(new Guid(idMess, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 }), out curMess);
-                bool trouve = false;
-                foreach(Guid idList in listsId)
-                {
-                    if((motherStorage.List.GetAccounts(idList)).Contains(curMess.PosterId))
-                        trouve = true;
-                }
-                if (trouve && curMess.Date > firstMsgDate )
-                {
-                   listMess.Add(curMess);
-                   nbMess++;
-                }
+                messages.AddRange(
+                    this.motherStorage.list.GetFullInfo(listId).Messages.Where(msg => msg.Date > firstMsgDate));
             }
-            return listMess;
+
+            messages.Sort((msg1, msg2) => DateTime.Compare(msg1.Date, msg2.Date));
+
+            return messages.Take(msgNumber).ToList();
         }
 
         public List<IMessage> GetListsMsgTo(HashSet<Guid> listsId, DateTime lastMsgDate, int msgNumber)
         {
-            List<IMessage> listMess= new List<IMessage>();
-            int nbMess = 0;
-            for(int idMess = nextFreeMsgId - 1; idMess >= 0  && nbMess < msgNumber; idMess--)
+            var messages = new List<IMessage>();
+            foreach (var listId in listsId)
             {
-                Message curMess;
-                dico_idMess_mess.TryGetValue(new Guid(idMess, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 }), out curMess);
-                bool trouve = false;
-                foreach(Guid idList in listsId)
-                {
-                    if((motherStorage.List.GetAccounts(idList)).Contains(curMess.PosterId))
-                       trouve = true;
-                }
-                if (trouve && curMess.Date < lastMsgDate )
-                {
-                   listMess.Add(curMess);
-                   nbMess++;
-                }
+                messages.AddRange(
+                    this.motherStorage.list.GetFullInfo(listId).Messages.Where(msg => msg.Date < lastMsgDate));
             }
-            return listMess;
+
+            // Note the reversing of the parameters because we supposedly want the *lasts* messages first
+            messages.Sort((msg1, msg2) => DateTime.Compare(msg2.Date, msg1.Date));
+
+            return messages.Take(msgNumber).ToList();
         }
 
         public void Tag(Guid accountId, Guid msgId)
@@ -439,27 +514,27 @@ namespace StorageLibrary
 
         public Guid Post(Guid accountId, string content)
         {
-            if (!dico_idaccount_listIdMess.ContainsKey(accountId))
-                dico_idaccount_listIdMess.Add(accountId, new List<Guid>());
+            var id = Guid.NewGuid();
+            var accountInfo = this.motherStorage.account.GetFullInfo(accountId);
+            var message = new Message(
+                id, accountId, accountInfo.AccountInfo.Name, string.Empty, DateTime.Now, content);
 
-            List<Guid> list_mess;
-            dico_idaccount_listIdMess.TryGetValue(accountId, out list_mess);
-            list_mess.Add(new Guid(nextFreeMsgId, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 }));
+            foreach (var listId in accountInfo.MemberOfLists)
+            {
+                var messages = this.motherStorage.list.GetFullInfo(listId).Messages;
+                messages.Add(message);
+            }
 
-            // TODO : set user name
-            Message curMessage = new Message(new Guid(nextFreeMsgId, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 }), accountId, "", "", new DateTime(0), content);
-            dico_idMess_mess.Add(new Guid(nextFreeMsgId, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 }), curMessage);
-
-            nextFreeMsgId++;
-            return new Guid(nextFreeMsgId - 1, 0, 0, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 });
+            return id;
         }
 
 
         public Guid Copy(Guid accountId, Guid msgId)
         {
-            Message curMess;
-            dico_idMess_mess.TryGetValue(msgId, out curMess);
-            return Post(accountId, curMess.Content);
+            // TODO: THATS NOT HOW RETWEET MUST WORK. DEFINITELY NOT.
+            var message = this.GetFullInfo(msgId);
+            var account = this.motherStorage.account.GetFullInfo(accountId);
+            return this.Post(accountId, message.MessageInfo.Content);
         }
 
         public void Remove(Guid id)
@@ -469,28 +544,32 @@ namespace StorageLibrary
 
         public MsgStorageTmp(StorageTmp storage)
         {
-            dico_idaccount_listIdMess = new SortedDictionary<Guid,List<Guid>>();
-            dico_idMess_mess = new SortedDictionary<Guid, Message>();
-
-            motherStorage = storage;
+            this.motherStorage = storage;
+            this.infoFromId = new SortedDictionary<Guid, FullMessageInfo>();
         }
 
         public void afficheDebug()
         {
-            Console.WriteLine("Affichage des messages");
-            foreach (KeyValuePair<Guid, List<Guid>> kvp in dico_idaccount_listIdMess)
+            Console.WriteLine("Printing messages...");
+            foreach (var item in this.infoFromId)
             {
                 Console.Write("  ");
-                Console.WriteLine((motherStorage.Account.GetInfo(kvp.Key)).Name);
-                foreach (Guid idMessage in kvp.Value)
-                {
-                    Console.Write("     ");
-                    Message mesCur;
-                    dico_idMess_mess.TryGetValue(idMessage, out mesCur);
-                    Console.WriteLine(mesCur.Content);
-                }
+                Console.Write(this.motherStorage.Account.GetInfo(item.Value.MessageInfo.PosterId).Name);
+                Console.Write(" : ");
+                Console.Write(item.Value.MessageInfo.Content);
             }
-            Console.WriteLine("");
+            Console.WriteLine("Messages printed.");
+        }
+
+        internal FullMessageInfo GetFullInfo(Guid messageId)
+        {
+            FullMessageInfo messageInfo;
+            if (this.infoFromId.TryGetValue(messageId, out messageInfo))
+            {
+                return messageInfo;
+            }
+
+            throw new MessageNotFound();
         }
 
     }
@@ -569,9 +648,9 @@ namespace StorageLibrary
     {
         static void Main(string[] args)
         {
-            StorageTmp DB = new StorageTmp();
-            DB.InitWithStupidData();
-            DB.afficheDebug();
+            var db = new StorageTmp();
+            db.InitWithStupidData();
+            db.afficheDebug();
 
             Console.ReadLine();
         }

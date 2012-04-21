@@ -7,61 +7,16 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Tigwi.UI.Models
+namespace Tigwi.UI.Models.Storage
 {
     using System;
 
     using StorageLibrary;
 
     /// <summary>
-    /// The i account set.
-    /// </summary>
-    public interface IAccountSet
-    {
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// The create.
-        /// </summary>
-        /// <returns>
-        /// </returns>
-        AccountModel Create();
-
-        /// <summary>
-        /// The delete.
-        /// </summary>
-        /// <param name="account">
-        /// The account.
-        /// </param>
-        void Delete(AccountModel account);
-
-        /// <summary>
-        /// The find.
-        /// </summary>
-        /// <param name="account">
-        /// The account.
-        /// </param>
-        /// <returns>
-        /// </returns>
-        AccountModel Find(Guid account);
-
-        /// <summary>
-        /// The find.
-        /// </summary>
-        /// <param name="name">
-        /// The name.
-        /// </param>
-        /// <returns>
-        /// </returns>
-        AccountModel Find(string name);
-
-        #endregion
-    }
-
-    /// <summary>
     /// The account set.
     /// </summary>
-    public class AccountSet : IAccountSet
+    public class AccountRepository : IAccountRepository
     {
         #region Constants and Fields
 
@@ -75,14 +30,14 @@ namespace Tigwi.UI.Models
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AccountSet"/> class. 
-        /// Initializes a new instance of the <see cref="AccountSet"/> class. 
-        /// Initializes a new instance of the <see cref="AccountSet"/> class.
+        /// Initializes a new instance of the <see cref="AccountRepository"/> class. 
+        /// Initializes a new instance of the <see cref="AccountRepository"/> class. 
+        /// Initializes a new instance of the <see cref="AccountRepository"/> class.
         /// </summary>
         /// <param name="storageObj">
         /// The storage obj.
         /// </param>
-        public AccountSet(IStorage storageObj)
+        public AccountRepository(IStorage storageObj)
         {
             this.storageObj = storageObj;
         }
@@ -106,13 +61,7 @@ namespace Tigwi.UI.Models
 
         #region Public Methods and Operators
 
-        /// <summary>
-        /// The create.
-        /// </summary>
-        /// <exception cref="NotImplementedException">
-        /// Not implemented folks :-)
-        /// </exception>
-        public AccountModel Create()
+        public StorageAccountModel Create(StorageUserModel user, string name, string description)
         {
             throw new NotImplementedException();
         }
@@ -123,7 +72,7 @@ namespace Tigwi.UI.Models
         /// <param name="account">
         /// The account.
         /// </param>
-        public void Delete(AccountModel account)
+        public void Delete(StorageAccountModel account)
         {
             this.StorageObj.Account.Delete(account.Id);
         }
@@ -136,7 +85,7 @@ namespace Tigwi.UI.Models
         /// </param>
         /// <returns>
         /// </returns>
-        public AccountModel Find(Guid id)
+        public StorageAccountModel Find(Guid id)
         {
             return new StorageAccountModel(this.StorageObj, id);
         }
@@ -149,7 +98,7 @@ namespace Tigwi.UI.Models
         /// </param>
         /// <returns>
         /// </returns>
-        public AccountModel Find(string name)
+        public StorageAccountModel Find(string name)
         {
             return new StorageAccountModel(this.StorageObj, name);
         }

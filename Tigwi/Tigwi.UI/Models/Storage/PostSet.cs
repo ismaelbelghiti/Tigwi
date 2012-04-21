@@ -1,7 +1,6 @@
-namespace Tigwi.UI.Models
+namespace Tigwi.UI.Models.Storage
 {
     using System;
-
 
     /// <summary>
     /// The i post set.

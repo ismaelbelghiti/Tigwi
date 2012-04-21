@@ -8,6 +8,8 @@ namespace Tigwi.UI.Models
 {
     using System.ComponentModel.DataAnnotations;
 
+    using Tigwi.UI.Models.Storage;
+
     public abstract class PostModel
     {
         [Key, Editable(false)]
@@ -22,8 +24,8 @@ namespace Tigwi.UI.Models
         [DataType(DataType.MultilineText)]
         public virtual string Content { get; set; }
 
-        internal abstract void TagBy(AccountModel account);
+        internal abstract void TagBy(StorageAccountModel account);
 
-        internal abstract void UnTagBy(AccountModel account);
+        internal abstract void UnTagBy(StorageAccountModel account);
     }
 }
