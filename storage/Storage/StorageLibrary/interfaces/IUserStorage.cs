@@ -41,6 +41,7 @@ namespace StorageLibrary
         /// delete a user
         /// doesn't do anything if the user doesn't exists
         /// </summary>
+        /// <exception cref="UserIsAdmin">To avoid deleting an account</exception>
         void Delete(Guid userId);
 
         // TODO : implement this

@@ -29,6 +29,7 @@ namespace StorageCommon
                 string eTag;
                 try
                 {
+                    blob.FetchAttributes();
                     eTag = blob.Attributes.Properties.ETag;
                     if (eTag != oldEtag)
                     {

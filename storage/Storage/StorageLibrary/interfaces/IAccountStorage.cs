@@ -21,7 +21,6 @@ namespace StorageLibrary
         /// Update informations about the given account
         /// </summary>
         /// <exception cref="AccountNotFound">if no account has ID=accountId</exception>
-        /// <exception cref="AccountAlreadyExists">if the name is already used by another account</exception>
         void SetInfo(Guid accountId, string description);
 
         /// <summary>
