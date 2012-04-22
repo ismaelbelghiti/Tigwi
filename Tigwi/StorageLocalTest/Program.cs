@@ -223,322 +223,314 @@ namespace StorageLocalTest
                 Console.Write(".");
             #endregion
 
-            Console.WriteLine("\n");
+            Console.WriteLine();
 
         }
 
         static void TestAccounts(IStorage storage)
         {
+            Console.WriteLine("TestAccounts");
 
-            //Guid GetId(string name); -> "AccountNotFound">if no account has this name
+            #region Guid GetId(string name)
+                // AccountNotFound if no account has this name
 
-            // test exception "AccountNotFound"
-
-            try
-            {
-                Guid noneid = storage.Account.GetId("accountThatDoesntExist");
-                Console.WriteLine("Error, Account.GetId return an id where it shouldn't.");
-            }
-            catch (AccountNotFound) { }
-
-            //test normal behaviour
-
-            try
-            {
-                Guid id = storage.Account.GetId("accountThatExists");
-            }
-            catch (AccountNotFound) { Console.WriteLine("Error, Account.GetId does not find id."); }
-            Console.Write(".");
-
-            //IAccountInfo GetInfo(Guid accountId); -> "AccountNotFound">if no account has this ID
-
-            // test exception "AccountNotFound"
-
-            try
-            {
-                IAccountInfo accountInfo = storage.Account.GetInfo(new Guid());
-                Console.WriteLine("Error, Account.GetInfo doesnot raise AccountNotFound.");
-            }
-            catch (AccountNotFound) { }
-            Console.Write(".");
-
-            //test normal behaviour
-
-            try
-            {
-                Guid accountid = storage.Account.GetId("accountThatExists");
-                IAccountInfo accountinfo = storage.Account.GetInfo(accountid);
-                if (accountinfo.Name != "accountThatExists" || accountinfo.Description != "accountThatExistsDesc")
-                    Console.WriteLine("Error, Account.GetInfo");
-            }
-            catch (UserNotFound) { Console.WriteLine("Error, Account.GetInfo does not found a new Id."); }
-            Console.Write(".");
-
-
-            //void SetInfo(Guid accountId, string description); -> "AccountNotFound">if no account has ID=accountID>
-
-            // test exception "AccountNotFound"
-
-            try
-            {
-                storage.Account.SetInfo(new Guid(), "");
-                Console.WriteLine("Error, Account.SetInfo does not raise AccountNotFound");
-            }
-            catch (AccountNotFound) { }
-
-            //test normal behaviour
-
-            try
-            {
-                Guid accountId = storage.Account.GetId("accountThatDoesntExist");
-                storage.Account.SetInfo(accountId, "accountThatExistsBadDesc");
-                IAccountInfo newaccountinfo = storage.Account.GetInfo(accountId);
-                if (newaccountinfo.Description != "accountThatExistsBadDesc")
-                    Console.WriteLine("Error, Account.SetInfo");
-                storage.User.SetInfo(accountId, "accountThatExistsDesc");
-            }
-            catch (AccountNotFound) { Console.WriteLine("Error, Account.SetInfo does not find an id"); }
-
-            //HashSet<Guid> GetUsers(Guid accountId); -> "AccountNotFound"
-
-            // test exception "AccountNotFound"
-            try
-            {
-                Guid accountId = storage.Account.GetId("accountThatExists");
-                HashSet<Guid> users = storage.Account.GetUsers(accountId);
-                Console.WriteLine("Error, Account.GetUsers does not raise AccountNotFound");
-            }
-            catch (AccountNotFound) { }
-            Console.Write(".");
-
-            //test normal behaviour
-            try
-            {
-                Guid userId = storage.User.GetId("userThatExists");
-                Guid accountId = storage.Account.GetId("accountThatExists");
-                HashSet<Guid> users = storage.Account.GetUsers(accountId);
-                if (!users.Contains(userId))
-                    Console.WriteLine("Error, Account.GetUsers");
-            }
-            catch (AccountNotFound) { Console.WriteLine("Error, Account.GetUsers does not find an id"); }
-            Console.Write(".");
-
-
-            //Guid GetAdminId(Guid accountId); -> "AccountNotFound"
-
-            // test exception "AccountNotFound"
-
-            try
-            {
-                storage.Account.GetAdminId(new Guid());
-                Console.WriteLine("Account.GetAdminId does not raise AccountNotFound");
-            }
-            catch (AccountNotFound) { }
-
-            //test normal behaviour
-
-            try
-            {
-                Guid userId = storage.User.GetId("userThatExists");
-                Guid accountId = storage.Account.GetId("accountThatExists");
-                Guid admin = storage.Account.GetAdminId(accountId);
-                if (admin != userId)
-                    Console.WriteLine("Error, Account.GetAdminId");
-                Console.Write(".");
-            }
-            catch (AccountNotFound) { Console.WriteLine("Error, Account.GetAdminId"); }
-
-            //void SetAdminId(Guid accountId, Guid userId); -> "AccountNotFound">if no account has this ID
-            //                                                  "UserNotFound">if no user has this ID
-
-            // test exception "AccountNotFound"
-            try
-            {
-                Guid userId = storage.User.GetId("userThatExists");
-                Guid accountId = storage.Account.GetId("accountThatDoesntExist");
-                storage.Account.SetAdminId(accountId, userId);
-                Console.WriteLine("Error, Account.SetAdminId does raise AccountNotFound");
-            }
-            catch (AccountNotFound) { }
-
-            // test exception "UserNotFound"
-
-            try
-            {
-                Guid userId = storage.User.GetId("userThatDoesntExist");
-                Guid accountId = storage.Account.GetId("accountThatExists");
-                storage.Account.SetAdminId(accountId, userId);
-                Console.WriteLine("Error, Account.SetAdminId does raise AccountNotFound");
-            }
-            catch (AccountNotFound) { }
-
-            //test normal behaviour
-
-            try
-            {
-                Guid userId = storage.User.GetId("userThatExists");
-                Guid accountId = storage.Account.GetId("accountThatExists");
-                storage.Account.SetAdminId(accountId, userId);
-
-            }
-            catch { Console.WriteLine("Error, Account.SetAdminId does not find account id or user id"); }
-
-
-
-            //void Add(Guid accountId, Guid userId); -> "AccountNotFound">if no account has this id
-            //                                          "UserNotFound">if no user has this id
-
-            // test exception "AccountNotFound"
-
-            try
-            {
-                Guid accountId = storage.Account.GetId("accountThatDoesnotExists");
-                Guid otherUserId = storage.User.GetId("otherUserThatExists");
-                storage.Account.Add(accountId, otherUserId);
-                Console.WriteLine("Error, Account.Add does not raise AccountNotFound");
-            }
-            catch (AccountNotFound) { }
-            Console.Write(".");
-
-            // test exception "UserNotFound"
-
-            try
-            {
-                Guid accountId = storage.Account.GetId("accountThatExists");
-                Guid otherUserId = storage.User.GetId("otherUserThatDoesnotExists");
-                storage.Account.Add(accountId, otherUserId);
-                Console.WriteLine("Error, Account.Add does not raise UsertNotFound");
-            }
-            catch (UserNotFound) { }
-            Console.Write(".");
-
-            //test normal behaviour
-            try
-            {
-                Guid accountId = storage.Account.GetId("accountThatExists");
-                Guid otherUserId = storage.User.GetId("otherUserThatExists");
-                storage.Account.Add(accountId, otherUserId);
-                HashSet<Guid> users = storage.Account.GetUsers(accountId);
-                if (!users.Contains(otherUserId))
-                    Console.WriteLine("Error, Account.Add");
-                HashSet<Guid> accounts = storage.User.GetAccounts(otherUserId);
-                if (!accounts.Contains(accountId))
-                    Console.WriteLine("Error, Account.Add");
-
-            }
-            catch { Console.WriteLine("Error, Account.Add raised an exception where it should not"); }
-            Console.Write(".");
-
-            //void Remove(Guid accountId, Guid userId); -> "UserIsAdmin">if you try to remove the administrator from the user groups
-
-            // test exception "UserIsAdmin"
-
-            try
-            {
-                Guid userId = storage.User.GetId("userThatExists");
-                Guid accountId = storage.Account.GetId("accountThatExists");
-                storage.Account.Remove(accountId, userId);
-                Console.WriteLine("Error, Account.Remove doesn't detect admin");
-            }
-            catch (UserIsAdmin) { }
-            Console.Write(".");
-
-            //test with wrong accountId
-
-            try
-            {
-                Guid userId = storage.User.GetId("userThatExists");
-                Guid accountId = storage.Account.GetId("accountThatDoesntExists");
-                storage.Account.Remove(accountId, userId);
-            }
-            catch (AccountNotFound) { Console.WriteLine("Error, Account.Remove raised AccountNotFound where it should not"); }
-            Console.Write(".");
-
-            //test with wrong userId
-
-            try
-            {
-                Guid userId = storage.User.GetId("userThatDoesnotExists");
-                Guid accountId = storage.Account.GetId("accountThatExists");
-                storage.Account.Remove(accountId, userId);
-            }
-            catch (AccountNotFound) { Console.WriteLine("Error, Account.Remove raised UserNotFound where it should not"); }
-            Console.Write(".");
-
-            //test normal behaviour
-
-            try
-            {
-                Guid accountId = storage.Account.GetId("accountThatExists");
-                Guid otherUserId = storage.User.GetId("otherUserThatExists");
-                storage.Account.Add(accountId, otherUserId);
-                storage.Account.Remove(accountId, otherUserId);
-                HashSet<Guid> users = storage.Account.GetUsers(accountId);
-                if (users.Contains(otherUserId))
-                    Console.WriteLine("Error, Account.Add");
-                HashSet<Guid> accounts = storage.User.GetAccounts(otherUserId);
-                if (accounts.Contains(accountId))
-                    Console.WriteLine("Error, Account.Add");
-            }
-            catch { Console.WriteLine("Error, Account.Remove "); }
-
-
-            //Guid Create(Guid adminId, string name, string description); -> "UserNotFound">if no account has this ID
-            //                                                            -> "AccountAlreadyExists">if the name is already used
-
-            // test exception "UserNotFound"
-
-            try
-            {
-                Guid userId = storage.User.GetId("userThatExists");
-                storage.Account.Create(userId, "acountThatExists", "description2");
-                Console.WriteLine("Error, Account.Create does not raise UserNotFound");
-            }
-            catch (UserNotFound) { }
-            Console.Write(".");
-
-            // test exception "AccountAlreadyExists"
-
-            try
-            {
-                Guid userId = storage.User.GetId("userThatExists");
-                storage.Account.Create(userId, "acountThatExists", "description2");
-                Console.WriteLine("Error, Account.Create does not detect existing account");
-            }
-            catch (AccountAlreadyExists) { }
-            Console.Write(".");
-
-
-            //test normal behaviour : already done with accountThatExists
-
-            //void Delete(Guid accountId);
-
-            //test with wrong accountId
-
-            try
-            {
-                storage.Account.Delete(new Guid());
-            }
-            catch { Console.WriteLine("Error, Account.Delete raise exception where it should not"); }
-            Console.Write(".");
-
-            //test normal behaviour
-
-            try
-            {
-                Guid otherAccountId = storage.Account.GetId("otherAccountThatExists");
-                storage.Account.Delete(otherAccountId);
+                // test exception "AccountNotFound"
                 try
                 {
-                    storage.Account.GetId("otherAccountThatExists");
-                    Console.WriteLine("Error, Account.Delete does not delete");
+                    Guid noneid = storage.Account.GetId("accountThatDoesntExist");
+                    Console.WriteLine("Error, Account.GetId return an id where it shouldn't.");
                 }
-                catch { }
-                storage.Account.Create(storage.User.GetId("userThatExists"), "otherAccountThatExists", "otherAccountThatExistsDesc");
-            }
-            catch { }
-            Console.Write(".");
+                catch (AccountNotFound) { }
 
+                //test normal behaviour
+                try
+                {
+                    Guid id = storage.Account.GetId("accountThatExists");
+                }
+                catch (AccountNotFound) { Console.WriteLine("Error, Account.GetId does not find id."); }
+                Console.Write(".");
+            #endregion
+
+            #region IAccountInfo GetInfo(Guid accountId)
+                // "AccountNotFound" if no account has this ID
+
+                // test exception "AccountNotFound"
+                try
+                {
+                    IAccountInfo accountInfo = storage.Account.GetInfo(Guid.NewGuid());
+                    Console.WriteLine("Error, Account.GetInfo doesnot raise AccountNotFound.");
+                }
+                catch (AccountNotFound) { }
+                Console.Write(".");
+
+                //test normal 
+                try
+                {
+                    Guid accountid = storage.Account.GetId("accountThatExists");
+                    IAccountInfo accountinfo = storage.Account.GetInfo(accountid);
+                    if (accountinfo.Name != "accountThatExists" || accountinfo.Description != "accountThatExistsDesc")
+                        Console.WriteLine("Error, Account.GetInfo");
+                }
+                catch (UserNotFound) { Console.WriteLine("Error, Account.GetInfo does not found a new Id."); }
+                Console.Write(".");
+            #endregion
+
+            #region void SetInfo(Guid accountId, string description)
+                //"AccountNotFound" if no account has ID=accountID>
+
+                // test exception "AccountNotFound"
+                try
+                {
+                    storage.Account.SetInfo(new Guid(), "");
+                    Console.WriteLine("Error, Account.SetInfo does not raise AccountNotFound");
+                }
+                catch (AccountNotFound) { }
+
+                //test normal behaviour
+                try
+                {
+                    Guid accountId = storage.Account.GetId("accountThatExists");
+                    storage.Account.SetInfo(accountId, "accountThatExistsBadDesc");
+                    IAccountInfo newaccountinfo = storage.Account.GetInfo(accountId);
+                    if (newaccountinfo.Description != "accountThatExistsBadDesc")
+                        Console.WriteLine("Error, Account.SetInfo");
+                    storage.Account.SetInfo(accountId, "accountThatExistsDesc");
+                }
+                catch (AccountNotFound) { Console.WriteLine("Error, Account.SetInfo does not find an id"); }
+            #endregion
+
+            #region HashSet<Guid> GetUsers(Guid accountId)
+                // AccountNotFound
+
+                // test exception "AccountNotFound"
+                try
+                {
+                    HashSet<Guid> users = storage.Account.GetUsers(Guid.NewGuid());
+                    Console.WriteLine("Error, Account.GetUsers does not raise AccountNotFound");
+                }
+                catch (AccountNotFound) { }
+                Console.Write(".");
+
+                //test normal behaviour
+                try
+                {
+                    Guid userId = storage.User.GetId("userThatExists");
+                    Guid accountId = storage.Account.GetId("accountThatExists");
+                    HashSet<Guid> users = storage.Account.GetUsers(accountId);
+                    if (!users.Contains(userId))
+                        Console.WriteLine("Error, Account.GetUsers");
+                }
+                catch (AccountNotFound) { Console.WriteLine("Error, Account.GetUsers does not find an id"); }
+                Console.Write(".");
+            #endregion
+
+            #region Guid GetAdminId(Guid accountId)
+                // AccountNotFound
+
+                // test exception "AccountNotFound"
+
+                try
+                {
+                    storage.Account.GetAdminId(new Guid());
+                    Console.WriteLine("Account.GetAdminId does not raise AccountNotFound");
+                }
+                catch (AccountNotFound) { }
+
+                //test normal behaviour
+
+                try
+                {
+                    Guid userId = storage.User.GetId("userThatExists");
+                    Guid accountId = storage.Account.GetId("accountThatExists");
+                    Guid admin = storage.Account.GetAdminId(accountId);
+                    if (admin != userId)
+                        Console.WriteLine("Error, Account.GetAdminId");
+                    Console.Write(".");
+                }
+                catch (AccountNotFound) { Console.WriteLine("Error, Account.GetAdminId"); }
+            #endregion
+
+            #region void SetAdminId(Guid accountId, Guid userId)
+                // AccountNotFound if no account has this ID
+                // UserNotFound if no user has this ID
+
+                // test exception "AccountNotFound"
+                try
+                {
+                    Guid userId = storage.User.GetId("userThatExists");
+                    Guid accountId = storage.Account.GetId("accountThatDoesntExist");
+                    storage.Account.SetAdminId(accountId, userId);
+                    Console.WriteLine("Error, Account.SetAdminId does raise AccountNotFound");
+                }
+                catch (AccountNotFound) { }
+
+                // test exception "UserNotFound"
+                try
+                {
+                    Guid userId = storage.User.GetId("userThatDoesntExist");
+                    Guid accountId = storage.Account.GetId("accountThatExists");
+                    storage.Account.SetAdminId(accountId, userId);
+                    Console.WriteLine("Error, Account.SetAdminId does raise AccountNotFound");
+                }
+                catch (UserNotFound) { }
+
+                //test normal behaviour
+                try
+                {
+                    Guid userId = storage.User.GetId("userThatExists");
+                    Guid accountId = storage.Account.GetId("accountThatExists");
+                    storage.Account.SetAdminId(accountId, userId);
+
+                }
+                catch { Console.WriteLine("Error, Account.SetAdminId does not find account id or user id"); }
+            #endregion
+
+            #region void Add(Guid accountId, Guid userId)
+                // AccountNotFound if no account has this id
+                // UserNotFound if no user has this id
+
+                // test exception "AccountNotFound"
+                try
+                {
+                    Guid otherUserId = storage.User.GetId("otherUserThatExists");
+                    storage.Account.Add(otherUserId, otherUserId);
+                    Console.WriteLine("Error, Account.Add does not raise AccountNotFound");
+                }
+                catch (AccountNotFound) { }
+                Console.Write(".");
+
+                // test exception "UserNotFound"
+                try
+                {
+                    Guid accountId = storage.Account.GetId("accountThatExists");
+                    Guid otherUserId = storage.User.GetId("otherUserThatDoesnotExists");
+                    storage.Account.Add(accountId, otherUserId);
+                    Console.WriteLine("Error, Account.Add does not raise UsertNotFound");
+                }
+                catch (UserNotFound) { }
+                Console.Write(".");
+
+                //test normal behaviour
+                try
+                {
+                    Guid accountId = storage.Account.GetId("accountThatExists");
+                    Guid otherUserId = storage.User.GetId("otherUserThatExists");
+                    storage.Account.Add(accountId, otherUserId);
+                    HashSet<Guid> users = storage.Account.GetUsers(accountId);
+                    if (!users.Contains(otherUserId))
+                        Console.WriteLine("Error, Account.Add");
+                    HashSet<Guid> accounts = storage.User.GetAccounts(otherUserId);
+                    if (!accounts.Contains(accountId))
+                        Console.WriteLine("Error, Account.Add");
+
+                }
+                catch { Console.WriteLine("Error, Account.Add raised an exception where it should not"); }
+                Console.Write(".");
+            #endregion
+
+            #region void Remove(Guid accountId, Guid userId)
+                // UserIsAdmin if you try to remove the administrator from the user groups
+
+                // test exception "UserIsAdmin"
+                try
+                {
+                    Guid userId = storage.User.GetId("userThatExists");
+                    Guid accountId = storage.Account.GetId("accountThatExists");
+                    storage.Account.Remove(accountId, userId);
+                    Console.WriteLine("Error, Account.Remove doesn't detect admin");
+                }
+                catch (UserIsAdmin) { }
+                Console.Write(".");
+
+                //test with wrong accountId
+                try
+                {
+                    Guid userId = storage.User.GetId("userThatExists");
+                    storage.Account.Remove(Guid.NewGuid(), userId);
+                }
+                catch (AccountNotFound) { Console.WriteLine("Error, Account.Remove raised AccountNotFound where it should not"); }
+                Console.Write(".");
+
+                //test with wrong userId
+                try
+                {
+                    Guid accountId = storage.Account.GetId("accountThatExists");
+                    storage.Account.Remove(accountId, Guid.NewGuid());
+                }
+                catch (UserNotFound) { Console.WriteLine("Error, Account.Remove raised UserNotFound where it should not"); }
+                Console.Write(".");
+
+                //test normal behaviour
+                try
+                {
+                    Guid accountId = storage.Account.GetId("accountThatExists");
+                    Guid otherUserId = storage.User.GetId("otherUserThatExists");
+                    storage.Account.Add(accountId, otherUserId);
+                    storage.Account.Remove(accountId, otherUserId);
+                    HashSet<Guid> users = storage.Account.GetUsers(accountId);
+                    if (users.Contains(otherUserId))
+                        Console.WriteLine("Error, Account.Add");
+                    HashSet<Guid> accounts = storage.User.GetAccounts(otherUserId);
+                    if (accounts.Contains(accountId))
+                        Console.WriteLine("Error, Account.Add");
+                }
+                catch { Console.WriteLine("Error, Account.Remove "); }
+            #endregion
+
+            #region Guid Create(Guid adminId, string name, string description)
+                // UserNotFound if no account has this ID
+                // AccountAlreadyExists if the name is already used
+
+                // test exception "UserNotFound"
+                try
+                {
+                    storage.Account.Create(Guid.NewGuid(), "acountThatExists", "description2");
+                    Console.WriteLine("Error, Account.Create does not raise UserNotFound");
+                }
+                catch (UserNotFound) { }
+                Console.Write(".");
+
+                // test exception "AccountAlreadyExists"
+                try
+                {
+                    Guid userId = storage.User.GetId("userThatExists");
+                    storage.Account.Create(userId, "acountThatExists", "description2");
+                    Console.WriteLine("Error, Account.Create does not detect existing account");
+                }
+                catch (AccountAlreadyExists) { }
+                Console.Write(".");
+
+                // test normal behavior
+                storage.Account.Create(storage.User.GetId("userThatExists"), "otherAccountThatExists", "otherAccountThatExistsDesc");
+            #endregion 
+
+            #region void Delete(Guid accountId);
+                try
+                {
+                    //test with wrong accountId
+                    try
+                    {
+                        storage.Account.Delete(new Guid());
+                    }
+                    catch { Console.WriteLine("Error, Account.Delete raise exception where it should not"); }
+                    Console.Write(".");
+
+                    //test normal behaviour
+                    Guid otherAccountId = storage.Account.GetId("otherAccountThatExists");
+                    storage.Account.Delete(otherAccountId);
+                    try
+                    {
+                        storage.Account.GetId("otherAccountThatExists");
+                        Console.WriteLine("Error, Account.Delete does not delete");
+                    }
+                    catch { }
+                    storage.Account.Create(storage.User.GetId("userThatExists"), "otherAccountThatExists", "otherAccountThatExistsDesc");
+                }
+                catch { Console.WriteLine("Unhandled esception in Account.Delete"); }
+                Console.Write(".");
+            #endregion
+
+            Console.WriteLine();
         }
 
         static void ClearContainer(CloudBlobContainer c)
@@ -564,6 +556,7 @@ namespace StorageLocalTest
             //storage.InitWithStupidData();
             //storage.afficheDebug();
             Guid userId = storage.User.Create("userThatExists", "userThatExists@gmail.com", "userThatExistsPass");
+            storage.User.Create("otherUserThatExists", "otherUserThatExists@gmail.com", "otherUserThatExistsPass");
             Guid accountId = storage.Account.Create(userId, "accountThatExists", "accountThatExistsDesc");
             storage.Account.Add(accountId, userId);
 

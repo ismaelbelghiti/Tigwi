@@ -41,4 +41,4 @@ TODO :
 	- penser au problème de trop de removes (paquets de ~100 avec trop peu d'éléments)
 
 TO BE CHECKED :
-	- do we need to use fetch atribute each time we need the etag ?
+	- do we need to use fetch atribute each time we need the etag ? yes i think
