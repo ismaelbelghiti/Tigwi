@@ -38,6 +38,7 @@ TODO :
 	- verifier les fonctions en lecture de list storage apres les modifs
 	- implementer la création des bonnes structures pour les listes lors de la création d'un utilisateur
 	- voir la taille d'un message
-	- 
 	- penser au problème de trop de removes (paquets de ~100 avec trop peu d'éléments)
 
+TO BE CHECKED :
+	- do we need to use fetch atribute each time we need the etag ? yes i think
