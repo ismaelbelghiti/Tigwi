@@ -25,7 +25,7 @@ namespace Tigwi.UI.Tests.Controllers
             var controller = new UserController(storage);
 
             var model = new RegisterViewModel
-                { Login = "Elarnon", Email = "cbasile06@gmail.com", Password = "pass", PasswordConfirmation = "pass" };
+                { Login = "Elarnon", Email = "cbasile06@gmail.com", Password = "pass", ConfirmPassword = "pass" };
 
             var result = controller.Register(model) as RedirectToRouteResult;
         }
