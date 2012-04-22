@@ -505,7 +505,7 @@ namespace Tigwi_API.Controllers
         //GET infoaccount/main/{accountName}
         
         //[Authorize]
-        public ActionResult Main(string accountName)
+        public ActionResult MainInfo(string accountName)
         {
             Answer output;
 
@@ -534,7 +534,7 @@ namespace Tigwi_API.Controllers
 
         //
         //GET infoaccount/main/{accountName}
-        public ActionResult Main(Guid accountId)
+        public ActionResult MainInfo(Guid accountId)
         {
             Answer output;
 
@@ -625,5 +625,66 @@ namespace Tigwi_API.Controllers
             return Content(stream.ToString());
         }
 
+        //
+        // GET : infoaccount/administrator/{accountName}
+
+        //[Authorize]
+        public ActionResult Administrator(string accountName)
+        {
+            Answer output;
+
+            try
+            {
+                var accountId = Storage.Account.GetId(accountName);
+
+                // get account's administrator
+                var adminId = Storage.Account.GetAdminId(accountId);
+                var admin = new User(Storage.User.GetInfo(adminId));
+
+                output = new Answer(admin);
+            }
+
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
+
+            return Content(stream.ToString());
+        }
+
+        //
+        // GET : infoaccount/administrator/{accountID}
+
+        //[Authorize]
+        public ActionResult Administrator(Guid accountId)
+        {
+            Answer output;
+
+            try
+            {
+                // get account's administrator
+                var adminId = Storage.Account.GetAdminId(accountId);
+                var admin = new User(Storage.User.GetInfo(adminId));
+
+                output = new Answer(admin);
+            }
+
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
+
+            return Content(stream.ToString());
+        }
     }
 }

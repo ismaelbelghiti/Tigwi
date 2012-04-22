@@ -9,7 +9,9 @@ namespace Tigwi_API.Models
     [XmlRootAttribute("Write")]
     public class MsgToWrite
     {
-        public string Account { get; set; }
+        //TODO: find how to make some fields optional
+        public string AccountName { get; set; }
+        public Guid AccountId { get; set; }
         public MsgToPost Message { get; set; }
     }
 
@@ -18,6 +20,16 @@ namespace Tigwi_API.Models
     public class MsgToPost
     {
         public string Content { get; set; }
+    }
+
+    [Serializable]
+    [XmlRootAttribute("Delete")]
+    public class MsgToDelete
+    {
+        //TODO: find how to make some fields optional
+        public string AccountName { get; set; }
+        public Guid AccountId { get; set; }
+        public Guid MessageId { get; set; }
     }
 
     [Serializable]
@@ -42,4 +54,22 @@ namespace Tigwi_API.Models
         public ListInfo ListInfo { get; set; }
     }
 
+    [Serializable]
+    public class ChangeDescription
+    {
+        //TODO: find how make optional some fields fot the request
+        public string AccountName { get; set; }
+        public Guid AccountId { get; set; }
+        public string Description { get; set; }
+    }
+
+    [Serializable]
+    public class AccountUser
+    {
+        //TODO: find how make optional some fields fot the request
+        public string AccountName { get; set; }
+        public Guid AccountId { get; set; }
+        public string UserLogin { get; set; }
+        public Guid UserId { get; set; }
+    }
 }

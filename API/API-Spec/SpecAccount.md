@@ -505,9 +505,9 @@ You need to be authenticated and authorize to use this account to get its id.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/main/accountName  
+http://api.tigwi.com/infoaccount/maininfo/accountName  
 or  
-http://api.tigwi.com/infoaccount/main/accountId
+http://api.tigwi.com/infoaccount/maininfo/accountId
 ###Request
 _left empty_
 ###Response
@@ -591,9 +591,52 @@ Error Type:
 
 ###Informations
 * You **must** be authenticated as an authorized user of _accountName_ to access this information.
-* In **URL**, _accountName_ is the name of the account whose main informations you want to get.
-* In **URL**, _accountId_ is the name of the account whose main informations you want to get.
+* In **URL**, _accountName_ is the name of the account whose allowed users you want to get.
+* In **URL**, _accountId_ is the unique identifier of the account whose allowed users you want to get.
 
+##Get an account's administrator's informations.
+###Purpose
+Obtain a number _numberOfUsers_ of the account _accountName_ users.
+You need to be authenticated and authorize to use this account to get this information.
+###HTTP method
+*GET*
+###URL
+http://api.tigwi.com/infoaccount/administrator/accountName/numberOfUsers  
+or  
+http://api.tigwi.com/infoaccount/administrator/accountId/numberOfUsers
+###Request
+_left empty_
+###Response
+General structure of the response :
+
+    <Answer>
+        <!-- Error Type -->
+		<Content> 
+            <!-- See below -->
+        </Content> 
+    </Answer>    
+  
+Content:
+
+    <User>
+        <Login> ... </Login>
+        <Avatar> ... </Avatar>
+        <Email> ... </Emain>
+    </User>
+ 
+Error Type:
+*In case an error occurs:
+
+    <Error Code="codeOfError"/>
+
+*Otherwise:
+   
+    <Error/>
+
+###Informations
+* You **must** be authenticated as an authorized user of _accountName_ to access this information.
+* In **URL**, _accountName_ is the name of the account whose administrator's informations you want to get.
+* In **URL**, _accountId_ is the unique identifier of the account whose administrator's informations you want to get.
 
 #Modifying an _account_
 
@@ -629,6 +672,37 @@ If no error occurs
 ###Informations
 * You **must** be authenticated as _nameofUser_ and authorized to use _nameOfAccount_ to post a message.
 * In **Request**, the size of your message is limited to 140 characters, but this limit is tested by the server. It raises an error if the message is too long.
+
+##Remove a message
+###Purpose
+For someone to remove a previously posted message on an authorized account. Authentication required.
+###HTTP method
+*POST*
+###URL
+http://api.tigwi.com/modifyaccount/delete
+###Request
+
+    <Delete>
+        <AccountName> accountName </AccountName>
+        // or you can use
+        <AccountId> accountId </AccountId>
+
+        <MessageId> messageId </MessageId>
+    </Delete>
+
+###Response
+In case an error occurs
+
+    <Error Code="codeOfError"/>
+
+
+If no error occurs
+
+    <Error/>
+
+###Informations
+* You **must** be authenticated as an authorized user of _accountName_ to remove a message.
+* In **Request**, if you indicate both _accountName_ and _accountId_, only the Id will be used (in particular when they don't refer to the same account).
 
 ##Create a list
 ###Purpose
@@ -698,3 +772,109 @@ If no error occurs
 ###Informations
 * You **must** be authenticated and authorized to use the account _nameOfSubscriber_ to use this method.
 * In **Request**, _nameOfSubscriber_ is the name of the account who wants to follow the list _idOfSubscription_.
+
+##Change an account's description
+###Purpose
+If you're authenticated as the administrator of the account _accountName_, you can change its description.
+###HTTP method
+*POST*
+###URL
+http://api.tigwi.com/modifyaccount/changedescription/
+###Request
+    
+    <ChangeDescription>
+        <AccountName> accountName </AccountName>
+        <Descritpion> <!-- New description --> </Description>
+    </ChangeDescription>
+
+or
+
+    <ChanegDescription>
+         <AccountId> accountId </AccountId>
+         <Description> <!-- New description --> </Description>
+    </ChangeDescription>
+
+###Response
+In case an error occurs
+
+    <Error Code="codeOfError"/>
+
+If no error occurs
+
+    <Error/>
+
+
+###Informations
+* You **must** be authenticated as the administrator of the account _accountName_ to use this method.
+* In **Request**, _accountName_ is the name of the account whose description you want to change.
+
+
+##Authorize an user to use an account
+###Purpose
+If you're authenticated as the administrator of the account _accountName_, you can add user _userLogin_ to authorized user list.
+###HTTP method
+*POST*
+###URL
+http://api.tigwi.com/modifyaccount/adduser/
+###Request
+    
+    <AccountUser>
+        <AccountName> accountName </AccountName>  
+        // or you can use 
+        <AccountId> accountId </AccountId>
+        
+        <UserLogin> userLogin </UserLogin>
+        // or you can use 
+        <UserId> userId </UserId>
+    </AccountUser>
+
+
+###Response
+In case an error occurs
+
+    <Error Code="codeOfError"/>
+
+If no error occurs
+
+    <Error/>
+
+
+###Informations
+* You **must** be authenticated as the administrator of the account _accountName_ to use this method.
+* In **Request**, _accountName_ is the name of the account where you want to add an user.
+* In **Request** if you use, either for the account or the user, the field "Id", it will have maximal priority. That is to say if you use both `<AccountName>` and `<AccountId>` with informations that do not correspond, it's the Id that will be used by the method.
+
+##Forbid an user to use an account
+###Purpose
+If you're authenticated as the administrator of the account _accountName_, you can remove user _userLogin_ from authorized users list.
+###HTTP method
+*POST*
+###URL
+http://api.tigwi.com/modifyaccount/removeuser/
+###Request
+    
+    <AccountUser>
+        <AccountName> accountName </AccountName>  
+        // or you can use 
+        <AccountId> accountId </AccountId>
+        
+        <UserLogin> userLogin </UserLogin>
+        // or you can use 
+        <UserId> userId </UserId>
+    </AccountUser>
+
+
+###Response
+In case an error occurs
+
+    <Error Code="codeOfError"/>
+
+If no error occurs
+
+    <Error/>
+
+
+###Informations
+* You **must** be authenticated as the administrator of the account _accountName_ to use this method.
+* In **Request**, _accountName_ is the name of the account where you want to add an user.
+* In **Request** if you use, either for the account or the user, the field "Id", it will have maximal priority. That is to say if you use both `<AccountName>` and `<AccountId>` with informations that do not correspond, it's the Id that will be used by the method.
