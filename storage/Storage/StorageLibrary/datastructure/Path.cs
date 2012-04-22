@@ -25,8 +25,8 @@ namespace StorageLibrary
         public const string L_INFO = "info/";
         public const string L_PERSO = "personnallist/";
         public const string L_OWNER = "owner/";
-        public const string L_OWNEDLISTS_PUBLIC = "ownedlists/public";
-        public const string L_OWNEDLISTS_PRIVATE = "ownedlists/private";
+        public const string L_OWNEDLISTS_PUBLIC = "ownedlists/public/";
+        public const string L_OWNEDLISTS_PRIVATE = "ownedlists/private/";
         public const string L_FOLLOWEDLISTS = "followedlists/";
         public const string L_FOLLOWEDLISTS_DATA = "/data";
         public const string L_FOLLOWEDLISTS_LOCK = "/lock";

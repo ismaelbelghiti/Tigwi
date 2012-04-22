@@ -96,22 +96,39 @@ namespace StorageCommon
             }
         }
 
+        // we can't use the Etag * with IfMatch 
+        // beacause it only works with IfNoneMatch
+        // We have to use an Etag retry policy --> TODO : find something better
         public bool SetIfExists(T obj)
         {
             BlobRequestOptions reqOpt = new BlobRequestOptions();
-            reqOpt.AccessCondition = AccessCondition.IfMatch("*");
             try
             {
-                BlobStream stream = blob.OpenWrite(reqOpt);
-                formatter.Serialize(stream, obj);
-                stream.Close();
-                return true;
+                while (true)
+                {
+                    blob.FetchAttributes();
+                    string etag = blob.Attributes.Properties.ETag;
+                    reqOpt.AccessCondition = AccessCondition.IfMatch(etag);
+                    try
+                    {
+                        BlobStream stream = blob.OpenWrite(reqOpt);
+                        formatter.Serialize(stream, obj);
+                        stream.Close();
+                        return true;
+                    }
+                    catch (StorageClientException e)
+                    {
+                        if (e.ErrorCode != StorageErrorCode.ConditionFailed)
+                            throw;
+                    }
+                }
             }
             catch (StorageClientException e)
             {
-                if (e.ErrorCode != StorageErrorCode.ConditionFailed && e.ErrorCode != StorageErrorCode.BlobAlreadyExists)
+                if (e.ErrorCode == StorageErrorCode.ResourceNotFound)
+                    return false;
+                else
                     throw;
-                return false;
             }
         }
 

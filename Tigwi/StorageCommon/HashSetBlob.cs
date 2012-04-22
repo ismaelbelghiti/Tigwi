@@ -53,6 +53,7 @@ namespace StorageCommon
             {
                 try
                 {
+                    blob.FetchAttributes();
                     eTag = blob.Attributes.Properties.ETag;
                     stream = blob.OpenRead();
                     set = (HashSet<T>)formatter.Deserialize(stream);
@@ -95,6 +96,7 @@ namespace StorageCommon
             {
                 try
                 {
+                    blob.FetchAttributes();
                     eTag = blob.Attributes.Properties.ETag;
                     stream = blob.OpenRead();
                     set = (HashSet<T>)formatter.Deserialize(stream);
