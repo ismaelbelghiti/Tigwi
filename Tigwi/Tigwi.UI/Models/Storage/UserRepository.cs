@@ -5,20 +5,12 @@ namespace Tigwi.UI.Models.Storage
 
     using StorageLibrary;
 
-    public class UserRepository : IUserRepository
+    public class UserRepository : StorageEntityRepository<StorageUserModel>, IUserRepository
     {
         public UserRepository(IStorage storage, IStorageContext storageContext)
+            : base(storage, storageContext)
         {
-            this.Storage = storage;
-            this.StorageContext = storageContext;
-            this.Users = new Dictionary<Guid, StorageUserModel>();
         }
-
-        protected IStorage Storage { get; private set; }
-
-        protected IStorageContext StorageContext { get; private set; }
-
-        protected Dictionary<Guid, StorageUserModel> Users { get; set; } 
 
         #region Public Methods and Operators
 
@@ -31,28 +23,26 @@ namespace Tigwi.UI.Models.Storage
             }
             catch (UserAlreadyExists userAlreadyExists)
             {
-                // throw new DuplicateUserException(login, userAlreadyExists);
-                throw;
+                throw new DuplicateUserException(login, userAlreadyExists);
             }
         }
 
         public void Delete(StorageUserModel user)
         {
             this.Storage.User.Delete(user.Id);
-            this.Users.Remove(user.Id);
+            this.EntitiesMap.Remove(user.Id);
         }
 
         public StorageUserModel Find(Guid user)
         {
             StorageUserModel userModel;
 
-            if (this.Users.TryGetValue(user, out userModel))
+            if (!this.EntitiesMap.TryGetValue(user, out userModel))
             {
-                return userModel;
+                userModel = new StorageUserModel(this.Storage, this.StorageContext, user);
+                this.EntitiesMap.Add(user, userModel);
             }
 
-            userModel = new StorageUserModel(this.Storage, this.StorageContext, user);
-            this.Users.Add(user, userModel);
             return userModel;
         }
 
@@ -65,8 +55,7 @@ namespace Tigwi.UI.Models.Storage
             }
             catch (UserNotFound userNotFound)
             {
-                // throw new UserNotFoundException(login, userNotFound);
-                throw;
+                throw new UserNotFoundException(login, userNotFound);
             }
         }
 

@@ -3,8 +3,10 @@
     #region
 
     using System;
+    using System.Web;
     using System.Web.Mvc;
     using System.Web.Security;
+    using System.Web.SessionState;
 
     using StorageLibrary;
 
@@ -28,7 +30,8 @@
 
         public HomeController()
         {
-            this.storage = new StorageContext(new Storage("dev'storeaccount1", "Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw=="));
+            // this.storage = new StorageContext(new Storage("devstoreaccount1", "Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw=="));
+            this.storage = new StorageContext(new StorageTmp());
         }
 
         public HomeController(IStorageContext storageContext)
@@ -54,8 +57,13 @@
                     throw new NotImplementedException();
                 }
 
-                // Store the current account in the session
-                this.Session["CurrentAccount"] = value.Id;
+                // Authenticate
+                var ticket = new FormsAuthenticationTicket(
+                    1, this.CurrentUser.Login, DateTime.Now, DateTime.MaxValue, false, this.CurrentUser.Id + "/" + value.Id);
+                var encrypted = FormsAuthentication.Encrypt(ticket);
+                var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encrypted);
+                this.Response.Cookies.Add(cookie);
+
                 this.currentAccount = value;
             }
         }
@@ -69,10 +77,7 @@
 
             set
             {
-                this.Session["CurrentUser"] = value.Id;
                 this.currentUser = value;
-
-                // TODO: really ?
                 this.CurrentAccount = this.Storage.Accounts.Find(value.Login);
             }
         }

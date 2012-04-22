@@ -8,9 +8,9 @@ namespace Tigwi.UI.Models.Storage
 
         IAccountRepository Accounts { get; }
 
-        IListSet Lists { get; }
+        IListRepository Lists { get; }
 
-        IPostSet Posts { get; }
+        IPostRepository Posts { get; }
 
         IUserRepository Users { get; }
 
@@ -25,9 +25,9 @@ namespace Tigwi.UI.Models.Storage
 
         private IAccountRepository accounts;
 
-        private IListSet lists;
+        private IListRepository lists;
 
-        private IPostSet posts;
+        private IPostRepository posts;
 
         private IUserRepository users;
 
@@ -52,19 +52,19 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public IListSet Lists
+        public IListRepository Lists
         {
             get
             {
-                return this.lists ?? (this.lists = new ListSet(this.StorageObj));
+                return this.lists ?? (this.lists = new ListRepository(this.StorageObj, this));
             }
         }
 
-        public IPostSet Posts
+        public IPostRepository Posts
         {
             get
             {
-                return this.posts ?? (this.posts = new PostSet(this.StorageObj));
+                return this.posts ?? (this.posts = new PostRepository(this.StorageObj, this));
             }
         }
 

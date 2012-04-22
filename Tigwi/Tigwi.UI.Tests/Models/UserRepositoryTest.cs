@@ -16,16 +16,15 @@ namespace Tigwi.UI.Tests.Models
     [TestFixture]
     public class UserRepositoryTest
     {
-        protected IStorage Storage { get; set; }
+        protected IStorageContext Storage { get; set; }
 
         #region SetUp / TearDown
 
         [SetUp]
         public void Init()
         {
-            var istorage = new StorageTmp();
-            this.Storage = istorage;
-            this.Repository = (new StorageContext(istorage)).Users;
+            this.Storage = new StorageContext(new StorageTmp());
+            this.Repository = this.Storage.Users;
         }
 
         protected IUserRepository Repository { get; set; }
@@ -52,6 +51,16 @@ namespace Tigwi.UI.Tests.Models
         }
 
         [Test]
+        public void TestCreateCreatesAccount()
+        {
+            var storage = this.Storage;
+            var user = storage.Users.Create("Elarnon", "cbasile06@gmail.com");
+
+            Assert.DoesNotThrow(() => storage.Accounts.Find("Elarnon"));
+            Assert.That(storage.Accounts.Find("Elarnon").Admin, Is.EqualTo(user));
+        }
+
+        [Test]
         public void TestFindUnicity()
         {
             var repository = this.Repository;
@@ -60,6 +69,16 @@ namespace Tigwi.UI.Tests.Models
 
             Assert.That(repository.Find(account.Id), Is.EqualTo(account));
             Assert.That(repository.Find(account.Login), Is.EqualTo(account));
+        }
+
+        [Test]
+        public void TestNameUnicity()
+        {
+            var storage = this.Storage;
+            var user = storage.Users.Create("Elarnon", "cbasile06@gmail.com");
+
+            Assert.Throws<DuplicateUserException>(() => storage.Users.Create("Elarnon", "mail"));
+            Assert.DoesNotThrow(() => storage.Users.Create("Login", "cbasile06@gmail.com"));
         }
 
         [Test]

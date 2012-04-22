@@ -4,47 +4,52 @@ namespace Tigwi.UI.Models.Storage
 
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using StorageLibrary;
 
     #endregion
 
-    public class StorageAccountModel
+    public class StorageAccountModel : StorageEntityModel
     {
         #region Constants and Fields
 
-        private ListCollectionAdapter allFollowedLists;
+        private readonly ListCollectionAdapter allFollowedLists;
 
-        private ListCollectionAdapter allOwnedLists;
+        private readonly ListCollectionAdapter allOwnedLists;
 
-        private ListCollectionAdapter memberLists;
+        private readonly ListCollectionAdapter memberLists;
 
-        private ListCollectionAdapter publicFollowedLists;
+        private readonly ListCollectionAdapter publicFollowedLists;
 
-        private ListCollectionAdapter publicOwnedLists;
+        private readonly ListCollectionAdapter publicOwnedLists;
 
-        private UserCollectionAdapter users;
+        private readonly UserCollectionAdapter users;
 
-        private string name;
+        private StorageUserModel admin;
 
         private string description;
 
-        private StorageUserModel admin;
+        private string name;
 
         #endregion
 
         #region Constructors and Destructors
 
         public StorageAccountModel(IStorage storage, IStorageContext storageContext, Guid accountId)
+            : base(storage, storageContext, accountId)
         {
-            this.Storage = storage;
-            this.StorageContext = storageContext;
-            this.Id = accountId;
-        }
+            this.users = new UserCollectionAdapter(this.Storage, this.StorageContext, this);
 
-        public StorageAccountModel(IStorage storage, IStorageContext storageContext, string name)
-            : this(storage, storageContext, storage.Account.GetId(name))
-        {
+            // Bunch of list adapters
+            this.allFollowedLists =
+                this.MakeListCollection(() => this.Storage.List.GetAccountFollowedLists(this.Id, true));
+            this.allOwnedLists = this.MakeListCollection(() => this.Storage.List.GetAccountOwnedLists(this.Id, true));
+            this.memberLists = this.MakeListCollection(() => this.Storage.List.GetFollowingLists(this.Id));
+            this.publicFollowedLists =
+                this.MakeListCollection(() => this.Storage.List.GetAccountFollowedLists(this.Id, false));
+            this.publicOwnedLists = this.MakeListCollection(
+                () => this.Storage.List.GetAccountOwnedLists(this.Id, false));
         }
 
         #endregion
@@ -55,7 +60,9 @@ namespace Tigwi.UI.Models.Storage
         {
             get
             {
-                return this.admin ?? (this.admin = this.StorageContext.Users.Find(this.Storage.Account.GetAdminId(this.Id)));
+                // Admin's initialization involves storage calls, so let's be lazy
+                return this.admin
+                       ?? (this.admin = this.StorageContext.Users.Find(this.Storage.Account.GetAdminId(this.Id)));
             }
 
             set
@@ -65,27 +72,35 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public ICollection<ListModel> AllFollowedLists
+        public ICollection<StorageListModel> AllFollowedLists
         {
             get
             {
-                return this.allFollowedLists
-                       ??
-                       (this.allFollowedLists =
-                        new ListCollectionAdapter(
-                            this.Storage, this.Id, () => this.Storage.List.GetAccountFollowedLists(this.Id, true)));
+                return this.allFollowedLists;
             }
         }
 
-        public ICollection<ListModel> AllOwnedLists
+        internal ListCollectionAdapter InternalAllFollowedLists
         {
             get
             {
-                return this.allOwnedLists
-                       ??
-                       (this.allOwnedLists =
-                        new ListCollectionAdapter(
-                            this.Storage, this.Id, () => this.Storage.List.GetAccountOwnedLists(this.Id, true)));
+                return this.allFollowedLists;
+            }
+        }
+
+        public ICollection<StorageListModel> AllOwnedLists
+        {
+            get
+            {
+                return this.allOwnedLists;
+            }
+        }
+
+        internal ListCollectionAdapter InternalAllOwnedLists
+        {
+            get
+            {
+                return this.allOwnedLists;
             }
         }
 
@@ -100,21 +115,23 @@ namespace Tigwi.UI.Models.Storage
             set
             {
                 this.description = value;
-                this.InfosUpdated = true;
+                this.DescriptionUpdated = true;
             }
         }
 
-        public Guid Id { get; private set; }
-
-        public ICollection<ListModel> MemberLists
+        public ICollection<StorageListModel> MemberOfLists
         {
             get
             {
-                return this.memberLists
-                       ??
-                       (this.memberLists =
-                        new ListCollectionAdapter(
-                            this.Storage, this.Id, () => this.Storage.List.GetFollowingLists(this.Id)));
+                return this.memberLists;
+            }
+        }
+
+        internal ListCollectionAdapter InternalMemberOfLists
+        {
+            get
+            {
+                return this.memberLists;
             }
         }
 
@@ -127,7 +144,7 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public ListModel PersonalList
+        public StorageListModel PersonalList
         {
             get
             {
@@ -135,27 +152,43 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public ICollection<ListModel> PublicFollowedLists
+        internal ListCollectionAdapter InternalPersonalList
         {
             get
             {
-                return this.publicFollowedLists
-                       ??
-                       (this.publicFollowedLists =
-                        new ListCollectionAdapter(
-                            this.Storage, this.Id, () => this.Storage.List.GetAccountFollowedLists(this.Id, false)));
+                throw new NotImplementedException();
             }
         }
 
-        public ICollection<ListModel> PublicOwnedLists
+        public ICollection<StorageListModel> PublicFollowedLists
         {
             get
             {
-                return this.publicOwnedLists
-                       ??
-                       (this.publicOwnedLists =
-                        new ListCollectionAdapter(
-                            this.Storage, this.Id, () => this.Storage.List.GetAccountOwnedLists(this.Id, false)));
+                return this.publicFollowedLists;
+            }
+        }
+
+        internal ListCollectionAdapter InternalPublicFollowedLists
+        {
+            get
+            {
+                return this.publicFollowedLists;
+            }
+        }
+
+        public ICollection<StorageListModel> PublicOwnedLists
+        {
+            get
+            {
+                return this.publicOwnedLists;
+            }
+        }
+
+        internal ListCollectionAdapter InternalPublicOwnedLists
+        {
+            get
+            {
+                return this.publicOwnedLists;
             }
         }
 
@@ -163,7 +196,15 @@ namespace Tigwi.UI.Models.Storage
         {
             get
             {
-                return this.users ?? (this.users = new UserCollectionAdapter(this.Storage, this.StorageContext, this.Id));
+                return this.users;
+            }
+        }
+
+        internal UserCollectionAdapter InternalUsers
+        {
+            get
+            {
+                return this.users;
             }
         }
 
@@ -171,21 +212,43 @@ namespace Tigwi.UI.Models.Storage
 
         #region Properties
 
+        protected override bool InfosUpdated
+        {
+            get
+            {
+                return this.DescriptionUpdated;
+            }
+
+            set
+            {
+                this.DescriptionUpdated = value;
+            }
+        }
+
         private bool AdminUpdated { get; set; }
 
-        private bool InfosFetched { get; set; }
-
-        private bool InfosUpdated { get; set; }
-
-        private IStorage Storage { get; set; }
-
-        private IStorageContext StorageContext { get; set; }
+        private bool DescriptionUpdated { get; set; }
 
         #endregion
 
         #region Public Methods and Operators
 
-        public void Save()
+        public override void Repopulate()
+        {
+            // Fetch infos
+            IAccountInfo accountInfo = this.Storage.Account.GetInfo(this.Id);
+
+            this.name = accountInfo.Name;
+
+            if (!this.DescriptionUpdated)
+            {
+                this.description = accountInfo.Description;
+            }
+
+            this.Populated = true;
+        }
+
+        public override void Save()
         {
             if (this.InfosUpdated)
             {
@@ -205,101 +268,25 @@ namespace Tigwi.UI.Models.Storage
 
         #region Methods
 
-        public void Populate()
+        private ListCollectionAdapter MakeListCollection(Func<ICollection<Guid>> func)
         {
-            if (this.InfosFetched)
-            {
-                return;
-            }
-
-            this.Repopulate();
-        }
-
-        public void Repopulate()
-        {
-            // Fetch infos
-            IAccountInfo accountInfo = this.Storage.Account.GetInfo(this.Id);
-
-            // TODO: shit may happen
-            this.name = accountInfo.Name;
-            this.description = accountInfo.Description;
-
-            this.InfosFetched = true;
+            return new ListCollectionAdapter(this.Storage, this.StorageContext, this, func);
         }
 
         #endregion
 
-        private abstract class AccountMemberCollection<T> : CollectionAdapter<T>
+        internal class ListCollectionAdapter : StorageEntityCollection<StorageAccountModel, StorageListModel>
         {
-            #region Constants and Fields
-
-            private readonly IStorage storage;
-
-            private readonly IStorageContext storageContext;
-
-            #endregion
-
-            #region Constructors and Destructors
-
-            protected AccountMemberCollection(IStorage storage, IStorageContext storageContext, Guid accountId)
-            {
-                this.storage = storage;
-                this.storageContext = storageContext;
-                this.AccountId = accountId;
-            }
-
-            #endregion
-
-            #region Properties
-
-            protected Guid AccountId { get; private set; }
-
-            protected IStorage Storage
-            {
-                get
-                {
-                    return this.storage;
-                }
-            }
-
-            protected IStorageContext StorageContext
-            {
-                get
-                {
-                    return this.storageContext;
-                }
-            }
-
-            #endregion
-        }
-
-        private class ListCollectionAdapter : AccountMemberCollection<ListModel>
-        {
-            #region Constants and Fields
-
-            private readonly Func<ICollection<Guid>> idCollectionFetcher;
-
-            #endregion
-
             #region Constructors and Destructors
 
             public ListCollectionAdapter(
-                IStorage storage, Guid accountId, Func<ICollection<Guid>> idCollectionFetcher)
-                : base(storage, null, accountId)
+                IStorage storage, 
+                IStorageContext storageContext, 
+                StorageAccountModel account, 
+                Func<ICollection<Guid>> idCollectionFetcher)
+                : base(storage, storageContext, account, idCollectionFetcher)
             {
-                this.idCollectionFetcher = idCollectionFetcher;
-            }
-
-            #endregion
-
-            #region Properties
-
-            private Func<ICollection<Guid>> IdCollectionFetcher
-            {
-                get
-                {
-                    return this.idCollectionFetcher;
-                }
+                this.GetModel = storageContext.Lists.Find;
             }
 
             #endregion
@@ -308,44 +295,47 @@ namespace Tigwi.UI.Models.Storage
 
             public override void Save()
             {
-                foreach (var item in this.CollectionAdded)
+                foreach (var list in this.CollectionAdded.Where(item => item.Value).Select(item => item.Key))
                 {
-                    this.Storage.List.Add(item.Id, this.AccountId);
+                    this.Storage.List.Add(list.Id, this.Parent.Id);
                 }
 
-                foreach (var item in this.CollectionRemoved)
+                foreach (var list in this.CollectionRemoved.Where(item => item.Value).Select(item => item.Key))
                 {
                     // TODO: check we are not removing the personal list ?
-                    this.Storage.List.Remove(item.Id, this.AccountId);
+                    this.Storage.List.Remove(list.Id, this.Parent.Id);
                 }
+
+                foreach (var list in this.CachedCollection)
+                {
+                    list.Save();
+                }
+
+                this.CollectionAdded.Clear();
+                this.CollectionRemoved.Clear();
             }
 
-            #endregion
-
-            #region Methods
-
-            protected override ICollection<Guid> FetchIdCollection()
+            protected override void ReverseAdd(StorageListModel item)
             {
-                return this.IdCollectionFetcher();
+                // item.CachedMembers.CacheAdd(this.Parent);
             }
 
-            protected override ListModel GetModel(Guid id)
+            protected override void ReverseRemove(StorageListModel item)
             {
-                throw new NotImplementedException();
-
-                // return new ListModelAdapter(this.storage, () => id);
+                // item.CachedMembers.CacheRemove(this.Parent);
             }
 
             #endregion
         }
 
-        private class UserCollectionAdapter : AccountMemberCollection<StorageUserModel>
+        internal class UserCollectionAdapter : StorageEntityCollection<StorageAccountModel, StorageUserModel>
         {
             #region Constructors and Destructors
 
-            public UserCollectionAdapter(IStorage storage, IStorageContext storageContext, Guid accountId)
-                : base(storage, storageContext, accountId)
+            public UserCollectionAdapter(IStorage storage, IStorageContext storageContext, StorageAccountModel account)
+                : base(storage, storageContext, account, () => storage.Account.GetUsers(account.Id))
             {
+                this.GetModel = storageContext.Users.Find;
             }
 
             #endregion
@@ -354,30 +344,36 @@ namespace Tigwi.UI.Models.Storage
 
             public override void Save()
             {
-                foreach (var item in this.CollectionAdded)
+                foreach (var user in this.CollectionAdded.Where(item => item.Value).Select(item => item.Key))
                 {
-                    this.Storage.Account.Add(this.AccountId, item.Id);
+                    user.Save();
+                    this.Storage.Account.Add(this.Parent.Id, user.Id);
                 }
 
-                foreach (var item in this.CollectionRemoved)
+                foreach (var user in this.CollectionRemoved.Where(item => item.Value).Select(item => item.Key))
                 {
                     // TODO: check we are not removing the admin (?)
-                    this.Storage.Account.Remove(this.AccountId, item.Id);
+                    user.Save();
+                    this.Storage.Account.Remove(this.Parent.Id, user.Id);
                 }
+
+                foreach (var user in this.CachedCollection)
+                {
+                    user.Save();
+                }
+
+                this.CollectionAdded.Clear();
+                this.CollectionRemoved.Clear();
             }
 
-            #endregion
-
-            #region Methods
-
-            protected override ICollection<Guid> FetchIdCollection()
+            protected override void ReverseAdd(StorageUserModel item)
             {
-                return this.Storage.Account.GetUsers(this.AccountId);
+                item.Accounts.Add(this.Parent);
             }
 
-            protected override StorageUserModel GetModel(Guid id)
+            protected override void ReverseRemove(StorageUserModel item)
             {
-                return this.StorageContext.Users.Find(id);
+                item.Accounts.Remove(this.Parent);
             }
 
             #endregion

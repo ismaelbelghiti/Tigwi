@@ -185,6 +185,11 @@
                     MemberOfLists = new HashSet<Guid>()
                 };
 
+            if (this.idFromName.ContainsKey(name))
+            {
+                throw new AccountAlreadyExists();
+            }
+
             this.infoFromId.Add(id, accountInfo);
             this.idFromName.Add(name, id);
             adminInfos.Accounts.Add(id);

@@ -34,12 +34,13 @@ namespace Tigwi.UI.Controllers
                 // TODO: redirect to login/sign up page
                 throw new Exception("Must be connected.");
             }
-
+            throw new Exception("fuck");
+            /*
             // Actually tag the post
             var post = this.Storage.Posts.Find(postId);
             post.TagBy(currentAccount);
 
-            return this.View(post);
+            return this.View(post);*/
         }
 
         /// <summary>

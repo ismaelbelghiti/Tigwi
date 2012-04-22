@@ -25,10 +25,7 @@ namespace Tigwi.UI.Tests.Models
         [SetUp]
         public void Init()
         {
-            var istorage = new StorageTmp();
-            this.Storage = new StorageContext(istorage);
-
-            this.UserModel = this.Storage.Users.Create("Elarnon", "cbasile06@gmail.com");
+            this.Storage = new StorageContext(new StorageTmp());
         }
 
         [TearDown]
@@ -42,46 +39,46 @@ namespace Tigwi.UI.Tests.Models
         [Test]
         public void TestGetProperties()
         {
-            var storageUserModel = this.UserModel;
+            var storage = this.Storage;
 
-            // Assert.That(storageUserModel.Id, Is.EqualTo(this.Id));
-            Assert.That(storageUserModel.Login, Is.EqualTo("Elarnon"));
-            Assert.That(storageUserModel.Email, Is.EqualTo("cbasile06@gmail.com"));
-            Assert.That(storageUserModel.Avatar, Is.Null);
+            var user = storage.Users.Create("Elarnon", "cbasile06@gmail.com");
+
+            Assert.That(user.Login, Is.EqualTo("Elarnon"));
+            Assert.That(user.Email, Is.EqualTo("cbasile06@gmail.com"));
+            Assert.That(user.Avatar, Is.Null);
         }
 
         [Test]
         public void TestSetEmail()
         {
-            var storageUserModel = this.UserModel;
-            storageUserModel.Email = "basile.clement@ens.fr";
+            var storage = this.Storage;
+            var user = storage.Users.Create("Elarnon", "cbasile06@gmail.com");
 
-            Assert.That(storageUserModel.Email, Is.EqualTo("basile.clement@ens.fr"));
+            user.Email = "basile.clement@ens.fr";
+            Assert.That(user.Email, Is.EqualTo("basile.clement@ens.fr"));
+
+            user.Save();
+
+            user.Repopulate();
+            Assert.That(user.Email, Is.EqualTo("basile.clement@ens.fr"));
         }
 
         [Test]
-        public void TestSaveEmail()
+        public void TestAccountsLink()
         {
-            var storageUserModel = this.UserModel;
-            storageUserModel.Email = "basile.clement@ens.fr";
+            var storage = this.Storage;
+            var user = storage.Users.Create("Elarnon", "cbasile06@gmail.com");
+            // user.CreateAcccount ?
+            var account = storage.Accounts.Create(user, "ElarnonAccount", "Elarnon's account");
 
-            storageUserModel.Save();
-
-            storageUserModel.Repopulate();
-            Assert.That(storageUserModel.Email, Is.EqualTo("basile.clement@ens.fr"));
-
-            var otherModel = this.Storage.Users.Find(storageUserModel.Id);
-            Assert.That(otherModel.Email, Is.EqualTo("basile.clement@ens.fr"));
-        }
-
-        [Test]
-        public void TestAddAccounts()
-        {
-            var user = this.UserModel;
-
-            var account = this.Storage.Accounts.Create(user, "Koukou", "A stupid account.");
-
+            Assert.That(account.Admin, Is.EqualTo(user));
             Assert.That(user.Accounts.Contains(account), Is.True);
+            Assert.That(account.Users.Contains(user), Is.True);
+
+            user.Accounts.Remove(account);
+
+            Assert.That(user.Accounts.Contains(account), Is.False);
+            Assert.That(account.Users.Contains(user), Is.False);
         }
 
         #endregion

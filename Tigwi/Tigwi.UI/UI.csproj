@@ -107,18 +107,27 @@
     <Compile Include="Models\AccountModel.cs" />
     <Compile Include="Models\ListModel.cs" />
     <Compile Include="Models\PostModel.cs" />
+    <Compile Include="Models\CustomIdentity.cs" />
     <Compile Include="Models\Storage\AccountRepository.cs" />
-    <Compile Include="Models\Storage\CollectionAdapter.cs" />
+    <Compile Include="Models\Storage\IListRepository.cs" />
+    <Compile Include="Models\Storage\IPostRepository.cs" />
+    <Compile Include="Models\Storage\StorageEntityCollection.cs" />
     <Compile Include="Models\Storage\IAccountRepository.cs" />
     <Compile Include="Models\Storage\IUserRepository.cs" />
     <Compile Include="Models\Storage\StorageAccountModel.cs" />
-    <Compile Include="Models\Storage\ListSet.cs" />
-    <Compile Include="Models\Storage\PostSet.cs" />
+    <Compile Include="Models\Storage\ListRepository.cs" />
+    <Compile Include="Models\Storage\PostRepository.cs" />
     <Compile Include="Models\Storage\StorageContext.cs" />
+    <Compile Include="Models\Storage\StorageEntityModel.cs" />
+    <Compile Include="Models\Storage\StorageEntityRepository.cs" />
+    <Compile Include="Models\Storage\StorageException.cs" />
+    <Compile Include="Models\Storage\StorageListModel.cs" />
+    <Compile Include="Models\Storage\StoragePostModel.cs" />
     <Compile Include="Models\Storage\StorageUserModel.cs" />
     <Compile Include="Models\Storage\UserRepository.cs" />
     <Compile Include="Models\UserLogOnViewModel.cs" />
     <Compile Include="Models\UserModel.cs" />
+    <Compile Include="Models\User\RegisterViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -217,6 +226,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\User\LogOn.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\Register.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

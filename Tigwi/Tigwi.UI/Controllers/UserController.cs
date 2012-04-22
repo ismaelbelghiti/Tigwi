@@ -8,10 +8,22 @@ namespace Tigwi.UI.Controllers
 {
     using System.Web.Security;
 
+    using StorageLibrary;
+
     using Tigwi.UI.Models;
+    using Tigwi.UI.Models.Storage;
+    using Tigwi.UI.Models.User;
 
     public class UserController : HomeController
     {
+        public UserController()
+            : base()
+        {}
+
+        public UserController(StorageContext storage)
+            : base(storage)
+        {}
+
         /// <summary>
         /// Show a page proposing the user to log in.
         /// </summary>
@@ -49,7 +61,7 @@ namespace Tigwi.UI.Controllers
         /// <returns></returns>
         public ActionResult Register()
         {
-            throw new NotImplementedException("UserController.Register");
+            return this.View();
         }
 
         /// <summary>
@@ -58,9 +70,30 @@ namespace Tigwi.UI.Controllers
         /// <param name="collection"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Register(FormCollection collection)
+        public ActionResult Register(RegisterViewModel registerViewModel)
         {
-            throw new NotImplementedException("UserController.Register[POST]");
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var newUser = this.Storage.Users.Create(registerViewModel.Login, registerViewModel.Email);
+                    this.CurrentUser = newUser;
+                    return this.RedirectToAction("Welcome");
+                }
+                catch (DuplicateUserException ex)
+                {
+                    // TODO: We need more granularity (login failed ? email failed ? propositions ?)
+                    ModelState.AddModelError("Login", "There is already a user with that login. Try again!");
+                }
+            }
+
+            // Somthing went wrong, display register page again
+            return this.View(registerViewModel);
+        }
+
+        public ActionResult Welcome()
+        {
+            throw new NotImplementedException("UserController.Welcome " + this.CurrentUser.Login);
         }
 
         /// <summary>

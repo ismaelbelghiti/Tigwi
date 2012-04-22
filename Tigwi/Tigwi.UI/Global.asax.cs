@@ -7,10 +7,16 @@ using System.Web.Routing;
 
 namespace Tigwi.UI
 {
+    using System.Security.Principal;
+    using System.Web.ClientServices;
+    using System.Web.Security;
+
+    using Tigwi.UI.Models;
+
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
 
-    public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : HttpApplication
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
@@ -20,6 +26,7 @@ namespace Tigwi.UI
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+
             // TODO: determine a routing scheme and put it in application
             /*
             routes.MapRoute("Log in", "_login", new { controller = "User", action = "LogOn" });
@@ -47,6 +54,21 @@ namespace Tigwi.UI
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+        }
+
+        protected void Application_AuthenticateRequest(object sender, EventArgs ev)
+        {
+            var cookie = this.Request.Cookies[FormsAuthentication.FormsCookieName];
+
+            if (cookie != null)
+            {
+                var ticket = FormsAuthentication.Decrypt(cookie.Value);
+                var userData = ticket.UserData;
+                var info = userData.Split('/');
+                var userId = Guid.Parse(info[0]);
+                var accountId = Guid.Parse(info[1]);
+                Context.User = new RolePrincipal(new CustomIdentity(null, null), cookie.Value);
+            }
         }
     }
 }

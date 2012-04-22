@@ -1,67 +1,21 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AccountSet.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The i account set.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
 namespace Tigwi.UI.Models.Storage
 {
+    #region
+
     using System;
-    using System.Collections.Generic;
 
     using StorageLibrary;
 
-    /// <summary>
-    /// The account set.
-    /// </summary>
-    public class AccountRepository : IAccountRepository
+    #endregion
+
+    public class AccountRepository : StorageEntityRepository<StorageAccountModel>, IAccountRepository
     {
-        #region Constants and Fields
-
-        /// <summary>
-        /// The storage obj.
-        /// </summary>
-        private readonly IStorage storageObj;
-
-        private readonly IStorageContext storageContext;
-
-        protected IDictionary<Guid, StorageAccountModel> Accounts { get; set; }
-
-        #endregion
 
         #region Constructors and Destructors
 
         public AccountRepository(IStorage storageObj, IStorageContext storageContext)
+            : base(storageObj, storageContext)
         {
-            this.storageObj = storageObj;
-            this.storageContext = storageContext;
-            this.Accounts = new Dictionary<Guid, StorageAccountModel>();
-        }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets StorageObj.
-        /// </summary>
-        protected IStorage StorageObj
-        {
-            get
-            {
-                return this.storageObj;
-            }
-        }
-
-        protected IStorageContext StorageContext
-        {
-            get
-            {
-                return this.storageContext;
-            }
         }
 
         #endregion
@@ -72,32 +26,32 @@ namespace Tigwi.UI.Models.Storage
         {
             try
             {
-                var id = this.StorageObj.Account.Create(user.Id, name, description);
+                Guid id = this.Storage.Account.Create(user.Id, name, description);
                 return this.Find(id);
             }
-            catch (UserNotFound)
+            catch (UserNotFound ex)
             {
-                throw;
+                throw new UserNotFoundException(user.Id, ex);
             }
-            catch (AccountAlreadyExists)
+            catch (AccountAlreadyExists ex)
             {
-                throw;
+                throw new DuplicateAccountException(name, ex);
             }
         }
 
         public void Delete(StorageAccountModel account)
         {
-            this.StorageObj.Account.Delete(account.Id);
-            this.Accounts.Remove(account.Id);
+            this.Storage.Account.Delete(account.Id);
+            this.EntitiesMap.Remove(account.Id);
         }
 
         public StorageAccountModel Find(Guid id)
         {
             StorageAccountModel account;
-            if (!this.Accounts.TryGetValue(id, out account))
+            if (!this.EntitiesMap.TryGetValue(id, out account))
             {
-                account = new StorageAccountModel(this.StorageObj, this.StorageContext, id);
-                this.Accounts.Add(id, account);
+                account = new StorageAccountModel(this.Storage, this.StorageContext, id);
+                this.EntitiesMap.Add(id, account);
             }
 
             return account;
@@ -105,8 +59,15 @@ namespace Tigwi.UI.Models.Storage
 
         public StorageAccountModel Find(string name)
         {
-            var id = this.StorageObj.Account.GetId(name);
-            return this.Find(id);
+            try
+            {
+                Guid id = this.Storage.Account.GetId(name);
+                return this.Find(id);
+            }
+            catch (AccountNotFound ex)
+            {
+                throw new AccountNotFoundException(name, ex);
+            }
         }
 
         #endregion
