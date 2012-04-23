@@ -41,7 +41,7 @@ Message format:
 	     <Content> content </Content>
      </Message>
 
-Error type:
+Error type:  
 *In case an error occurs:
 
 
@@ -54,7 +54,7 @@ Error type:
 
 ###Informations
 * In **URL**, _accountName_ is the name of the account whose messages you want to get.
-* In **URL**, _accountId is the unique identifier of the account whose messages you want to get.
+* In **URL**, _accountId_ is the unique identifier of the account whose messages you want to get.
 * In **URL**, _numberOfMessages_ is the number of messages you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of messages returned (different from _numberOfMessages_ if there are not enough messages to provide).
 
@@ -97,7 +97,7 @@ Account format:
          <Description> <!-- Description of the account --> </Description>
      </Account>
 
-Error Type:
+Error Type:  
 *In case an error occurs:
 
     <Error Code="codeOfError"/>
@@ -154,7 +154,7 @@ Account format:
          <Description> <!-- Description of the account --> </Description>
      </Account>
 
-Error Type:
+Error Type:  
 *In case an error occurs:
 
     <Error Code="codeOfError"/>
@@ -210,7 +210,7 @@ Account format:
          <Description> <!-- Description of the account --> </Description>
      </Account>
 
-Error Type:
+Error Type:  
 *In case an error occurs:
 
     <Error Code="codeOfError"/>
@@ -263,7 +263,7 @@ List format:
 	     <Name> nameOfList </Name>
      </List>
 
-Error Type:
+Error Type:  
 *In case an error occurs:
 
     <Error Code="codeOfError"/>
@@ -318,7 +318,7 @@ List format:
 	     <Name> nameOfList </Name>
      </List>
 
-Error Type:
+Error Type:  
 *In case an error occurs:
 
     <Error Code="codeOfError"/>
@@ -372,7 +372,7 @@ List format:
 	     <Name> nameOfList </Name>
      </List>
 
-Error Type:
+Error Type:  
 *In case an error occurs:
 
     <Error Code="codeOfError"/>
@@ -426,7 +426,7 @@ List format:
 	     <Name> nameOfList </Name>
      </List>
 
-Error Type:
+Error Type:  
 *In case an error occurs:
 
     <Error Code="codeOfError"/>
@@ -481,7 +481,7 @@ List format:
 	     <Name> nameOfList </Name>
      </List>
 
-Error Type:
+Error Type:  
 *In case an error occurs:
 
     <Error Code="codeOfError"/>
@@ -528,7 +528,7 @@ Content:
          <Description> DecriptionOfAccount </Description>
      </Account>
 
-Error Type:
+Error Type:  
 *In case an error occurs:
 
     <Error Code="codeOfError"/>
@@ -580,8 +580,8 @@ User:
         <Email> ... </Emain>
         <Id> ... </Id>
     </User>
- 
-Error Type:
+
+Error Type:  
 *In case an error occurs:
 
     <Error Code="codeOfError"/>
@@ -626,7 +626,7 @@ Content:
         <Id> ... </Id>
     </User>
  
-Error Type:
+Error Type:  
 *In case an error occurs:
 
     <Error Code="codeOfError"/>

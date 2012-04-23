@@ -94,9 +94,9 @@ Error Type:
     <Error/>
 
 ###Informations
-* In **URL**, _accountName_ is the name of the account whose subscribers you want to get.
-* In **URL**, _accountId_ is the unique identifier of the account whose subscribers you want to get.
-* In **URL**, _numberOfSubscribers_ is the number of subscribers you want to get. It is optional and default is set to 20.
-* In **Response**, _sizeOfList_ is the number of subscribers returned (different from _numberOfSubscribers_ if there are not enough subscribers to provide).
+* In **URL**, _userLogin_ is the login of the user whose authorized accounts you want to get.
+* In **URL**, _userId_ is the unique identifier of the user whose authorized accounts you want to get.
+* In **URL**, _numberOfAccounts_ is the number of accounts you want to get. It is optional and default is set to 20.
+* In **Response**, _sizeOfList_ is the number of accounts returned (different from _numberOfAccounts_ if there are not enough accounts to provide).
 
 #Modifying an _user_
