@@ -49,12 +49,12 @@ namespace StorageLibrary
         /// To be used to check a user password
         /// </summary>
         /// <exception cref="UserNotFound"></exception>
-        string GetPassword(Guid userID);
+        string GetPassword(Guid userId);
 
         /// <summary>
         /// Change a user password
         /// </summary>
         /// <exception cref="UserNotFound"></exception>
-        void SetPassword(Guid userID, string password);
+        void SetPassword(Guid userId, string password);
     }
 }

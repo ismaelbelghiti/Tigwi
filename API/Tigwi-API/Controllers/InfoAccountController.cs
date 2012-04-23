@@ -511,7 +511,7 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                // get the public lists owned by the given account
+                // get the informations of the given account
 
                 var accountId = Storage.Account.GetId(accountName);
                 var accountInfo = Storage.Account.GetInfo(accountId);
@@ -540,7 +540,7 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                // get the public lists owned by the given account
+                // get the informations of the given account
                 var accountInfo = Storage.Account.GetInfo(accountId);
                 var accountToReturn = new Account(accountId, accountInfo.Name, accountInfo.Description);
                 output = new Answer(accountToReturn);
@@ -639,7 +639,8 @@ namespace Tigwi_API.Controllers
 
                 // get account's administrator
                 var adminId = Storage.Account.GetAdminId(accountId);
-                var admin = new User(Storage.User.GetInfo(adminId));
+                var adminInfo = Storage.User.GetInfo(adminId);
+                var admin = new User(adminInfo, Storage.User.GetId(adminInfo.Login));
 
                 output = new Answer(admin);
             }
@@ -669,7 +670,8 @@ namespace Tigwi_API.Controllers
             {
                 // get account's administrator
                 var adminId = Storage.Account.GetAdminId(accountId);
-                var admin = new User(Storage.User.GetInfo(adminId));
+                var adminInfo = Storage.User.GetInfo(adminId);
+                var admin = new User(adminInfo, Storage.User.GetId(adminInfo.Login));
 
                 output = new Answer(admin);
             }

@@ -50,7 +50,7 @@ namespace Tigwi_API.Controllers
             for (var k = 0; k < size; k++)
             {
                 var userId = hashUsers.First();
-                var user = new User(storage.User.GetInfo(userId));
+                var user = new User(storage.User.GetInfo(userId), userId);
                 users.Add(user);
                 hashUsers.Remove(userId);
             }

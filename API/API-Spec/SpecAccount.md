@@ -578,6 +578,7 @@ User:
         <Login> ... </Login>
         <Avatar> ... </Avatar>
         <Email> ... </Emain>
+        <Id> ... </Id>
     </User>
  
 Error Type:
@@ -622,6 +623,7 @@ Content:
         <Login> ... </Login>
         <Avatar> ... </Avatar>
         <Email> ... </Emain>
+        <Id> ... </Id>
     </User>
  
 Error Type:

@@ -99,16 +99,18 @@ namespace Tigwi_API.Models
     [Serializable]
     public class User : Content
     {
-        public User (IUserInfo user)
+        public User (IUserInfo user, Guid userId)
         {
             Login = user.Login;
             Avatar = user.Avatar;
             Email = user.Email;
+            Id = userId;
         }
 
-        string Login { get; set; }
-        string Avatar { get; set; }
-        string Email { get; set; }
+        public string Login { get; set; }
+        public string Avatar { get; set; }
+        public string Email { get; set; }
+        public Guid Id { get; set; } 
     }
 
     [Serializable]
