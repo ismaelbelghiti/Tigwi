@@ -137,12 +137,11 @@ namespace Tigwi_API.Controllers
                 //if (userId == )
                 //    userId = Storage.User.GetId(infos.UserLogin);
 
-                //Create the account and get the infos
+                //Create the account
                 var accountId = Storage.Account.Create(userId, infos.AccountName, infos.Description);
-                var accountInfo = Storage.Account.GetInfo(accountId);
                
                 // Result
-                answer = new Answer( new Account(accountId, accountInfo.Name, accountInfo.Description) );
+                answer = new Answer( new ObjectCreated(accountId) );
 
             }
             catch (StorageLibException exception)

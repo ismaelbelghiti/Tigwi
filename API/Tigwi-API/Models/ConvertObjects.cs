@@ -128,6 +128,18 @@ namespace Tigwi_API.Models
         public List<User> User;
     }
 
+    [Serializable]
+    public class ObjectCreated : Content
+    {
+        public ObjectCreated(Guid id)
+        {
+            Id = id;
+        }
+
+        [XmlAttribute]
+        public Guid Id;
+    }
+
     // models to answer to requests with errors (can be empty) messages
 
     [Serializable]

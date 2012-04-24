@@ -16,8 +16,7 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Write(MsgToWrite msg)
         {
-            //TODO : Get back on this when Storage gives us a method to get a message with its Id to follow spec. Or we can build a new Content type that only provides Guid...
-            Error error;
+            Answer answer;
 
             try
             {
@@ -26,19 +25,19 @@ namespace Tigwi_API.Controllers
                 //if (accountId == )
                 //    accountId = Storage.Account.GetId(msg.AccountName);
 
-                Storage.Msg.Post(accountId, msg.Message.Content);
+                var msgId = Storage.Msg.Post(accountId, msg.Message.Content);
 
-                // Result is an empty error XML element
-                error = new Error();
+                //Result
+                answer = new Answer(new ObjectCreated(msgId));
             }
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
-                error = new Error(exception.Code.ToString());
+                answer = new Answer(new Error(exception.Code.ToString()));
             }
 
             var stream = new MemoryStream();
-            (new XmlSerializer(typeof (Error))).Serialize(stream, error);
+            (new XmlSerializer(typeof (Error))).Serialize(stream, answer);
 
             return Content(stream.ToString());
         }
@@ -114,28 +113,27 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CreateList(CreateList listCreation)
         {
-            //TODO: change result so that we provide the informations of the list whet it's created. Spec to update.
-            Error error;
+            Answer answer;
 
             try
             {
                 var accountId = Storage.Account.GetId(listCreation.Account);
                 var listToCreate = listCreation.ListInfo;
 
-                Storage.List.Create(accountId, listToCreate.Name, listToCreate.Description,
+                var listId = Storage.List.Create(accountId, listToCreate.Name, listToCreate.Description,
                                     listToCreate.IsPrivate);
 
                 // Result is an empty error XML element
-                error = new Error();
+                answer = new Answer(new ObjectCreated(listId));
             }
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
-                error = new Error(exception.Code.ToString());
+                answer = new Answer(new Error(exception.Code.ToString()));
             }
 
             var stream = new MemoryStream();
-            (new XmlSerializer(typeof (Error))).Serialize(stream, error);
+            (new XmlSerializer(typeof (Error))).Serialize(stream, answer);
 
             return Content(stream.ToString());
         }

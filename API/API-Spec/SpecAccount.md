@@ -662,18 +662,35 @@ http://api.tigwi.com/modifyaccount/write
     </Write>
 
 ###Response
-In case an error occurs
+General structure of the response :
+
+    <Answer>
+        <!-- Error Type -->
+		<Content> 
+            <!-- See below -->
+        </Content> 
+    </Answer>    
+  
+Content:
+
+     <ObjectCreated Id="UniqueIdentifierOfCreatedObject"/>
+
+Error type:  
+*In case an error occurs:
+
 
     <Error Code="codeOfError"/>
 
 
-If no error occurs
-
+*Otherwise:
+   
     <Error/>
+
 
 ###Informations
 * You **must** be authenticated as _nameofUser_ and authorized to use _nameOfAccount_ to post a message.
 * In **Request**, the size of your message is limited to 140 characters, but this limit is tested by the server. It raises an error if the message is too long.
+* In **Response**, the message provided is the message created.
 
 ##Remove a message
 ###Purpose
@@ -727,14 +744,29 @@ http://api.tigwi.com/modifyaccount/createlist/
 	</CreateList>
 
 ###Response
-In case an error occurs
+General structure of the response :
+
+    <Answer>
+        <!-- Error Type -->
+		<Content> 
+            <!-- See below -->
+        </Content> 
+    </Answer>    
+  
+Content:
+
+     <ObjectCreated Id="UniqueIdentifierOfCreatedObject"/>
+
+Error type:  
+*In case an error occurs:
+
 
     <Error Code="codeOfError"/>
 
-If no error occurs
 
+*Otherwise:
+   
     <Error/>
-
 
 ###Informations
 * You **must** be authenticated and authorized to use _nameOfSubscriber_ to use this method.

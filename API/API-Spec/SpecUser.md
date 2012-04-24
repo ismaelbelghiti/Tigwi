@@ -230,20 +230,19 @@ General structure of the response :
   
 Content:
 
-     <Account>
-	     <Id> idOfAccount </Id>
-	     <Name> nameOfAccount </Name>
-         <Description> DecriptionOfAccount </Description>
-     </Account>
+     <ObjectCreated Id="UniqueIdentifierOfCreatedObject"/>
 
-Error Type:  
+Error type:  
 *In case an error occurs:
 
+
     <Error Code="codeOfError"/>
+
 
 *Otherwise:
    
     <Error/>
+
 
 
 ###Informations
