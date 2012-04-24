@@ -127,6 +127,7 @@ namespace Tigwi_API.Models
         [XmlElement]
         public List<User> User;
     }
+
     // models to answer to requests with errors (can be empty) messages
 
     [Serializable]
