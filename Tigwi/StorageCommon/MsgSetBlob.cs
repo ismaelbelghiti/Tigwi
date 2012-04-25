@@ -2,17 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Microsoft.WindowsAzure.StorageClient;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace StorageLibrary.Utilities
+namespace StorageCommon
 {
-    public class HashSetBlob<T>
+    public class MsgSetBlob
     {
-        CloudBlob blob;
+        /*CloudBlob blob;
         BinaryFormatter formatter;
 
-        public HashSetBlob(CloudBlobContainer container, string blobName)
+        public MsgSetBlob(CloudBlobContainer container, string blobName)
         {
             blob = container.GetBlobReference(blobName);
             formatter = new BinaryFormatter();
@@ -41,10 +46,10 @@ namespace StorageLibrary.Utilities
             }
         }
 
-        public bool Add(T item)
+        public bool Add(MessageUpdateFields )
         {
             BlobRequestOptions reqOpt = new BlobRequestOptions();
-            HashSet<T> set;
+            SortedList<K, V> list;
             BlobStream stream;
             string eTag;
             bool keepGoing;
@@ -56,7 +61,7 @@ namespace StorageLibrary.Utilities
                     blob.FetchAttributes();
                     eTag = blob.Attributes.Properties.ETag;
                     stream = blob.OpenRead();
-                    set = (HashSet<T>)formatter.Deserialize(stream);
+                    list = (SortedList<K, V>)formatter.Deserialize(stream);
                     stream.Close();
                 }
                 catch
@@ -64,17 +69,17 @@ namespace StorageLibrary.Utilities
                     return false;
                 }
 
-                set.Add(item);
+                list.Add(key, item);
                 reqOpt.AccessCondition = AccessCondition.IfMatch(eTag);
 
                 try
                 {
                     stream = blob.OpenWrite(reqOpt);
-                    formatter.Serialize(stream, set);
+                    formatter.Serialize(stream, list);
                     stream.Close();
                     keepGoing = false;
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     keepGoing = true;
                 }
@@ -125,6 +130,7 @@ namespace StorageLibrary.Utilities
             } while (keepGoing);
 
             return true;
-        }
+        }*/
     }
 }
+

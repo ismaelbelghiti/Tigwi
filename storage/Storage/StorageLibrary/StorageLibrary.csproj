@@ -72,11 +72,27 @@
     <Compile Include="base\MsgStorage.cs" />
     <Compile Include="base\Storage.cs" />
     <Compile Include="base\UserStorage.cs" />
-    <Compile Include="datastructure\AccountInfo.cs" />
-    <Compile Include="datastructure\ListInfo.cs" />
-    <Compile Include="datastructure\Message.cs" />
-    <Compile Include="datastructure\Path.cs" />
-    <Compile Include="datastructure\UserInfo.cs" />
+    <Compile Include="utilities\Hasher.cs" />
+    <Compile Include="utilities\HashSetBlob.cs" />
+    <Compile Include="utilities\MsgSetBlob.cs" />
+    <Compile Include="utilities\Mutex.cs" />
+    <Compile Include="utilities\StrgBlob.cs" />
+    <Compile Include="utilities\StrgConnexion.cs" />
+    <Compile Include="datastructure\AccountInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="datastructure\ListInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="datastructure\Message.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="datastructure\Path.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="datastructure\UserInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="exception\StorageLibException.cs" />
     <Compile Include="interfaces\IMessage.cs" />
     <Compile Include="interfaces\IAccount.cs" />
@@ -89,12 +105,6 @@
     <Compile Include="interfaces\IStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StorageTmp.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Tigwi\StorageCommon\StorageCommon.csproj">
-      <Project>{51555566-C2F4-42F0-B978-91D1478B87E9}</Project>
-      <Name>StorageCommon</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="base\StorageArchitecture.txt" />

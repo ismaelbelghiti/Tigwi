@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using StorageCommon;
+using StorageLibrary;
+using StorageLibrary.Utilities;
 
 namespace StorageLibrary
 {
@@ -60,7 +61,7 @@ namespace StorageLibrary
             HashSet<Guid> followingAccounts = new HashSet<Guid>();
             followingAccounts.Add(ownerId);
 
-            // Creation des blobs
+            // Creation of blobs in list container
             StrgBlob<ListInfo> bInfo = new StrgBlob<ListInfo>(connexion.listContainer, Path.L_INFO + id);
             StrgBlob<Guid> bOwner = new StrgBlob<Guid>(connexion.listContainer, Path.L_OWNER + id);
             HashSetBlob<Guid> bOwned = new HashSetBlob<Guid>(connexion.listContainer, (isPrivate ? Path.L_OWNEDLISTS_PRIVATE : Path.L_OWNEDLISTS_PUBLIC) + ownerId);
@@ -74,6 +75,12 @@ namespace StorageLibrary
             bFollowedAccounts.Set(new HashSet<Guid>());
             Mutex.Init(connexion.listContainer, Path.L_FOLLOWEDACCOUNTS + id + Path.L_FOLLOWEDACC_LOCK);
 
+            // Creation of blobs in message container
+            StrgBlob<SortedList<DateTime, Message>> bMessages = new StrgBlob<SortedList<DateTime, Message>>(connexion.msgContainer, Path.M_LISTMESSAGES + id);
+
+            // store data
+            bMessages.Set(new SortedList<DateTime, Message>());
+
             // add the lists to owned lists and check that the user exists. if he doesn't, delete the data stored
             if (!bOwned.Add(id))
             {
@@ -82,6 +89,9 @@ namespace StorageLibrary
                 bFollowingAccounts.Delete();
                 bFollowedAccounts.Delete();
                 Mutex.Delete(connexion.listContainer, Path.L_FOLLOWEDACCOUNTS + id + Path.L_FOLLOWEDACC_LOCK);
+
+                bMessages.Delete();
+
                 throw new AccountNotFound();
             }
 

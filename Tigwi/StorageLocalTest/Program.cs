@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using StorageCommon;
 using StorageLibrary;
 using Microsoft.WindowsAzure.StorageClient;
 
@@ -992,7 +991,7 @@ namespace StorageLocalTest
         static void Main(string[] args)
         {
             Console.WriteLine("Init connexions");
-            Storage storage = new Storage("ulyssestorage", "S9IlG8caJ1BJpA3B3DOV7KF6VxU8an2W5N5m4Y5ZcL1rt7ljoRzcXAOw6xRc8pn8f9XNAOpyqCcXdJShj95onA==");
+            Storage storage = new Storage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY");
 
             Console.WriteLine("Clearing previous data");
             ClearContainer(storage.connexion.userContainer);
