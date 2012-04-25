@@ -115,6 +115,7 @@
     <Compile Include="Models\ListModel.cs" />
     <Compile Include="Models\PostModel.cs" />
     <Compile Include="Models\CustomIdentity.cs" />
+    <Compile Include="Models\PostViewModel.cs" />
     <Compile Include="Models\Storage\AccountRepository.cs" />
     <Compile Include="Models\Storage\IListRepository.cs" />
     <Compile Include="Models\Storage\IPostRepository.cs" />
