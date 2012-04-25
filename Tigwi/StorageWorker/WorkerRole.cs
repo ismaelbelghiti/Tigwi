@@ -8,13 +8,11 @@ using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using Microsoft.WindowsAzure.StorageClient;
-using StorageCommon;
 
 namespace StorageWorker
 {
     public class WorkerRole : RoleEntryPoint
     {
-        StrgConnexion connexion = new StrgConnexion("", "");
 
         public override void Run()
         {
@@ -24,7 +22,7 @@ namespace StorageWorker
             // Process messages
             while (true)
             {
-                
+                // todo : process the messages
             }
         }
 

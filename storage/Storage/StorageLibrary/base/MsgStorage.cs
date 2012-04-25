@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using StorageCommon;
+using StorageLibrary;
+using StorageLibrary.Utilities;
 using Microsoft.WindowsAzure.StorageClient;
 
 namespace StorageLibrary
@@ -18,14 +19,16 @@ namespace StorageLibrary
         }
 
         // Interface implementation
-        public List<IMessage> GetListsMsgFrom(HashSet<Guid> listsId, DateTime firstMsgId, int msgNumber)
+
+        //NYI
+        public List<IMessage> GetListsMsgFrom(HashSet<Guid> listsId, DateTime firstMsgTime, int msgNumber)
         {
             throw new NotImplementedException();
         }
 
-        public List<IMessage> GetListsMsgTo(HashSet<Guid> listsId, DateTime lastMsgId, int msgNumber)
+        public List<IMessage> GetListsMsgTo(HashSet<Guid> listsId, DateTime lastMsgTime, int msgNumber)
         {
-            if (DateTime.Now - lastMsgId < new TimeSpan(60000000000) && msgNumber < 100)
+            if (DateTime.Now - lastMsgTime < new TimeSpan(60000000000) && msgNumber < 100)
             {
                 List<IMessage> messages = listsId.Aggregate<Guid, List<IMessage>>(new List<IMessage>(), (messagelist, list) =>
                     (System.Collections.Generic.List<IMessage>)
@@ -57,36 +60,47 @@ namespace StorageLibrary
             }
         }
 
+        // NYI
         public void Tag(Guid accountId, Guid msgId)
         {
             throw new NotImplementedException();
         }
 
+        // NYI
         public void Untag(Guid accoundId, Guid msgId)
         {
             throw new NotImplementedException();
         }
 
+        // NYI
         public List<IMessage> GetTaggedFrom(Guid accoundId, DateTime firstMsgId, int msgNumber)
         {
             throw new NotImplementedException();
         }
 
+        // NYI
         public List<IMessage> GetTaggedTo(Guid accountId, DateTime lastMsgId, int msgNumber)
         {
             throw new NotImplementedException();
         }
 
+        // NYI
         public Guid Post(Guid accountId, string content)
         {
+            Guid id = Guid.NewGuid();
+            // TODO : Add in listMsg
+
+            // TODO : Add in accountMsg
             throw new NotImplementedException();
         }
 
+        // NYI
         public Guid Copy(Guid accountId, Guid msgId)
         {
             throw new NotImplementedException();
         }
 
+        // NYI
         public void Remove(Guid id)
         {
             throw new NotImplementedException();

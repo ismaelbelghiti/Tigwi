@@ -7,7 +7,7 @@ using Microsoft.WindowsAzure.StorageClient;
 using System.Threading;
 using System.Diagnostics;
 
-namespace StorageCommon
+namespace StorageLibrary.Utilities
 {
     public class Mutex : IDisposable
     {

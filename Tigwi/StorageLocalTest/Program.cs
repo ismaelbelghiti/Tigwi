@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using StorageCommon;
 using StorageLibrary;
 using Microsoft.WindowsAzure.StorageClient;
 
@@ -501,7 +500,7 @@ namespace StorageLocalTest
                 Console.Write(".");
 
                 // test normal behavior
-                storage.Account.Create(storage.User.GetId("userThatExists"), "otherAccountThatExists", "otherAccountThatExistsDesc");
+                // Done while doing init
             #endregion 
 
             #region void Delete(Guid accountId);
@@ -533,6 +532,454 @@ namespace StorageLocalTest
             Console.WriteLine();
         }
 
+        static void TestList(IStorage storage, Guid listIdThatExists)
+        {
+            Console.WriteLine("TestList");
+
+            #region IListInfo GetInfo(Guid listId)
+
+            // test exception "ListNotFound"
+            try
+            {
+                storage.List.GetInfo(new Guid());
+                Console.WriteLine("Error, List.GetInfo does not raise ListNotFound");
+            }
+            catch (ListNotFound) { }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.GetInfo"); }
+            Console.Write(".");
+
+            //test normal behaviour
+
+            try
+            {
+                IListInfo listInfo = storage.List.GetInfo(listIdThatExists);
+                if (listInfo.Name != "listThatExists")
+                    Console.WriteLine("List.GetInfo returns wrong info");
+            }
+            catch (UserNotFound) { Console.WriteLine("Error, List.GetInfo does not found an id"); }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.GetInfo"); }
+            Console.Write(".");
+
+            #endregion
+
+            #region void SetInfo(Guid listId, string name, string description, bool isPrivate);
+
+            //test exception ListNotFound
+            try
+            {
+                storage.List.SetInfo(new Guid(), "babar", "babar is cool", false);
+                Console.WriteLine("Error, List.SetInfo does not raise ListNotFound");
+            }
+            catch (ListNotFound) { }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.SetInfo"); }
+            Console.Write(".");
+
+            //test exception IsPersonnalList
+
+            try
+            {
+                Guid idPersList = storage.List.GetPersonalList(storage.Account.GetId("accountThatExists"));
+                storage.List.SetInfo(idPersList, "babar", "babar", false);
+                Console.WriteLine("Error, List.SetInfo does not raise IsPersonnalList");
+            }
+            catch (IsPersonnalList) { }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.SetInfo"); }
+            Console.Write(".");
+
+            //test normal behaviour
+
+            try
+            {
+                storage.List.SetInfo(listIdThatExists, "listThatExists", "Babar", false);
+                if (storage.List.GetInfo(listIdThatExists).Description != "Babar")
+                    Console.WriteLine("Error, List.SetInfo does not change info");
+                storage.List.SetInfo(listIdThatExists, "listThatExists", "Yeah", false);
+            }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.SetInfo"); }
+            Console.Write(".");
+
+            #endregion
+
+            #region Guid GetOwner(Guid listId)
+
+            //test exception ListNotFound
+
+            try
+            {
+                storage.List.GetOwner(new Guid());
+                Console.WriteLine("Error, List.GetOwner does not raise ListNotFound");
+            }
+            catch (ListNotFound) { }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.GetOwner"); }
+            Console.Write(".");
+
+            //test normal beahaviour
+
+            try
+            {
+                Guid ownerId = storage.List.GetOwner(listIdThatExists);
+                if (ownerId != storage.Account.GetId("accountThatExists"))
+                    Console.WriteLine("Error, List.GetOwner returned bad owner");
+            }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.GetOwner"); }
+            Console.Write(".");
+
+            #endregion
+
+            #region Guid GetPersonalList(Guid accountId)
+
+            //test exception AccountNotFound
+
+            try
+            {
+                storage.List.GetPersonalList(new Guid());
+                Console.WriteLine("Error, List.GetPersonalList does not raise AccountNotFound");
+            }
+            catch (AccountNotFound) { }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.GetPersonalList"); }
+            Console.Write(".");
+
+            //test normal beahaviour : already tested
+
+            #endregion
+
+            #region Guid Create(Guid ownerId, string name, string description, bool isPrivate)
+
+            //test exception AccountNotFound
+
+            try
+            {
+                storage.List.Create(new Guid(), "babar", "babar", false);
+                Console.WriteLine("Error, List.Create does not raise AccountNotFound");
+            }
+            catch (AccountNotFound) { }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.Create"); }
+            Console.Write(".");
+
+            //test normal beahaviour : already tested
+
+            #endregion
+
+            #region void Delete(Guid id)
+
+            //test exception IsPersonnalList
+
+            try
+            {
+                storage.List.Delete(storage.List.GetPersonalList(storage.Account.GetId("accountThatExists")));
+                Console.WriteLine("Error, List.Delete does not raise IsPersonnalList");
+            }
+            catch (IsPersonnalList) { }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.Delete"); }
+            Console.Write(".");
+
+            //test with wrong id
+
+            try
+            {
+                storage.List.Delete(new Guid());
+            }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.Delete with wrong id"); }
+            Console.Write(".");
+
+            //test normal beahaviour
+
+            try
+            {
+                Guid listTempId = storage.List.Create(storage.Account.GetId("accountThatExists"), "babar", "babar", false);
+                storage.List.Delete(listTempId);
+
+                try
+                {
+                    storage.List.GetInfo(listTempId);
+                    Console.WriteLine("Error, List.Delete does not delete");
+                }
+                catch (ListNotFound) { }
+            }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.Delete"); }
+            Console.Write(".");
+
+            #endregion
+
+            #region void Follow(Guid listId, Guid accountId)
+
+            //test exception AccountNotFound
+
+            try
+            {
+                storage.List.Follow(listIdThatExists, new Guid());
+                Console.WriteLine("Error, List.Follow does not raise AccountNotFound");
+            }
+            catch (AccountNotFound) { }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.Follow"); }
+            Console.Write(".");
+
+            //test exception ListNotFound
+
+            try
+            {
+                storage.List.Follow(new Guid(), storage.Account.GetId("accountThatExists"));
+                Console.WriteLine("Error, List.Follow does not raise ListNotFound");
+            }
+            catch (ListNotFound) { }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.Follow"); }
+            Console.Write(".");
+
+            //test normal beahaviour : already tested
+
+            #endregion
+
+            #region void Unfollow(Guid listId, Guid accountId)
+
+            //test exception AccountNotFound
+
+            try
+            {
+                storage.List.Unfollow(listIdThatExists, new Guid());
+                Console.WriteLine("Error, List.Unfollow does not raise AccountNotFound");
+            }
+            catch (AccountNotFound) { }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.Unfollow"); }
+            Console.Write(".");
+
+            //test exception ListNotFound
+
+            try
+            {
+                storage.List.Unfollow(new Guid(), storage.Account.GetId("accountThatExists"));
+                Console.WriteLine("Error, List.Unfollow does not raise ListNotFound");
+            }
+            catch (ListNotFound) { }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.Unfollow"); }
+            Console.Write(".");
+
+            //test exception AccountIsOwner
+
+            try
+            {
+                storage.List.Unfollow(listIdThatExists, storage.Account.GetId("accountThatExists"));
+                Console.WriteLine("Error, List.Unfollow does not raise AccountIsOwner");
+            }
+            catch (AccountIsOwner) { }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.Unfollow"); }
+            Console.Write(".");
+
+            //test normal beahaviour
+
+            try
+            {
+                Guid otherAccountId = storage.Account.GetId("otherAccountThatExists");
+                storage.List.Unfollow(listIdThatExists, otherAccountId);
+                HashSet<Guid> listsFollowed = storage.List.GetAccountFollowedLists(otherAccountId, false);
+                HashSet<Guid> followers = storage.List.GetFollowingAccounts(listIdThatExists);
+
+                if (listsFollowed.Contains(otherAccountId))
+                    Console.WriteLine("Error, List.Unfollow does not unfollow");
+                if (followers.Contains(listIdThatExists))
+                    Console.WriteLine("Error, List.Unfollow does not unfollow");
+                storage.List.Follow(listIdThatExists, otherAccountId);
+            }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.Unfollow"); }
+            Console.Write(".");
+
+            #endregion
+
+            #region HashSet<Guid> GetAccounts(Guid listId)
+
+            //test exception ListNotFound
+
+            try
+            {
+                storage.List.GetAccounts(new Guid());
+                Console.WriteLine("Error, List.GetAccounts does not raise ListNotFound");
+            }
+            catch (ListNotFound) { }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.GetAccounts"); }
+            Console.Write(".");
+
+            //test normal beahaviour
+
+            try
+            {
+                if (!storage.List.GetAccounts(listIdThatExists).Contains(storage.Account.GetId("accountThatExists")))
+                    Console.WriteLine("Error, List.GetAccounts does not give good accounts");
+            }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.GetAccounts"); }
+            Console.Write(".");
+
+            #endregion
+
+            #region void Add(Guid listId, Guid accountId)
+
+            //test exception ListNotFound
+
+            try
+            {
+                storage.List.Add(Guid.NewGuid(), storage.Account.GetId("accountThatExists"));
+                Console.WriteLine("Error, List.Add does not raise ListNotFound");
+            }
+            catch (ListNotFound) { }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.Add"); }
+            Console.Write(".");
+
+            //test exception AccountNotFound
+
+            try
+            {
+                storage.List.Add(listIdThatExists, Guid.NewGuid());
+                Console.WriteLine("Error, List.Add does not raise AccountNotFound");
+            }
+            catch (AccountNotFound) { }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.Add"); }
+            Console.Write(".");
+
+            //test normal beahaviour : already tested
+
+            #endregion
+
+            #region void Remove(Guid listId, Guid accountId)
+
+            //test normal beahaviour
+
+            try
+            {
+                Guid accountThatExistsId = storage.Account.GetId("accountThatExists");
+                storage.List.Remove(listIdThatExists, accountThatExistsId);
+                HashSet<Guid> accounts = storage.List.GetAccounts(listIdThatExists);
+                if (accounts.Contains(accountThatExistsId))
+                    Console.WriteLine("Error, List.Remove does not remove");
+                storage.List.Add(listIdThatExists, accountThatExistsId);
+            }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.Remove"); }
+            Console.Write(".");
+
+            #endregion
+
+            #region HashSet<Guid> GetAccountOwnedLists(Guid accountId, bool withPrivate)
+
+            //test exception AccountNotFound
+
+            try
+            {
+                storage.List.GetAccountOwnedLists(Guid.NewGuid(), false);
+                Console.WriteLine("Error, List.GetAccountOwnedLists does not raise AccountNotFound");
+            }
+            catch (AccountNotFound) { }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.GetAccountOwnedLists"); }
+            Console.Write(".");
+
+            try
+            {
+                storage.List.GetAccountOwnedLists(Guid.NewGuid(), true);
+                Console.WriteLine("Error, List.GetAccountOwnedLists does not raise AccountNotFound");
+            }
+            catch (AccountNotFound) { }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.GetAccountOwnedLists"); }
+            Console.Write(".");
+
+            //test normal beahaviour
+
+            try
+            {
+                HashSet<Guid> ownedLists = storage.List.GetAccountOwnedLists(storage.Account.GetId("accountThatExists"), false);
+                if (!ownedLists.Contains(listIdThatExists))
+                    Console.WriteLine("GetAccountOwnedLists does not return the expected result");
+            }
+            catch (Exception e) { Console.WriteLine("Unhandled exception in List.GetAccountOwnedLists : " + e.ToString()); }
+            Console.Write(".");
+
+            #endregion
+
+            #region HashSet<Guid> GetAccountFollowedLists(Guid accountId, bool withPrivate)
+
+            //test exception AccountNotFound
+
+            try
+            {
+                storage.List.GetAccountFollowedLists(new Guid(), false);
+                Console.WriteLine("Error, List.GetAccountFollowedLists does not raise AccountNotFound");
+            }
+            catch (AccountNotFound) { }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.GetAccountFollowedLists"); }
+            Console.Write(".");
+
+            try
+            {
+                storage.List.GetAccountFollowedLists(new Guid(), true);
+                Console.WriteLine("Error, List.GetAccountFollowedLists does not raise AccountNotFound");
+            }
+            catch (AccountNotFound) { }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.GetAccountFollowedLists"); }
+            Console.Write(".");
+
+            //test normal beahaviour
+
+            try
+            {
+                HashSet<Guid> followedList = storage.List.GetAccountFollowedLists(storage.Account.GetId("otherAccountThatExists"), false);
+                if (!followedList.Contains(listIdThatExists))
+                    Console.WriteLine("Error, GetAccountFollowedLists does not return the expected result");
+            }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.GetAccountFollowedLists"); }
+            Console.Write(".");
+
+            #endregion
+
+            #region HashSet<Guid> GetFollowingLists(Guid accountId);
+
+            //test exception AccountNotFound
+
+            try
+            {
+                storage.List.GetFollowingLists(Guid.NewGuid());
+                Console.WriteLine("Error, List.GetFollowingLists does not raise AccountNotFound");
+            }
+            catch (AccountNotFound) { }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.GetFollowingLists"); }
+            Console.Write(".");
+
+            //test normal beahaviour
+
+            try
+            {
+                HashSet<Guid> followingLists = storage.List.GetFollowingLists(storage.Account.GetId("accountThatExists"));
+                if (!followingLists.Contains(listIdThatExists))
+                    Console.WriteLine("Error, GetFollowingLists does not return the expected result");
+            }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.GetFollowingLists"); }
+            Console.Write(".");
+
+            #endregion
+
+            #region HashSet<Guid> GetFollowingAccounts(Guid listId)
+
+            //test exception ListNotFound
+
+            try
+            {
+                storage.List.GetFollowingAccounts(new Guid());
+                Console.WriteLine("Error, List. GetFollowingAccounts does not raise ListNotFound");
+            }
+            catch (ListNotFound) { }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List. GetFollowingAccounts"); }
+            Console.Write(".");
+
+            //test normal beahaviour
+
+            try
+            {
+                HashSet<Guid> followingAccounts = storage.List.GetFollowingAccounts(listIdThatExists);
+                if (!followingAccounts.Contains(storage.Account.GetId("accountThatExists")))
+                    Console.WriteLine("Error, GetFollowingAccounts does return the expected result");
+            }
+            catch (Exception) { Console.WriteLine("Unhandled exception in List.GetFollowingAccounts"); }
+            Console.Write(".");
+
+            #endregion
+
+            Console.WriteLine();
+        }
+
         static void ClearContainer(CloudBlobContainer c)
         {
             BlobRequestOptions opt = new BlobRequestOptions();
@@ -544,7 +991,7 @@ namespace StorageLocalTest
         static void Main(string[] args)
         {
             Console.WriteLine("Init connexions");
-            Storage storage = new Storage("ulyssestorage", "S9IlG8caJ1BJpA3B3DOV7KF6VxU8an2W5N5m4Y5ZcL1rt7ljoRzcXAOw6xRc8pn8f9XNAOpyqCcXdJShj95onA==");
+            Storage storage = new Storage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY");
 
             Console.WriteLine("Clearing previous data");
             ClearContainer(storage.connexion.userContainer);
@@ -553,17 +1000,22 @@ namespace StorageLocalTest
             ClearContainer(storage.connexion.msgContainer);
 
             Console.WriteLine("Filling with initial data");
-            //storage.InitWithStupidData();
-            //storage.afficheDebug();
             Guid userId = storage.User.Create("userThatExists", "userThatExists@gmail.com", "userThatExistsPass");
-            storage.User.Create("otherUserThatExists", "otherUserThatExists@gmail.com", "otherUserThatExistsPass");
             Guid accountId = storage.Account.Create(userId, "accountThatExists", "accountThatExistsDesc");
-            storage.Account.Add(accountId, userId);
+            storage.User.Create("otherUserThatExists", "otherUserThatExists@gmail.com", "otherUserThatExistsPass");
+            Guid otherAccountId = storage.Account.Create(userId, "otherAccountThatExists", "otherAccountThatExistsDesc");
+
+            Guid listId = storage.List.Create(storage.Account.GetId("accountThatExists"), "listThatExists", "Yeah", false);
+            storage.List.Add(listId, accountId);
+            storage.List.Add(listId, otherAccountId);
+            storage.List.Follow(listId, accountId);
+            storage.List.Follow(listId, otherAccountId);
 
             Console.WriteLine("Init ok");
 
             TestUser(storage);
             TestAccounts(storage);
+            TestList(storage, listId);
 
             Console.ReadLine();
 

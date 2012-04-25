@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.StorageClient;
-using StorageCommon;
+using StorageLibrary;
+using StorageLibrary.Utilities;
 
 namespace StorageLibrary
 {

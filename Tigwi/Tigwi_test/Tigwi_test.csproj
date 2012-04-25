@@ -79,10 +79,6 @@
       <Project>{2C5E15F5-0DF9-4D0A-AB8F-FB8FEC5B25E8}</Project>
       <Name>StorageLibrary</Name>
     </ProjectReference>
-    <ProjectReference Include="..\StorageCommon\StorageCommon.csproj">
-      <Project>{51555566-C2F4-42F0-B978-91D1478B87E9}</Project>
-      <Name>StorageCommon</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

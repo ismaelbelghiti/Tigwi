@@ -31,8 +31,8 @@ namespace Tigwi_API
                             new
                             {
                                 controller = "InfoAccount",
-                                action = @"\d+",
-                                accountName = @"\s+",
+                                action = "",
+                                accountId = @"\d+",
                                 number = "20" // Par défaut le nombre de messages est 20
                             }
                 );
@@ -50,6 +50,29 @@ namespace Tigwi_API
                                 }
                 );
             
+            // routes to InfoUser
+
+            routes.MapRoute("InfoUser", 
+                            "infouser/{action}/{userLogin}/{number}",
+                            new
+                                {
+                                    controller = "InfoUser",
+                                    action = "",
+                                    userLogin = @"/s+",
+                                    number = "20"
+                                }
+                );
+
+            routes.MapRoute("InfoUser",
+                            "infouser/{action}/{userId}/{number}",
+                            new
+                            {
+                                controller = "InfoUser",
+                                action = "",
+                                userId = @"/d+",
+                                number = "20"
+                            }
+                );
 
 			// default route (also used for Modify)
             routes.MapRoute("Default", "{controller}/{action}/{id}",

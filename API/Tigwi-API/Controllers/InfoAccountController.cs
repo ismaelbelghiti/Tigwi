@@ -19,7 +19,7 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                // get lasts messages from user name
+                // get lasts messages from account accoutName
                 var accountId = Storage.Account.GetId(accountName);
                 var personalListId = Storage.List.GetPersonalList(accountId);
                 var listMsgs = Storage.Msg.GetListsMsgTo(new HashSet<Guid> { personalListId }, DateTime.Now, number);
@@ -50,7 +50,7 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                // get lasts messages from user name
+                // get lasts messages from account accoutName
                 var personalListId = Storage.List.GetPersonalList(accountId);
                 var listMsgs = Storage.Msg.GetListsMsgTo(new HashSet<Guid> { personalListId }, DateTime.Now, number);
 
@@ -71,7 +71,66 @@ namespace Tigwi_API.Controllers
 
             return Content(stream.ToString());
         }
-        
+
+        //
+        // GET: /infoaccount/taggedmessages/{accountName}/{number}
+        public ActionResult TaggedMessages(string accountName, int number)
+        {
+            Answer output;
+
+            try
+            {
+                // get lasts tagged messages from account accountName
+                var accountId = Storage.Account.GetId(accountName);
+                var listMsgs = Storage.Msg.GetTaggedTo(accountId, DateTime.Now, number);
+
+                // convert, looking forward XML serialization
+                var listMsgsOutput = new Messages(listMsgs, Storage);
+                output = new Answer(listMsgsOutput);
+            }
+
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
+
+            return Content(stream.ToString());
+        }
+
+        //
+        // GET: /infoaccount/taggedmessages/{accountId}/{number}
+        public ActionResult TaggedMessages(Guid accountId, int number)
+        {
+            Answer output;
+
+            try
+            {
+                // get lasts messages from user name
+                var listMsgs = Storage.Msg.GetTaggedTo(accountId, DateTime.Now, number);
+
+                // convert, looking forward XML serialization
+                var listMsgsOutput = new Messages(listMsgs, Storage);
+                output = new Answer(listMsgsOutput);
+            }
+
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
+
+            return Content(stream.ToString());
+        }
+
         //
         // GET : /infoaccount/subscriberaccounts/{accountName}/{number}
         public ActionResult SubscriberAccounts(string accountName, int number)
@@ -505,13 +564,13 @@ namespace Tigwi_API.Controllers
         //GET infoaccount/main/{accountName}
         
         //[Authorize]
-        public ActionResult Main(string accountName)
+        public ActionResult MainInfo(string accountName)
         {
             Answer output;
 
             try
             {
-                // get the public lists owned by the given account
+                // get the informations of the given account
 
                 var accountId = Storage.Account.GetId(accountName);
                 var accountInfo = Storage.Account.GetInfo(accountId);
@@ -534,13 +593,13 @@ namespace Tigwi_API.Controllers
 
         //
         //GET infoaccount/main/{accountName}
-        public ActionResult Main(Guid accountId)
+        public ActionResult MainInfo(Guid accountId)
         {
             Answer output;
 
             try
             {
-                // get the public lists owned by the given account
+                // get the informations of the given account
                 var accountInfo = Storage.Account.GetInfo(accountId);
                 var accountToReturn = new Account(accountId, accountInfo.Name, accountInfo.Description);
                 output = new Answer(accountToReturn);
@@ -625,5 +684,68 @@ namespace Tigwi_API.Controllers
             return Content(stream.ToString());
         }
 
+        //
+        // GET : infoaccount/administrator/{accountName}
+
+        //[Authorize]
+        public ActionResult Administrator(string accountName)
+        {
+            Answer output;
+
+            try
+            {
+                var accountId = Storage.Account.GetId(accountName);
+
+                // get account's administrator
+                var adminId = Storage.Account.GetAdminId(accountId);
+                var adminInfo = Storage.User.GetInfo(adminId);
+                var admin = new User(adminInfo, Storage.User.GetId(adminInfo.Login));
+
+                output = new Answer(admin);
+            }
+
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
+
+            return Content(stream.ToString());
+        }
+
+        //
+        // GET : infoaccount/administrator/{accountID}
+
+        //[Authorize]
+        public ActionResult Administrator(Guid accountId)
+        {
+            Answer output;
+
+            try
+            {
+                // get account's administrator
+                var adminId = Storage.Account.GetAdminId(accountId);
+                var adminInfo = Storage.User.GetInfo(adminId);
+                var admin = new User(adminInfo, Storage.User.GetId(adminInfo.Login));
+
+                output = new Answer(admin);
+            }
+
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
+
+            return Content(stream.ToString());
+        }
     }
 }

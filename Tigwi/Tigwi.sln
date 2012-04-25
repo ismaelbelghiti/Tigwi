@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tigwi_test", "Tigwi_test\Ti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageWorker", "StorageWorker\StorageWorker.csproj", "{3F7051EE-54D0-4019-AA58-F0EA17396698}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageCommon", "StorageCommon\StorageCommon.csproj", "{51555566-C2F4-42F0-B978-91D1478B87E9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI", "Tigwi.UI\UI.csproj", "{46428462-DB30-44D8-A6BB-7B83F3F211EC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI_test", "Tigwi.UI.Tests\UI_test.csproj", "{5D2BF629-E4C9-4BCF-928F-AD605E9E5684}"
@@ -159,26 +157,6 @@ Global
 		{3F7051EE-54D0-4019-AA58-F0EA17396698}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{3F7051EE-54D0-4019-AA58-F0EA17396698}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{3F7051EE-54D0-4019-AA58-F0EA17396698}.Release|x86.ActiveCfg = Release|Any CPU
-		{51555566-C2F4-42F0-B978-91D1478B87E9}.Cloud-Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{51555566-C2F4-42F0-B978-91D1478B87E9}.Cloud-Debug|Any CPU.Build.0 = Debug|Any CPU
-		{51555566-C2F4-42F0-B978-91D1478B87E9}.Cloud-Debug|Mixed Platforms.ActiveCfg = Cloud-Debug|Any CPU
-		{51555566-C2F4-42F0-B978-91D1478B87E9}.Cloud-Debug|Mixed Platforms.Build.0 = Cloud-Debug|Any CPU
-		{51555566-C2F4-42F0-B978-91D1478B87E9}.Cloud-Debug|x86.ActiveCfg = Cloud-Debug|Any CPU
-		{51555566-C2F4-42F0-B978-91D1478B87E9}.Cloud-Release|Any CPU.ActiveCfg = Release|Any CPU
-		{51555566-C2F4-42F0-B978-91D1478B87E9}.Cloud-Release|Any CPU.Build.0 = Release|Any CPU
-		{51555566-C2F4-42F0-B978-91D1478B87E9}.Cloud-Release|Mixed Platforms.ActiveCfg = Cloud-Release|Any CPU
-		{51555566-C2F4-42F0-B978-91D1478B87E9}.Cloud-Release|Mixed Platforms.Build.0 = Cloud-Release|Any CPU
-		{51555566-C2F4-42F0-B978-91D1478B87E9}.Cloud-Release|x86.ActiveCfg = Cloud-Release|Any CPU
-		{51555566-C2F4-42F0-B978-91D1478B87E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{51555566-C2F4-42F0-B978-91D1478B87E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{51555566-C2F4-42F0-B978-91D1478B87E9}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{51555566-C2F4-42F0-B978-91D1478B87E9}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{51555566-C2F4-42F0-B978-91D1478B87E9}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{51555566-C2F4-42F0-B978-91D1478B87E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{51555566-C2F4-42F0-B978-91D1478B87E9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{51555566-C2F4-42F0-B978-91D1478B87E9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{51555566-C2F4-42F0-B978-91D1478B87E9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{51555566-C2F4-42F0-B978-91D1478B87E9}.Release|x86.ActiveCfg = Release|Any CPU
 		{46428462-DB30-44D8-A6BB-7B83F3F211EC}.Cloud-Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{46428462-DB30-44D8-A6BB-7B83F3F211EC}.Cloud-Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46428462-DB30-44D8-A6BB-7B83F3F211EC}.Cloud-Debug|Mixed Platforms.ActiveCfg = Cloud-Debug|Any CPU

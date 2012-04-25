@@ -6,7 +6,8 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using Microsoft.WindowsAzure.StorageClient;
-using StorageCommon;
+using StorageLibrary;
+using StorageLibrary.Utilities;
 
 
 namespace StorageLibrary
