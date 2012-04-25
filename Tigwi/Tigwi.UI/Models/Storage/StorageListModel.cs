@@ -14,6 +14,14 @@ namespace Tigwi.UI.Models.Storage
         {
         }
 
+        public ICollection<StoragePostModel> PostsAfter(DateTime date, int maximum = 100)
+        {
+            var postsAfter = new List<StoragePostModel>(maximum);
+            var msgCollection = this.Storage.Msg.GetListsMsgFrom(new HashSet<Guid> { this.Id }, date, maximum);
+            postsAfter.AddRange(msgCollection.Select(msg => new StoragePostModel(this.StorageContext, msg)));
+            return postsAfter;
+        }
+
         public ICollection<StoragePostModel> Posts
         {
             get

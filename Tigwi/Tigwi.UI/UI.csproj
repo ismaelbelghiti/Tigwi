@@ -109,6 +109,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountModel.cs" />
+    <Compile Include="Models\CookieData.cs" />
     <Compile Include="Models\ListModel.cs" />
     <Compile Include="Models\PostModel.cs" />
     <Compile Include="Models\CustomIdentity.cs" />

@@ -7,9 +7,12 @@ using System.Web.Routing;
 
 namespace Tigwi.UI
 {
+    using System.IO;
+    using System.Runtime.Serialization.Formatters.Binary;
     using System.Security.Principal;
     using System.Web.ClientServices;
     using System.Web.Security;
+    using System.Xml.Serialization;
 
     using Tigwi.UI.Models;
 
@@ -58,17 +61,26 @@ namespace Tigwi.UI
 
         protected void Application_AuthenticateRequest(object sender, EventArgs ev)
         {
-            var cookie = this.Request.Cookies[FormsAuthentication.FormsCookieName];
+            var cookie = Request.Cookies[FormsAuthentication.FormsCookieName];
 
-            if (cookie != null)
+            if (cookie == null)
             {
-                var ticket = FormsAuthentication.Decrypt(cookie.Value);
-                var userData = ticket.UserData;
-                var info = userData.Split('/');
-                var userId = Guid.Parse(info[0]);
-                var accountId = Guid.Parse(info[1]);
-                Context.User = new RolePrincipal(new CustomIdentity(null, null), cookie.Value);
+                return;
             }
+
+            var ticket = FormsAuthentication.Decrypt(cookie.Value);
+            var serialized = Convert.FromBase64String(ticket.UserData);
+            var userData = (new BinaryFormatter()).Deserialize(new MemoryStream(serialized)) as CookieData;
+
+            if (userData == null)
+            {
+                return;
+            }
+
+            this.Context.User =
+                new GenericPrincipal(
+                    new CustomIdentity(userData.UserId, userData.AccountId, cookie.Name, "Forms"), new string[0]);
+            System.Threading.Thread.CurrentPrincipal = this.Context.User;
         }
     }
 }
