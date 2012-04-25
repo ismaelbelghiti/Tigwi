@@ -24,7 +24,7 @@ namespace StorageWorker
             // Process messages
             while (true)
             {
-                
+                // todo : process the messages
             }
         }
 

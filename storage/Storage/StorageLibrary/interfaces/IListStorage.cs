@@ -12,12 +12,14 @@ namespace StorageLibrary
         /// </summary>
         /// <exception cref="ListNotFound">if no list has this ID</exception>
         IListInfo GetInfo(Guid listId);
+
         /// <summary>
         /// Set the infos about a list
         /// </summary>
         /// <exception cref="ListNotFound">If no list has this ID</exception>
         /// <exception cref="IsPersonnalList">If you are trying to modify the list that correspond to the messages from a single user</exception>
         void SetInfo(Guid listId, string name, string description, bool isPrivate);
+
         /// <summary>
         /// Get the owner of a list
         /// </summary>
@@ -27,7 +29,7 @@ namespace StorageLibrary
         /// <summary>
         /// Get the list following only the given account
         /// </summary>
-        /// <exception cref="ListNotFound">If no list has this ID</exception>
+        /// <exception cref="AccountNotFound">If no list has this ID</exception>
         Guid GetPersonalList(Guid accountId);
 
         /// <summary>
@@ -36,6 +38,7 @@ namespace StorageLibrary
         /// </summary>
         /// <exception cref="AccountNotFound">If no account has this Id</exception>
         Guid Create(Guid ownerId, string name, string description, bool isPrivate);
+
         /// <summary>
         /// Delete a list
         /// </summary>
@@ -48,6 +51,7 @@ namespace StorageLibrary
         /// <exception cref="AccountNotFound">if no account has this ID</exception>
         /// <exception cref="ListNotFound">if no list has this ID</exception>
         void Follow(Guid listId, Guid accountId);
+
         /// <summary>
         /// The account accountId does not follow listId anymore
         /// </summary>
@@ -61,12 +65,14 @@ namespace StorageLibrary
         /// </summary>
         /// <exception cref="ListNotFound">No list has this ID</exception>
         HashSet<Guid> GetAccounts(Guid listId);
+
         /// <summary>
         /// Add an account into the given list
         /// </summary>
         /// <exception cref="ListNotFound">no list has this ID</exception>
         /// <exception cref="AccountNotFound">no account has this ID</exception>
         void Add(Guid listId, Guid accountId);
+
         /// <summary>
         /// Remove an account from the given list
         /// </summary>
@@ -77,16 +83,19 @@ namespace StorageLibrary
         /// </summary>
         /// <exception cref="AccountNotFound">no account has this Id</exception>
         HashSet<Guid> GetAccountOwnedLists(Guid accountId, bool withPrivate);
+
         /// <summary>
         /// Get the lists Followed by the given account
         /// </summary>
         /// <exception cref="AccountNotFound">no account has this ID</exception>
         HashSet<Guid> GetAccountFollowedLists(Guid accountId, bool withPrivate);
+
         /// <summary>
         /// Get the lists following the given account
         /// </summary>
         /// <exception cref="AccountNotFound">no account has this ID</exception>
         HashSet<Guid> GetFollowingLists(Guid accountId);
+
         /// <summary>
         /// Get the accounts following publicly the given list
         /// </summary>
