@@ -26,7 +26,7 @@ namespace Tigwi.UI.Models.Storage
         {
             try
             {
-                Guid id = this.Storage.Account.Create(user.Id, name, description);
+                var id = this.Storage.Account.Create(user.Id, name, description);
                 return this.Find(id);
             }
             catch (UserNotFound ex)
@@ -61,7 +61,7 @@ namespace Tigwi.UI.Models.Storage
         {
             try
             {
-                Guid id = this.Storage.Account.GetId(name);
+                var id = this.Storage.Account.GetId(name);
                 return this.Find(id);
             }
             catch (AccountNotFound ex)

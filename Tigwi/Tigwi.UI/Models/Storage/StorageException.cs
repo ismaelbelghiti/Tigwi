@@ -10,9 +10,8 @@ namespace Tigwi.UI.Models.Storage
     public class DuplicateUserException : Exception
     {
         public DuplicateUserException(string login, UserAlreadyExists innerException)
-            : base("There is already a user with the given login `" + login + "'.", innerException)
+            : base("This username is already taken.", innerException)
         {
-            
         }
     }
 

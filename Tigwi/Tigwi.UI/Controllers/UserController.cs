@@ -42,17 +42,25 @@ namespace Tigwi.UI.Controllers
         [HttpPost]
         public ActionResult LogOn(UserLogOnViewModel userLogOnViewModel)
         {
-            // TODO: implement user authentication :-)
             if (ModelState.IsValid)
             {
-                this.Storage.Users.Create("Elarnon", "k@o.n");
-                var loggingUser = this.Storage.Users.Find(userLogOnViewModel.Login);
-                this.CurrentUser = loggingUser;
+                try
+                {
+                    // TODO: real authentication
+                    var loggingUser = this.Storage.Users.Find(userLogOnViewModel.Login);
+                    this.CurrentUser = loggingUser;
 
-                return this.View("Error");
+                    this.SaveIdentity(userLogOnViewModel.RememberMe);
+
+                    return this.RedirectToAction("Timeline", "Account");
+                }
+                catch (UserNotFoundException ex)
+                {
+                    ModelState.AddModelError("Login", ex.Message);
+                }
             }
 
-            throw new NotImplementedException("UserController.LogOn[POST]");
+            return this.View(userLogOnViewModel);
         }
 
         /// <summary>
@@ -67,7 +75,7 @@ namespace Tigwi.UI.Controllers
         /// <summary>
         /// Register a new user into the system.
         /// </summary>
-        /// <param name="collection"></param>
+        /// <param name="registerViewModel">A ViewModel containing the data useful for the user creation.</param>
         /// <returns></returns>
         [HttpPost]
         public ActionResult Register(RegisterViewModel registerViewModel)
@@ -76,14 +84,18 @@ namespace Tigwi.UI.Controllers
             {
                 try
                 {
+                    // TODO: real authentication
                     var newUser = this.Storage.Users.Create(registerViewModel.Login, registerViewModel.Email);
                     this.CurrentUser = newUser;
-                    return this.RedirectToAction("Welcome");
+
+                    this.SaveIdentity(false);
+
+                    return this.RedirectToAction("Register");
                 }
                 catch (DuplicateUserException ex)
                 {
                     // TODO: We need more granularity (login failed ? email failed ? propositions ?)
-                    ModelState.AddModelError("Login", "There is already a user with that login. Try again!");
+                    ModelState.AddModelError("Login", ex.Message);
                 }
             }
 
@@ -93,7 +105,7 @@ namespace Tigwi.UI.Controllers
 
         public ActionResult Welcome()
         {
-            throw new NotImplementedException("UserController.Welcome " + this.CurrentUser.Login);
+            throw new NotImplementedException();
         }
 
         /// <summary>

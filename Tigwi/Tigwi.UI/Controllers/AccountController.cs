@@ -21,6 +21,11 @@ namespace Tigwi.UI.Controllers
             : base(storageContext)
         {
         }
+        
+        public ActionResult Timeline()
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Shows a page listing all the accounts of the active user.
@@ -41,9 +46,9 @@ namespace Tigwi.UI.Controllers
         /// Makes the given account active (the one which will post things by default, etc.)
         /// </summary>
         /// <returns></returns>
+        [Authorize]
         public ActionResult MakeActive(Guid accountId)
         {
-            this.CheckForConnection();
             var account = this.Storage.Accounts.Find(accountId);
 
             try

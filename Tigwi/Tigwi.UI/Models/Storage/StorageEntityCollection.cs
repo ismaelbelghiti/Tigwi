@@ -12,7 +12,6 @@ namespace Tigwi.UI.Models.Storage
     #endregion
 
     public abstract class StorageEntityCollection<TParent, T> : ICollection<T>
-        where TParent : StorageEntityModel where T : StorageEntityModel
     {
         #region Constants and Fields
 
