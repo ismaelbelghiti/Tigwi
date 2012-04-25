@@ -16,7 +16,7 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Write(MsgToWrite msg)
         {
-            Error error;
+            Answer answer;
 
             try
             {
@@ -25,19 +25,52 @@ namespace Tigwi_API.Controllers
                 //if (accountId == )
                 //    accountId = Storage.Account.GetId(msg.AccountName);
 
-                Storage.Msg.Post(accountId, msg.Message.Content);
+                var msgId = Storage.Msg.Post(accountId, msg.Message.Content);
 
-                // Result is an empty error XML element
-                error = new Error();
+                //Result
+                answer = new Answer(new ObjectCreated(msgId));
             }
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
-                error = new Error(exception.Code.ToString());
+                answer = new Answer(new Error(exception.Code.ToString()));
             }
 
             var stream = new MemoryStream();
-            (new XmlSerializer(typeof (Error))).Serialize(stream, error);
+            (new XmlSerializer(typeof (Error))).Serialize(stream, answer);
+
+            return Content(stream.ToString());
+        }
+
+        //
+        // POST : modifyaccount/copy
+
+        //[Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Copy(CopyMsg msg)
+        {
+            Answer answer;
+
+            try
+            {
+                var accountId = msg.AccountId;
+                //TODO: find how to test accountId
+                //if (accountId == )
+                //    accountId = Storage.Account.GetId(msg.AccountName);
+
+                var msgId = Storage.Msg.Copy(accountId, msg.MessageId);
+
+                //Result
+                answer = new Answer(new ObjectCreated(msgId));
+            }
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                answer = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Error))).Serialize(stream, answer);
 
             return Content(stream.ToString());
         }
@@ -54,7 +87,7 @@ namespace Tigwi_API.Controllers
             try
             {
                 //TODO: find out how to use this information, if necessary (?)
-                var accountId = msg.AccountId;
+               // var accountId = msg.AccountId;
                 //TODO: find how to test accountId
                 //if (accountId == )
                 //    accountId = Storage.Account.GetId(msg.AccountName);
@@ -62,6 +95,72 @@ namespace Tigwi_API.Controllers
                 Storage.Msg.Remove(msg.MessageId);
 
                 // Result is an empty error XML element
+                error = new Error();
+            }
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                error = new Error(exception.Code.ToString());
+            }
+
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Error))).Serialize(stream, error);
+
+            return Content(stream.ToString());
+        }
+
+        //
+        // POST : modifyaccount/tag
+
+        //[Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Tag(Tag msg)
+        {
+            Error error;
+
+            try
+            {
+                var accountId = msg.AccountId;
+                //TODO: find how to test accountId
+                //if (accountId == )
+                //    accountId = Storage.Account.GetId(msg.AccountName);
+
+              Storage.Msg.Tag(accountId, msg.MessageId);
+
+                //Result is an empty error
+                error = new Error();
+            }
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                error = new Error(exception.Code.ToString());
+            }
+
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Error))).Serialize(stream, error);
+
+            return Content(stream.ToString());
+        }
+
+        //
+        // POST : modifyaccount/tag
+
+        //[Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Untag(Untag msg)
+        {
+            Error error;
+
+            try
+            {
+                var accountId = msg.AccountId;
+                //TODO: find how to test accountId
+                //if (accountId == )
+                //    accountId = Storage.Account.GetId(msg.AccountName);
+
+                Storage.Msg.Untag(accountId, msg.MessageId);
+
+                //Result is an empty error
                 error = new Error();
             }
             catch (StorageLibException exception)
@@ -113,27 +212,27 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CreateList(CreateList listCreation)
         {
-            Error error;
+            Answer answer;
 
             try
             {
                 var accountId = Storage.Account.GetId(listCreation.Account);
                 var listToCreate = listCreation.ListInfo;
 
-                Storage.List.Create(accountId, listToCreate.Name, listToCreate.Description,
+                var listId = Storage.List.Create(accountId, listToCreate.Name, listToCreate.Description,
                                     listToCreate.IsPrivate);
 
                 // Result is an empty error XML element
-                error = new Error();
+                answer = new Answer(new ObjectCreated(listId));
             }
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
-                error = new Error(exception.Code.ToString());
+                answer = new Answer(new Error(exception.Code.ToString()));
             }
 
             var stream = new MemoryStream();
-            (new XmlSerializer(typeof (Error))).Serialize(stream, error);
+            (new XmlSerializer(typeof (Error))).Serialize(stream, answer);
 
             return Content(stream.ToString());
         }
@@ -177,7 +276,7 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult RemoveUser(AccountUser infos)
+        public ActionResult RemoveUser(RemoveUser infos)
         {
             Error error;
 
@@ -216,7 +315,7 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult AddUser(AccountUser infos)
+        public ActionResult AddUser(AddUser infos)
         {
             Error error;
 
@@ -249,7 +348,45 @@ namespace Tigwi_API.Controllers
 
             return Content(stream.ToString());
         }
-    
 
+
+        //
+        // POST modifyaccount/changeadmin
+
+        //[Authorize]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult ChangeAdmin(ChangeAdministrator infos)
+        {
+            Error error;
+
+            try
+            {
+                var accountId = infos.AccountId;
+                //TODO: find how to test accountId to know if the information was sent or not
+                //if (accountId == )
+                //    accountId = Storage.Account.GetId(infos.AccountName);
+
+                var userId = infos.UserId;
+                //TODO: find how to test userId to know if the information was sent or not
+                //if (userId == )
+                //   userId = Storage.User.GetId(infos.UserLogin);
+
+                //Set the informations
+                Storage.Account.SetAdminId(accountId, userId);
+
+                // Result is an empty error XML element
+                error = new Error();
+            }
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                error = new Error(exception.Code.ToString());
+            }
+
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Error))).Serialize(stream, error);
+
+            return Content(stream.ToString());
+        }
     }
 }

@@ -23,14 +23,27 @@ namespace Tigwi_API.Models
     }
 
     [Serializable]
-    [XmlRootAttribute("Delete")]
-    public class MsgToDelete
+    public class ActionOnMessage
     {
         //TODO: find how to make some fields optional
         public string AccountName { get; set; }
         public Guid AccountId { get; set; }
         public Guid MessageId { get; set; }
     }
+
+    [Serializable]
+    [XmlRootAttribute("Delete")]
+    public class MsgToDelete : ActionOnMessage{}
+
+    [Serializable]
+    [XmlRootAttribute("Copy")]
+    public class CopyMsg : ActionOnMessage{}
+
+    [Serializable]
+    public class Tag : ActionOnMessage{}
+
+    [Serializable]
+    public class Untag : ActionOnMessage { }
 
     [Serializable]
     public class SubscribeList
@@ -72,4 +85,14 @@ namespace Tigwi_API.Models
         public string UserLogin { get; set; }
         public Guid UserId { get; set; }
     }
+
+    [Serializable]
+    public class AddUser : AccountUser{}
+
+    [Serializable]
+    public class RemoveUser : AccountUser{}
+
+    [Serializable]
+    public class ChangeAdministrator : AccountUser { }
+
 }

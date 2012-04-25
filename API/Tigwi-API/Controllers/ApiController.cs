@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Web.Mvc;
 using System.Linq;
+using System.Xml.Serialization;
 using StorageLibrary;
 using Tigwi_API.Models;
 
@@ -56,6 +58,29 @@ namespace Tigwi_API.Controllers
             }
 
             return new Users(users); 
+        }
+
+        public ActionResult Createuser(NewUser user)
+        {
+            Answer answer;
+
+            try
+            {
+                var userId = Storage.User.Create(user.Login, user.Email, user.Password);
+
+                // Result is an empty error XML element
+                answer = new Answer(new ObjectCreated(userId));
+            }
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                answer = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Error))).Serialize(stream, answer);
+
+            return Content(stream.ToString());
         }
 
         protected IStorage Storage;

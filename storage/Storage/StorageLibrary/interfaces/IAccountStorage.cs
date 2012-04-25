@@ -57,7 +57,7 @@ namespace StorageLibrary
         /// <summary>
         /// Create an account and return its ID
         /// </summary>
-        /// <exception cref="UserNotFound">if no account has this ID</exception>
+        /// <exception cref="UserNotFound">if no user has this ID</exception>
         /// <exception cref="AccountAlreadyExists">if the name is already used</exception>
         Guid Create(Guid adminId, string name, string description);
         /// <summary>

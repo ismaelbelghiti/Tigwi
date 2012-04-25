@@ -127,6 +127,28 @@ namespace Tigwi_API.Models
         [XmlElement]
         public List<User> User;
     }
+
+    [Serializable]
+    public class ObjectCreated : Content
+    {
+        public ObjectCreated(Guid id)
+        {
+            Id = id;
+        }
+
+        [XmlAttribute]
+        public Guid Id;
+    }
+
+    [Serializable]
+    [XmlRootAttribute("User")]
+    public class NewUser
+    {
+        public string Login { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
+
     // models to answer to requests with errors (can be empty) messages
 
     [Serializable]
