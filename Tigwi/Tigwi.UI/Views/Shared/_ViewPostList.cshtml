@@ -1,0 +1,9 @@
+﻿@using Tigwi.UI.Models
+@model List<Tigwi.UI.Models.PostViewModel>
+
+@for (int i = 0; i < Model.Count(); i++)
+{
+    PostViewModel toSend = Model[i];
+    toSend.color = i%2;
+    @Html.Partial("_ViewPost", toSend);
+}

@@ -1,0 +1,12 @@
+﻿@model Tigwi.UI.Models.PostViewModel
+
+<article class="message message@(Model.color%2)">
+    <div class="row-fluid">
+        <img class="span2" style="border-radius: 20px;" src="@Url.Content("~/Content/images/default_profile_1_bigger.png")"/>
+        <section class="span10">
+            <h5>@Model.Poster</h5>
+            <p>@Model.Content</p>
+        </section>
+            
+    </div>
+</article>
