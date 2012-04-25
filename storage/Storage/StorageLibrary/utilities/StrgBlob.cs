@@ -6,49 +6,20 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using Microsoft.WindowsAzure.StorageClient;
+using StorageLibrary.Utilities;
 
 namespace StorageLibrary.Utilities
 {
-    public class StrgBlob<T>
+    public class StrgBlob<T> : BaseBlob
     {
         // TODO : allow asynchronous upload and download
         // TODO : see if it is a good thing -> perf tests
         // TODO : if it is a good thing, use it where we can
-        BinaryFormatter formatter;
-        CloudBlob blob;
 
-        public bool Exists
-        {
-            get{
-                try
-                {
-                    blob.FetchAttributes();
-                    return true;
-                }
-                catch (StorageClientException e)
-                {
-                    if (e.ErrorCode == StorageErrorCode.ResourceNotFound)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-            }
-        }
-
-        public StrgBlob(CloudBlobContainer container, string blobName)
-        {
-            formatter = new BinaryFormatter();
-            blob = container.GetBlobReference(blobName);
-        }
+        public StrgBlob(CloudBlobContainer container, string blobName) : base(container, blobName) { }
 
         public T GetIfExists(Exception e)
         {
-            // TODO : better error handling
-            // TODO : replace the exception by an error code
             try
             {
                 BlobStream stream = blob.OpenRead();
@@ -130,11 +101,6 @@ namespace StorageLibrary.Utilities
                 else
                     throw;
             }
-        }
-
-        public void Delete()
-        {
-            blob.DeleteIfExists();
         }
     }
 }

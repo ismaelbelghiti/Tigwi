@@ -72,6 +72,7 @@
     <Compile Include="base\MsgStorage.cs" />
     <Compile Include="base\Storage.cs" />
     <Compile Include="base\UserStorage.cs" />
+    <Compile Include="utilities\BaseBlob.cs" />
     <Compile Include="utilities\Hasher.cs" />
     <Compile Include="utilities\HashSetBlob.cs" />
     <Compile Include="utilities\MsgSetBlob.cs" />
@@ -107,7 +108,7 @@
     <Compile Include="StorageTmp.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="base\StorageArchitecture.txt" />
+    <Content Include="StorageArchitecture.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

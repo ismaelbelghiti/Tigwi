@@ -30,16 +30,13 @@ list ->		------------------------------
 			followedaccounts/<list ID>/data		: HashSet<Guid> -- accounts in this list 
 									  /lock		: Mutex
 
-message ->	listmessages/<list ID>				: SortedList<IMessage> -- 100 last messages of the list
-			accountmessages/<poster ID>/<date>	: SortedList<IMessage> -- ~100 messages from <poster>, the first of the list is dated <date>
+message ->	listmessages/<list ID>				: List<IMessage> -- 100 last messages of the list
+			accountmessages/<poster ID>/<date>	: List<IMessage> -- ~100 messages from <poster>, the first of the list is dated <date>
 			taggedmessages/<account ID>			: HashSet<Guid>
-
-wait 1 min after msg post to show them
 
 TODO :
 	- check messages suze in the storage
-	- repack messages when to much messages have been deleted
+	- penser au problème de trop de removes (paquets de ~100 avec trop peu d'éléments)
 	- be able to upload avatars
 	- avoid follow a private list
-	- See if we can parallelize uploads and downloads from the storage
-	- benchmark our functions to see the time they takes
+	- avoid create each container evry times : only once in the begining
