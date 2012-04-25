@@ -80,23 +80,7 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        internal ListCollectionAdapter InternalAllFollowedLists
-        {
-            get
-            {
-                return this.allFollowedLists;
-            }
-        }
-
         public ICollection<StorageListModel> AllOwnedLists
-        {
-            get
-            {
-                return this.allOwnedLists;
-            }
-        }
-
-        internal ListCollectionAdapter InternalAllOwnedLists
         {
             get
             {
@@ -127,14 +111,6 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        internal ListCollectionAdapter InternalMemberOfLists
-        {
-            get
-            {
-                return this.memberLists;
-            }
-        }
-
         public string Name
         {
             get
@@ -152,23 +128,7 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        internal ListCollectionAdapter InternalPersonalList
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         public ICollection<StorageListModel> PublicFollowedLists
-        {
-            get
-            {
-                return this.publicFollowedLists;
-            }
-        }
-
-        internal ListCollectionAdapter InternalPublicFollowedLists
         {
             get
             {
@@ -184,23 +144,7 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        internal ListCollectionAdapter InternalPublicOwnedLists
-        {
-            get
-            {
-                return this.publicOwnedLists;
-            }
-        }
-
         public ICollection<StorageUserModel> Users
-        {
-            get
-            {
-                return this.users;
-            }
-        }
-
-        internal UserCollectionAdapter InternalUsers
         {
             get
             {
@@ -211,6 +155,62 @@ namespace Tigwi.UI.Models.Storage
         #endregion
 
         #region Properties
+
+        internal ListCollectionAdapter InternalAllFollowedLists
+        {
+            get
+            {
+                return this.allFollowedLists;
+            }
+        }
+
+        internal ListCollectionAdapter InternalAllOwnedLists
+        {
+            get
+            {
+                return this.allOwnedLists;
+            }
+        }
+
+        internal ListCollectionAdapter InternalMemberOfLists
+        {
+            get
+            {
+                return this.memberLists;
+            }
+        }
+
+        internal ListCollectionAdapter InternalPersonalList
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        internal ListCollectionAdapter InternalPublicFollowedLists
+        {
+            get
+            {
+                return this.publicFollowedLists;
+            }
+        }
+
+        internal ListCollectionAdapter InternalPublicOwnedLists
+        {
+            get
+            {
+                return this.publicOwnedLists;
+            }
+        }
+
+        internal UserCollectionAdapter InternalUsers
+        {
+            get
+            {
+                return this.users;
+            }
+        }
 
         protected override bool InfosUpdated
         {
@@ -231,12 +231,12 @@ namespace Tigwi.UI.Models.Storage
 
         #endregion
 
-        #region Public Methods and Operators
+        #region Methods
 
-        public override void Repopulate()
+        internal override void Repopulate()
         {
             // Fetch infos
-            IAccountInfo accountInfo = this.Storage.Account.GetInfo(this.Id);
+            var accountInfo = this.Storage.Account.GetInfo(this.Id);
 
             this.name = accountInfo.Name;
 
@@ -248,7 +248,7 @@ namespace Tigwi.UI.Models.Storage
             this.Populated = true;
         }
 
-        public override void Save()
+        internal override void Save()
         {
             if (this.InfosUpdated)
             {
@@ -257,16 +257,11 @@ namespace Tigwi.UI.Models.Storage
 
             if (this.AdminUpdated)
             {
-                this.Admin.Save();
                 this.Storage.Account.SetAdminId(this.Id, this.Admin.Id);
             }
 
             this.users.Save();
         }
-
-        #endregion
-
-        #region Methods
 
         private ListCollectionAdapter MakeListCollection(Func<ICollection<Guid>> func)
         {
@@ -291,9 +286,9 @@ namespace Tigwi.UI.Models.Storage
 
             #endregion
 
-            #region Public Methods and Operators
+            #region Methods
 
-            public override void Save()
+            internal override void Save()
             {
                 foreach (var list in this.CollectionAdded.Where(item => item.Value).Select(item => item.Key))
                 {
@@ -340,9 +335,9 @@ namespace Tigwi.UI.Models.Storage
 
             #endregion
 
-            #region Public Methods and Operators
+            #region Methods
 
-            public override void Save()
+            internal override void Save()
             {
                 foreach (var user in this.CollectionAdded.Where(item => item.Value).Select(item => item.Key))
                 {
@@ -355,11 +350,6 @@ namespace Tigwi.UI.Models.Storage
                     // TODO: check we are not removing the admin (?)
                     user.Save();
                     this.Storage.Account.Remove(this.Parent.Id, user.Id);
-                }
-
-                foreach (var user in this.CachedCollection)
-                {
-                    user.Save();
                 }
 
                 this.CollectionAdded.Clear();

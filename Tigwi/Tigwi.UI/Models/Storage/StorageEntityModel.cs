@@ -23,9 +23,9 @@ namespace Tigwi.UI.Models.Storage
 
         protected IStorageContext StorageContext { get; set; }
 
-        public abstract void Save();
+        internal abstract void Save();
 
-        public void Populate()
+        internal void Populate()
         {
             if (this.Populated)
             {
@@ -35,6 +35,6 @@ namespace Tigwi.UI.Models.Storage
             this.Repopulate();
         }
 
-        public abstract void Repopulate();
+        internal abstract void Repopulate();
     }
 }

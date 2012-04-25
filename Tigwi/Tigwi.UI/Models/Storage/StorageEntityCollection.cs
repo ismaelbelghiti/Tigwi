@@ -170,7 +170,7 @@ namespace Tigwi.UI.Models.Storage
             return this.Remove(item, true);
         }
 
-        public abstract void Save();
+        internal abstract void Save();
 
         #endregion
 

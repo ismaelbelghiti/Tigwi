@@ -17,7 +17,6 @@ namespace Tigwi.UI.Controllers
     public class UserController : HomeController
     {
         public UserController()
-            : base()
         {}
 
         public UserController(StorageContext storage)

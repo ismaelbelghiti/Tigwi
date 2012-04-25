@@ -122,7 +122,7 @@ namespace Tigwi.UI.Models.Storage
 
         #region Methods
 
-        public override void Save()
+        internal override void Save()
         {
             if (this.InfosUpdated)
             {
@@ -130,14 +130,13 @@ namespace Tigwi.UI.Models.Storage
                 this.InfosUpdated = false;
             }
 
-            var accountCollectionAdapter = this.accounts;
-            if (accountCollectionAdapter != null)
+            if (this.accounts != null)
             {
-                accountCollectionAdapter.Save();
+                this.accounts.Save();
             }
         }
 
-        public override void Repopulate()
+        internal override void Repopulate()
         {
             var userInfo = this.Storage.User.GetInfo(this.Id);
             this.login = userInfo.Login;
@@ -170,7 +169,7 @@ namespace Tigwi.UI.Models.Storage
 
             #region Public Methods and Operators
 
-            public override void Save()
+            internal override void Save()
             {
                 // TODO: catch exceptions.
                 foreach (var account in this.CollectionAdded.Where(item => item.Value).Select(item => item.Key))
