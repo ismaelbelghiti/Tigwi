@@ -7,6 +7,10 @@ using NUnit.Framework;
 
 namespace Tigwi.UI.Tests.Models
 {
+    using System.IO;
+    using System.Runtime.Serialization;
+    using System.Runtime.Serialization.Formatters.Binary;
+
     using Moq;
 
     using StorageLibrary;
@@ -36,6 +40,37 @@ namespace Tigwi.UI.Tests.Models
         #endregion
 
         #region Tests
+
+        [Serializable]
+        public class Test
+        {
+            public Guid UserId { get; set; }
+
+            public Guid AccountId { get; set; }
+        }
+
+        [Test]
+        public void MyTest()
+        {
+            var test = new Test { UserId = Guid.NewGuid(), AccountId = Guid.NewGuid() };
+
+            Console.WriteLine(test.UserId);
+            Console.WriteLine(test.AccountId);
+
+            var formatter = new BinaryFormatter();
+            var stream = new MemoryStream();
+
+            formatter.Serialize(stream, test);
+
+            var encodedStr = Convert.ToBase64String(stream.ToArray());
+            Console.WriteLine(encodedStr);
+            var decodedArr = Convert.FromBase64String(encodedStr);
+            var stream2 = new MemoryStream(decodedArr);
+            var deserialized = (new BinaryFormatter()).Deserialize(stream2) as Test;
+
+            Console.WriteLine(deserialized.UserId);
+            Console.WriteLine(deserialized.AccountId);
+        }
 
         [Test]
         public void TestCreate()
