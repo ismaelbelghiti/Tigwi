@@ -133,7 +133,6 @@ namespace StorageLibrary
         public Guid Create(Guid adminId, string name, string description)
         {
             // TODO : create the personnal list 
-            // TODO : create all the requiered list structures
 
             Guid nameHash = Hasher.Hash(name);
             StrgBlob<Guid> bNameById = new StrgBlob<Guid>(connexion.accountContainer, Path.A_IDBYNAME + nameHash);
@@ -151,11 +150,15 @@ namespace StorageLibrary
             StrgBlob<IAccountInfo> bInfo = new StrgBlob<IAccountInfo>(connexion.accountContainer, Path.A_INFO + id);
             StrgBlob<HashSet<Guid>> bAccountUsers = new StrgBlob<HashSet<Guid>>(connexion.accountContainer, Path.A_USERS + id);
             StrgBlob<Guid> bAdminId = new StrgBlob<Guid>(connexion.accountContainer, Path.A_ADMINID + id);
+
             StrgBlob<HashSet<Guid>> bUserAccounts = new StrgBlob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + adminId + Path.U_ACC_DATA);
+
             StrgBlob<HashSet<Guid>> bOwnedListsPublic = new StrgBlob<HashSet<Guid>>(connexion.listContainer, Path.L_OWNEDLISTS_PUBLIC + id);
             StrgBlob<HashSet<Guid>> bOwnedListsPrivate = new StrgBlob<HashSet<Guid>>(connexion.listContainer, Path.L_OWNEDLISTS_PRIVATE + id);
             StrgBlob<HashSet<Guid>> bFollowedLists = new StrgBlob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDLISTS + id + Path.L_FOLLOWEDLISTS_DATA);
             StrgBlob<HashSet<Guid>> bFollowedBy = new StrgBlob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDBY + id);
+
+            MsgSetBlobPack bTaggedMsg = new MsgSetBlobPack(connexion.msgContainer, Path.M_TAGGEDMESSAGES + id);
 
             // TODO : we could do it without a lock - or at least store the data before
             using (new Mutex(connexion.userContainer, Path.U_ACCOUNTS + adminId + Path.U_ACC_LOCK, new UserNotFound()))
@@ -168,6 +171,7 @@ namespace StorageLibrary
                 bOwnedListsPrivate.Set(new HashSet<Guid>());
                 bFollowedLists.Set(new HashSet<Guid>());
                 bFollowedBy.Set(new HashSet<Guid>());
+                bTaggedMsg.Init();
 
                 Mutex.Init(connexion.listContainer, Path.L_FOLLOWEDLISTS + id + Path.L_FOLLOWEDLISTS_LOCK);
 

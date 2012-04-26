@@ -24,7 +24,6 @@ namespace StorageLibrary
 
         public List<IMessage> GetListsMsgFrom(HashSet<Guid> listsId, DateTime firstMsgTime, int msgNumber)
         {
-            // TODO : only look at the 
             // TODO : add some parallization
             SortedSet<IMessage> messages = listsId.Aggregate(new SortedSet<IMessage>(),
                 (set, id) => new StrgBlob<SortedSet<IMessage>>(connexion.msgContainer, Path.M_LISTMESSAGES + id).GetIfExists(new ListNotFound()));
@@ -74,9 +73,11 @@ namespace StorageLibrary
             //}
         }
 
-        // NYI
         public void Tag(Guid accountId, Guid msgId)
         {
+            // retrive the message
+            IMessage message = (new StrgBlob<IMessage>(connexion.msgContainer, Path.M_MESSAGE + msgId)).GetIfExists(new MessageNotFound());
+
             throw new NotImplementedException();
         }
 
