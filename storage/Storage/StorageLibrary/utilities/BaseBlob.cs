@@ -48,7 +48,7 @@ namespace StorageLibrary.Utilities
 
         public void Delete()
         {
-            blob.DeleteIfExists();
+            blob.Delete();
         }
     }
 }

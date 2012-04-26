@@ -30,13 +30,17 @@ list ->		------------------------------
 			followedaccounts/<list ID>/data		: HashSet<Guid> -- accounts in this list 
 									  /lock		: Mutex
 
-message ->	listmessages/<list ID>				: List<IMessage> -- 100 last messages of the list
+message ->	listmessages/<list ID>				: SortedSet<IMessage> -- 100 last messages of the list
 			accountmessages/<poster ID>/<date>	: List<IMessage> -- ~100 messages from <poster>, the first of the list is dated <date>
-			taggedmessages/<account ID>			: HashSet<Guid>
+			taggedmessages/<account ID>/<date>	: SortedSet<IMessage>
+			message/<messageID>					: IMessage
 
 TODO :
 	- check messages suze in the storage
 	- penser au problème de trop de removes (paquets de ~100 avec trop peu d'éléments)
 	- be able to upload avatars
-	- avoid follow a private list
+	- avoid follow a private list 
 	- avoid create each container evry times : only once in the begining
+	- Find something better than a sortedSet to sort messages. Maybe we should code our own ?
+	- remove the messages from the listmessage when we remove an account from the list
+	- maybe we don't need to fetch attributes, they are automaticaly updated with blob update ?

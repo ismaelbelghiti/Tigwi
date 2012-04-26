@@ -27,9 +27,9 @@ namespace StorageLibrary.Utilities
                 stream.Close();
                 return t;
             }
-            catch (Exception)
+            catch (Exception e2)
             {
-                throw e;
+                throw e2;
             }
         }
 

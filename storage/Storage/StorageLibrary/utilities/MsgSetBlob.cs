@@ -7,90 +7,40 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace StorageLibrary.Utilities
 {
-    public class MsgSetBlob
+    public class MsgSetBlob : BaseBlob
     {
-        /*CloudBlob blob;
-        BinaryFormatter formatter;
-
-        public MsgSetBlob(CloudBlobContainer container, string blobName)
+        [Serializable]
+        class MsgComparer : IComparer<IMessage>
         {
-            blob = container.GetBlobReference(blobName);
-            formatter = new BinaryFormatter();
-        }
-
-        public bool Exists
-        {
-            get
+            public int Compare(IMessage x, IMessage y)
             {
-                try
-                {
-                    blob.FetchAttributes();
-                    return true;
-                }
-                catch (StorageClientException e)
-                {
-                    if (e.ErrorCode == StorageErrorCode.ResourceNotFound)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                if (x.Date == y.Date)
+                    return x.Id.CompareTo(y.Id);
+                else
+                    return x.Date < y.Date ? -1 : 1;
             }
         }
 
-        public bool Add(MessageUpdateFields )
+        public MsgSetBlob(CloudBlobContainer container, string blobName) : base(container, blobName) { }
+
+        public void Init()
         {
-            BlobRequestOptions reqOpt = new BlobRequestOptions();
-            SortedList<K, V> list;
-            BlobStream stream;
-            string eTag;
-            bool keepGoing;
-
-            do
-            {
-                try
-                {
-                    blob.FetchAttributes();
-                    eTag = blob.Attributes.Properties.ETag;
-                    stream = blob.OpenRead();
-                    list = (SortedList<K, V>)formatter.Deserialize(stream);
-                    stream.Close();
-                }
-                catch
-                {
-                    return false;
-                }
-
-                list.Add(key, item);
-                reqOpt.AccessCondition = AccessCondition.IfMatch(eTag);
-
-                try
-                {
-                    stream = blob.OpenWrite(reqOpt);
-                    formatter.Serialize(stream, list);
-                    stream.Close();
-                    keepGoing = false;
-                }
-                catch (Exception)
-                {
-                    keepGoing = true;
-                }
-
-            } while (keepGoing);
-
-            return true;
+            MsgComparer comparer = new MsgComparer();
+            BlobStream stream = blob.OpenWrite();
+            formatter.Serialize(stream, new SortedSet<IMessage>(comparer));
+            stream.Close();
         }
 
-        public bool Remove(T item)
+        /// <summary>
+        /// Add a message to the set and delete the older message if count > maxMessage
+        /// </summary>
+        /// <returns>return false if no message was added</returns>
+        public bool AddAndDelete(IMessage message, int maxMsg)
         {
             BlobRequestOptions reqOpt = new BlobRequestOptions();
-            HashSet<T> set;
+            SortedSet<IMessage> set;
             BlobStream stream;
             string eTag;
-            bool keepGoing;
 
             do
             {
@@ -99,15 +49,17 @@ namespace StorageLibrary.Utilities
                     blob.FetchAttributes();
                     eTag = blob.Attributes.Properties.ETag;
                     stream = blob.OpenRead();
-                    set = (HashSet<T>)formatter.Deserialize(stream);
+                    set = (SortedSet<IMessage>)formatter.Deserialize(stream);
                     stream.Close();
                 }
-                catch
-                {
-                    return false;
-                }
+                catch { return false; }
 
-                set.Remove(item);
+                // update the set
+                set.Add(message);
+                // we can do this this way because we usualy remove only one
+                while (set.Count > maxMsg)
+                    set.Remove(set.Min);
+
                 reqOpt.AccessCondition = AccessCondition.IfMatch(eTag);
 
                 try
@@ -115,17 +67,12 @@ namespace StorageLibrary.Utilities
                     stream = blob.OpenWrite(reqOpt);
                     formatter.Serialize(stream, set);
                     stream.Close();
-                    keepGoing = false;
+                    return true;
                 }
-                catch (Exception)
-                {
-                    keepGoing = true;
-                }
+                catch { }
 
-            } while (keepGoing);
-
-            return true;
-        }*/
+            } while (true);
+        }
     }
 }
 

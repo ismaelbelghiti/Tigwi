@@ -55,7 +55,6 @@ namespace StorageLibrary
         /// <summary>
         /// Post a message and return its Id
         /// </summary>
-        /// <exception cref="AccountNotFound">no account has this ID</exception>
         Guid Post(Guid accountId, string content);
 
         /// <summary>

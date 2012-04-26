@@ -75,11 +75,8 @@ namespace StorageLibrary
             bFollowedAccounts.Set(new HashSet<Guid>());
             Mutex.Init(connexion.listContainer, Path.L_FOLLOWEDACCOUNTS + id + Path.L_FOLLOWEDACC_LOCK);
 
-            // Creation of blobs in message container
-            StrgBlob<SortedList<DateTime, Message>> bMessages = new StrgBlob<SortedList<DateTime, Message>>(connexion.msgContainer, Path.M_LISTMESSAGES + id);
-
-            // store data
-            bMessages.Set(new SortedList<DateTime, Message>());
+            MsgSetBlob bMessages = new MsgSetBlob(connexion.msgContainer, Path.M_LISTMESSAGES + id);
+            bMessages.Init();
 
             // add the lists to owned lists and check that the user exists. if he doesn't, delete the data stored
             if (!bOwned.Add(id))

@@ -980,6 +980,22 @@ namespace StorageLocalTest
             Console.WriteLine();
         }
 
+        static void TestMessages(IStorage storage)
+        {
+            Console.WriteLine("Testing Messages");
+            Guid account1 = storage.Account.GetId("accountThatExists");
+            Guid account2 = storage.Account.GetId("otherAccountThatExists");
+            HashSet<Guid> lists1 = storage.List.GetAccountOwnedLists(account1, false);
+
+
+            storage.Msg.Post(account1, "account1 msg");
+            foreach (var m in storage.Msg.GetListsMsgFrom(lists1, DateTime.MinValue, 100))
+                Console.WriteLine(m.Content);
+
+
+            Console.WriteLine();
+        }
+
         static void ClearContainer(CloudBlobContainer c)
         {
             BlobRequestOptions opt = new BlobRequestOptions();
@@ -991,7 +1007,7 @@ namespace StorageLocalTest
         static void Main(string[] args)
         {
             Console.WriteLine("Init connexions");
-            Storage storage = new Storage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY");
+            Storage storage = new Storage("ulyssestorage", "VSUwYEH4xZuAG9UlZT71mqmixX2slRFlGDXgFUL5lq812aoqN3yxorcbZ3fuUDSp6nlcp4bDH7EWraRWZsBsTg==");
 
             Console.WriteLine("Clearing previous data");
             ClearContainer(storage.connexion.userContainer);
@@ -1013,9 +1029,11 @@ namespace StorageLocalTest
 
             Console.WriteLine("Init ok");
 
-            TestUser(storage);
-            TestAccounts(storage);
-            TestList(storage, listId);
+            //TestUser(storage);
+            //TestAccounts(storage);
+            //TestList(storage, listId);
+
+            TestMessages(storage);
 
             Console.ReadLine();
 
