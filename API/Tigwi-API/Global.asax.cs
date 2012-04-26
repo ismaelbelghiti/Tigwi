@@ -15,7 +15,7 @@ namespace Tigwi_API
 
             //routes to InfoAccount
 
-            routes.MapRoute("InfoAccount",
+            routes.MapRoute("InfoAccountByName",
                             "infoaccount/{action}/{accountName}/{number}",
                             new
                                 {
@@ -26,7 +26,7 @@ namespace Tigwi_API
                                 }
                 );
 
-            routes.MapRoute("InfoAccount",
+            routes.MapRoute("InfoAccountById",
                             "infoaccount/{action}/{accountId}/{number}",
                             new
                             {
@@ -52,7 +52,7 @@ namespace Tigwi_API
             
             // routes to InfoUser
 
-            routes.MapRoute("InfoUser", 
+            routes.MapRoute("InfoUserByLogin", 
                             "infouser/{action}/{userLogin}/{number}",
                             new
                                 {
@@ -63,7 +63,7 @@ namespace Tigwi_API
                                 }
                 );
 
-            routes.MapRoute("InfoUser",
+            routes.MapRoute("InfoUserById",
                             "infouser/{action}/{userId}/{number}",
                             new
                             {
