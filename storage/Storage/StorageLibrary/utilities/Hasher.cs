@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Security.Cryptography;
 
-namespace StorageCommon
+namespace StorageLibrary.Utilities
 {
     public class Hasher
     {

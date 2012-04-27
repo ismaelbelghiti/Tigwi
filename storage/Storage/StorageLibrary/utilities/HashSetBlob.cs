@@ -5,41 +5,11 @@ using System.Text;
 using Microsoft.WindowsAzure.StorageClient;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace StorageCommon
+namespace StorageLibrary.Utilities
 {
-    public class HashSetBlob<T>
+    public class HashSetBlob<T> : BaseBlob
     {
-        CloudBlob blob;
-        BinaryFormatter formatter;
-
-        public HashSetBlob(CloudBlobContainer container, string blobName)
-        {
-            blob = container.GetBlobReference(blobName);
-            formatter = new BinaryFormatter();
-        }
-
-        public bool Exists
-        {
-            get
-            {
-                try
-                {
-                    blob.FetchAttributes();
-                    return true;
-                }
-                catch (StorageClientException e)
-                {
-                    if (e.ErrorCode == StorageErrorCode.ResourceNotFound)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-            }
-        }
+        public HashSetBlob(CloudBlobContainer container, string blobName) : base(container, blobName) { }
 
         public bool Add(T item)
         {
@@ -47,21 +17,18 @@ namespace StorageCommon
             HashSet<T> set;
             BlobStream stream;
             string eTag;
-            bool keepGoing;
 
             do
             {
                 try
                 {
+                    blob.FetchAttributes();
                     eTag = blob.Attributes.Properties.ETag;
                     stream = blob.OpenRead();
                     set = (HashSet<T>)formatter.Deserialize(stream);
                     stream.Close();
                 }
-                catch
-                {
-                    return false;
-                }
+                catch { return false; }
 
                 set.Add(item);
                 reqOpt.AccessCondition = AccessCondition.IfMatch(eTag);
@@ -71,16 +38,11 @@ namespace StorageCommon
                     stream = blob.OpenWrite(reqOpt);
                     formatter.Serialize(stream, set);
                     stream.Close();
-                    keepGoing = false;
+                    return true;
                 }
-                catch(Exception)
-                {
-                    keepGoing = true;
-                }
+                catch { }
 
-            } while (keepGoing);
-
-            return true;
+            } while (true);
         }
 
         public bool Remove(T item)
@@ -89,21 +51,18 @@ namespace StorageCommon
             HashSet<T> set;
             BlobStream stream;
             string eTag;
-            bool keepGoing;
 
             do
             {
                 try
                 {
+                    blob.FetchAttributes();
                     eTag = blob.Attributes.Properties.ETag;
                     stream = blob.OpenRead();
                     set = (HashSet<T>)formatter.Deserialize(stream);
                     stream.Close();
                 }
-                catch
-                {
-                    return false;
-                }
+                catch { return false; }
 
                 set.Remove(item);
                 reqOpt.AccessCondition = AccessCondition.IfMatch(eTag);
@@ -113,16 +72,11 @@ namespace StorageCommon
                     stream = blob.OpenWrite(reqOpt);
                     formatter.Serialize(stream, set);
                     stream.Close();
-                    keepGoing = false;
+                    return true;
                 }
-                catch (Exception)
-                {
-                    keepGoing = true;
-                }
+                catch { }
 
-            } while (keepGoing);
-
-            return true;
+            } while (true);
         }
     }
 }

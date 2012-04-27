@@ -5,6 +5,9 @@ using System.Text;
 
 namespace StorageLibrary
 {
+    // Be carefull : their is no warranty an all about time synchronisation between differents VM in azure
+    // To be sure messages come in the right order, we wait a few moments between the time they are posted and the time we show them
+
     public interface IMsgStorage
     {
         /// <summary>
@@ -13,6 +16,7 @@ namespace StorageLibrary
         /// </summary>
         /// <exception cref="ListNotFound">A list in listID doesn't exists</exception>
         List<IMessage> GetListsMsgFrom(HashSet<Guid> listsId, DateTime firstMsgDate, int msgNumber);
+
         /// <summary>
         /// Return the last msgNumber messages posted before lastMsgDate contained into listId.
         /// Does not include lastMsgDate
@@ -27,6 +31,7 @@ namespace StorageLibrary
         /// <exception cref="AccountNotFound">no account has this ID</exception>
         /// <exception cref="MessageNotFound">no message has this ID</exception>
         void Tag(Guid accountId, Guid msgId);
+
         /// <summary>
         /// Remove a message from favorits
         /// Doesn't do anything if the account or the msg doesn't exists
@@ -39,6 +44,7 @@ namespace StorageLibrary
         /// </summary>
         /// <exception cref="AccountNotFound">No account has this id</exception>
         List<IMessage> GetTaggedFrom(Guid accoundId, DateTime firstMsgDate, int msgNumber);
+
         /// <summary>
         /// Return the last msgNumber messages posted before firstMsgId tagged by the account.
         /// Does not include firstMasgDate
@@ -49,14 +55,15 @@ namespace StorageLibrary
         /// <summary>
         /// Post a message and return its Id
         /// </summary>
-        /// <exception cref="AccountNotFound">no account has this ID</exception>
         Guid Post(Guid accountId, string content);
+
         /// <summary>
         /// Copy a message to accountId and return the new ID
         /// </summary>
         /// <exception cref="AccountNotFound">no account has this ID</exception>
         /// <exception cref="MessageNotFound">no message has this ID</exception>
         Guid Copy(Guid accountId, Guid msgId);
+
         /// <summary>
         /// Delete a message
         /// Don't do anything if the message doesn't exists

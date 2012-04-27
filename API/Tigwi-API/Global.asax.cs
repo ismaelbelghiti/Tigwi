@@ -15,7 +15,7 @@ namespace Tigwi_API
 
             //routes to InfoAccount
 
-            routes.MapRoute("InfoAccount",
+            routes.MapRoute("InfoAccountByName",
                             "infoaccount/{action}/{accountName}/{number}",
                             new
                                 {
@@ -26,13 +26,13 @@ namespace Tigwi_API
                                 }
                 );
 
-            routes.MapRoute("InfoAccount",
+            routes.MapRoute("InfoAccountById",
                             "infoaccount/{action}/{accountId}/{number}",
                             new
                             {
                                 controller = "InfoAccount",
-                                action = @"\d+",
-                                accountName = @"\s+",
+                                action = "",
+                                accountId = @"\d+",
                                 number = "20" // Par défaut le nombre de messages est 20
                             }
                 );
@@ -50,6 +50,29 @@ namespace Tigwi_API
                                 }
                 );
             
+            // routes to InfoUser
+
+            routes.MapRoute("InfoUserByLogin", 
+                            "infouser/{action}/{userLogin}/{number}",
+                            new
+                                {
+                                    controller = "InfoUser",
+                                    action = "",
+                                    userLogin = @"/s+",
+                                    number = "20"
+                                }
+                );
+
+            routes.MapRoute("InfoUserById",
+                            "infouser/{action}/{userId}/{number}",
+                            new
+                            {
+                                controller = "InfoUser",
+                                action = "",
+                                userId = @"/d+",
+                                number = "20"
+                            }
+                );
 
 			// default route (also used for Modify)
             routes.MapRoute("Default", "{controller}/{action}/{id}",

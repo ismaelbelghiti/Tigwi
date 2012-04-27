@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Web.Mvc;
 using System.Linq;
+using System.Xml.Serialization;
 using StorageLibrary;
 using Tigwi_API.Models;
 
@@ -12,7 +14,7 @@ namespace Tigwi_API.Controllers
         protected ApiController ()
         {
             // TODO : give the actual connexion informations
-            Storage = new Storage("devstoreaccount1","Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==");
+            Storage = new Storage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY");
         }
 
         protected static Accounts BuildAccountListFromGuidCollection(ICollection<Guid> hashAccounts, int size, IStorage storage)
@@ -50,12 +52,35 @@ namespace Tigwi_API.Controllers
             for (var k = 0; k < size; k++)
             {
                 var userId = hashUsers.First();
-                var user = new User(storage.User.GetInfo(userId));
+                var user = new User(storage.User.GetInfo(userId), userId);
                 users.Add(user);
                 hashUsers.Remove(userId);
             }
 
             return new Users(users); 
+        }
+
+        public ActionResult Createuser(NewUser user)
+        {
+            Answer answer;
+
+            try
+            {
+                var userId = Storage.User.Create(user.Login, user.Email, user.Password);
+
+                // Result is an empty error XML element
+                answer = new Answer(new ObjectCreated(userId));
+            }
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                answer = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Error))).Serialize(stream, answer);
+
+            return Content(stream.ToString());
         }
 
         protected IStorage Storage;

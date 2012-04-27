@@ -92,6 +92,8 @@
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApiController.cs" />
+    <Compile Include="Controllers\InfoAccountByIdController.cs" />
+    <Compile Include="Controllers\InfoAccountByNameController.cs" />
     <Compile Include="Controllers\InfoUserController.cs" />
     <Compile Include="Controllers\ModifyListController.cs" />
     <Compile Include="Controllers\HomeController.cs" />

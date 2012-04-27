@@ -72,7 +72,7 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult followList(Guid idOfList, Guid accountId)
+        public ActionResult FollowList(Guid idOfList, Guid accountId)
         {
             Error error;
 
@@ -100,7 +100,7 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult unfollowList(Guid idOfList, Guid accountId)
+        public ActionResult UnfollowList(Guid idOfList, Guid accountId)
         {
             Error error;
 

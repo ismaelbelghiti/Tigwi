@@ -6,49 +6,20 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using Microsoft.WindowsAzure.StorageClient;
+using StorageLibrary.Utilities;
 
-namespace StorageCommon
+namespace StorageLibrary.Utilities
 {
-    public class StrgBlob<T>
+    public class StrgBlob<T> : BaseBlob
     {
         // TODO : allow asynchronous upload and download
         // TODO : see if it is a good thing -> perf tests
         // TODO : if it is a good thing, use it where we can
-        BinaryFormatter formatter;
-        CloudBlob blob;
 
-        public bool Exists
-        {
-            get{
-                try
-                {
-                    blob.FetchAttributes();
-                    return true;
-                }
-                catch (StorageClientException e)
-                {
-                    if (e.ErrorCode == StorageErrorCode.ResourceNotFound)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-            }
-        }
-
-        public StrgBlob(CloudBlobContainer container, string blobName)
-        {
-            formatter = new BinaryFormatter();
-            blob = container.GetBlobReference(blobName);
-        }
+        public StrgBlob(CloudBlobContainer container, string blobName) : base(container, blobName) { }
 
         public T GetIfExists(Exception e)
         {
-            // TODO : better error handling
-            // TODO : replace the exception by an error code
             try
             {
                 BlobStream stream = blob.OpenRead();
@@ -56,9 +27,9 @@ namespace StorageCommon
                 stream.Close();
                 return t;
             }
-            catch (Exception)
+            catch (Exception e2)
             {
-                throw e;
+                throw e2;
             }
         }
 
@@ -96,28 +67,40 @@ namespace StorageCommon
             }
         }
 
+        // we can't use the Etag * with IfMatch 
+        // beacause it only works with IfNoneMatch
+        // We have to use an Etag retry policy --> TODO : find something better
         public bool SetIfExists(T obj)
         {
             BlobRequestOptions reqOpt = new BlobRequestOptions();
-            reqOpt.AccessCondition = AccessCondition.IfMatch("*");
             try
             {
-                BlobStream stream = blob.OpenWrite(reqOpt);
-                formatter.Serialize(stream, obj);
-                stream.Close();
-                return true;
+                while (true)
+                {
+                    blob.FetchAttributes();
+                    string etag = blob.Attributes.Properties.ETag;
+                    reqOpt.AccessCondition = AccessCondition.IfMatch(etag);
+                    try
+                    {
+                        BlobStream stream = blob.OpenWrite(reqOpt);
+                        formatter.Serialize(stream, obj);
+                        stream.Close();
+                        return true;
+                    }
+                    catch (StorageClientException e)
+                    {
+                        if (e.ErrorCode != StorageErrorCode.ConditionFailed)
+                            throw;
+                    }
+                }
             }
             catch (StorageClientException e)
             {
-                if (e.ErrorCode != StorageErrorCode.ConditionFailed && e.ErrorCode != StorageErrorCode.BlobAlreadyExists)
+                if (e.ErrorCode == StorageErrorCode.ResourceNotFound)
+                    return false;
+                else
                     throw;
-                return false;
             }
-        }
-
-        public void Delete()
-        {
-            blob.DeleteIfExists();
         }
     }
 }

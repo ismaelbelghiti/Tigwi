@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.StorageClient;
 
-namespace StorageCommon
+namespace StorageLibrary.Utilities
 {
     public class StrgConnexion
     {

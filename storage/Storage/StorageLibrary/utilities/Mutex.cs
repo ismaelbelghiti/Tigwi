@@ -7,7 +7,7 @@ using Microsoft.WindowsAzure.StorageClient;
 using System.Threading;
 using System.Diagnostics;
 
-namespace StorageCommon
+namespace StorageLibrary.Utilities
 {
     public class Mutex : IDisposable
     {
@@ -29,6 +29,7 @@ namespace StorageCommon
                 string eTag;
                 try
                 {
+                    blob.FetchAttributes();
                     eTag = blob.Attributes.Properties.ETag;
                     if (eTag != oldEtag)
                     {

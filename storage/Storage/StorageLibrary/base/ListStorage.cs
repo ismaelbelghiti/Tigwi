@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using StorageCommon;
+using StorageLibrary;
+using StorageLibrary.Utilities;
 
 namespace StorageLibrary
 {
@@ -28,6 +29,7 @@ namespace StorageLibrary
         {
             // autorisation passage publique/privé
             // si passage publique privé : pseudo-suppression
+
             throw new NotImplementedException();
         }
 
@@ -59,12 +61,12 @@ namespace StorageLibrary
             HashSet<Guid> followingAccounts = new HashSet<Guid>();
             followingAccounts.Add(ownerId);
 
-            // Creation des blobs
+            // Creation of blobs in list container
             StrgBlob<ListInfo> bInfo = new StrgBlob<ListInfo>(connexion.listContainer, Path.L_INFO + id);
             StrgBlob<Guid> bOwner = new StrgBlob<Guid>(connexion.listContainer, Path.L_OWNER + id);
             HashSetBlob<Guid> bOwned = new HashSetBlob<Guid>(connexion.listContainer, (isPrivate ? Path.L_OWNEDLISTS_PRIVATE : Path.L_OWNEDLISTS_PUBLIC) + ownerId);
             StrgBlob<HashSet<Guid>> bFollowingAccounts = new StrgBlob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWINGACCOUNTS + id);
-            StrgBlob<HashSet<Guid>> bFollowedAccounts = new StrgBlob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDACCOUNTS + id + Path.L_FOLLOWEDACC_LOCK);
+            StrgBlob<HashSet<Guid>> bFollowedAccounts = new StrgBlob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDACCOUNTS + id + Path.L_FOLLOWEDACC_DATA);
 
             // store the data
             bInfo.Set(info);
@@ -72,6 +74,9 @@ namespace StorageLibrary
             bFollowingAccounts.Set(followingAccounts);
             bFollowedAccounts.Set(new HashSet<Guid>());
             Mutex.Init(connexion.listContainer, Path.L_FOLLOWEDACCOUNTS + id + Path.L_FOLLOWEDACC_LOCK);
+
+            MsgSetBlob bMessages = new MsgSetBlob(connexion.msgContainer, Path.M_LISTMESSAGES + id);
+            bMessages.Init();
 
             // add the lists to owned lists and check that the user exists. if he doesn't, delete the data stored
             if (!bOwned.Add(id))
@@ -81,6 +86,9 @@ namespace StorageLibrary
                 bFollowingAccounts.Delete();
                 bFollowedAccounts.Delete();
                 Mutex.Delete(connexion.listContainer, Path.L_FOLLOWEDACCOUNTS + id + Path.L_FOLLOWEDACC_LOCK);
+
+                bMessages.Delete();
+
                 throw new AccountNotFound();
             }
 
@@ -119,17 +127,13 @@ namespace StorageLibrary
             if (bOwner.GetIfExists(new ListNotFound()) == accountId)
                 throw new AccountIsOwner();
 
-            try
+            using (new Mutex(connexion.listContainer, Path.L_FOLLOWEDLISTS + accountId + Path.L_FOLLOWEDLISTS_LOCK, new AccountNotFound()))
             {
-                using (new Mutex(connexion.listContainer, Path.L_FOLLOWEDLISTS + accountId + Path.L_FOLLOWEDLISTS_LOCK, new AccountNotFound()))
-                {
-                    bFollowingAccounts.Remove(accountId);
-                    HashSet<Guid> followedLists = bFollowedLists.Get();
-                    followedLists.Remove(listId);
-                    bFollowedLists.Set(followedLists);
-                }
+                bFollowingAccounts.Remove(accountId);
+                HashSet<Guid> followedLists = bFollowedLists.GetIfExists(new ListNotFound());
+                followedLists.Remove(listId);
+                bFollowedLists.Set(followedLists);
             }
-            catch (AccountNotFound) { }
 
         }
 
@@ -142,19 +146,47 @@ namespace StorageLibrary
         public HashSet<Guid> GetFollowingLists(Guid accountId)
         {
             StrgBlob<HashSet<Guid>> blob = new StrgBlob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDBY + accountId);
-            return blob.GetIfExists(new ListNotFound());
+            return blob.GetIfExists(new AccountNotFound());
         }
 
-        // NYI
         public void Add(Guid listId, Guid accountId)
         {
-            throw new NotImplementedException();
+            StrgBlob<HashSet<Guid>> bFollowedAcounts = new StrgBlob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDACCOUNTS + listId + Path.L_FOLLOWEDACC_DATA);
+            HashSetBlob<Guid> bFollowingLists = new HashSetBlob<Guid>(connexion.listContainer, Path.L_FOLLOWEDBY + accountId);
+            StrgBlob<IListInfo> bListInfo = new StrgBlob<IListInfo>(connexion.listContainer, Path.L_INFO + listId);
+
+            using (new Mutex(connexion.listContainer, Path.L_FOLLOWEDACCOUNTS + listId + Path.L_FOLLOWEDACC_LOCK, new ListNotFound()))
+            {
+                // check if the list is private or not
+                if ((!bListInfo.Get().IsPrivate && !bFollowingLists.Add(listId)) || !bFollowedAcounts.Exists)
+                    throw new AccountNotFound();
+
+                HashSet<Guid> followedAccounts = bFollowedAcounts.Get();
+                followedAccounts.Add(accountId);
+                bFollowedAcounts.Set(followedAccounts);
+            }
+
         }
 
-        // NYI
         public void Remove(Guid listId, Guid accountId)
         {
-            throw new NotImplementedException();
+            // We don't check wether the list is private or not because it would be much more complicated and slower
+            // it is much easier to remove the list form FollowingLists even if she doesn't belong to this set
+            StrgBlob<HashSet<Guid>> bFollowedAcounts = new StrgBlob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDACCOUNTS + listId + Path.L_FOLLOWEDACC_DATA);
+
+            try
+            {
+                using (new Mutex(connexion.listContainer, Path.L_FOLLOWEDACCOUNTS + listId + Path.L_FOLLOWEDACC_LOCK, new AccountNotFound()))
+                {
+                    HashSetBlob<Guid> bFollowingLists = new HashSetBlob<Guid>(connexion.listContainer, Path.L_FOLLOWEDBY + accountId);
+                    bFollowingLists.Remove(listId);
+
+                    HashSet<Guid> followedAccounts = bFollowedAcounts.Get();
+                    followedAccounts.Remove(accountId);
+                    bFollowedAcounts.Set(followedAccounts);
+                }
+            }
+            catch (AccountNotFound) { }
         }
 
         public HashSet<Guid> GetAccountOwnedLists(Guid accountId, bool withPrivate)
@@ -175,7 +207,7 @@ namespace StorageLibrary
             StrgBlob<HashSet<Guid>> bPublic = new StrgBlob<HashSet<Guid>>(connexion.listContainer, Path.L_OWNEDLISTS_PUBLIC + accountId);
             StrgBlob<HashSet<Guid>> bFollowed = new StrgBlob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDLISTS + accountId + Path.L_FOLLOWEDLISTS_DATA);
             HashSet<Guid> lists = bPublic.GetIfExists(new AccountNotFound());
-            lists = (HashSet<Guid>) lists.Concat(bFollowed.GetIfExists(new AccountNotFound()));
+            lists.UnionWith(bFollowed.GetIfExists(new AccountNotFound()));
 
             if (withPrivate)
             {

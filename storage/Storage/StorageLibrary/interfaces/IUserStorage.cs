@@ -41,6 +41,7 @@ namespace StorageLibrary
         /// delete a user
         /// doesn't do anything if the user doesn't exists
         /// </summary>
+        /// <exception cref="UserIsAdmin">To avoid deleting an account</exception>
         void Delete(Guid userId);
 
         // TODO : implement this
@@ -48,12 +49,12 @@ namespace StorageLibrary
         /// To be used to check a user password
         /// </summary>
         /// <exception cref="UserNotFound"></exception>
-        string GetPassword(Guid userID);
+        string GetPassword(Guid userId);
 
         /// <summary>
         /// Change a user password
         /// </summary>
         /// <exception cref="UserNotFound"></exception>
-        void SetPassword(Guid userID, string password);
+        void SetPassword(Guid userId, string password);
     }
 }
