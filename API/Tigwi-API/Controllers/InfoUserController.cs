@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Xml.Serialization;
 using StorageLibrary;
@@ -42,7 +40,7 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        //GET infouser/maininformations/{userLogin}
+        //GET infouser/maininformations/{userId}
         public ActionResult MainInfo(Guid userId)
         {
             Answer output;
@@ -69,7 +67,7 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // GET : /infoaccount/subscribedaccounts/{accountName}/{number}
+        // GET : /infoaccount/subscribedaccounts/{userLogin}/{number}
         public ActionResult SubscribedAccounts(string userLogin, int number)
         {
             Answer output;

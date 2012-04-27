@@ -34,6 +34,7 @@ namespace Tigwi_API.Controllers
             return Content(stream.ToString());
         }
 
+
         //
         // GET: /infoaccount/taggedmessages/{accountId}/{number}
         public ActionResult TaggedMessages(Guid accountId, int number)
@@ -58,6 +59,7 @@ namespace Tigwi_API.Controllers
             return Content(stream.ToString());
         }
 
+        
         //
         // GET : /infoaccount/subscriberaccounts/{accountId}/{number}
         public ActionResult SubscriberAccounts(Guid accountId, int number)
@@ -82,6 +84,8 @@ namespace Tigwi_API.Controllers
             return Content(stream.ToString());
         }
 
+
+        // To be used in following methods
         private ContentResult SubscriptionsEitherPublicOrAll(Guid accountId, int numberOfSubscriptions, bool withPrivate)
         {
             Answer output;
@@ -104,6 +108,7 @@ namespace Tigwi_API.Controllers
             return Content(stream.ToString());
         }
 
+
         //
         // GET : /infoaccount/publiclysubscribedaccounts/{accountId}/{number}
         public ActionResult PubliclySubscribedAccounts(Guid accountId, int number)
@@ -114,7 +119,6 @@ namespace Tigwi_API.Controllers
 
         //
         // GET : /infoaccount/subscribedaccounts/{accountId}/{number}
-
         // [Authorize]
         public ActionResult SubscribedAccounts(Guid accountId, int number)
         {
@@ -143,6 +147,7 @@ namespace Tigwi_API.Controllers
             return Content(stream.ToString());
         }
 
+        
         //
         // GET : /infoaccount/subscribedpubliclists/{accountId}/{number}
         public ActionResult SubscribedPublicLists(Guid accountId, int number)
@@ -150,14 +155,16 @@ namespace Tigwi_API.Controllers
             return SubscribedListsEitherPublicOrAll(accountId, number, false);
         }
 
+        
         //
         // GET : /infoaccount/subscribedlists/{accountId}/{number}
-
         //[Authorize]
         public ActionResult SubscribedLists(Guid accountId, int number)
         {
             return SubscribedListsEitherPublicOrAll(accountId, number, true);
         }
+        
+        
         //
         // GET : /infoaccount/subscriberLists/{accountId}/{number}
         public ActionResult SubscriberLists(Guid accountId, int number)
@@ -182,6 +189,8 @@ namespace Tigwi_API.Controllers
             return Content(stream.ToString());
         }
 
+
+        // To be used in following methods
         private ActionResult OwnedListsEitherPublicOrAll(Guid accountId, int numberOfLists, bool withPrivate)
         {
             Answer output;
@@ -205,6 +214,7 @@ namespace Tigwi_API.Controllers
             return Content(stream.ToString());
         }
 
+
         //
         // GET : infoaccount/ownedpubliclists/{accountId}/{number}
         public ActionResult OwnedPublicLists(Guid accountId, int number)
@@ -212,14 +222,15 @@ namespace Tigwi_API.Controllers
             return OwnedListsEitherPublicOrAll(accountId, number, false);
         }
 
+        
         //
         // GET : /infoaccount/ownedlists/{accountId}/{number}
-
         //[Authorize]
         public ActionResult OwnedLists(Guid accountId, int number)
         {
             return OwnedListsEitherPublicOrAll(accountId, number, true);
         }
+
 
         //
         // GET : /infoaccount/main/{accountId}
@@ -244,6 +255,7 @@ namespace Tigwi_API.Controllers
 
             return Content(stream.ToString());
         }
+
 
         //
         // GET : /infoaccount/usersallowed/{accountId}/{number}
@@ -270,9 +282,9 @@ namespace Tigwi_API.Controllers
             return Content(stream.ToString());
         }
 
+
         //
         // GET : infoaccount/administrator/{accountId}
-
         //[Authorize]
         public ActionResult Administrator(Guid accountId)
         {

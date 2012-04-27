@@ -9,14 +9,17 @@ using Tigwi_API.Models;
 
 namespace Tigwi_API.Controllers
 {
-    public abstract class ApiController : Controller
+    public class ApiController : Controller
     {
+
+        // Initialize storage when instanciating a controller
         protected ApiController ()
         {
             // TODO : give the actual connexion informations
             Storage = new Storage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY");
         }
 
+        // Methods to build lists used in any controller
         protected static Accounts BuildAccountListFromGuidCollection(ICollection<Guid> hashAccounts, int size, IStorage storage)
         {
             var accountList = new List<Account>();
@@ -60,7 +63,11 @@ namespace Tigwi_API.Controllers
             return new Users(users); 
         }
 
-        public ActionResult Createuser(NewUser user)
+        // General methods
+
+        //
+        // GET : /createuser/{user}
+        public ActionResult CreateUser(NewUser user)
         {
             Answer answer;
 

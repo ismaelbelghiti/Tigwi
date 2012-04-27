@@ -9,6 +9,7 @@ namespace Tigwi_API.Controllers
 {
     public class InfoAccountByNameController : InfoAccountController
     {
+        
         //
         // GET: /infoaccount/messages/{accountName}/{number}
         public ActionResult Messages(string accountName, int number)
@@ -58,6 +59,7 @@ namespace Tigwi_API.Controllers
             return Content(stream.ToString());
         }
 
+        
         //
         // GET : /infoaccount/subscriberaccounts/{accountName}/{number}
         public ActionResult SubscriberAccounts(string accountName, int number)
@@ -81,6 +83,7 @@ namespace Tigwi_API.Controllers
 
             return Content(stream.ToString());
         }
+
 
         // To be used in following methods
         private ContentResult SubscriptionsEitherPublicOrAll(string accountName, int numberOfSubscriptions, bool withPrivate)
@@ -113,14 +116,16 @@ namespace Tigwi_API.Controllers
             return SubscriptionsEitherPublicOrAll(accountName, number, false);
         }
 
+
         //
         // GET : /infoaccount/subscribedaccounts/{accountName}/{number}
-
         // [Authorize]
         public ActionResult SubscribedAccounts(string accountName, int number)
         {
             return SubscriptionsEitherPublicOrAll(accountName, number, true);
         }
+
+
         // To be used in following methods
         private ActionResult SubscribedListsEitherPublicOrAll(string accountName, int numberofLists, bool withPrivate)
         {
@@ -144,6 +149,7 @@ namespace Tigwi_API.Controllers
             return Content(stream.ToString());
         }
 
+
         //
         // GET : /infoaccount/subscribedpubliclists/{accountName}/{number}
         public ActionResult SubscribedPublicLists(string accountName, int number)
@@ -151,15 +157,16 @@ namespace Tigwi_API.Controllers
             return SubscribedListsEitherPublicOrAll(accountName, number, false);
         }
 
+        
         //
         // GET : /infoaccount/subscribedlists/{accountName}/{number}
-
         //[Authorize]
         public ActionResult SubscribedLists(string accountName, int number)
         {
             return SubscribedListsEitherPublicOrAll(accountName, number, true);
         }
 
+        
         //
         // GET : /infoaccount/subscriberLists/{accountName}/{number}
         public ActionResult SubscriberLists(string accountName, int number)
@@ -184,6 +191,7 @@ namespace Tigwi_API.Controllers
             return Content(stream.ToString());
         }
 
+
         // To be used in following methods
         private ActionResult OwnedListsEitherPublicOrAll(string accountName, int numberOfLists, bool withPrivate)
         {
@@ -207,6 +215,8 @@ namespace Tigwi_API.Controllers
 
             return Content(stream.ToString());
         }
+        
+        
         //
         // GET : infoaccount/ownedpubliclists/{accountName}/{number}
         public ActionResult OwnedPublicLists(string accountName, int number)
@@ -214,18 +224,18 @@ namespace Tigwi_API.Controllers
             return OwnedListsEitherPublicOrAll(accountName, number, false);
         }
 
+
         //
         // GET : /infoaccount/ownedlists/{accountName}/{number}
-
         //[Authorize]
         public ActionResult OwnedLists(string accountName, int number)
         {
             return OwnedListsEitherPublicOrAll(accountName, number, true);
         }
 
+
         //
         // GET : /infoaccount/main/{accountName}
-
         //[Authorize]
         public ActionResult MainInfo(string accountName)
         {
@@ -249,6 +259,7 @@ namespace Tigwi_API.Controllers
             return Content(stream.ToString());
         }
 
+        
         //
         // GET : /infoaccount/usersallowed/{accountName}/{number}
         //[Authorize] (?)
@@ -274,9 +285,9 @@ namespace Tigwi_API.Controllers
             return Content(stream.ToString());
         }
 
+
         //
         // GET : infoaccount/administrator/{accountName}
-
         //[Authorize]
         public ActionResult Administrator(string accountName)
         {
@@ -299,9 +310,6 @@ namespace Tigwi_API.Controllers
 
             return Content(stream.ToString());
         }
-
-
-
-
+        
     }
 }

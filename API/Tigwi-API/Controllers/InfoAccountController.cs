@@ -1,15 +1,13 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
-using System.Web.Mvc;
-using System.Xml.Serialization;
-using StorageLibrary;
 using Tigwi_API.Models;
 
 namespace Tigwi_API.Controllers
 {
     public abstract class InfoAccountController : ApiController
     {
+
+        // parts of code that are common when accessing methods by name or by id
 
         protected Answer AnswerMessages(Guid accountId, int number)
         {
@@ -21,7 +19,6 @@ namespace Tigwi_API.Controllers
             var listMsgsOutput = new Messages(listMsgs, Storage);
             return new Answer(listMsgsOutput);
         }
-
         
 
         protected Answer AnswerTaggedMessages(Guid accountId, int number)
@@ -52,6 +49,7 @@ namespace Tigwi_API.Controllers
             return new Answer(accountListToReturn);
         }
 
+        
         protected Answer AnswerSubscriptionsEitherPublicOrAll(Guid accountId, int numberOfSubscriptions, bool withPrivate)
         {
             // get the public lists followed by the given account
@@ -95,6 +93,7 @@ namespace Tigwi_API.Controllers
             return new Answer(accountListToReturn);
         }
 
+
         protected Answer AnswerOwnedListsEitherPublicOrAll(Guid accountId, int numberOfLists, bool withPrivate)
         {
             // get the public lists owned by the given account
@@ -107,6 +106,7 @@ namespace Tigwi_API.Controllers
             return new Answer(listsToReturn);
         }
 
+
         protected Answer AnswerMainInfo(Guid accountId)
         {
             // get the informations of the given account
@@ -114,6 +114,7 @@ namespace Tigwi_API.Controllers
             var accountToReturn = new Account(accountId, accountInfo.Name, accountInfo.Description);
             return new Answer(accountToReturn);
         }
+
 
         protected Answer AnswerUsersAllowed(Guid accountId, int number)
         {
@@ -127,6 +128,7 @@ namespace Tigwi_API.Controllers
             return new Answer(userListToReturn);
         }
 
+        
         protected Answer AnswerAdministrator(Guid accountId)
         {
             // get account's administrator
