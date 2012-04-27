@@ -42,9 +42,9 @@ namespace Tigwi_API.Controllers
             return Content(stream.ToString());
         }
 
-        //
+        // TODO : change method name because overloading is bad in this case
         // GET: /infoaccount/messages/{accountId}/{number}
-        public ActionResult Messages(Guid accountId, int number)
+/*        public ActionResult Messages(Guid accountId, int number)
         {
             Answer output;
 
@@ -71,7 +71,7 @@ namespace Tigwi_API.Controllers
 
             return Content(stream.ToString());
         }
-
+        */
         //
         // GET: /infoaccount/taggedmessages/{accountName}/{number}
         public ActionResult TaggedMessages(string accountName, int number)
