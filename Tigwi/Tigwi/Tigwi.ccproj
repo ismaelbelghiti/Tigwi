@@ -100,7 +100,7 @@
   </PropertyGroup>
   <Import Project="$(CloudExtensionsDir)\Microsoft.WindowsAzure.targets" />
   <!-- Azure Deployment code -->
-  <Target Name="BeforeBuild" Condition=" '$(AzureStorageAccountKey)' != '' ">
+  <Target Name="BeforeBuild" Condition=" '$(AzureStorageAccountKey)' != '' And '$(AzureStorageAccountName)' != '' And Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets')" >
     <FileUpdate
       Files="@(ServiceConfigurationFiles)"
       Regex ="UseDevelopmentStorage=true"
