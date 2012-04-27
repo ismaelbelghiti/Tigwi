@@ -18,6 +18,8 @@
 		<!-- Example : <ConnectionFiles Include="myfile.*" /> -->
 	</ItemGroup>
 	<ItemGroup>
-		<AllFiles Include="..\..\\**\*.*" />
+		<AllFiles Include="..\..\API\\**\*.*" />
+		<AllFiles Include="..\..\storage\\**\*.*" />
+		<AllFiles Include="..\..\Tigwi\\**\*.*" />
 	</ItemGroup>
 </Project>
