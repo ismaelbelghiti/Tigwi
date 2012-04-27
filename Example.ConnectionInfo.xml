@@ -19,6 +19,8 @@
 		<ConnectionFiles Include="API\Tigwi-API\Controllers\ApiController.cs" />
 	</ItemGroup>
 	<ItemGroup>
-		<AllFiles Include="..\..\\**\*.*" />
+		<AllFiles Include="..\..\API\\**\*.*" />
+		<AllFiles Include="..\..\storage\\**\*.*" />
+		<AllFiles Include="..\..\Tigwi\\**\*.*" />
 	</ItemGroup>
 </Project>
