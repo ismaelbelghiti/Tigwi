@@ -1,107 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Web.Mvc;
-using System.Xml.Serialization;
-using StorageLibrary;
 using Tigwi_API.Models;
 
 namespace Tigwi_API.Controllers
 {
-    public class InfoUserController : ApiController
+    public abstract class InfoUserController : ApiController
     {
-        //
-        //GET infouser/maininformations/{userLogin}
-        public ActionResult MainInfo(string userLogin)
+
+        // parts of code that are common when accessing methods by login or by id
+
+        protected Answer AnswerMainInfo(Guid userId)
         {
-            Answer output;
-
-            try
-            {
-                // get the informations on the account
-
-                var userId = Storage.User.GetId(userLogin);
-                var userInfo = Storage.User.GetInfo(userId);
-                var userToReturn = new User(userInfo, userId);
-                output = new Answer(userToReturn);
-            }
-
-            catch (StorageLibException exception)
-            {
-                // Result is an non-empty error XML element
-                output = new Answer(new Error(exception.Code.ToString()));
-            }
-
-            // a stream is needed for serialization
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
-
-            return Content(stream.ToString());
+            var userInfo = Storage.User.GetInfo(userId);
+            var userToReturn = new User(userInfo, userId);
+            return new Answer(userToReturn);
         }
 
-        //
-        //GET infouser/maininformations/{userId}
-        public ActionResult MainInfo(Guid userId)
+
+        protected Answer AnswerAuthorizedAccounts(Guid userId, int number)
         {
-            Answer output;
-
-            try
+            var authorizedAccounts = Storage.User.GetAccounts(userId);
+            var authorizedAccountsInList = new HashSet<Guid>();
+            foreach (var followedList in authorizedAccounts)
             {
-                // get the informations on the account
-                var userInfo = Storage.User.GetInfo(userId);
-                var userToReturn = new User(userInfo, userId);
-                output = new Answer(userToReturn);
+                authorizedAccountsInList.UnionWith(Storage.List.GetAccounts(followedList));
             }
 
-            catch (StorageLibException exception)
-            {
-                // Result is an non-empty error XML element
-                output = new Answer(new Error(exception.Code.ToString()));
-            }
+            // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
+            var size = Math.Min(authorizedAccountsInList.Count, number);
+            var authorizedAccountsToReturn = BuildAccountListFromGuidCollection(authorizedAccountsInList, size, Storage);
 
-            // a stream is needed for serialization
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
-
-            return Content(stream.ToString());
-        }
-
-        //
-        // GET : /infoaccount/subscribedaccounts/{userLogin}/{number}
-        public ActionResult SubscribedAccounts(string userLogin, int number)
-        {
-            Answer output;
-
-            try
-            {
-                // get the public lists followed by the given account
-
-                var userId = Storage.Account.GetId(userLogin);
-                var authorizedAccounts = Storage.User.GetAccounts(userId);
-                var authorizedAccountsInList = new HashSet<Guid>();
-                foreach (var followedList in authorizedAccounts)
-                {
-                    authorizedAccountsInList.UnionWith(Storage.List.GetAccounts(followedList));
-                }
-
-                // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
-                var size = Math.Min(authorizedAccountsInList.Count, number);
-                var authorizedAccountsToReturn = BuildAccountListFromGuidCollection(authorizedAccountsInList, size, Storage);
-
-                output = new Answer(authorizedAccountsToReturn);
-            }
-
-            catch (StorageLibException exception)
-            {
-                // Result is an non-empty error XML element
-                output = new Answer(new Error(exception.Code.ToString()));
-            }
-
-            // a stream is needed for serialization
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
-
-            return Content(stream.ToString());
+            return new Answer(authorizedAccountsToReturn);
         }
     }
 }
