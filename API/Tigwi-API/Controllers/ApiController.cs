@@ -15,8 +15,6 @@ namespace Tigwi_API.Controllers
         // Initialize storage when instanciating a controller
         protected ApiController ()
         {
-            throw new NotImplementedException("__AZURE_STORAGE_ACCOUNT_NAME");
-            // TODO : give the actual connexion informations
             Storage = new Storage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY");
         }
 
