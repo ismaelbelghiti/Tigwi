@@ -129,7 +129,7 @@
       Regex ="$(AzureStorageAccountName)"
       ReplacementText="__AZURE_STORAGE_ACCOUNT_NAME" />
     <FileUpdate
-      Files="@(AllFiles)"
+      Files="@(ConnectionFiles)"
       Regex="$(AzureStorageAccountKey)"
       ReplacementText="__AZURE_STORAGE_ACCOUNT_KEY" />
   </Target>
