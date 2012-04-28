@@ -65,7 +65,8 @@ namespace Tigwi_API.Controllers
         // General methods
 
         //
-        // GET : /createuser/{user}
+        // POST : /createuser/{user}
+        [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CreateUser(NewUser user)
         {
             Answer answer;

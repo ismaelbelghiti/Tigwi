@@ -15,12 +15,11 @@ namespace Tigwi_API
             // general route to ApiController
 
             routes.MapRoute("CreateUser",
-                            "createuser/{user}",
+                            "createuser",
                             new
                                 {
-                                    controller = "ApiController",
-                                    action = "CreateUser",
-                                    user = ""
+                                    controller = "Api",
+                                    action = "CreateUser"
                                 }
                 );
 
