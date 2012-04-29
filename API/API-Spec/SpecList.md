@@ -236,7 +236,7 @@ Delete the suscription of the given account to the list. Authentication required
 ###HTTP method
 *POST*
 ###URL
-http://api.tigwi.com/modifylist/unsubscribeaccount/{idOfList}/{accountId}
+http://api.tigwi.com/modifylist/unsubscribeaccount/
 ###Request
     
     <UnubscribeAccount>
@@ -261,7 +261,7 @@ The given account follows the given list. Authentication required.
 ###HTTP method
 *POST*
 ###URL
-http://api.tigwi.com/modifylist/followlist/{idOfList}/{accountId}
+http://api.tigwi.com/modifylist/followlist/
 ###Request
     
     <FollowList>
@@ -285,7 +285,7 @@ The given account does not follow the given list anymore. Authentication require
 ###HTTP method
 *POST*
 ###URL
-http://api.tigwi.com/modifylist/unfollowlist/{idOfList}/{accountId}
+http://api.tigwi.com/modifylist/unfollowlist/
 ###Request
     
     <UnfollowList>

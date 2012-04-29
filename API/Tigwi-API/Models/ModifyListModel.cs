@@ -12,4 +12,11 @@ namespace Tigwi_API.Models
         public Guid List;
         public string Subscription;
     }
+
+    [Serializable]
+    public class ListAndAccount
+    {
+        public Guid List;
+        public string Account;
+    }
 }
