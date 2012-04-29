@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Web.Mvc;
-using System.Xml.Serialization;
+﻿using System.Web.Mvc;
 using StorageLibrary;
 using Tigwi_API.Models;
 
@@ -16,7 +13,7 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Write(MsgToWrite msg)
         {
-            Answer answer;
+            Answer output;
 
             try
             {
@@ -28,18 +25,15 @@ namespace Tigwi_API.Controllers
                 var msgId = Storage.Msg.Post(accountId, msg.Message.Content);
 
                 //Result
-                answer = new Answer(new ObjectCreated(msgId));
+                output = new Answer(new ObjectCreated(msgId));
             }
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
-                answer = new Answer(new Error(exception.Code.ToString()));
+                output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof (Error))).Serialize(stream, answer);
-
-            return Content(stream.ToString());
+            return Serialize(output);
         }
 
         //
@@ -49,7 +43,7 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Copy(CopyMsg msg)
         {
-            Answer answer;
+            Answer output;
 
             try
             {
@@ -61,18 +55,15 @@ namespace Tigwi_API.Controllers
                 var msgId = Storage.Msg.Copy(accountId, msg.MessageId);
 
                 //Result
-                answer = new Answer(new ObjectCreated(msgId));
+                output = new Answer(new ObjectCreated(msgId));
             }
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
-                answer = new Answer(new Error(exception.Code.ToString()));
+                output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Error))).Serialize(stream, answer);
-
-            return Content(stream.ToString());
+            return Serialize(output);
         }
 
         //
@@ -103,10 +94,7 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
         //
@@ -136,10 +124,7 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
         //
@@ -169,10 +154,7 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
         //
@@ -199,10 +181,7 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof (Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
         //
@@ -212,7 +191,7 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CreateList(CreateList listCreation)
         {
-            Answer answer;
+            Answer output;
 
             try
             {
@@ -223,18 +202,15 @@ namespace Tigwi_API.Controllers
                                     listToCreate.IsPrivate);
 
                 // Result is an empty error XML element
-                answer = new Answer(new ObjectCreated(listId));
+                output = new Answer(new ObjectCreated(listId));
             }
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
-                answer = new Answer(new Error(exception.Code.ToString()));
+                output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof (Error))).Serialize(stream, answer);
-
-            return Content(stream.ToString());
+            return Serialize(output);
         }
 
         //
@@ -265,10 +241,7 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof (Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
         //
@@ -304,10 +277,7 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof (Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
         //
@@ -343,10 +313,7 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof (Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
 
@@ -383,10 +350,7 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
     }
 }

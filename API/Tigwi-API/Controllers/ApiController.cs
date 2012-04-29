@@ -18,6 +18,16 @@ namespace Tigwi_API.Controllers
             Storage = new Storage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY");
         }
 
+        protected ContentResult Serialize(Answer output)
+        {
+            // a stream is needed for serialization
+            var stream = new MemoryStream();
+            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
+
+            stream.Position = 0;
+            return Content((new StreamReader(stream)).ReadToEnd());
+        }
+
         // Methods to build lists used in any controller
         protected static Accounts BuildAccountListFromGuidCollection(ICollection<Guid> hashAccounts, int size, IStorage storage)
         {
@@ -69,25 +79,22 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CreateUser(NewUser user)
         {
-            Answer answer;
+            Answer output;
 
             try
             {
                 var userId = Storage.User.Create(user.Login, user.Email, user.Password);
 
                 // Result is an empty error XML element
-                answer = new Answer(new ObjectCreated(userId));
+                output = new Answer(new ObjectCreated(userId));
             }
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
-                answer = new Answer(new Error(exception.Code.ToString()));
+                output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Error))).Serialize(stream, answer);
-
-            return Content(stream.ToString());
+            return Serialize(output);
         }
 
         protected IStorage Storage;

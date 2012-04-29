@@ -1,7 +1,5 @@
 ﻿using System;
-using System.IO;
 using System.Web.Mvc;
-using System.Xml.Serialization;
 using StorageLibrary;
 using Tigwi_API.Models;
 
@@ -27,11 +25,7 @@ namespace Tigwi_API.Controllers
                 output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            // a stream is needed for serialization
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
-
-            return Content(stream.ToString());
+            return Serialize(output);
         }
 
         
@@ -52,11 +46,7 @@ namespace Tigwi_API.Controllers
                 output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            // a stream is needed for serialization
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
-
-            return Content(stream.ToString());
+            return Serialize(output);
         }
     }
 }

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.IO;
 using System.Web.Mvc;
-using System.Xml.Serialization;
 using Tigwi_API.Models;
 using StorageLibrary;
 
@@ -32,10 +30,7 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
         //
@@ -60,10 +55,7 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
 
@@ -89,10 +81,7 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
         //
@@ -117,10 +106,7 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
     }
