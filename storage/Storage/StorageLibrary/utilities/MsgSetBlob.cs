@@ -39,17 +39,13 @@ namespace StorageLibrary.Utilities
         /// <returns>return false if no message was added</returns>
         public bool AddAndDelete(IMessage message, int maxMsg)
         {
-            BlobRequestOptions reqOpt = new BlobRequestOptions();
             SortedSet<IMessage> set;
             BlobStream stream;
-            string eTag;
 
             do
             {
                 try
                 {
-                    blob.FetchAttributes();
-                    eTag = blob.Attributes.Properties.ETag;
                     stream = blob.OpenRead();
                     set = (SortedSet<IMessage>)formatter.Deserialize(stream);
                     stream.Close();
@@ -62,18 +58,9 @@ namespace StorageLibrary.Utilities
                 while (set.Count > maxMsg)
                     set.Remove(set.Min);
 
-                reqOpt.AccessCondition = AccessCondition.IfMatch(eTag);
+            } while (!base.TrySet(set));
 
-                try
-                {
-                    stream = blob.OpenWrite(reqOpt);
-                    formatter.Serialize(stream, set);
-                    stream.Close();
-                    return true;
-                }
-                catch { }
-
-            } while (true);
+            return true;
         }
     }
 }
