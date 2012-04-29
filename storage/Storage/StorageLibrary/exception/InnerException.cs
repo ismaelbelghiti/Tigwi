@@ -8,4 +8,8 @@ namespace StorageLibrary.exception
     class EtagNotSet : Exception
     {
     }
+
+    class BlobDoesntExists : Exception
+    {
+    }
 }

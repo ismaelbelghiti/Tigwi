@@ -6,6 +6,7 @@ using StorageLibrary.Utilities;
 using Microsoft.WindowsAzure.StorageClient;
 using System.Globalization;
 using System.Runtime.Serialization.Formatters.Binary;
+using StorageLibrary.exception;
 
 namespace StorageLibrary.Utilities
 {
@@ -89,6 +90,8 @@ namespace StorageLibrary.Utilities
         // return false to warn that the message was not added
         public bool AddMessage(IMessage message)
         {
+            // TODO find when something has changed
+            // Maybe by retriving etags when we get blobs list
             while (true)
             {
                 // get blobs
@@ -102,39 +105,21 @@ namespace StorageLibrary.Utilities
                 int blobIndex = blobsList.IndexOf(blobsList.Last(p => p.Key <= message.Date));
 
                 // inserte data
-                CloudBlob blob = blobsList[blobIndex].Value;
-                SortedSet<IMessage> msgSet;
-                BlobRequestOptions reqOpt = new BlobRequestOptions();
-                BlobStream stream;
-                string eTag;
-                BinaryFormatter formatter = new BinaryFormatter();
+                Blob<MessageSet> blob = new Blob<MessageSet>(blobsList[blobIndex].Value);
+                MessageSet set;
 
-                while(true)
+                try
                 {
-                    try
+                    do
                     {
-                        blob.FetchAttributes();
-                        eTag = blob.Attributes.Properties.ETag;
-                        stream = blob.OpenRead();
-                        msgSet = (SortedSet<IMessage>)formatter.Deserialize(stream);
-                        stream.Close();
-                    }
-                    catch { break; }
+                        set = blob.GetIfExists(new BlobDoesntExists());
+                        // TODO : split if necessary
 
-                    // TODO : split if necessary
-
-                    msgSet.Add(message);
-                    reqOpt.AccessCondition = AccessCondition.IfMatch(eTag);
-
-                    try
-                    {
-                        stream = blob.OpenWrite(reqOpt);
-                        formatter.Serialize(stream, msgSet);
-                        stream.Close();
-                        return true;
-                    }
-                    catch { }
+                    } while (!blob.TrySet(set));
                 }
+                catch (BlobDoesntExists) { continue; }
+
+                return true;
             }
         }
 

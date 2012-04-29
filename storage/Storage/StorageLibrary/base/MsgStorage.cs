@@ -78,7 +78,9 @@ namespace StorageLibrary
             // retrive the message
             IMessage message = (new Blob<IMessage>(connexion.msgContainer, Path.M_MESSAGE + msgId)).GetIfExists(new MessageNotFound());
 
-            throw new NotImplementedException();
+            MsgSetBlobPack msgsBlob = new MsgSetBlobPack(connexion.msgContainer, Path.M_TAGGEDMESSAGES + accountId);
+            if (!msgsBlob.AddMessage(message))
+                throw new AccountNotFound();
         }
 
         // NYI

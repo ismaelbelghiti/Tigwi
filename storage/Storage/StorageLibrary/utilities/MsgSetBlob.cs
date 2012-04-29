@@ -12,8 +12,6 @@ namespace StorageLibrary.Utilities
     // TODO : Do we realy need this class ? -- or to have it this way ?
     public class MsgSetBlob : Blob<MessageSet>
     {
-        
-
         public MsgSetBlob(CloudBlob blob) : base(blob) { }
 
         public MsgSetBlob(CloudBlobContainer container, string blobName) : base(container, blobName) { }
