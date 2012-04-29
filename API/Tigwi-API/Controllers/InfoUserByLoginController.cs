@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Web.Mvc;
-using System.Xml.Serialization;
+﻿using System.Web.Mvc;
 using StorageLibrary;
 using Tigwi_API.Models;
 
@@ -9,8 +7,15 @@ namespace Tigwi_API.Controllers
     public class InfoUserByLoginController : InfoUserController
     {
 
+        // TEST
+        // GET: /infouser/test/{userLogin}/{number}
+        public string Test(string userLogin, int number)
+        {
+            return userLogin + " " + number;
+        }
+
         //
-        // GET : /infouser/maininformations/{userLogin}
+        // GET : /infouser/maininfo/{userLogin}
         public ActionResult MainInfo(string userLogin)
         {
             Answer output;
@@ -26,11 +31,7 @@ namespace Tigwi_API.Controllers
                 output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            // a stream is needed for serialization
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
-
-            return Content(stream.ToString());
+            return Serialize(output);
         }
 
         
@@ -51,11 +52,7 @@ namespace Tigwi_API.Controllers
                 output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            // a stream is needed for serialization
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
-
-            return Content(stream.ToString());
+            return Serialize(output);
         }
     }
 }

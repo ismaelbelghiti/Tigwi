@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Web.Mvc;
-using System.Xml.Serialization;
+﻿using System.Web.Mvc;
 using StorageLibrary;
 using Tigwi_API.Models;
 
@@ -9,6 +7,13 @@ namespace Tigwi_API.Controllers
 {
     public class InfoAccountByNameController : InfoAccountController
     {
+
+        // TEST
+        // GET: /infoaccount/test/{accountName}/{number}
+        public string Test(string accountName, int number)
+        {
+            return accountName + " " + number;
+        }
         
         //
         // GET: /infoaccount/messages/{accountName}/{number}
@@ -27,11 +32,7 @@ namespace Tigwi_API.Controllers
                 output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            // a stream is needed for serialization
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
-
-            return Content(stream.ToString());
+            return Serialize(output);
         }
 
 
@@ -52,11 +53,7 @@ namespace Tigwi_API.Controllers
                 output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            // a stream is needed for serialization
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
-
-            return Content(stream.ToString());
+            return Serialize(output);
         }
 
         
@@ -77,11 +74,7 @@ namespace Tigwi_API.Controllers
                 output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            // a stream is needed for serialization
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
-
-            return Content(stream.ToString());
+            return Serialize(output);
         }
 
 
@@ -101,11 +94,7 @@ namespace Tigwi_API.Controllers
                 output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            // a stream is needed for serialization
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
-
-            return Content(stream.ToString());
+            return Serialize(output);
         }
 
 
@@ -142,11 +131,7 @@ namespace Tigwi_API.Controllers
                 output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            // a stream is needed for serialization
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
-
-            return Content(stream.ToString());
+            return Serialize(output);
         }
 
 
@@ -168,7 +153,7 @@ namespace Tigwi_API.Controllers
 
         
         //
-        // GET : /infoaccount/subscriberLists/{accountName}/{number}
+        // GET : /infoaccount/subscriberlists/{accountName}/{number}
         public ActionResult SubscriberLists(string accountName, int number)
         {
             Answer output;
@@ -184,11 +169,7 @@ namespace Tigwi_API.Controllers
                 output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            // a stream is needed for serialization
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
-
-            return Content(stream.ToString());
+            return Serialize(output);
         }
 
 
@@ -209,11 +190,7 @@ namespace Tigwi_API.Controllers
                 output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            // a stream is needed for serialization
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
-
-            return Content(stream.ToString());
+            return Serialize(output);
         }
         
         
@@ -235,7 +212,7 @@ namespace Tigwi_API.Controllers
 
 
         //
-        // GET : /infoaccount/main/{accountName}
+        // GET : /infoaccount/maininfo/{accountName}
         //[Authorize]
         public ActionResult MainInfo(string accountName)
         {
@@ -252,11 +229,7 @@ namespace Tigwi_API.Controllers
                 output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            // a stream is needed for serialization
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
-
-            return Content(stream.ToString());
+            return Serialize(output);
         }
 
         
@@ -278,11 +251,7 @@ namespace Tigwi_API.Controllers
                 output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            // a stream is needed for serialization
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
-
-            return Content(stream.ToString());
+            return Serialize(output);
         }
 
 
@@ -304,11 +273,7 @@ namespace Tigwi_API.Controllers
                 output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            // a stream is needed for serialization
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Answer))).Serialize(stream, output);
-
-            return Content(stream.ToString());
+            return Serialize(output);
         }
         
     }

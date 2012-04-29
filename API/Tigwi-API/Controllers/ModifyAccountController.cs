@@ -1,7 +1,5 @@
 ﻿using System;
-using System.IO;
 using System.Web.Mvc;
-using System.Xml.Serialization;
 using StorageLibrary;
 using Tigwi_API.Models;
 
@@ -16,30 +14,26 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Write(MsgToWrite msg)
         {
-            Answer answer;
+            Answer output;
 
             try
             {
                 var accountId = msg.AccountId;
-                //TODO: find how to test accountId
-                //if (accountId == )
-                //    accountId = Storage.Account.GetId(msg.AccountName);
+                if (accountId == new Guid("default") )
+                    accountId = Storage.Account.GetId(msg.AccountName);
 
                 var msgId = Storage.Msg.Post(accountId, msg.Message.Content);
 
                 //Result
-                answer = new Answer(new ObjectCreated(msgId));
+                output = new Answer(new ObjectCreated(msgId));
             }
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
-                answer = new Answer(new Error(exception.Code.ToString()));
+                output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof (Error))).Serialize(stream, answer);
-
-            return Content(stream.ToString());
+            return Serialize(output);
         }
 
         //
@@ -49,30 +43,26 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Copy(CopyMsg msg)
         {
-            Answer answer;
+            Answer output;
 
             try
             {
                 var accountId = msg.AccountId;
-                //TODO: find how to test accountId
-                //if (accountId == )
-                //    accountId = Storage.Account.GetId(msg.AccountName);
+                if (accountId == new Guid("default"))
+                    accountId = Storage.Account.GetId(msg.AccountName);
 
                 var msgId = Storage.Msg.Copy(accountId, msg.MessageId);
 
                 //Result
-                answer = new Answer(new ObjectCreated(msgId));
+                output = new Answer(new ObjectCreated(msgId));
             }
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
-                answer = new Answer(new Error(exception.Code.ToString()));
+                output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Error))).Serialize(stream, answer);
-
-            return Content(stream.ToString());
+            return Serialize(output);
         }
 
         //
@@ -88,9 +78,8 @@ namespace Tigwi_API.Controllers
             {
                 //TODO: find out how to use this information, if necessary (?)
                // var accountId = msg.AccountId;
-                //TODO: find how to test accountId
-                //if (accountId == )
-                //    accountId = Storage.Account.GetId(msg.AccountName);
+               // if (accountId == new Guid("default"))
+               //     accountId = Storage.Account.GetId(msg.AccountName);
 
                 Storage.Msg.Remove(msg.MessageId);
 
@@ -103,10 +92,7 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
         //
@@ -121,9 +107,8 @@ namespace Tigwi_API.Controllers
             try
             {
                 var accountId = msg.AccountId;
-                //TODO: find how to test accountId
-                //if (accountId == )
-                //    accountId = Storage.Account.GetId(msg.AccountName);
+                if (accountId == new Guid("default"))
+                    accountId = Storage.Account.GetId(msg.AccountName);
 
               Storage.Msg.Tag(accountId, msg.MessageId);
 
@@ -136,10 +121,7 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
         //
@@ -154,9 +136,8 @@ namespace Tigwi_API.Controllers
             try
             {
                 var accountId = msg.AccountId;
-                //TODO: find how to test accountId
-                //if (accountId == )
-                //    accountId = Storage.Account.GetId(msg.AccountName);
+                if (accountId == new Guid("default"))
+                    accountId = Storage.Account.GetId(msg.AccountName);
 
                 Storage.Msg.Untag(accountId, msg.MessageId);
 
@@ -169,10 +150,7 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
         //
@@ -186,7 +164,7 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                var accountId = Storage.Account.GetId(subscribe.Account);
+                var accountId = Storage.Account.GetId(subscribe.AccountName);
 
                 Storage.List.Follow(subscribe.Subscription, accountId);
 
@@ -199,10 +177,7 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof (Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
         //
@@ -212,7 +187,7 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CreateList(CreateList listCreation)
         {
-            Answer answer;
+            Answer output;
 
             try
             {
@@ -223,18 +198,15 @@ namespace Tigwi_API.Controllers
                                     listToCreate.IsPrivate);
 
                 // Result is an empty error XML element
-                answer = new Answer(new ObjectCreated(listId));
+                output = new Answer(new ObjectCreated(listId));
             }
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
-                answer = new Answer(new Error(exception.Code.ToString()));
+                output = new Answer(new Error(exception.Code.ToString()));
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof (Error))).Serialize(stream, answer);
-
-            return Content(stream.ToString());
+            return Serialize(output);
         }
 
         //
@@ -249,9 +221,8 @@ namespace Tigwi_API.Controllers
             try
             {
                 var accountId = infos.AccountId;
-                //TODO: find how to test accountId to know if the information was sent or not
-                //if (accountId == )
-                //    accountId = Storage.Account.GetId(infos.AccountName);
+                if (accountId == new Guid("default"))
+                    accountId = Storage.Account.GetId(infos.AccountName);
 
                 //Set the informations
                 Storage.Account.SetInfo(accountId, infos.Description);
@@ -265,10 +236,7 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof (Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
         //
@@ -283,14 +251,12 @@ namespace Tigwi_API.Controllers
             try
             {
                 var accountId = infos.AccountId;
-                //TODO: find how to test accountId to know if the information was sent or not
-                //if (accountId == )
-                //    accountId = Storage.Account.GetId(infos.AccountName);
+                if (accountId == new Guid("default"))
+                    accountId = Storage.Account.GetId(infos.AccountName);
 
                 var userId = infos.UserId;
-                //TODO: find how to test userId to know if the information was sent or not
-                //if (userId == )
-                //   userId = Storage.User.GetId(infos.UserLogin);
+                if (userId == new Guid("default") )
+                   userId = Storage.User.GetId(infos.UserLogin);
 
                 //Set the informations
                 Storage.Account.Add(accountId, userId);
@@ -304,10 +270,7 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof (Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
         //
@@ -322,14 +285,12 @@ namespace Tigwi_API.Controllers
             try
             {
                 var accountId = infos.AccountId;
-                //TODO: find how to test accountId to know if the information was sent or not
-                //if (accountId == )
-                //    accountId = Storage.Account.GetId(infos.AccountName);
+                if (accountId == new Guid("default"))
+                    accountId = Storage.Account.GetId(infos.AccountName);
 
                 var userId = infos.UserId;
-                //TODO: find how to test userId to know if the information was sent or not
-                //if (userId == )
-                //   userId = Storage.User.GetId(infos.UserLogin);
+                if (userId == new Guid("default"))
+                    userId = Storage.User.GetId(infos.UserLogin);
 
                 //Set the informations
                 Storage.Account.Remove(accountId, userId);
@@ -343,10 +304,7 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof (Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
 
@@ -362,14 +320,12 @@ namespace Tigwi_API.Controllers
             try
             {
                 var accountId = infos.AccountId;
-                //TODO: find how to test accountId to know if the information was sent or not
-                //if (accountId == )
-                //    accountId = Storage.Account.GetId(infos.AccountName);
+                if (accountId == new Guid("default"))
+                    accountId = Storage.Account.GetId(infos.AccountName);
 
                 var userId = infos.UserId;
-                //TODO: find how to test userId to know if the information was sent or not
-                //if (userId == )
-                //   userId = Storage.User.GetId(infos.UserLogin);
+                if (userId == new Guid("default"))
+                    userId = Storage.User.GetId(infos.UserLogin);
 
                 //Set the informations
                 Storage.Account.SetAdminId(accountId, userId);
@@ -383,10 +339,7 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
     }
 }
