@@ -1007,7 +1007,7 @@ namespace StorageLocalTest
         static void Main(string[] args)
         {
             Console.WriteLine("Init connexions");
-            Storage storage = new Storage("ulyssestorage", "VSUwYEH4xZuAG9UlZT71mqmixX2slRFlGDXgFUL5lq812aoqN3yxorcbZ3fuUDSp6nlcp4bDH7EWraRWZsBsTg==");
+            Storage storage = new Storage("ulyssestorage", "");
 
             Console.WriteLine("Clearing previous data");
             ClearContainer(storage.connexion.userContainer);
@@ -1029,9 +1029,9 @@ namespace StorageLocalTest
 
             Console.WriteLine("Init ok");
 
-            //TestUser(storage);
-            //TestAccounts(storage);
-            //TestList(storage, listId);
+            TestUser(storage);
+            TestAccounts(storage);
+            TestList(storage, listId);
 
             //TestMessages(storage);
 

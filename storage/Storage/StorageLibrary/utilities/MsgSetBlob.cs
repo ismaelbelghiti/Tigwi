@@ -7,19 +7,12 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace StorageLibrary.Utilities
 {
-    public class MsgSetBlob : Blob<SortedSet<IMessage>>
+    // TODO : inheritance of blob is not the best thing
+    // we should have a blob field instead
+    // TODO : Do we realy need this class ? -- or to have it this way ?
+    public class MsgSetBlob : Blob<MessageSet>
     {
-        [Serializable]
-        class MsgComparer : IComparer<IMessage>
-        {
-            public int Compare(IMessage x, IMessage y)
-            {
-                if (x.Date == y.Date)
-                    return x.Id.CompareTo(y.Id);
-                else
-                    return x.Date < y.Date ? -1 : 1;
-            }
-        }
+        
 
         public MsgSetBlob(CloudBlob blob) : base(blob) { }
 
@@ -27,9 +20,8 @@ namespace StorageLibrary.Utilities
 
         public void Init()
         {
-            MsgComparer comparer = new MsgComparer();
             BlobStream stream = blob.OpenWrite();
-            formatter.Serialize(stream, new SortedSet<IMessage>(comparer));
+            formatter.Serialize(stream, new MessageSet());
             stream.Close();
         }
 
@@ -39,7 +31,7 @@ namespace StorageLibrary.Utilities
         /// <returns>return false if no message was added</returns>
         public bool AddAndDelete(IMessage message, int maxMsg)
         {
-            SortedSet<IMessage> set;
+            MessageSet set;
             BlobStream stream;
 
             do
@@ -47,7 +39,7 @@ namespace StorageLibrary.Utilities
                 try
                 {
                     stream = blob.OpenRead();
-                    set = (SortedSet<IMessage>)formatter.Deserialize(stream);
+                    set = (MessageSet)formatter.Deserialize(stream);
                     stream.Close();
                 }
                 catch { return false; }

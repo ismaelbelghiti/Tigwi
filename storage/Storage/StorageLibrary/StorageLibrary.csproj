@@ -76,6 +76,7 @@
     <Compile Include="Utilities\BaseBlob.cs" />
     <Compile Include="Utilities\Hasher.cs" />
     <Compile Include="Utilities\HashSetBlob.cs" />
+    <Compile Include="Utilities\MessageSet.cs" />
     <Compile Include="Utilities\MsgSetBlob.cs" />
     <Compile Include="Utilities\MsgSetBlobPack.cs" />
     <Compile Include="Utilities\Mutex.cs" />
