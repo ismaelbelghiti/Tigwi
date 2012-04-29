@@ -36,6 +36,7 @@ message ->	listmessages/<list ID>				: SortedSet<IMessage> -- 100 last messages 
 			message/<messageID>					: IMessage
 
 TODO :
+	- attributes are automatically updated when we upload or download the blob : repercute this in the code
 	- check messages size in the storage
 	- be able to upload avatars
 	- avoid follow a private list 
@@ -43,7 +44,6 @@ TODO :
 	- Find something better than a sortedSet to sort messages. Maybe we should code our own ? KeyedCollection ?
 		http://msdn.microsoft.com/en-us/library/5z658b67%28v=vs.80%29.aspx
 	- remove the messages from the listmessage when we remove an account from the list
-	- maybe we don't need to fetch attributes, they are automaticaly updated with blob update ?
 	- check that we dont write on a deleted blob while using retry
 	- find out what happends when we try to list blobs in a directory that does not exists
-	- chek that we don't loose the order when we convert a sorted set to a list
+	- check that we don't loose the order when we convert a sorted set to a list

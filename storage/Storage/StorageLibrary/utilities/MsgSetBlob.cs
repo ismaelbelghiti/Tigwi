@@ -7,7 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace StorageLibrary.Utilities
 {
-    public class MsgSetBlob : BaseBlob
+    public class MsgSetBlob : Blob<SortedSet<IMessage>>
     {
         [Serializable]
         class MsgComparer : IComparer<IMessage>

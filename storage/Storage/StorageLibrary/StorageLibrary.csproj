@@ -72,13 +72,13 @@
     <Compile Include="base\MsgStorage.cs" />
     <Compile Include="base\Storage.cs" />
     <Compile Include="base\UserStorage.cs" />
+    <Compile Include="exception\InnerException.cs" />
     <Compile Include="Utilities\BaseBlob.cs" />
     <Compile Include="Utilities\Hasher.cs" />
     <Compile Include="Utilities\HashSetBlob.cs" />
     <Compile Include="Utilities\MsgSetBlob.cs" />
     <Compile Include="Utilities\MsgSetBlobPack.cs" />
     <Compile Include="Utilities\Mutex.cs" />
-    <Compile Include="Utilities\StrgBlob.cs" />
     <Compile Include="Utilities\StrgConnexion.cs" />
     <Compile Include="datastructure\AccountInfo.cs">
       <SubType>Code</SubType>

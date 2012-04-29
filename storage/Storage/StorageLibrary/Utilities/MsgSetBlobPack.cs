@@ -44,7 +44,7 @@ namespace StorageLibrary.Utilities
                 int blobIndex = blobsList.IndexOf(blobsList.Last(p => p.Key <= date));
 
                 // get the messages
-                StrgBlob<SortedSet<IMessage>> bMsgSet = new StrgBlob<SortedSet<IMessage>>(blobsList[blobIndex].Value);
+                Blob<SortedSet<IMessage>> bMsgSet = new Blob<SortedSet<IMessage>>(blobsList[blobIndex].Value);
                 SortedSet<IMessage> msgSet;
                 try { msgSet = bMsgSet.GetIfExists(new Exception()); }
                 catch { continue; }
@@ -56,7 +56,7 @@ namespace StorageLibrary.Utilities
                 // get messages from following sets while we need them
                 while (msgList.Count < msgCount && blobIndex<blobsList.Count)
                 {
-                    bMsgSet = new StrgBlob<SortedSet<IMessage>>(blobsList[blobIndex].Value);
+                    bMsgSet = new Blob<SortedSet<IMessage>>(blobsList[blobIndex].Value);
                     try { msgSet = bMsgSet.GetIfExists(new Exception()); }
                     catch { continue; }
 

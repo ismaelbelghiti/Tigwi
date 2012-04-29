@@ -7,7 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace StorageLibrary.Utilities
 {
-    public class HashSetBlob<T> : BaseBlob
+    public class HashSetBlob<T> : Blob<HashSet<T>>
     {
         public HashSetBlob(CloudBlobContainer container, string blobName) : base(container, blobName) { }
 

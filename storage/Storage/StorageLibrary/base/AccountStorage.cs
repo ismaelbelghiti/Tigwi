@@ -20,19 +20,19 @@ namespace StorageLibrary
         // Interface implementation
         public Guid GetId(string name)
         {
-            StrgBlob<Guid> blob = new StrgBlob<Guid>(connexion.accountContainer, Path.A_IDBYNAME + Hasher.Hash(name));
+            Blob<Guid> blob = new Blob<Guid>(connexion.accountContainer, Path.A_IDBYNAME + Hasher.Hash(name));
             return blob.GetIfExists(new AccountNotFound());
         }
 
         public IAccountInfo GetInfo(Guid accountId)
         {
-            StrgBlob<IAccountInfo> blob = new StrgBlob<IAccountInfo>(connexion.accountContainer, Path.A_INFO + accountId);
+            Blob<IAccountInfo> blob = new Blob<IAccountInfo>(connexion.accountContainer, Path.A_INFO + accountId);
             return blob.GetIfExists(new AccountNotFound());
         }
 
         public void SetInfo(Guid accountId, string description)
         {
-            StrgBlob<AccountInfo> bInfo = new StrgBlob<AccountInfo>(connexion.accountContainer, Path.A_INFO + accountId);
+            Blob<AccountInfo> bInfo = new Blob<AccountInfo>(connexion.accountContainer, Path.A_INFO + accountId);
             AccountInfo info = bInfo.GetIfExists(new AccountNotFound());
             info.Description = description;
             if (!bInfo.SetIfExists(info))
@@ -41,20 +41,20 @@ namespace StorageLibrary
 
         public HashSet<Guid> GetUsers(Guid accountId)
         {
-            StrgBlob<HashSet<Guid>> blob = new StrgBlob<HashSet<Guid>>(connexion.accountContainer, Path.A_USERS + accountId);
+            Blob<HashSet<Guid>> blob = new Blob<HashSet<Guid>>(connexion.accountContainer, Path.A_USERS + accountId);
             return blob.GetIfExists(new AccountNotFound());
         }
 
         public Guid GetAdminId(Guid accountId)
         {
-            StrgBlob<Guid> blob = new StrgBlob<Guid>(connexion.accountContainer, Path.A_ADMINID + accountId);
+            Blob<Guid> blob = new Blob<Guid>(connexion.accountContainer, Path.A_ADMINID + accountId);
             return blob.GetIfExists(new AccountNotFound());
         }
 
         public void SetAdminId(Guid accountId, Guid userId)
         {
-            StrgBlob<Guid> bAdmin = new StrgBlob<Guid>(connexion.accountContainer, Path.A_ADMINID + accountId);
-            StrgBlob<HashSet<Guid>> bUserAccounts = new StrgBlob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_DATA);
+            Blob<Guid> bAdmin = new Blob<Guid>(connexion.accountContainer, Path.A_ADMINID + accountId);
+            Blob<HashSet<Guid>> bUserAccounts = new Blob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_DATA);
 
             using (new Mutex(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_LOCK, new UserNotFound()))
             {
@@ -81,7 +81,7 @@ namespace StorageLibrary
 
         public void Add(Guid accountId, Guid userId)
         {
-            StrgBlob<HashSet<Guid>> bUserAccounts = new StrgBlob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_DATA);
+            Blob<HashSet<Guid>> bUserAccounts = new Blob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_DATA);
 
             using (new Mutex(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_LOCK, new UserNotFound()))
             {
@@ -105,8 +105,8 @@ namespace StorageLibrary
 
         public void Remove(Guid accountId, Guid userId)
         {
-            StrgBlob<HashSet<Guid>> bUserAccounts = new StrgBlob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_DATA);
-            StrgBlob<Guid> bAdminId = new StrgBlob<Guid>(connexion.accountContainer, Path.A_ADMINID + accountId);
+            Blob<HashSet<Guid>> bUserAccounts = new Blob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_DATA);
+            Blob<Guid> bAdminId = new Blob<Guid>(connexion.accountContainer, Path.A_ADMINID + accountId);
 
             try
             {
@@ -135,7 +135,7 @@ namespace StorageLibrary
             // TODO : create the personnal list 
 
             Guid nameHash = Hasher.Hash(name);
-            StrgBlob<Guid> bNameById = new StrgBlob<Guid>(connexion.accountContainer, Path.A_IDBYNAME + nameHash);
+            Blob<Guid> bNameById = new Blob<Guid>(connexion.accountContainer, Path.A_IDBYNAME + nameHash);
 
             if (!bNameById.SetIfNotExists(Guid.Empty))
                 throw new AccountAlreadyExists();
@@ -147,16 +147,16 @@ namespace StorageLibrary
             users.Add(adminId);
 
             // init blobs
-            StrgBlob<IAccountInfo> bInfo = new StrgBlob<IAccountInfo>(connexion.accountContainer, Path.A_INFO + id);
-            StrgBlob<HashSet<Guid>> bAccountUsers = new StrgBlob<HashSet<Guid>>(connexion.accountContainer, Path.A_USERS + id);
-            StrgBlob<Guid> bAdminId = new StrgBlob<Guid>(connexion.accountContainer, Path.A_ADMINID + id);
+            Blob<IAccountInfo> bInfo = new Blob<IAccountInfo>(connexion.accountContainer, Path.A_INFO + id);
+            Blob<HashSet<Guid>> bAccountUsers = new Blob<HashSet<Guid>>(connexion.accountContainer, Path.A_USERS + id);
+            Blob<Guid> bAdminId = new Blob<Guid>(connexion.accountContainer, Path.A_ADMINID + id);
 
-            StrgBlob<HashSet<Guid>> bUserAccounts = new StrgBlob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + adminId + Path.U_ACC_DATA);
+            Blob<HashSet<Guid>> bUserAccounts = new Blob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + adminId + Path.U_ACC_DATA);
 
-            StrgBlob<HashSet<Guid>> bOwnedListsPublic = new StrgBlob<HashSet<Guid>>(connexion.listContainer, Path.L_OWNEDLISTS_PUBLIC + id);
-            StrgBlob<HashSet<Guid>> bOwnedListsPrivate = new StrgBlob<HashSet<Guid>>(connexion.listContainer, Path.L_OWNEDLISTS_PRIVATE + id);
-            StrgBlob<HashSet<Guid>> bFollowedLists = new StrgBlob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDLISTS + id + Path.L_FOLLOWEDLISTS_DATA);
-            StrgBlob<HashSet<Guid>> bFollowedBy = new StrgBlob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDBY + id);
+            Blob<HashSet<Guid>> bOwnedListsPublic = new Blob<HashSet<Guid>>(connexion.listContainer, Path.L_OWNEDLISTS_PUBLIC + id);
+            Blob<HashSet<Guid>> bOwnedListsPrivate = new Blob<HashSet<Guid>>(connexion.listContainer, Path.L_OWNEDLISTS_PRIVATE + id);
+            Blob<HashSet<Guid>> bFollowedLists = new Blob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDLISTS + id + Path.L_FOLLOWEDLISTS_DATA);
+            Blob<HashSet<Guid>> bFollowedBy = new Blob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDBY + id);
 
             MsgSetBlobPack bTaggedMsg = new MsgSetBlobPack(connexion.msgContainer, Path.M_TAGGEDMESSAGES + id);
 
