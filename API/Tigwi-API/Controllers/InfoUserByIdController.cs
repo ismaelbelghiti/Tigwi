@@ -9,7 +9,7 @@ namespace Tigwi_API.Controllers
     {
 
         //
-        // GET : /infouser/maininformations/{userId}
+        // GET : /infouser/maininfo/{userId}
         public ActionResult MainInfo(Guid userId)
         {
             Answer output;

@@ -7,8 +7,15 @@ namespace Tigwi_API.Controllers
     public class InfoUserByLoginController : InfoUserController
     {
 
+        // TEST
+        // GET: /infouser/test/{userLogin}/{number}
+        public string Test(string userLogin, int number)
+        {
+            return userLogin + " " + number;
+        }
+
         //
-        // GET : /infouser/maininformations/{userLogin}
+        // GET : /infouser/maininfo/{userLogin}
         public ActionResult MainInfo(string userLogin)
         {
             Answer output;

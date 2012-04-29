@@ -30,7 +30,6 @@ namespace Tigwi_API
                             new
                                 {
                                     controller = "InfoAccountByName",
-                                    action = "",
                                     accountName = @"\s+",
                                     number = "20" // Par défaut le nombre de messages est 20
                                 }
@@ -41,7 +40,6 @@ namespace Tigwi_API
                             new
                             {
                                 controller = "InfoAccountById",
-                                action = "",
                                 accountId = @"\d+",
                                 number = "20" // Par défaut le nombre de messages est 20
                             }
@@ -54,8 +52,6 @@ namespace Tigwi_API
                             new
                                 {
                                     controller = "InfoList",
-                                    action = "",
-                                    idOfList = "",
                                     number = "20"
                                 }
                 );
@@ -67,7 +63,6 @@ namespace Tigwi_API
                             new
                                 {
                                     controller = "InfoUserByLogin",
-                                    action = "",
                                     userLogin = @"/s+",
                                     number = "20"
                                 }
@@ -78,16 +73,13 @@ namespace Tigwi_API
                             new
                             {
                                 controller = "InfoUserById",
-                                action = "",
                                 userId = @"/d+",
                                 number = "20"
                             }
                 );
 
-			// default route (also used for Modify)
-            routes.MapRoute("Default", "{controller}/{action}/{id}",
-                            new {controller = "Home", action = "Index", id = ""}
-                );
+			// default route used for modify controllers
+            routes.MapRoute("Default", "{controller}/{action}");
 		}
 
         protected void Application_Start()

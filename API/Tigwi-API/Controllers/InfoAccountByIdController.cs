@@ -7,6 +7,12 @@ namespace Tigwi_API.Controllers
 {
     public class InfoAccountByIdController : InfoAccountController
     {
+        // TEST
+        // GET: /infoaccount/test/{accountId}
+        public string Test(Guid accountId)
+        {
+            return accountId + " accessed test successfully !";
+        }
 
         //
         // GET: /infoaccount/messages/{accountId}/{number}
@@ -144,7 +150,7 @@ namespace Tigwi_API.Controllers
         
         
         //
-        // GET : /infoaccount/subscriberLists/{accountId}/{number}
+        // GET : /infoaccount/subscriberlists/{accountId}/{number}
         public ActionResult SubscriberLists(Guid accountId, int number)
         {
             Answer output;
@@ -203,7 +209,7 @@ namespace Tigwi_API.Controllers
 
 
         //
-        // GET : /infoaccount/main/{accountId}
+        // GET : /infoaccount/maininfo/{accountId}
         public ActionResult MainInfo(Guid accountId)
         {
             Answer output;
