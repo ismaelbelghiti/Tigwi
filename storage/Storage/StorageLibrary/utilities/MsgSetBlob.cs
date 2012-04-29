@@ -21,6 +21,8 @@ namespace StorageLibrary.Utilities
             }
         }
 
+        public MsgSetBlob(CloudBlob blob) : base(blob) { }
+
         public MsgSetBlob(CloudBlobContainer container, string blobName) : base(container, blobName) { }
 
         public void Init()

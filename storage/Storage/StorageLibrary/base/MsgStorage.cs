@@ -87,10 +87,10 @@ namespace StorageLibrary
             throw new NotImplementedException();
         }
 
-        // NYI
-        public List<IMessage> GetTaggedFrom(Guid accoundId, DateTime firstMsgId, int msgNumber)
+        public List<IMessage> GetTaggedFrom(Guid accoundId, DateTime firstMsgDate, int msgNumber)
         {
-            throw new NotImplementedException();
+            MsgSetBlobPack bMessages = new MsgSetBlobPack(connexion.msgContainer, Path.M_TAGGEDMESSAGES + accoundId);
+            return bMessages.GetMessagesFrom(firstMsgDate, msgNumber, new AccountNotFound());
         }
 
         // NYI

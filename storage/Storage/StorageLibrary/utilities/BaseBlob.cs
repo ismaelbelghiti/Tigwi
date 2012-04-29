@@ -23,6 +23,12 @@ namespace StorageLibrary.Utilities
             blob = container.GetBlobReference(blobName);
         }
 
+        protected BaseBlob(CloudBlob blob)
+        {
+            formatter = new BinaryFormatter();
+            this.blob = blob;
+        }
+
         public bool Exists
         {
             get

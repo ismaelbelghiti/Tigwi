@@ -18,6 +18,8 @@ namespace StorageLibrary.Utilities
 
         public StrgBlob(CloudBlobContainer container, string blobName) : base(container, blobName) { }
 
+        public StrgBlob(CloudBlob blob) : base(blob) { }
+
         public T GetIfExists(Exception e)
         {
             try
@@ -27,9 +29,9 @@ namespace StorageLibrary.Utilities
                 stream.Close();
                 return t;
             }
-            catch (Exception e2)
+            catch
             {
-                throw e2;
+                throw e;
             }
         }
 

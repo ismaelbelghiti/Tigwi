@@ -1033,7 +1033,9 @@ namespace StorageLocalTest
             //TestAccounts(storage);
             //TestList(storage, listId);
 
-            TestMessages(storage);
+            //TestMessages(storage);
+
+            storage.Msg.GetTaggedFrom(accountId, DateTime.MinValue, 100);
 
             Console.ReadLine();
 
