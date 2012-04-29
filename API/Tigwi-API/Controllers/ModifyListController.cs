@@ -12,13 +12,13 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult SubscribeAccount(SubscribeAccount subscribeAccount)
+        public ActionResult SubscribeAccount(ListAndAccount subscribeAccount)
         {
             Error error;
 
             try
             {
-                var accountId = Storage.Account.GetId(subscribeAccount.Subscription);
+                var accountId = Storage.Account.GetId(subscribeAccount.Account);
                 Storage.List.Add(subscribeAccount.List, accountId);
 
                 // Result is an empty error XML element
