@@ -21,9 +21,8 @@ namespace Tigwi_API.Controllers
             try
             {
                 var accountId = msg.AccountId;
-                //TODO: find how to test accountId
-                //if (accountId == )
-                //    accountId = Storage.Account.GetId(msg.AccountName);
+                if (accountId == new Guid("default") )
+                    accountId = Storage.Account.GetId(msg.AccountName);
 
                 var msgId = Storage.Msg.Post(accountId, msg.Message.Content);
 
@@ -54,9 +53,8 @@ namespace Tigwi_API.Controllers
             try
             {
                 var accountId = msg.AccountId;
-                //TODO: find how to test accountId
-                //if (accountId == )
-                //    accountId = Storage.Account.GetId(msg.AccountName);
+                if (accountId == new Guid("default"))
+                    accountId = Storage.Account.GetId(msg.AccountName);
 
                 var msgId = Storage.Msg.Copy(accountId, msg.MessageId);
 
@@ -88,9 +86,8 @@ namespace Tigwi_API.Controllers
             {
                 //TODO: find out how to use this information, if necessary (?)
                // var accountId = msg.AccountId;
-                //TODO: find how to test accountId
-                //if (accountId == )
-                //    accountId = Storage.Account.GetId(msg.AccountName);
+               // if (accountId == new Guid("default"))
+               //     accountId = Storage.Account.GetId(msg.AccountName);
 
                 Storage.Msg.Remove(msg.MessageId);
 
@@ -121,9 +118,8 @@ namespace Tigwi_API.Controllers
             try
             {
                 var accountId = msg.AccountId;
-                //TODO: find how to test accountId
-                //if (accountId == )
-                //    accountId = Storage.Account.GetId(msg.AccountName);
+                if (accountId == new Guid("default"))
+                    accountId = Storage.Account.GetId(msg.AccountName);
 
               Storage.Msg.Tag(accountId, msg.MessageId);
 
@@ -154,9 +150,8 @@ namespace Tigwi_API.Controllers
             try
             {
                 var accountId = msg.AccountId;
-                //TODO: find how to test accountId
-                //if (accountId == )
-                //    accountId = Storage.Account.GetId(msg.AccountName);
+                if (accountId == new Guid("default"))
+                    accountId = Storage.Account.GetId(msg.AccountName);
 
                 Storage.Msg.Untag(accountId, msg.MessageId);
 
@@ -186,7 +181,7 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                var accountId = Storage.Account.GetId(subscribe.Account);
+                var accountId = Storage.Account.GetId(subscribe.AccountName);
 
                 Storage.List.Follow(subscribe.Subscription, accountId);
 
@@ -249,9 +244,8 @@ namespace Tigwi_API.Controllers
             try
             {
                 var accountId = infos.AccountId;
-                //TODO: find how to test accountId to know if the information was sent or not
-                //if (accountId == )
-                //    accountId = Storage.Account.GetId(infos.AccountName);
+                if (accountId == new Guid("default"))
+                    accountId = Storage.Account.GetId(infos.AccountName);
 
                 //Set the informations
                 Storage.Account.SetInfo(accountId, infos.Description);
@@ -283,14 +277,12 @@ namespace Tigwi_API.Controllers
             try
             {
                 var accountId = infos.AccountId;
-                //TODO: find how to test accountId to know if the information was sent or not
-                //if (accountId == )
-                //    accountId = Storage.Account.GetId(infos.AccountName);
+                if (accountId == new Guid("default"))
+                    accountId = Storage.Account.GetId(infos.AccountName);
 
                 var userId = infos.UserId;
-                //TODO: find how to test userId to know if the information was sent or not
-                //if (userId == )
-                //   userId = Storage.User.GetId(infos.UserLogin);
+                if (userId == new Guid("default") )
+                   userId = Storage.User.GetId(infos.UserLogin);
 
                 //Set the informations
                 Storage.Account.Add(accountId, userId);
@@ -322,14 +314,12 @@ namespace Tigwi_API.Controllers
             try
             {
                 var accountId = infos.AccountId;
-                //TODO: find how to test accountId to know if the information was sent or not
-                //if (accountId == )
-                //    accountId = Storage.Account.GetId(infos.AccountName);
+                if (accountId == new Guid("default"))
+                    accountId = Storage.Account.GetId(infos.AccountName);
 
                 var userId = infos.UserId;
-                //TODO: find how to test userId to know if the information was sent or not
-                //if (userId == )
-                //   userId = Storage.User.GetId(infos.UserLogin);
+                if (userId == new Guid("default"))
+                    userId = Storage.User.GetId(infos.UserLogin);
 
                 //Set the informations
                 Storage.Account.Remove(accountId, userId);
@@ -362,14 +352,12 @@ namespace Tigwi_API.Controllers
             try
             {
                 var accountId = infos.AccountId;
-                //TODO: find how to test accountId to know if the information was sent or not
-                //if (accountId == )
-                //    accountId = Storage.Account.GetId(infos.AccountName);
+                if (accountId == new Guid("default"))
+                    accountId = Storage.Account.GetId(infos.AccountName);
 
                 var userId = infos.UserId;
-                //TODO: find how to test userId to know if the information was sent or not
-                //if (userId == )
-                //   userId = Storage.User.GetId(infos.UserLogin);
+                if (userId == new Guid("default"))
+                    userId = Storage.User.GetId(infos.UserLogin);
 
                 //Set the informations
                 Storage.Account.SetAdminId(accountId, userId);

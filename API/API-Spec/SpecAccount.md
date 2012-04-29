@@ -1,4 +1,4 @@
-﻿Tigwi - API Specification by L. de HARO, A. de MYTTENAERE and T. ZIMMERMANN 
+Tigwi - API Specification by L. de HARO, A. de MYTTENAERE and T. ZIMMERMANN 
 
 #Get informations about an _account_
 
@@ -899,7 +899,10 @@ http://api.tigwi.com/modifyaccount/subscribelist/
 ###Request
     
     <SubscribeList>
-        <Account> nameOfSubscriber </Account>
+        <AccountName> nameOfSubscriber </AccountName>
+        // or you can use
+        <AccountId> idOdSubscriber </AccountId>
+
         <Subscription> idOfSubscription </Suscription>
     </SubscribeList>
 
@@ -916,6 +919,7 @@ If no error occurs
 ###Informations
 * You **must** be authenticated and authorized to use the account _nameOfSubscriber_ to use this method.
 * In **Request**, _nameOfSubscriber_ is the name of the account who wants to follow the list _idOfSubscription_.
+* In **Request**, _idOfSubscriber_ is the unique identifier of the account who wants to follow the list _idOfSubscription_.
 
 ##Change an account's description
 ###Purpose
