@@ -12,25 +12,35 @@ namespace Tigwi_API
 		{
 			routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            // general route to ApiController
 
-            //routes to InfoAccount
+            routes.MapRoute("CreateUser",
+                            "createuser",
+                            new
+                                {
+                                    controller = "Api",
+                                    action = "CreateUser"
+                                }
+                );
 
-            routes.MapRoute("InfoAccount",
+            // routes to InfoAccount
+
+            routes.MapRoute("InfoAccountByName",
                             "infoaccount/{action}/{accountName}/{number}",
                             new
                                 {
-                                    controller = "InfoAccount",
+                                    controller = "InfoAccountByName",
                                     action = "",
                                     accountName = @"\s+",
                                     number = "20" // Par défaut le nombre de messages est 20
                                 }
                 );
 
-            routes.MapRoute("InfoAccount",
+            routes.MapRoute("InfoAccountById",
                             "infoaccount/{action}/{accountId}/{number}",
                             new
                             {
-                                controller = "InfoAccount",
+                                controller = "InfoAccountById",
                                 action = "",
                                 accountId = @"\d+",
                                 number = "20" // Par défaut le nombre de messages est 20
@@ -52,22 +62,22 @@ namespace Tigwi_API
             
             // routes to InfoUser
 
-            routes.MapRoute("InfoUser", 
+            routes.MapRoute("InfoUserByLogin", 
                             "infouser/{action}/{userLogin}/{number}",
                             new
                                 {
-                                    controller = "InfoUser",
+                                    controller = "InfoUserByLogin",
                                     action = "",
                                     userLogin = @"/s+",
                                     number = "20"
                                 }
                 );
 
-            routes.MapRoute("InfoUser",
+            routes.MapRoute("InfoUserById",
                             "infouser/{action}/{userId}/{number}",
                             new
                             {
-                                controller = "InfoUser",
+                                controller = "InfoUserById",
                                 action = "",
                                 userId = @"/d+",
                                 number = "20"
