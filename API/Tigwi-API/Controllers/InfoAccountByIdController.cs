@@ -8,7 +8,7 @@ namespace Tigwi_API.Controllers
     public class InfoAccountByIdController : InfoAccountController
     {
         // TEST
-        // GET: /infoaccount/test/{accountId}
+        // GET: /infoaccountbyid/test/{accountId}
         public string Test(Guid accountId)
         {
             return accountId + " accessed test successfully !";
@@ -36,7 +36,7 @@ namespace Tigwi_API.Controllers
 
 
         //
-        // GET: /infoaccount/taggedmessages/{accountId}/{number}
+        // GET: /infoaccountbyid/taggedmessages/{accountId}/{number}
         public ActionResult TaggedMessages(Guid accountId, int number)
         {
             Answer output;
@@ -57,7 +57,7 @@ namespace Tigwi_API.Controllers
 
         
         //
-        // GET : /infoaccount/subscriberaccounts/{accountId}/{number}
+        // GET : /infoaccountbyid/subscriberaccounts/{accountId}/{number}
         public ActionResult SubscriberAccounts(Guid accountId, int number)
         {
             Answer output;
@@ -98,7 +98,7 @@ namespace Tigwi_API.Controllers
 
 
         //
-        // GET : /infoaccount/publiclysubscribedaccounts/{accountId}/{number}
+        // GET : /infoaccountbyid/publiclysubscribedaccounts/{accountId}/{number}
         public ActionResult PubliclySubscribedAccounts(Guid accountId, int number)
         {
             return SubscriptionsEitherPublicOrAll(accountId, number, false);
@@ -106,7 +106,7 @@ namespace Tigwi_API.Controllers
 
 
         //
-        // GET : /infoaccount/subscribedaccounts/{accountId}/{number}
+        // GET : /infoaccountbyid/subscribedaccounts/{accountId}/{number}
         // [Authorize]
         public ActionResult SubscribedAccounts(Guid accountId, int number)
         {
@@ -133,7 +133,7 @@ namespace Tigwi_API.Controllers
 
         
         //
-        // GET : /infoaccount/subscribedpubliclists/{accountId}/{number}
+        // GET : /infoaccountbyid/subscribedpubliclists/{accountId}/{number}
         public ActionResult SubscribedPublicLists(Guid accountId, int number)
         {
             return SubscribedListsEitherPublicOrAll(accountId, number, false);
@@ -141,7 +141,7 @@ namespace Tigwi_API.Controllers
 
         
         //
-        // GET : /infoaccount/subscribedlists/{accountId}/{number}
+        // GET : /infoaccountbyid/subscribedlists/{accountId}/{number}
         //[Authorize]
         public ActionResult SubscribedLists(Guid accountId, int number)
         {
@@ -150,7 +150,7 @@ namespace Tigwi_API.Controllers
         
         
         //
-        // GET : /infoaccount/subscriberlists/{accountId}/{number}
+        // GET : /infoaccountbyid/subscriberlists/{accountId}/{number}
         public ActionResult SubscriberLists(Guid accountId, int number)
         {
             Answer output;
@@ -192,7 +192,7 @@ namespace Tigwi_API.Controllers
 
 
         //
-        // GET : infoaccount/ownedpubliclists/{accountId}/{number}
+        // GET : infoaccountbyid/ownedpubliclists/{accountId}/{number}
         public ActionResult OwnedPublicLists(Guid accountId, int number)
         {
             return OwnedListsEitherPublicOrAll(accountId, number, false);
@@ -200,7 +200,7 @@ namespace Tigwi_API.Controllers
 
         
         //
-        // GET : /infoaccount/ownedlists/{accountId}/{number}
+        // GET : /infoaccountbyid/ownedlists/{accountId}/{number}
         //[Authorize]
         public ActionResult OwnedLists(Guid accountId, int number)
         {
@@ -209,7 +209,7 @@ namespace Tigwi_API.Controllers
 
 
         //
-        // GET : /infoaccount/maininfo/{accountId}
+        // GET : /infoaccountbyid/maininfo/{accountId}
         public ActionResult MainInfo(Guid accountId)
         {
             Answer output;
@@ -230,7 +230,7 @@ namespace Tigwi_API.Controllers
 
 
         //
-        // GET : /infoaccount/usersallowed/{accountId}/{number}
+        // GET : /infoaccountbyid/usersallowed/{accountId}/{number}
         //[Authorize] (?)
         public ActionResult UsersAllowed(Guid accountId, int number)
         {
@@ -252,7 +252,7 @@ namespace Tigwi_API.Controllers
 
 
         //
-        // GET : infoaccount/administrator/{accountId}
+        // GET : infoaccountbyid/administrator/{accountId}
         //[Authorize]
         public ActionResult Administrator(Guid accountId)
         {
