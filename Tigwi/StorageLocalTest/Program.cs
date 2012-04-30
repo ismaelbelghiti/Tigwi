@@ -987,19 +987,11 @@ namespace StorageLocalTest
             Guid account2 = storage.Account.GetId("otherAccountThatExists");
             HashSet<Guid> lists1 = storage.List.GetAccountOwnedLists(account1, false);
 
-            storage.Msg.Tag(account1, storage.Msg.Post(account1, "account1 msg1"));
-            storage.Msg.Tag(account1, storage.Msg.Post(account1, "account1 msg2"));
-            storage.Msg.Tag(account1, storage.Msg.Post(account1, "account1 msg3"));
-            storage.Msg.Tag(account1, storage.Msg.Post(account1, "account1 msg4"));
-            storage.Msg.Tag(account1, storage.Msg.Post(account1, "account1 msg5"));
-            storage.Msg.Tag(account1, storage.Msg.Post(account1, "account1 msg6"));
-            storage.Msg.Tag(account1, storage.Msg.Post(account1, "account1 msg7"));
-            storage.Msg.Tag(account1, storage.Msg.Post(account1, "account1 msg8"));
-            storage.Msg.Tag(account1, storage.Msg.Post(account1, "account1 msg9"));
-            storage.Msg.Tag(account1, storage.Msg.Post(account1, "account1 msg10"));
-            storage.Msg.Tag(account1, storage.Msg.Post(account1, "account1 msg11"));
-            storage.Msg.Tag(account1, storage.Msg.Post(account1, "account1 msg12"));
-            storage.Msg.Tag(account1, storage.Msg.Post(account1, "account1 msg13"));
+            for (int i = 0; i < 100; i++)
+            {
+                storage.Msg.Tag(account1, storage.Msg.Post(account2, "message " + i));
+                Console.Write(".");
+            }
 
             foreach (var m in storage.Msg.GetTaggedFrom(account1, DateTime.MinValue, 100))
                 Console.WriteLine(m.Content);

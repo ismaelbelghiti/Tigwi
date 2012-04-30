@@ -23,6 +23,8 @@ namespace StorageLibrary.Utilities
 
         public MessageSet() : base(new MsgComparer()) { }
 
+        public MessageSet(IEnumerable<IMessage> items) : base(items, new MsgComparer()) { }
+
         protected MessageSet(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

@@ -166,9 +166,52 @@ namespace StorageLibrary.Utilities
             blob.Delete();
         }
 
+        public bool TryDelete()
+        {
+            if (blob.Attributes.Properties.ETag == null)
+                throw new EtagNotSet();
+
+            BlobRequestOptions reqOpt = new BlobRequestOptions();
+            reqOpt.AccessCondition = AccessCondition.IfMatch(blob.Attributes.Properties.ETag);
+
+            try
+            {
+                blob.Delete(reqOpt);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public void AddMetadata(string name, string value)
         {
             blob.Metadata.Add(name, value);
+        }
+
+        public void UploadMetadata()
+        {
+            blob.SetMetadata();
+        }
+
+        public bool TryUploadMetadata()
+        {
+            if (blob.Attributes.Properties.ETag == null)
+                throw new EtagNotSet();
+
+            BlobRequestOptions reqOpt = new BlobRequestOptions();
+            reqOpt.AccessCondition = AccessCondition.IfMatch(blob.Attributes.Properties.ETag);
+
+            try
+            {
+                blob.SetMetadata(reqOpt);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public NameValueCollection Metadata

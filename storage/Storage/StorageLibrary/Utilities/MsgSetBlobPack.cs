@@ -14,6 +14,10 @@ namespace StorageLibrary.Utilities
     // - maybe the guid to dectect changes is not the best fing in terms of performance
     class MsgSetBlobPack
     {
+        const int splitSize = 40;
+        const int mergeSize = 10;
+        const string timeFormat = "yyyy-MM-dd-HH-mm-ss-fffffff";
+
         CloudBlobDirectory dir;
 
         public MsgSetBlobPack(CloudBlobContainer container, string path)
@@ -23,7 +27,7 @@ namespace StorageLibrary.Utilities
 
         public void Init()
         {
-            Blob<MessageSet> blob = new Blob<MessageSet>(dir.Container, dir.Uri + DateTime.MinValue.ToString("yyyy-MM-dd-HH-mm-ss-fffffff"));
+            Blob<MessageSet> blob = new Blob<MessageSet>(dir.Container, dir.Uri + DateTime.MinValue.ToString(timeFormat));
             blob.AddMetadata("version", Guid.NewGuid().ToString());
             blob.Set(new MessageSet());
         }
@@ -127,7 +131,30 @@ namespace StorageLibrary.Utilities
                     {
                         set = GetMessageSet(blob);
                         set.Add(message);
-                        // TODO : split if necessary
+
+                        // split if necessary
+                        // TODO : should we export this to a worker
+                        if (set.Count > splitSize)
+                        {
+                            MessageSet set1 = new MessageSet(set.Take(set.Count / 2));
+                            MessageSet set2 = new MessageSet(set.Skip(set.Count / 2));
+
+                            Blob<MessageSet> blob2 = new Blob<MessageSet>(dir.Container, dir.Uri + set2.Min.Date.ToString(timeFormat));
+
+                            // set version to 0 to be sure no one insert/remove a message while we split
+                            blob.AddMetadata("version", Guid.Empty.ToString());
+                            if (!blob.TryUploadMetadata())
+                                throw new VersionHasChanged();
+
+                            // specify new versions numbers
+                            blob.AddMetadata("version", Guid.NewGuid().ToString());
+                            blob2.AddMetadata("version", Guid.NewGuid().ToString());
+
+                            // upload blobs
+                            blob2.Set(set2);
+                            blob.Set(set1);
+                            return true;
+                        }
 
                     } while (!blob.TrySet(set));
                 }
@@ -156,7 +183,33 @@ namespace StorageLibrary.Utilities
                     {
                         set = GetMessageSet(blob);
                         set.Remove(message);
-                        // TODO : merge if necessary
+
+                        // merge if necessary -- and if it is possible
+                        // TODO : should we move this to the worker
+                        if (set.Count < mergeSize && blobIndex < blobsList.Count-1 )
+                        {
+                            Blob<MessageSet> blob2 = new Blob<MessageSet>(blobsList[blobIndex + 1].Value);
+
+                            MessageSet set2 = blob2.GetIfExists(new VersionHasChanged());
+
+                            // set version to 0 to be sure no one insert/remove a message while we split
+                            blob.AddMetadata("version", Guid.Empty.ToString());
+                            if (!blob.TryUploadMetadata())
+                                throw new VersionHasChanged();
+
+                            if (!blob2.TryDelete())
+                            {
+                                // restore old version
+                                blob.AddMetadata("version", Guid.NewGuid().ToString());
+                                blob.UploadMetadata();
+                                throw new VersionHasChanged();
+                            }
+                            // specify new versions numbers
+                            blob.AddMetadata("version", Guid.NewGuid().ToString());
+                            set.UnionWith(set2);
+                            blob.Set(set);
+                            return;
+                        }
 
                     } while (!blob.TrySet(set));
                 }
@@ -192,7 +245,8 @@ namespace StorageLibrary.Utilities
         {
             string guid = blob.Metadata["version"];
             MessageSet set = blob.GetIfExists(new VersionHasChanged());
-            if (guid != blob.Metadata["version"])
+            // if the guid = 0, then the architecture is changing
+            if (guid != blob.Metadata["version"] || guid == Guid.Empty.ToString())
                 throw new VersionHasChanged();
             return set;
         }
