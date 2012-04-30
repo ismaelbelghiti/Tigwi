@@ -113,6 +113,7 @@ namespace StorageLibrary.Utilities
                     do
                     {
                         set = blob.GetIfExists(new BlobDoesntExists());
+                        set.Add(message);
                         // TODO : split if necessary
 
                     } while (!blob.TrySet(set));

@@ -99,7 +99,7 @@ namespace StorageLibrary.Utilities
                 stream.Close();
                 return t;
             }
-            catch
+            catch(Exception)
             {
                 throw e;
             }

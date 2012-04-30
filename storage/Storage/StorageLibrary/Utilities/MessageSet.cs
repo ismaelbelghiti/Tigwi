@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace StorageLibrary.Utilities
 {
     [Serializable]
-    public class MessageSet : SortedSet<IMessage>
+    public class MessageSet : SortedSet<IMessage>, ISerializable
     {
         [Serializable]
         class MsgComparer : IComparer<IMessage>
@@ -21,5 +22,7 @@ namespace StorageLibrary.Utilities
         }
 
         public MessageSet() : base(new MsgComparer()) { }
+
+        protected MessageSet(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }
