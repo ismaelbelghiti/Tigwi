@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using System.Xml.Serialization;
 using StorageLibrary;
 using Tigwi_API.Models;
 
@@ -11,8 +12,10 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult ChangeEmail(ChangeInfo infos)
+        public ActionResult ChangeEmail()
         {
+            var infos = (ChangeInfo)(new XmlSerializer(typeof(ChangeInfo))).Deserialize(Request.InputStream);
+
             Error error;
 
             try
@@ -42,8 +45,10 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult ChangeAvatar(ChangeInfo infos)
+        public ActionResult ChangeAvatar()
         {
+            var infos = (ChangeInfo)(new XmlSerializer(typeof(ChangeInfo))).Deserialize(Request.InputStream);
+
             Error error;
 
             try
@@ -74,8 +79,10 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult ChangePassword(ChangePassword infos)
+        public ActionResult ChangePassword()
         {
+            var infos = (ChangePassword)(new XmlSerializer(typeof(ChangePassword))).Deserialize(Request.InputStream);
+
             Error error;
 
             try
@@ -111,8 +118,10 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult CreateAccount(CreateAccount infos)
+        public ActionResult CreateAccount()
         {
+            var infos = (CreateAccount)(new XmlSerializer(typeof(CreateAccount))).Deserialize(Request.InputStream);
+
             Answer output;
 
             try
