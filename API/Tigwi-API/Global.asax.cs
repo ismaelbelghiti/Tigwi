@@ -30,17 +30,15 @@ namespace Tigwi_API
                             new
                                 {
                                     controller = "InfoAccountByName",
-                                    accountName = @"\s+",
                                     number = "20" // Par défaut le nombre de messages est 20
                                 }
                 );
 
             routes.MapRoute("InfoAccountById",
-                            "infoaccount/{action}/{accountId}/{number}",
+                            "infoaccountbyid/{action}/{accountId}/{number}",
                             new
                             {
                                 controller = "InfoAccountById",
-                                accountId = @"\d+",
                                 number = "20" // Par défaut le nombre de messages est 20
                             }
                 );
@@ -63,17 +61,15 @@ namespace Tigwi_API
                             new
                                 {
                                     controller = "InfoUserByLogin",
-                                    userLogin = @"/s+",
                                     number = "20"
                                 }
                 );
 
             routes.MapRoute("InfoUserById",
-                            "infouser/{action}/{userId}/{number}",
+                            "infouserbyid/{action}/{userId}/{number}",
                             new
                             {
                                 controller = "InfoUserById",
-                                userId = @"/d+",
                                 number = "20"
                             }
                 );

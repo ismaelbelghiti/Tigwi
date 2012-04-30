@@ -1,5 +1,5 @@
-﻿using System;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using System.Xml.Serialization;
 using Tigwi_API.Models;
 using StorageLibrary;
 
@@ -12,8 +12,10 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult SubscribeAccount(ListAndAccount subscribeAccount)
+        public ActionResult SubscribeAccount()
         {
+            var subscribeAccount = (ListAndAccount)(new XmlSerializer(typeof(ListAndAccount))).Deserialize(Request.InputStream);
+
             Error error;
 
             try
@@ -38,8 +40,10 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult UnsubscribeAccount(ListAndAccount unsubscribeAccount)
+        public ActionResult UnsubscribeAccount()
         {
+            var unsubscribeAccount = (ListAndAccount)(new XmlSerializer(typeof(ListAndAccount))).Deserialize(Request.InputStream);
+
             Error error;
 
             try
@@ -65,8 +69,10 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult FollowList(ListAndAccount followList)
+        public ActionResult FollowList()
         {
+            var followList = (ListAndAccount)(new XmlSerializer(typeof(ListAndAccount))).Deserialize(Request.InputStream);
+
             Error error;
 
             try
@@ -91,8 +97,10 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult UnfollowList(ListAndAccount unfollowList)
+        public ActionResult UnfollowList()
         {
+            var unfollowList = (ListAndAccount)(new XmlSerializer(typeof(ListAndAccount))).Deserialize(Request.InputStream);
+
             Error error;
 
             try

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
+using System.Xml.Serialization;
 using StorageLibrary;
 using Tigwi_API.Models;
 
@@ -8,12 +9,23 @@ namespace Tigwi_API.Controllers
     public class ModifyAccountController : ApiController
     {
         //
+        // POST : /modifyaccount/test
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Test()
+        {
+            var user = (NewUser) (new XmlSerializer(typeof (NewUser))).Deserialize(Request.InputStream);
+            return Content("Le résultat est " + user.Login + ", " + user.Email + ", " + user.Password);
+        }
+
+        //
         // POST : modifyaccount/write
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Write(MsgToWrite msg)
+        public ActionResult Write()
         {
+            var msg = (MsgToWrite)(new XmlSerializer(typeof(MsgToWrite))).Deserialize(Request.InputStream);
+
             Answer output;
 
             try
@@ -41,8 +53,10 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Copy(CopyMsg msg)
+        public ActionResult Copy()
         {
+            var msg = (CopyMsg)(new XmlSerializer(typeof(CopyMsg))).Deserialize(Request.InputStream);
+
             Answer output;
 
             try
@@ -70,8 +84,10 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Delete(MsgToDelete msg)
+        public ActionResult Delete()
         {
+            var msg = (MsgToDelete)(new XmlSerializer(typeof(MsgToDelete))).Deserialize(Request.InputStream);
+
             Error error;
 
             try
@@ -100,8 +116,10 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Tag(Tag msg)
+        public ActionResult Tag()
         {
+            var msg = (Tag)(new XmlSerializer(typeof(Tag))).Deserialize(Request.InputStream);
+
             Error error;
 
             try
@@ -129,8 +147,10 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Untag(Untag msg)
+        public ActionResult Untag()
         {
+            var msg = (Untag)(new XmlSerializer(typeof(Untag))).Deserialize(Request.InputStream);
+
             Error error;
 
             try
@@ -158,8 +178,10 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult SubscribeList(SubscribeList subscribe)
+        public ActionResult SubscribeList()
         {
+            var subscribe = (SubscribeList)(new XmlSerializer(typeof(SubscribeList))).Deserialize(Request.InputStream);
+
             Error error;
 
             try
@@ -185,8 +207,10 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult CreateList(CreateList listCreation)
+        public ActionResult CreateList()
         {
+            var listCreation = (CreateList)(new XmlSerializer(typeof(CreateList))).Deserialize(Request.InputStream);
+
             Answer output;
 
             try
@@ -214,8 +238,10 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult ChangeDescription(ChangeDescription infos)
+        public ActionResult ChangeDescription()
         {
+            var infos = (ChangeDescription)(new XmlSerializer(typeof(ChangeDescription))).Deserialize(Request.InputStream);
+
             Error error;
 
             try
@@ -244,8 +270,10 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult RemoveUser(RemoveUser infos)
+        public ActionResult RemoveUser()
         {
+            var infos = (RemoveUser)(new XmlSerializer(typeof(RemoveUser))).Deserialize(Request.InputStream);
+
             Error error;
 
             try
@@ -278,8 +306,10 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult AddUser(AddUser infos)
+        public ActionResult AddUser()
         {
+            var infos = (AddUser)(new XmlSerializer(typeof(AddUser))).Deserialize(Request.InputStream);
+
             Error error;
 
             try
@@ -313,8 +343,10 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult ChangeAdmin(ChangeAdministrator infos)
+        public ActionResult ChangeAdmin()
         {
+            var infos = (ChangeAdministrator)(new XmlSerializer(typeof(ChangeAdministrator))).Deserialize(Request.InputStream);
+
             Error error;
 
             try

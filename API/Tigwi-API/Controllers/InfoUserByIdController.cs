@@ -9,7 +9,7 @@ namespace Tigwi_API.Controllers
     {
 
         //
-        // GET : /infouser/maininfo/{userId}
+        // GET : /infouserbyid/maininfo/{userId}
         public ActionResult MainInfo(Guid userId)
         {
             Answer output;
@@ -30,7 +30,7 @@ namespace Tigwi_API.Controllers
 
         
         //
-        // GET : /infouser/authorizedaccounts/{userId}/{number}
+        // GET : /infouserbyid/authorizedaccounts/{userId}/{number}
         public ActionResult AuthorizedAccounts(Guid userId, int number)
         {
             Answer output;

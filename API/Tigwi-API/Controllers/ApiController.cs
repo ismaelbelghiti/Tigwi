@@ -75,10 +75,12 @@ namespace Tigwi_API.Controllers
         // General methods
 
         //
-        // POST : /createuser/{user}
+        // POST : /createuser
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult CreateUser(NewUser user)
+        public ActionResult CreateUser()
         {
+            var user = (NewUser)(new XmlSerializer(typeof(NewUser))).Deserialize(Request.InputStream);
+
             Answer output;
 
             try
