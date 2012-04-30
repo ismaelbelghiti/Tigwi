@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using Microsoft.WindowsAzure.StorageClient;
 using StorageLibrary.exception;
+using System.Collections.Specialized;
 
 namespace StorageLibrary.Utilities
 {
@@ -163,6 +164,19 @@ namespace StorageLibrary.Utilities
         public void Delete()
         {
             blob.Delete();
+        }
+
+        public void AddMetadata(string name, string value)
+        {
+            blob.Metadata.Add(name, value);
+        }
+
+        public NameValueCollection Metadata
+        {
+            get
+            {
+                return blob.Metadata;
+            }
         }
     }
 }

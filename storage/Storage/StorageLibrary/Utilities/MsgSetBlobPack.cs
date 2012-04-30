@@ -10,6 +10,8 @@ using StorageLibrary.exception;
 
 namespace StorageLibrary.Utilities
 {
+    // TODO : 
+    // - maybe the guid to dectect changes is not the best fing in terms of performance
     class MsgSetBlobPack
     {
         CloudBlobDirectory dir;
@@ -21,19 +23,22 @@ namespace StorageLibrary.Utilities
 
         public void Init()
         {
-            MsgSetBlob bTaggedMsg = new MsgSetBlob(dir.Container, dir.Uri + DateTime.MinValue.ToString("yyyy-MM-dd-HH-mm-ss-fffffff"));
-            bTaggedMsg.Init();
+            Blob<MessageSet> blob = new Blob<MessageSet>(dir.Container, dir.Uri + DateTime.MinValue.ToString("yyyy-MM-dd-HH-mm-ss-fffffff"));
+            blob.AddMetadata("version", Guid.NewGuid().ToString());
+            blob.Set(new MessageSet());
         }
 
         public List<IMessage> GetMessagesFrom(DateTime date, int msgCount, Exception e)
         {
+            List<IMessage> msgList = null;
+
             // if their is a change in te architecture of packs while we retreive messages, then we try again
-            // TODO : how to detect when something has changed ?
-            // - add a GUI in the name to see when we change
-            // - add a GUI in metadata
-            // - the GUI would only change if we change the structure
-            while (true)
+            // To detect when the structure has changed, we add a guid in metadata to get the version of the structure
+            bool keepGoing = true;
+            while (keepGoing)
             {
+                keepGoing = false;
+
                 // get blobs
                 List<KeyValuePair<DateTime, CloudBlob>> blobsList = GetBlobs();
 
@@ -46,11 +51,16 @@ namespace StorageLibrary.Utilities
 
                 // get the messages
                 Blob<SortedSet<IMessage>> bMsgSet = new Blob<SortedSet<IMessage>>(blobsList[blobIndex].Value);
+                string guid = bMsgSet.Metadata["version"];
                 SortedSet<IMessage> msgSet;
                 try { msgSet = bMsgSet.GetIfExists(new Exception()); }
                 catch { continue; }
 
-                List<IMessage> msgList = msgSet.GetViewBetween(Message.FirstMessage(date), Message.LastMessage()).ToList();
+                // check that the version hasn't changed
+                if (bMsgSet.Metadata["version"] != guid)
+                    continue;
+
+                msgList = msgSet.GetViewBetween(Message.FirstMessage(date), Message.LastMessage()).ToList();
 
                 blobIndex++;
 
@@ -58,18 +68,26 @@ namespace StorageLibrary.Utilities
                 while (msgList.Count < msgCount && blobIndex<blobsList.Count)
                 {
                     bMsgSet = new Blob<SortedSet<IMessage>>(blobsList[blobIndex].Value);
+                    guid = bMsgSet.Metadata["version"];
                     try { msgSet = bMsgSet.GetIfExists(new Exception()); }
                     catch { continue; }
+
+                    // check that the version hasn't changed
+                    if (bMsgSet.Metadata["version"] != guid)
+                    {
+                        keepGoing = true;
+                        break;
+                    }
 
                     msgList.AddRange(msgSet);
                     blobIndex++;
                 }
-
-                if (msgList.Count > msgCount)
-                    msgList = msgList.GetRange(0, msgCount);
-
-                return msgList;
             }
+
+            if (msgList.Count > msgCount)
+                msgList = msgList.GetRange(0, msgCount);
+
+            return msgList;
         }
 
         // NYI
@@ -90,57 +108,61 @@ namespace StorageLibrary.Utilities
         // return false to warn that the message was not added
         public bool AddMessage(IMessage message)
         {
-            // TODO find when something has changed
-            // Maybe by retriving etags when we get blobs list
             while (true)
             {
-                // get blobs
+                // find the blob
+                // TODO : find a better datasutrcture to do this faster
                 List<KeyValuePair<DateTime, CloudBlob>> blobsList = GetBlobs();
-
                 if (!blobsList.Any())
                     return false;
 
-                // get the right blob
-                // TODO : find a better datasutrcture to do this faster
                 int blobIndex = blobsList.IndexOf(blobsList.Last(p => p.Key <= message.Date));
 
                 // inserte data
                 Blob<MessageSet> blob = new Blob<MessageSet>(blobsList[blobIndex].Value);
                 MessageSet set;
-
                 try
                 {
                     do
                     {
-                        set = blob.GetIfExists(new BlobDoesntExists());
+                        set = GetMessageSet(blob);
                         set.Add(message);
                         // TODO : split if necessary
 
                     } while (!blob.TrySet(set));
                 }
-                catch (BlobDoesntExists) { continue; }
+                catch (VersionHasChanged) { continue; }
 
                 return true;
             }
         }
 
-        // NYI
         public void RemoveMessage(IMessage message)
         {
             while (true)
             {
-                // get blobs
+                // find the blobs
                 List<KeyValuePair<DateTime, CloudBlob>> blobsList = GetBlobs();
+                if (!blobsList.Any())
+                    return;
+                int blobIndex = blobsList.IndexOf(blobsList.Last(p => p.Key <= message.Date));
 
-                throw new NotImplementedException();
+                // inserte data
+                Blob<MessageSet> blob = new Blob<MessageSet>(blobsList[blobIndex].Value);
+                MessageSet set;
+                try
+                {
+                    do
+                    {
+                        set = GetMessageSet(blob);
+                        set.Remove(message);
+                        // TODO : merge if necessary
 
-                // find the good blob
+                    } while (!blob.TrySet(set));
+                }
+                catch (VersionHasChanged) { continue; }
 
-                // remove data
-
-                // merge if necessary
-
-                // try to save
+                return;
             }
         }
 
@@ -153,8 +175,10 @@ namespace StorageLibrary.Utilities
         List<KeyValuePair<DateTime, CloudBlob>> GetBlobs()
         {
             // Blobs are already ordered since they are retrieve by alphabetical order
-            // TODO : Check this assertion
-            IEnumerable<CloudBlob> blobs = dir.ListBlobs().OfType<CloudBlob>();
+            BlobRequestOptions requestOptions = new BlobRequestOptions();
+            requestOptions.BlobListingDetails = BlobListingDetails.Metadata;
+
+            IEnumerable<CloudBlob> blobs = dir.ListBlobs(requestOptions).OfType<CloudBlob>();
             return blobs.Select(c => new KeyValuePair<DateTime, CloudBlob>(NameToDate(c.Name), c)).ToList();
         }
 
@@ -163,5 +187,16 @@ namespace StorageLibrary.Utilities
             string dateString = blobName.Substring(blobName.LastIndexOf("/") + 1);
             return DateTime.ParseExact(dateString, "yyyy-MM-dd-HH-mm-ss-fffffff", CultureInfo.InvariantCulture);
         }
+
+        MessageSet GetMessageSet(Blob<MessageSet> blob)
+        {
+            string guid = blob.Metadata["version"];
+            MessageSet set = blob.GetIfExists(new VersionHasChanged());
+            if (guid != blob.Metadata["version"])
+                throw new VersionHasChanged();
+            return set;
+        }
+
+        class VersionHasChanged : Exception { }
     }
 }

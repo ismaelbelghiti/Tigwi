@@ -5,11 +5,5 @@ using System.Text;
 
 namespace StorageLibrary.exception
 {
-    class EtagNotSet : Exception
-    {
-    }
-
-    class BlobDoesntExists : Exception
-    {
-    }
+    class EtagNotSet : Exception { }
 }

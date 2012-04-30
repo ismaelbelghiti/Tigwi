@@ -22,6 +22,7 @@ namespace StorageLibrary
             this.connexion = connexion;
         }
 
+        // partialy implemented
         public List<IMessage> GetListsMsgFrom(HashSet<Guid> listsId, DateTime firstMsgTime, int msgNumber)
         {
             // TODO : add some parallization
@@ -78,15 +79,25 @@ namespace StorageLibrary
             // retrive the message
             IMessage message = (new Blob<IMessage>(connexion.msgContainer, Path.M_MESSAGE + msgId)).GetIfExists(new MessageNotFound());
 
+            // Tag it
             MsgSetBlobPack msgsBlob = new MsgSetBlobPack(connexion.msgContainer, Path.M_TAGGEDMESSAGES + accountId);
             if (!msgsBlob.AddMessage(message))
                 throw new AccountNotFound();
         }
 
-        // NYI
-        public void Untag(Guid accoundId, Guid msgId)
+        public void Untag(Guid accountId, Guid msgId)
         {
-            throw new NotImplementedException();
+            // retrive the message to get its date
+            IMessage message;
+            try
+            {
+                message = (new Blob<IMessage>(connexion.msgContainer, Path.M_MESSAGE + msgId)).GetIfExists(new MessageNotFound());
+            }
+            catch { return; }
+
+            // remove the message from tagged
+            MsgSetBlobPack msgsBlob = new MsgSetBlobPack(connexion.msgContainer, Path.M_TAGGEDMESSAGES + accountId);
+            msgsBlob.RemoveMessage(message);
         }
 
         public List<IMessage> GetTaggedFrom(Guid accoundId, DateTime firstMsgDate, int msgNumber)
@@ -95,12 +106,13 @@ namespace StorageLibrary
             return bMessages.GetMessagesFrom(firstMsgDate, msgNumber, new AccountNotFound());
         }
 
-        // NYI
         public List<IMessage> GetTaggedTo(Guid accountId, DateTime lastMsgId, int msgNumber)
         {
-            throw new NotImplementedException();
+            MsgSetBlobPack bMessages = new MsgSetBlobPack(connexion.msgContainer, Path.M_TAGGEDMESSAGES + accountId);
+            return bMessages.GetMessagesTo(lastMsgId, msgNumber, new AccountNotFound());
         }
 
+        // partialy implemented
         public Guid Post(Guid accountId, string content)
         {
             Guid id = Guid.NewGuid();
