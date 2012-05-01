@@ -107,7 +107,7 @@
     </Compile>
     <Compile Include="Models\IAccountModel.cs" />
     <Compile Include="Models\IPostModel.cs" />
-    <Compile Include="Models\IStorageListModel.cs" />
+    <Compile Include="Models\IListModel.cs" />
     <Compile Include="Models\IUserModel.cs" />
     <Compile Include="Models\SearchViewModel.cs" />
     <Compile Include="Models\Account\AccountCreationViewModel.cs" />
