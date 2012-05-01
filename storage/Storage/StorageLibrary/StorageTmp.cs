@@ -45,7 +45,6 @@
                 };
             this.idFromLogin.Add(login, id);
             this.infoFromId.Add(id, userInfo);
-            this.storage.Account.Create(id, login, "Main account");
 
             return id;
         }
