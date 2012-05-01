@@ -36,6 +36,7 @@ message ->	listmessages/<list ID>/<date>		: MessageSet
 			message/<messageID>					: IMessage
 
 TODO :
+	- Should the personnal list have the same ID than the account ?
 	- check messages size in the storage
 	- be able to upload avatars
 	- avoid create each container evry times : only once in the begining
@@ -48,6 +49,7 @@ TODO :
 CHECKS :
 	- check that we dont write on a deleted blob while using retry
 	- find out what happends when we try to list blobs in a directory that does not exists
+	- that consrtaints are respected on personnal list
 
 BUG :
 	- avoid fo0llow a private list 

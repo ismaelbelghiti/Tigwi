@@ -42,19 +42,12 @@ namespace StorageLibrary
         // NYI
         public Guid GetPersonalList(Guid accountId)
         {
-            throw new NotImplementedException();
-
             Blob<Guid> blob = new Blob<Guid>(connexion.listContainer, Path.L_PERSO + accountId);
-            return blob.GetIfExists(new ListNotFound());
+            return blob.GetIfExists(new AccountNotFound());
         }
 
         public Guid Create(Guid ownerId, string name, string description, bool isPrivate)
         {
-            // implemntation partielle
-
-            // TODO : verifier que l'utilisateur existe
-            // TODO : implementer les autres structues de données
-
             // Create the data :
             Guid id = Guid.NewGuid();
             ListInfo info = new ListInfo(name, description, isPrivate, false);
