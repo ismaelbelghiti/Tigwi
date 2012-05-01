@@ -24,6 +24,7 @@ namespace Tigwi_API.Models
     [Serializable]
     public class Message 
     {
+        public Message() {}
         public Message(IMessage msg, IStorage storage)
         {
             Id = msg.Id.ToString();
@@ -72,6 +73,7 @@ namespace Tigwi_API.Models
     [Serializable]
     public class Account : Content
     {
+        public Account () {}
         public Account(Guid id, string name, string description)
         {
             Id = id.ToString();
@@ -108,6 +110,7 @@ namespace Tigwi_API.Models
     [Serializable]
     public class User : Content
     {
+        public User () {}
         public User (IUserInfo user, Guid userId)
         {
             Login = user.Login;
@@ -125,6 +128,7 @@ namespace Tigwi_API.Models
     [Serializable]
     public class Users : Content
     {
+        public Users() {}
         public Users(List<User> listUsers)
         {
             Size = listUsers.Count();

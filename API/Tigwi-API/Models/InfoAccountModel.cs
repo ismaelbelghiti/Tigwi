@@ -9,6 +9,7 @@ namespace Tigwi_API.Models
     [XmlType("List")]
     public class ListApi
     {
+        public ListApi () {}
         public ListApi(Guid id, string name)
         {
             Id = id.ToString();
