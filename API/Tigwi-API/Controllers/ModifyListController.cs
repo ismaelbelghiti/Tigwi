@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using System.Xml.Serialization;
 using Tigwi_API.Models;
 using StorageLibrary;
@@ -14,22 +15,37 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult SubscribeAccount()
         {
-            var subscribeAccount = (ListAndAccount)(new XmlSerializer(typeof(ListAndAccount))).Deserialize(Request.InputStream);
-
             Error error;
 
             try
             {
-                var accountId = Storage.Account.GetId(subscribeAccount.Account);
-                Storage.List.Add(subscribeAccount.List, accountId);
+                var subscribeAccount =
+                    (ListAndAccount) (new XmlSerializer(typeof (ListAndAccount))).Deserialize(Request.InputStream);
 
-                // Result is an empty error XML element
-                error = new Error();
+                if (subscribeAccount.Account == null)
+                    error = new Error("Account missing");
+                else if (subscribeAccount.List == null)
+                    error = new Error("List missing");
+                else
+                {
+                    try
+                    {
+                        var accountId = Storage.Account.GetId(subscribeAccount.Account);
+                        Storage.List.Add(subscribeAccount.List.GetValueOrDefault(), accountId);
+
+                        // Result is an empty error XML element
+                        error = new Error();
+                    }
+                    catch (StorageLibException exception)
+                    {
+                        // Result is an non-empty error XML element
+                        error = new Error(exception.Code.ToString());
+                    }
+                }
             }
-            catch (StorageLibException exception)
+            catch (InvalidOperationException exception)
             {
-                // Result is an non-empty error XML element
-                error = new Error(exception.Code.ToString());
+                error = new Error(exception.Message + " " + exception.InnerException.Message);
             }
 
             return Serialize(new Answer(error));
@@ -42,22 +58,37 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult UnsubscribeAccount()
         {
-            var unsubscribeAccount = (ListAndAccount)(new XmlSerializer(typeof(ListAndAccount))).Deserialize(Request.InputStream);
-
             Error error;
 
             try
             {
-                var accountId = Storage.Account.GetId(unsubscribeAccount.Account);
-                Storage.List.Remove(unsubscribeAccount.List, accountId);
+                var unsubscribeAccount =
+                    (ListAndAccount) (new XmlSerializer(typeof (ListAndAccount))).Deserialize(Request.InputStream);
 
-                // Result is an empty error XML element
-                error = new Error();
+                if (unsubscribeAccount.Account == null)
+                    error = new Error("Account missing");
+                else if (unsubscribeAccount.List == null)
+                    error = new Error("List missing");
+                else
+                {
+                    try
+                    {
+                        var accountId = Storage.Account.GetId(unsubscribeAccount.Account);
+                        Storage.List.Remove(unsubscribeAccount.List.GetValueOrDefault(), accountId);
+
+                        // Result is an empty error XML element
+                        error = new Error();
+                    }
+                    catch (StorageLibException exception)
+                    {
+                        // Result is an non-empty error XML element
+                        error = new Error(exception.Code.ToString());
+                    }
+                }
             }
-            catch (StorageLibException exception)
+            catch (InvalidOperationException exception)
             {
-                // Result is an non-empty error XML element
-                error = new Error(exception.Code.ToString());
+                error = new Error(exception.Message + " " + exception.InnerException.Message);
             }
 
             return Serialize(new Answer(error));
@@ -71,22 +102,37 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult FollowList()
         {
-            var followList = (ListAndAccount)(new XmlSerializer(typeof(ListAndAccount))).Deserialize(Request.InputStream);
-
             Error error;
 
             try
             {
-                var accountId = Storage.Account.GetId(followList.Account);
-                Storage.List.Follow(followList.List, accountId);
+                var followList =
+                    (ListAndAccount) (new XmlSerializer(typeof (ListAndAccount))).Deserialize(Request.InputStream);
 
-                // Result is an empty error XML element
-                error = new Error();
+                if (followList.Account == null)
+                    error = new Error("Account missing");
+                else if (followList.List == null)
+                    error = new Error("List missing");
+                else
+                {
+                    try
+                    {
+                        var accountId = Storage.Account.GetId(followList.Account);
+                        Storage.List.Follow(followList.List.GetValueOrDefault(), accountId);
+
+                        // Result is an empty error XML element
+                        error = new Error();
+                    }
+                    catch (StorageLibException exception)
+                    {
+                        // Result is an non-empty error XML element
+                        error = new Error(exception.Code.ToString());
+                    }
+                }
             }
-            catch (StorageLibException exception)
+            catch (InvalidOperationException exception)
             {
-                // Result is an non-empty error XML element
-                error = new Error(exception.Code.ToString());
+                error = new Error(exception.Message + " " + exception.InnerException.Message);
             }
 
             return Serialize(new Answer(error));
@@ -99,22 +145,37 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult UnfollowList()
         {
-            var unfollowList = (ListAndAccount)(new XmlSerializer(typeof(ListAndAccount))).Deserialize(Request.InputStream);
-
             Error error;
 
             try
             {
-                var accountId = Storage.Account.GetId(unfollowList.Account);
-                Storage.List.Unfollow(unfollowList.List, accountId);
+                var unfollowList =
+                    (ListAndAccount) (new XmlSerializer(typeof (ListAndAccount))).Deserialize(Request.InputStream);
 
-                // Result is an empty error XML element
-                error = new Error();
+                if (unfollowList.Account == null)
+                    error = new Error("Account missing");
+                else if (unfollowList.List == null)
+                    error = new Error("List missing");
+                else
+                {
+                    try
+                    {
+                        var accountId = Storage.Account.GetId(unfollowList.Account);
+                        Storage.List.Unfollow(unfollowList.List.GetValueOrDefault(), accountId);
+
+                        // Result is an empty error XML element
+                        error = new Error();
+                    }
+                    catch (StorageLibException exception)
+                    {
+                        // Result is an non-empty error XML element
+                        error = new Error(exception.Code.ToString());
+                    }
+                }
             }
-            catch (StorageLibException exception)
+            catch (InvalidOperationException exception)
             {
-                // Result is an non-empty error XML element
-                error = new Error(exception.Code.ToString());
+                error = new Error(exception.Message + " " + exception.InnerException.Message);
             }
 
             return Serialize(new Answer(error));

@@ -14,19 +14,18 @@ namespace StorageLibrary
 {
     public class UserStorage : IUserStorage
     {
-        StrgConnexion connexion;
+        BlobFactory blobFactory;
 
         // Constuctor
-        public UserStorage(StrgConnexion connexion)
+        public UserStorage(BlobFactory blobFactory)
         {
-            this.connexion = connexion;
+            this.blobFactory = blobFactory;
         }
 
         // Interface implementation
         public Guid GetId(string login)
         {
-            Guid loginHash = Hasher.Hash(login);
-            Blob<Guid> blob = new Blob<Guid>(connexion.userContainer, Path.U_IDBYLOGIN + loginHash);
+            Blob<Guid> blob = blobFactory.UIdByLogin(login);
             Guid id = blob.GetIfExists(new UserNotFound());
             if (id.Equals(Guid.Empty))
                 throw new UserNotFound();
@@ -35,14 +34,13 @@ namespace StorageLibrary
 
         public IUserInfo GetInfo(Guid userId)
         {
-            Blob<IUserInfo> blob = new Blob<IUserInfo>(connexion.userContainer, "info/" + userId);
-            return blob.GetIfExists(new UserNotFound());
+            return blobFactory.UInfo(userId).GetIfExists(new UserNotFound());
         }
 
         public void SetInfo(Guid userId, string email)
         {
-            Blob<UserInfo> bInfo = new Blob<UserInfo>(connexion.userContainer, Path.U_INFO + userId);
-            UserInfo info = bInfo.GetIfExists(new UserNotFound());
+            Blob<IUserInfo> bInfo = blobFactory.UInfo(userId);
+            IUserInfo info = bInfo.GetIfExists(new UserNotFound());
             info.Email = email;
             if (!bInfo.SetIfExists(info))
                 throw new UserNotFound();
@@ -50,8 +48,7 @@ namespace StorageLibrary
 
         public HashSet<Guid> GetAccounts(Guid userId)
         {
-            Blob<HashSet<Guid>> blob = new Blob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_DATA);
-            return blob.GetIfExists(new UserNotFound());
+            return blobFactory.UAccountsData(userId).GetIfExists(new UserNotFound());
         }
 
         public Guid Create(string login, string email, string password)
@@ -59,23 +56,22 @@ namespace StorageLibrary
             // TODO unreserve the name if an error occure
 
             // reserve the name
-            Guid loginHash = Hasher.Hash(login);
-            Blob<Guid> bLoginById = new Blob<Guid>(connexion.userContainer, Path.U_IDBYLOGIN + loginHash);
+            Blob<Guid> bLoginById = blobFactory.UIdByLogin(login);
 
             if (!bLoginById.SetIfNotExists(Guid.Empty))
                 throw new UserAlreadyExists();
 
             // create the data
-            Guid id = Guid.NewGuid();
+            Guid userId = Guid.NewGuid();
             // TODO : add the avatar
             UserInfo info = new UserInfo(login, "", email);
             HashSet<Guid> accounts = new HashSet<Guid>();
 
             // init blobs
-            Blob<IUserInfo> bInfo = new Blob<IUserInfo>(connexion.userContainer, Path.U_INFO + id);
-            Blob<HashSet<Guid>> bAccounts = new Blob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + id + Path.U_ACC_DATA);
-            Blob<string> bPassword = new Blob<string>(connexion.userContainer, Path.U_PASSWORD + id);
-            Mutex.Init(connexion.userContainer, Path.U_ACCOUNTS + id + Path.U_ACC_LOCK);
+            Blob<IUserInfo> bInfo = blobFactory.UInfo(userId);
+            Blob<HashSet<Guid>> bAccounts = blobFactory.UAccountsData(userId);
+            Blob<string> bPassword = blobFactory.UPassword(userId);
+            blobFactory.UAccountsLockInit(userId);
 
             // store the data
             bInfo.Set(info);
@@ -83,9 +79,9 @@ namespace StorageLibrary
             bPassword.Set(password);
 
             // we finish by unlocking the name
-            bLoginById.Set(id);
+            bLoginById.Set(userId);
 
-            return id;
+            return userId;
         }
 
         public void Delete(Guid userId)
@@ -96,14 +92,12 @@ namespace StorageLibrary
 
         public string GetPassword(Guid userId)
         {
-            Blob<string> bPass = new Blob<string>(connexion.userContainer, Path.U_PASSWORD + userId);
-            return bPass.GetIfExists(new UserNotFound());
+            return blobFactory.UPassword(userId).GetIfExists(new UserNotFound());
         }
 
         public void SetPassword(Guid userId, string pass)
         {
-            Blob<string> bPass = new Blob<string>(connexion.userContainer, Path.U_PASSWORD + userId);
-            if (!bPass.SetIfExists(pass))
+            if (!blobFactory.UPassword(userId).SetIfExists(pass))
                 throw new UserNotFound();
         }
     }

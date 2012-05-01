@@ -9,6 +9,9 @@ namespace StorageLocalTest
 {
     class Program
     {
+        const string azureAccountName = "ulyssestorage";
+        const string azureAccountKey = "WJHW/rX9U0ruYBANj96g/ACkmZE+5904U5OIYcxn0x/CcfQ3Z/zbU+SvN7uFsaWgs9tQDrqYqFouv3iNhMA+aQ==";
+
         static void TestUser(IStorage storage)
         {
             Console.WriteLine("TestUser");
@@ -1011,10 +1014,14 @@ namespace StorageLocalTest
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Init connexions");
-            Storage storage = new Storage("ulyssestorage", "XBfWftDi/T9lWl1ms6WA7wy+aPrR8IcJg3vdHd9MG4qJNafOxQYUrQodmuo/lQTXQzHIPTJBbWsrd6cSd6wSSw==");
-
             Console.WriteLine("Clearing previous data");
+            BlobFactory blobFactory = new BlobFactory(azureAccountName, azureAccountKey);
+            blobFactory.InitStorage();
+
+            Console.WriteLine("Init connexions");
+            Storage storage = new Storage(azureAccountName, azureAccountKey);
+
+            
             ClearContainer(storage.connexion.userContainer);
             ClearContainer(storage.connexion.accountContainer);
             ClearContainer(storage.connexion.listContainer);
@@ -1038,7 +1045,7 @@ namespace StorageLocalTest
             TestAccounts(storage);
             TestList(storage, listId);
 
-            TestMessages(storage);
+            //TestMessages(storage);
 
             storage.Msg.GetTaggedFrom(accountId, DateTime.MinValue, 100);
 

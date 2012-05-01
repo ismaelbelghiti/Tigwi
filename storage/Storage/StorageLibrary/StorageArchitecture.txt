@@ -1,7 +1,7 @@
 ﻿user ->		idbylogin/<login hash>				: Guid (= 0 if the login is reserved but not used)
 			idbyopenid/<openid hash>			: Guid
 			info/<user ID>						: UserInfo
-			accouts/<user ID>/data				: HashSet<Guid> -- you must take the mutex before touching to this
+			accounts/<user ID>/data				: HashSet<Guid> -- you must take the mutex before touching to this
 							 /lock				: Mutex -- must be taken if you add this user to an account->users or if you add an account to this user
 			password/<user ID>					: string
 				
@@ -26,7 +26,8 @@ list ->		------------------------------
 									  /lock		: Mutex
 			followingaccounts/<list ID>			: HashSet<Guid> -- accounts following this list 
 
-			followedby/<account ID>				: HashSet<Guid> -- list following this account publicly
+			followedby/<account ID>/public		: HashSet<Guid> -- list following this account publicly
+			followedby/<account ID>/all
 			followedaccounts/<list ID>/data		: HashSet<Guid> -- accounts in this list 
 									  /lock		: Mutex
 
@@ -36,6 +37,10 @@ message ->	listmessages/<list ID>/<date>		: MessageSet
 			message/<messageID>					: IMessage
 
 TODO :
+	- Create a console application to init the storage
+		This application will have to :
+		-> create the containers if they don't exist
+		-> clean them, but not delete them (we can't use a container who has just been deleted !!!)
 	- Should the personnal list have the same ID than the account ?
 	- check messages size in the storage
 	- be able to upload avatars
@@ -52,5 +57,5 @@ CHECKS :
 	- that consrtaints are respected on personnal list
 
 BUG :
-	- avoid fo0llow a private list 
+	- avoid follow a private list 
 	- add/remove the messages from the listmessage when we add/remove an account from the list

@@ -85,8 +85,12 @@ namespace Tigwi_API.Controllers
             {
                 var user = (NewUser) (new XmlSerializer(typeof (NewUser))).Deserialize(Request.InputStream);
                 
-                if (user.Login == null || user.Email == null || user.Password == null)
-                    output = new Answer(new Error("Bad entry"));
+                if (user.Login == null)
+                    output = new Answer(new Error("Login missing"));
+                else if (user.Email == null) // TODO ? More checkings on email
+                    output = new Answer(new Error("Email missing"));
+                else if (user.Password == null) // TODO ? More checkings on password
+                    output = new Answer(new Error("Password missing"));
                 else
                 {
                     try
@@ -103,9 +107,9 @@ namespace Tigwi_API.Controllers
                     }
                 }
             }
-            catch(InvalidOperationException)
+            catch(InvalidOperationException exception)
             {
-                output = new Answer(new Error("Bad xml entry"));
+                output = new Answer(new Error(exception.Message + " " + exception.InnerException.Message));
             }
 
             return Serialize(output);

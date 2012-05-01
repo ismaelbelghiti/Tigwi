@@ -15,11 +15,13 @@ namespace StorageLibrary
         // We split the set of messages in packs because we don't want to retrive a 10M blob from the storage
         TimeSpan limitDateDiff = TimeSpan.FromSeconds(5);
 
-        StrgConnexion connexion;
+        StrgConnexion connexion; // TODO : to be removed
+        BlobFactory blobFactory;
 
-        public MsgStorage(StrgConnexion connexion)
+        public MsgStorage(StrgConnexion connexion, BlobFactory blobFactory)
         {
             this.connexion = connexion;
+            this.blobFactory = blobFactory;
         }
 
         public List<IMessage> GetListsMsgFrom(HashSet<Guid> listsId, DateTime firstMsgTime, int msgNumber)
@@ -107,9 +109,7 @@ namespace StorageLibrary
             try
             {
                 Blob<AccountInfo> bAccountInfo = new Blob<AccountInfo>(connexion.accountContainer, Path.A_INFO + accountId);
-                Blob<Guid> bPersonnalListId = new Blob<Guid>(connexion.listContainer, Path.L_PERSO + accountId);
                 AccountInfo accountInfo = bAccountInfo.GetIfExists(new AccountNotFound());
-                Guid personnalListId = bPersonnalListId.GetIfExists(new AccountNotFound());
 
                 Message message = new Message(id, accountId, accountInfo.Name, "", DateTime.Now, content);
 
@@ -118,9 +118,8 @@ namespace StorageLibrary
 
                 // Add in listMsg
                 // TODO : handle the fact that followedBy might change during this process
-                Blob<HashSet<Guid>> bFollowedBy = new Blob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDBY + accountId);
-                HashSet<Guid> lists = bFollowedBy.GetIfExists(new AccountNotFound());
-                lists.Add(personnalListId); // HACK : change this to take into account all private lists 
+                Blob<HashSet<Guid>> bFollowedByAll = new Blob<HashSet<Guid>>(connexion.listContainer, Path.LFollowedByAll(accountId));
+                HashSet<Guid> lists = bFollowedByAll.GetIfExists(new AccountNotFound());
                 foreach(Guid listId in lists) 
                 {
                     MsgSetBlobPack msgSet = new MsgSetBlobPack(connexion.msgContainer, Path.M_LISTMESSAGES + listId);

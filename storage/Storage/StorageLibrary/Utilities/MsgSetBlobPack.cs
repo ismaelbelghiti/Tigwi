@@ -10,8 +10,7 @@ using StorageLibrary.exception;
 
 namespace StorageLibrary.Utilities
 {
-    // TODO : 
-    // - maybe the guid to dectect changes is not the best fing in terms of performance
+    // TODO : maybe the guid to dectect changes is not the best fing in terms of performance
     class MsgSetBlobPack
     {
         const int splitSize = 200;

@@ -26,17 +26,19 @@ namespace StorageLibrary
 
 
         public StrgConnexion connexion;
+        BlobFactory blobFactory;
 
         // Initialisation
         public Storage(string azureAccountName, string azureKey)
         {
-            connexion = new StrgConnexion(azureAccountName, azureKey);
+            connexion = new StrgConnexion(azureAccountName, azureKey);  // TODO : only the blobFactory should be needed
+            blobFactory = new BlobFactory(azureAccountName, azureKey);
 
             // allocate childrens
-            user = new UserStorage(connexion);
-            account = new AccountStorage(connexion);
-            list = new ListStorage(connexion);
-            msg = new MsgStorage(connexion);
+            user = new UserStorage(blobFactory);
+            account = new AccountStorage(connexion, blobFactory);
+            list = new ListStorage(connexion, blobFactory);
+            msg = new MsgStorage(connexion, blobFactory);
         }
     }
 }
