@@ -10,7 +10,7 @@ namespace StorageLocalTest
     class Program
     {
         const string azureAccountName = "ulyssestorage";
-        const string azureAccountKey = "";
+        const string azureAccountKey = "WJHW/rX9U0ruYBANj96g/ACkmZE+5904U5OIYcxn0x/CcfQ3Z/zbU+SvN7uFsaWgs9tQDrqYqFouv3iNhMA+aQ==";
 
         static void TestUser(IStorage storage)
         {
@@ -1045,7 +1045,7 @@ namespace StorageLocalTest
             TestAccounts(storage);
             TestList(storage, listId);
 
-            TestMessages(storage);
+            //TestMessages(storage);
 
             storage.Msg.GetTaggedFrom(accountId, DateTime.MinValue, 100);
 

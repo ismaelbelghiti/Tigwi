@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{43FEE8
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageLocalTest", "StorageLocalTest\StorageLocalTest.csproj", "{6387CE5D-E7D8-4002-8FD9-5B99229B1075}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SetUp", "SetUp\SetUp.csproj", "{1A46422D-8AB1-4091-B1AC-C5357131E2A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Cloud-Debug|Any CPU = Cloud-Debug|Any CPU
@@ -217,6 +219,26 @@ Global
 		{6387CE5D-E7D8-4002-8FD9-5B99229B1075}.Release|Mixed Platforms.Build.0 = Release|x86
 		{6387CE5D-E7D8-4002-8FD9-5B99229B1075}.Release|x86.ActiveCfg = Release|x86
 		{6387CE5D-E7D8-4002-8FD9-5B99229B1075}.Release|x86.Build.0 = Release|x86
+		{1A46422D-8AB1-4091-B1AC-C5357131E2A2}.Cloud-Debug|Any CPU.ActiveCfg = Debug|x86
+		{1A46422D-8AB1-4091-B1AC-C5357131E2A2}.Cloud-Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{1A46422D-8AB1-4091-B1AC-C5357131E2A2}.Cloud-Debug|Mixed Platforms.Build.0 = Debug|x86
+		{1A46422D-8AB1-4091-B1AC-C5357131E2A2}.Cloud-Debug|x86.ActiveCfg = Debug|x86
+		{1A46422D-8AB1-4091-B1AC-C5357131E2A2}.Cloud-Debug|x86.Build.0 = Debug|x86
+		{1A46422D-8AB1-4091-B1AC-C5357131E2A2}.Cloud-Release|Any CPU.ActiveCfg = Release|x86
+		{1A46422D-8AB1-4091-B1AC-C5357131E2A2}.Cloud-Release|Mixed Platforms.ActiveCfg = Release|x86
+		{1A46422D-8AB1-4091-B1AC-C5357131E2A2}.Cloud-Release|Mixed Platforms.Build.0 = Release|x86
+		{1A46422D-8AB1-4091-B1AC-C5357131E2A2}.Cloud-Release|x86.ActiveCfg = Release|x86
+		{1A46422D-8AB1-4091-B1AC-C5357131E2A2}.Cloud-Release|x86.Build.0 = Release|x86
+		{1A46422D-8AB1-4091-B1AC-C5357131E2A2}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{1A46422D-8AB1-4091-B1AC-C5357131E2A2}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{1A46422D-8AB1-4091-B1AC-C5357131E2A2}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{1A46422D-8AB1-4091-B1AC-C5357131E2A2}.Debug|x86.ActiveCfg = Debug|x86
+		{1A46422D-8AB1-4091-B1AC-C5357131E2A2}.Debug|x86.Build.0 = Debug|x86
+		{1A46422D-8AB1-4091-B1AC-C5357131E2A2}.Release|Any CPU.ActiveCfg = Release|x86
+		{1A46422D-8AB1-4091-B1AC-C5357131E2A2}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{1A46422D-8AB1-4091-B1AC-C5357131E2A2}.Release|Mixed Platforms.Build.0 = Release|x86
+		{1A46422D-8AB1-4091-B1AC-C5357131E2A2}.Release|x86.ActiveCfg = Release|x86
+		{1A46422D-8AB1-4091-B1AC-C5357131E2A2}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -9,12 +9,14 @@ namespace StorageLibrary
 {
     public class AccountStorage : IAccountStorage
     {
-        StrgConnexion connexion;
+        StrgConnexion connexion; // TODO : to be removed
+        BlobFactory blobFactory;
 
         // Constuctor
-        public AccountStorage(StrgConnexion connexion)
+        public AccountStorage(StrgConnexion connexion, BlobFactory blobFactory)
         {
             this.connexion = connexion;
+            this.blobFactory = blobFactory;
         }
 
         // Interface implementation
@@ -54,9 +56,9 @@ namespace StorageLibrary
         public void SetAdminId(Guid accountId, Guid userId)
         {
             Blob<Guid> bAdmin = new Blob<Guid>(connexion.accountContainer, Path.A_ADMINID + accountId);
-            Blob<HashSet<Guid>> bUserAccounts = new Blob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_DATA);
+            Blob<HashSet<Guid>> bUserAccounts = blobFactory.UAccountsData(userId);
 
-            using (new Mutex(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_LOCK, new UserNotFound()))
+            using (blobFactory.UAccountsLock(userId))
             {
                 HashSet<Guid> userAccounts = bUserAccounts.Get();
                 // we check if the user is already on this account
@@ -81,9 +83,9 @@ namespace StorageLibrary
 
         public void Add(Guid accountId, Guid userId)
         {
-            Blob<HashSet<Guid>> bUserAccounts = new Blob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_DATA);
+            Blob<HashSet<Guid>> bUserAccounts = blobFactory.UAccountsData(userId);
 
-            using (new Mutex(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_LOCK, new UserNotFound()))
+            using (blobFactory.UAccountsLock(userId))
             {
                 HashSetBlob<Guid> accountUsers = new HashSetBlob<Guid>(connexion.accountContainer, Path.A_USERS + accountId);
                 if (!accountUsers.Add(userId))
@@ -105,12 +107,12 @@ namespace StorageLibrary
 
         public void Remove(Guid accountId, Guid userId)
         {
-            Blob<HashSet<Guid>> bUserAccounts = new Blob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_DATA);
+            Blob<HashSet<Guid>> bUserAccounts = blobFactory.UAccountsData(userId);
             Blob<Guid> bAdminId = new Blob<Guid>(connexion.accountContainer, Path.A_ADMINID + accountId);
 
             try
             {
-                using (new Mutex(connexion.userContainer, Path.U_ACCOUNTS + userId + Path.U_ACC_LOCK, new UserNotFound()))
+                using (blobFactory.UAccountsLock(userId))
                 {
                     if (bAdminId.GetIfExists(new AccountNotFound()).Equals(userId))
                         throw new UserIsAdmin();
@@ -150,7 +152,7 @@ namespace StorageLibrary
             Blob<HashSet<Guid>> bAccountUsers = new Blob<HashSet<Guid>>(connexion.accountContainer, Path.A_USERS + id);
             Blob<Guid> bAdminId = new Blob<Guid>(connexion.accountContainer, Path.A_ADMINID + id);
 
-            Blob<HashSet<Guid>> bUserAccounts = new Blob<HashSet<Guid>>(connexion.userContainer, Path.U_ACCOUNTS + adminId + Path.U_ACC_DATA);
+            Blob<HashSet<Guid>> bUserAccounts = blobFactory.UAccountsData(adminId);
 
             Blob<HashSet<Guid>> bOwnedListsPublic = new Blob<HashSet<Guid>>(connexion.listContainer, Path.L_OWNEDLISTS_PUBLIC + id);
             Blob<HashSet<Guid>> bOwnedListsPrivate = new Blob<HashSet<Guid>>(connexion.listContainer, Path.L_OWNEDLISTS_PRIVATE + id);
@@ -160,7 +162,7 @@ namespace StorageLibrary
             MsgSetBlobPack bTaggedMsg = new MsgSetBlobPack(connexion.msgContainer, Path.M_TAGGEDMESSAGES + id);
 
             // TODO : we could do it without a lock - or at least store the data before
-            using (new Mutex(connexion.userContainer, Path.U_ACCOUNTS + adminId + Path.U_ACC_LOCK, new UserNotFound()))
+            using (blobFactory.UAccountsLock(adminId))
             {
                 // store the data
                 bInfo.Set(info);

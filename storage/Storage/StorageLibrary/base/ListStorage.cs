@@ -9,12 +9,14 @@ namespace StorageLibrary
 {
     public class ListStorage : IListStorage
     {
-        StrgConnexion connexion;
+        StrgConnexion connexion; // TODO : to be removed
+        BlobFactory blobFactory;
 
         // Constuctor
-        public ListStorage(StrgConnexion connexion)
+        public ListStorage(StrgConnexion connexion, BlobFactory blobFactory)
         {
             this.connexion = connexion;
+            this.blobFactory = blobFactory;
         }
 
         // Interface implementation

@@ -15,11 +15,13 @@ namespace StorageLibrary
         // We split the set of messages in packs because we don't want to retrive a 10M blob from the storage
         TimeSpan limitDateDiff = TimeSpan.FromSeconds(5);
 
-        StrgConnexion connexion;
+        StrgConnexion connexion; // TODO : to be removed
+        BlobFactory blobFactory;
 
-        public MsgStorage(StrgConnexion connexion)
+        public MsgStorage(StrgConnexion connexion, BlobFactory blobFactory)
         {
             this.connexion = connexion;
+            this.blobFactory = blobFactory;
         }
 
         public List<IMessage> GetListsMsgFrom(HashSet<Guid> listsId, DateTime firstMsgTime, int msgNumber)
