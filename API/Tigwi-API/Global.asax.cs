@@ -12,27 +12,33 @@ namespace Tigwi_API
 		{
 			routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            // general route to ApiController
 
-            //routes to InfoAccount
+            routes.MapRoute("CreateUser",
+                            "createuser",
+                            new
+                                {
+                                    controller = "Api",
+                                    action = "CreateUser"
+                                }
+                );
 
-            routes.MapRoute("InfoAccount",
+            // routes to InfoAccount
+
+            routes.MapRoute("InfoAccountByName",
                             "infoaccount/{action}/{accountName}/{number}",
                             new
                                 {
-                                    controller = "InfoAccount",
-                                    action = "",
-                                    accountName = @"\s+",
+                                    controller = "InfoAccountByName",
                                     number = "20" // Par défaut le nombre de messages est 20
                                 }
                 );
 
-            routes.MapRoute("InfoAccount",
-                            "infoaccount/{action}/{accountId}/{number}",
+            routes.MapRoute("InfoAccountById",
+                            "infoaccountbyid/{action}/{accountId}/{number}",
                             new
                             {
-                                controller = "InfoAccount",
-                                action = "",
-                                accountId = @"\d+",
+                                controller = "InfoAccountById",
                                 number = "20" // Par défaut le nombre de messages est 20
                             }
                 );
@@ -44,40 +50,32 @@ namespace Tigwi_API
                             new
                                 {
                                     controller = "InfoList",
-                                    action = "",
-                                    idOfList = "",
                                     number = "20"
                                 }
                 );
             
             // routes to InfoUser
 
-            routes.MapRoute("InfoUser", 
+            routes.MapRoute("InfoUserByLogin", 
                             "infouser/{action}/{userLogin}/{number}",
                             new
                                 {
-                                    controller = "InfoUser",
-                                    action = "",
-                                    userLogin = @"/s+",
+                                    controller = "InfoUserByLogin",
                                     number = "20"
                                 }
                 );
 
-            routes.MapRoute("InfoUser",
-                            "infouser/{action}/{userId}/{number}",
+            routes.MapRoute("InfoUserById",
+                            "infouserbyid/{action}/{userId}/{number}",
                             new
                             {
-                                controller = "InfoUser",
-                                action = "",
-                                userId = @"/d+",
+                                controller = "InfoUserById",
                                 number = "20"
                             }
                 );
 
-			// default route (also used for Modify)
-            routes.MapRoute("Default", "{controller}/{action}/{id}",
-                            new {controller = "Home", action = "Index", id = ""}
-                );
+			// default route used for modify controllers
+            routes.MapRoute("Default", "{controller}/{action}");
 		}
 
         protected void Application_Start()

@@ -39,6 +39,7 @@ namespace StorageLibrary
         // message container
         public const string M_LISTMESSAGES = "listmessages/";
         public const string M_ACCOUNTMESSAGES = "accountmessages/";
+        public const string M_MESSAGE = "message/";
         public const string M_TAGGEDMESSAGES = "taggedmessages/";
 
     }

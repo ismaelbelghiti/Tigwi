@@ -16,8 +16,11 @@
 		<!-- Edit the list of files where to replace __AZURE_STORAGE_ACCOUNT_NAME and __AZURE_STORAGE_ACCOUNT_KEY by their values,
 		put the relative position to Tigwi.ccproj -->
 		<!-- Example : <ConnectionFiles Include="myfile.*" /> -->
+		<ConnectionFiles Include="..\..\API\Tigwi-API\Controllers\ApiController.cs" />
 	</ItemGroup>
 	<ItemGroup>
-		<AllFiles Include="..\..\\**\*.*" />
+		<AllFiles Include="..\..\API\\**\*.*" />
+		<AllFiles Include="..\..\storage\\**\*.*" />
+		<AllFiles Include="..\..\Tigwi\\**\*.*" />
 	</ItemGroup>
 </Project>

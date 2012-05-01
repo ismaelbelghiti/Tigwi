@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Xml.Serialization;
 using StorageLibrary;
 using Tigwi_API.Models;
@@ -17,8 +12,10 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult ChangeEmail(ChangeInfo infos)
+        public ActionResult ChangeEmail()
         {
+            var infos = (ChangeInfo)(new XmlSerializer(typeof(ChangeInfo))).Deserialize(Request.InputStream);
+
             Error error;
 
             try
@@ -40,10 +37,7 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
         //
@@ -51,15 +45,17 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult ChangeAvatar(ChangeInfo infos)
+        public ActionResult ChangeAvatar()
         {
+            var infos = (ChangeInfo)(new XmlSerializer(typeof(ChangeInfo))).Deserialize(Request.InputStream);
+
             Error error;
 
             try
             {
-                var userId = infos.UserId;
+                // var userId = infos.UserId;
                 //TODO: find how to test userId to know if the information was sent or not
-                //if (userId == )
+                // if (userId == )
                 //    userId = Storage.User.GetId(infos.UserLogin);
 
                 //TODO: come back to this when storage will hav implemented change avatar method
@@ -75,10 +71,7 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
         //
@@ -86,8 +79,10 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult ChangePassword(ChangePassword infos)
+        public ActionResult ChangePassword()
         {
+            var infos = (ChangePassword)(new XmlSerializer(typeof(ChangePassword))).Deserialize(Request.InputStream);
+
             Error error;
 
             try
@@ -115,10 +110,7 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
         //
@@ -126,9 +118,11 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult CreateAccount(CreateAccount infos)
+        public ActionResult CreateAccount()
         {
-            Answer answer;
+            var infos = (CreateAccount)(new XmlSerializer(typeof(CreateAccount))).Deserialize(Request.InputStream);
+
+            Answer output;
 
             try
             {
@@ -141,19 +135,16 @@ namespace Tigwi_API.Controllers
                 var accountId = Storage.Account.Create(userId, infos.AccountName, infos.Description);
                
                 // Result
-                answer = new Answer( new ObjectCreated(accountId) );
+                output = new Answer( new ObjectCreated(accountId) );
 
             }
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
-                answer = new Answer( new Error(exception.Code.ToString()));
+                output = new Answer( new Error(exception.Code.ToString()));
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Error))).Serialize(stream, answer);
-
-            return Content(stream.ToString());
+            return Serialize(output);
         }
 
     }

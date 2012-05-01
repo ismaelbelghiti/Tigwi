@@ -7,125 +7,51 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace StorageLibrary.Utilities
 {
-    public class MsgSetBlob
+    // TODO : inheritance of blob is not the best thing
+    // we should have a blob field instead
+    // TODO : Do we realy need this class ? -- or to have it this way ?
+    public class MsgSetBlob : Blob<MessageSet>
     {
-        /*CloudBlob blob;
-        BinaryFormatter formatter;
+        public MsgSetBlob(CloudBlob blob) : base(blob) { }
 
-        public MsgSetBlob(CloudBlobContainer container, string blobName)
+        public MsgSetBlob(CloudBlobContainer container, string blobName) : base(container, blobName) { }
+
+        public void Init()
         {
-            blob = container.GetBlobReference(blobName);
-            formatter = new BinaryFormatter();
+            BlobStream stream = blob.OpenWrite();
+            formatter.Serialize(stream, new MessageSet());
+            stream.Close();
         }
 
-        public bool Exists
+        /// <summary>
+        /// Add a message to the set and delete the older message if count > maxMessage
+        /// </summary>
+        /// <returns>return false if no message was added</returns>
+        public bool AddAndDelete(IMessage message, int maxMsg)
         {
-            get
-            {
-                try
-                {
-                    blob.FetchAttributes();
-                    return true;
-                }
-                catch (StorageClientException e)
-                {
-                    if (e.ErrorCode == StorageErrorCode.ResourceNotFound)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-            }
-        }
-
-        public bool Add(MessageUpdateFields )
-        {
-            BlobRequestOptions reqOpt = new BlobRequestOptions();
-            SortedList<K, V> list;
+            MessageSet set;
             BlobStream stream;
-            string eTag;
-            bool keepGoing;
 
             do
             {
                 try
                 {
-                    blob.FetchAttributes();
-                    eTag = blob.Attributes.Properties.ETag;
                     stream = blob.OpenRead();
-                    list = (SortedList<K, V>)formatter.Deserialize(stream);
+                    set = (MessageSet)formatter.Deserialize(stream);
                     stream.Close();
                 }
-                catch
-                {
-                    return false;
-                }
+                catch { return false; }
 
-                list.Add(key, item);
-                reqOpt.AccessCondition = AccessCondition.IfMatch(eTag);
+                // update the set
+                set.Add(message);
+                // we can do this this way because we usualy remove only one
+                while (set.Count > maxMsg)
+                    set.Remove(set.Min);
 
-                try
-                {
-                    stream = blob.OpenWrite(reqOpt);
-                    formatter.Serialize(stream, list);
-                    stream.Close();
-                    keepGoing = false;
-                }
-                catch (Exception)
-                {
-                    keepGoing = true;
-                }
-
-            } while (keepGoing);
+            } while (!base.TrySet(set));
 
             return true;
         }
-
-        public bool Remove(T item)
-        {
-            BlobRequestOptions reqOpt = new BlobRequestOptions();
-            HashSet<T> set;
-            BlobStream stream;
-            string eTag;
-            bool keepGoing;
-
-            do
-            {
-                try
-                {
-                    blob.FetchAttributes();
-                    eTag = blob.Attributes.Properties.ETag;
-                    stream = blob.OpenRead();
-                    set = (HashSet<T>)formatter.Deserialize(stream);
-                    stream.Close();
-                }
-                catch
-                {
-                    return false;
-                }
-
-                set.Remove(item);
-                reqOpt.AccessCondition = AccessCondition.IfMatch(eTag);
-
-                try
-                {
-                    stream = blob.OpenWrite(reqOpt);
-                    formatter.Serialize(stream, set);
-                    stream.Close();
-                    keepGoing = false;
-                }
-                catch (Exception)
-                {
-                    keepGoing = true;
-                }
-
-            } while (keepGoing);
-
-            return true;
-        }*/
     }
 }
 

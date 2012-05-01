@@ -1,4 +1,4 @@
-Tigwi - API Specification by L. de HARO, A. de MYTTENAERE and T. ZIMMERMANN 
+﻿Tigwi - API Specification by L. de HARO, A. de MYTTENAERE and T. ZIMMERMANN 
 
 #General methods
 

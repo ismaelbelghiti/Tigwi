@@ -27,5 +27,25 @@ namespace StorageLibrary
         public DateTime Date { get; set; }
 
         public string Content { get; set; }
+
+        public static Message FirstMessage(DateTime date)
+        {
+            return new Message(new Guid(), new Guid(), "", "", date, "");
+        }
+
+        public static Message FirstMessage()
+        {
+            return FirstMessage(DateTime.MinValue);
+        }
+
+        public static Message LastMessage(DateTime date)
+        {
+            return new Message(new Guid("ffffffff-ffff-ffff-ffff-ffffffffffff"), new Guid(), "", "", date, "");
+        }
+
+        public static Message LastMessage()
+        {
+            return Message.LastMessage(DateTime.MaxValue);
+        }
     }
 }

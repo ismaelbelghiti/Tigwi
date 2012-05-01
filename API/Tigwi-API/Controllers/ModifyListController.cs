@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Xml.Serialization;
 using Tigwi_API.Models;
 using StorageLibrary;
@@ -14,13 +12,15 @@ namespace Tigwi_API.Controllers
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult SubscribeAccount(SubscribeAccount subscribeAccount)
+        public ActionResult SubscribeAccount()
         {
+            var subscribeAccount = (ListAndAccount)(new XmlSerializer(typeof(ListAndAccount))).Deserialize(Request.InputStream);
+
             Error error;
 
             try
             {
-                var accountId = Storage.Account.GetId(subscribeAccount.Subscription);
+                var accountId = Storage.Account.GetId(subscribeAccount.Account);
                 Storage.List.Add(subscribeAccount.List, accountId);
 
                 // Result is an empty error XML element
@@ -32,24 +32,24 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
         //
-        // POST : /modifylist/unsubscribeaccount/{idOfList}/{accountId}
+        // POST : /modifylist/unsubscribeaccount/
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult UnsubscribeAccount(Guid idOfList, Guid accountId)
+        public ActionResult UnsubscribeAccount()
         {
+            var unsubscribeAccount = (ListAndAccount)(new XmlSerializer(typeof(ListAndAccount))).Deserialize(Request.InputStream);
+
             Error error;
 
             try
             {
-                Storage.List.Add(idOfList, accountId);
+                var accountId = Storage.Account.GetId(unsubscribeAccount.Account);
+                Storage.List.Remove(unsubscribeAccount.List, accountId);
 
                 // Result is an empty error XML element
                 error = new Error();
@@ -60,25 +60,25 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
 
         //
-        // POST : /modifylist/followlist/{idOfList}/{accountId}
+        // POST : /modifylist/followlist/
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult FollowList(Guid idOfList, Guid accountId)
+        public ActionResult FollowList()
         {
+            var followList = (ListAndAccount)(new XmlSerializer(typeof(ListAndAccount))).Deserialize(Request.InputStream);
+
             Error error;
 
             try
             {
-                Storage.List.Follow(idOfList, accountId);
+                var accountId = Storage.Account.GetId(followList.Account);
+                Storage.List.Follow(followList.List, accountId);
 
                 // Result is an empty error XML element
                 error = new Error();
@@ -89,24 +89,24 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
         //
-        // POST : /modifylist/unfollowlist/{idOfList}/{accountId}
+        // POST : /modifylist/unfollowlist/
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult UnfollowList(Guid idOfList, Guid accountId)
+        public ActionResult UnfollowList()
         {
+            var unfollowList = (ListAndAccount)(new XmlSerializer(typeof(ListAndAccount))).Deserialize(Request.InputStream);
+
             Error error;
 
             try
             {
-                Storage.List.Unfollow(idOfList, accountId);
+                var accountId = Storage.Account.GetId(unfollowList.Account);
+                Storage.List.Unfollow(unfollowList.List, accountId);
 
                 // Result is an empty error XML element
                 error = new Error();
@@ -117,10 +117,7 @@ namespace Tigwi_API.Controllers
                 error = new Error(exception.Code.ToString());
             }
 
-            var stream = new MemoryStream();
-            (new XmlSerializer(typeof(Error))).Serialize(stream, error);
-
-            return Content(stream.ToString());
+            return Serialize(new Answer(error));
         }
 
     }
