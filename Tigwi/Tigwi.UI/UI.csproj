@@ -59,9 +59,6 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data.Entity" />
-    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Web.Helpers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
@@ -119,6 +116,7 @@
     <Compile Include="Models\Storage\AccountRepository.cs" />
     <Compile Include="Models\Storage\IListRepository.cs" />
     <Compile Include="Models\Storage\IPostRepository.cs" />
+    <Compile Include="Models\Storage\IStorageContext.cs" />
     <Compile Include="Models\Storage\StorageEntityCollection.cs" />
     <Compile Include="Models\Storage\IAccountRepository.cs" />
     <Compile Include="Models\Storage\IUserRepository.cs" />

@@ -30,6 +30,7 @@ namespace Tigwi.UI.Models.Storage
 
         public void Delete(StorageListModel list)
         {
+            // TODO: fixme
             this.Storage.List.Delete(list.Id);
             this.EntitiesMap.Remove(list.Id);
         }
@@ -39,12 +40,19 @@ namespace Tigwi.UI.Models.Storage
             StorageListModel list;
             if (!this.EntitiesMap.TryGetValue(listId, out list))
             {
-                // TODO
-                list = null;
+                list = new StorageListModel(this.Storage, this.StorageContext, listId);
                 this.EntitiesMap.Add(listId, list);
             }
 
             return list;
+        }
+
+        internal void SaveChanges()
+        {
+            foreach (var list in this.EntitiesMap)
+            {
+                list.Value.Save();
+            }
         }
     }
 }

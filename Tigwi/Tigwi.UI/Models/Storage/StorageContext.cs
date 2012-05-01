@@ -2,34 +2,19 @@ namespace Tigwi.UI.Models.Storage
 {
     using StorageLibrary;
 
-    public interface IStorageContext
-    {
-        #region Public Properties
-
-        IAccountRepository Accounts { get; }
-
-        IListRepository Lists { get; }
-
-        IPostRepository Posts { get; }
-
-        IUserRepository Users { get; }
-
-        #endregion
-    }
-
     public class StorageContext : IStorageContext
     {
         #region Constants and Fields
 
         private readonly IStorage storageObj;
 
-        private IAccountRepository accounts;
+        private AccountRepository accounts;
 
-        private IListRepository lists;
+        private ListRepository lists;
 
-        private IPostRepository posts;
+        private PostRepository posts;
 
-        private IUserRepository users;
+        private UserRepository users;
 
         #endregion
 
@@ -73,6 +58,29 @@ namespace Tigwi.UI.Models.Storage
             get
             {
                 return this.users ?? (this.users = new UserRepository(this.StorageObj, this));
+            }
+        }
+
+        public void SaveChanges()
+        {
+            if (this.users != null)
+            {
+                this.users.SaveChanges();
+            }
+
+            if (this.posts != null)
+            {
+                this.users.SaveChanges();
+            }
+
+            if (this.accounts != null)
+            {
+                this.accounts.SaveChanges();
+            }
+
+            if (this.lists != null)
+            {
+                this.lists.SaveChanges();
             }
         }
 

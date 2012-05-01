@@ -16,6 +16,7 @@ namespace Tigwi.UI.Models.Storage
 
         public StorageUserModel Create(string login, string email)
         {
+            // Create a new user via medium-level storage calls and return the corresponding Model
             try
             {
                 var id = this.Storage.User.Create(login, email, string.Empty);
@@ -29,14 +30,19 @@ namespace Tigwi.UI.Models.Storage
 
         public void Delete(StorageUserModel user)
         {
-            this.Storage.User.Delete(user.Id);
-            this.EntitiesMap.Remove(user.Id);
+            // TODO: fixme
+            var id = user.Id;
+
+            // Forget everything about him
+            this.Storage.User.Delete(id);
+            this.EntitiesMap.Remove(id);
         }
 
         public StorageUserModel Find(Guid user)
         {
             StorageUserModel userModel;
 
+            // First check the cache.
             if (!this.EntitiesMap.TryGetValue(user, out userModel))
             {
                 userModel = new StorageUserModel(this.Storage, this.StorageContext, user);
@@ -56,6 +62,14 @@ namespace Tigwi.UI.Models.Storage
             catch (UserNotFound userNotFound)
             {
                 throw new UserNotFoundException(login, userNotFound);
+            }
+        }
+
+        internal void SaveChanges()
+        {
+            foreach (var user in this.EntitiesMap)
+            {
+                user.Value.Save();
             }
         }
 

@@ -12,6 +12,7 @@ namespace Tigwi.UI.Models.Storage
     #endregion
 
     public abstract class StorageEntityCollection<TParent, T> : ICollection<T>
+        where T : StorageEntityModel
     {
         #region Constants and Fields
 
@@ -49,6 +50,7 @@ namespace Tigwi.UI.Models.Storage
         {
             get
             {
+                this.CleanInternalCollection();
                 return this.InternalCollection.Count;
             }
         }
@@ -105,7 +107,24 @@ namespace Tigwi.UI.Models.Storage
                     this.InternalCollectionFetched = true;
                 }
 
+                this.CleanInternalCollection();
+
                 return this.internalCollection;
+            }
+        }
+
+        protected void CleanInternalCollection()
+        {
+            var toRemove = new HashSet<T>();
+
+            foreach (var entity in this.internalCollection.Where(entity => entity.Deleted))
+            {
+                toRemove.Add(entity);
+            }
+
+            foreach (var entity in toRemove)
+            {
+                this.internalCollection.Remove(entity);
             }
         }
 
@@ -162,7 +181,23 @@ namespace Tigwi.UI.Models.Storage
 
         public IEnumerator<T> GetEnumerator()
         {
-            return this.InternalCollection.GetEnumerator();
+            var toRemove = new HashSet<T>();
+            foreach (var entity in this.InternalCollection)
+            {
+                if (entity.Deleted)
+                {
+                    toRemove.Add(entity);
+                }
+                else
+                {
+                    yield return entity;
+                }
+            }
+
+            foreach (var entity in toRemove)
+            {
+                this.internalCollection.Remove(entity);
+            }
         }
 
         public bool Remove(T item)
@@ -178,7 +213,7 @@ namespace Tigwi.UI.Models.Storage
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.InternalCollection.GetEnumerator();
+            return this.GetEnumerator();
         }
 
         #endregion

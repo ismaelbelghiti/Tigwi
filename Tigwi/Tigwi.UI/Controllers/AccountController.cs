@@ -22,9 +22,15 @@ namespace Tigwi.UI.Controllers
         {
         }
         
+        [Authorize]
         public ActionResult Timeline()
         {
-            throw new NotImplementedException();
+            if (this.CurrentAccount == null)
+            {
+                throw new NotImplementedException("Not connected.");
+            }
+
+            return this.View();
         }
 
         /// <summary>

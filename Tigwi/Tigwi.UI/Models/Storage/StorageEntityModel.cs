@@ -21,7 +21,14 @@ namespace Tigwi.UI.Models.Storage
 
         protected IStorage Storage { get; set; }
 
+        internal bool Deleted { get; set; }
+
         protected IStorageContext StorageContext { get; set; }
+
+        internal void MarkDeleted()
+        {
+            this.Deleted = true;
+        }
 
         internal abstract void Save();
 

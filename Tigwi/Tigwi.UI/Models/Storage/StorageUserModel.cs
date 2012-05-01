@@ -124,7 +124,7 @@ namespace Tigwi.UI.Models.Storage
 
         internal override void Save()
         {
-            if (this.InfosUpdated)
+            if (this.InfosUpdated && !this.Deleted)
             {
                 this.Storage.User.SetInfo(this.Id, this.Email);
                 this.InfosUpdated = false;

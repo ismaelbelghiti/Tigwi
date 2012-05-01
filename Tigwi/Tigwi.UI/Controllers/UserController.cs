@@ -85,11 +85,23 @@ namespace Tigwi.UI.Controllers
                 {
                     // TODO: real authentication
                     var newUser = this.Storage.Users.Create(registerViewModel.Login, registerViewModel.Email);
-                    this.CurrentUser = newUser;
 
-                    this.SaveIdentity(false);
+                    try
+                    {
+                        var newAccount = this.Storage.Accounts.Create(newUser, registerViewModel.Login, string.Empty);
+                        this.CurrentUser = newUser;
+                        this.CurrentAccount = newAccount;
 
-                    return this.RedirectToAction("Register");
+                        this.SaveIdentity(registerViewModel.RememberMe);
+
+                        return this.RedirectToAction("Welcome");
+                    }
+                    catch (DuplicateAccountException ex)
+                    {
+                        this.Storage.Users.Delete(newUser);
+                        this.Storage.SaveChanges();
+                        ModelState.AddModelError("Login", ex.Message);
+                    }
                 }
                 catch (DuplicateUserException ex)
                 {
@@ -104,7 +116,7 @@ namespace Tigwi.UI.Controllers
 
         public ActionResult Welcome()
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("UserController.Welcome");
         }
 
         /// <summary>

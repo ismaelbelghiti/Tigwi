@@ -130,7 +130,6 @@
 
         public ActionResult Index()
         {
-            this.ViewBag.CurrentUser = "Zak";
             return this.View();
         }
 
@@ -175,11 +174,11 @@
             this.Response.Cookies.Add(cookie);
         }
 
-        protected override void OnActionExecuted(ActionExecutedContext filterContext)
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
+            base.OnActionExecuting(filterContext);
             this.ViewBag.CurrentUser = this.CurrentUser;
             this.ViewBag.CurrentAccount = this.CurrentAccount;
-            base.OnActionExecuted(filterContext);
         }
 
         #endregion

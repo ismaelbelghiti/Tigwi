@@ -1,25 +1,35 @@
 namespace Tigwi.UI.Models.Storage
 {
+    #region
+
     using System;
 
     using StorageLibrary;
 
+    #endregion
+
     public class PostRepository : StorageEntityRepository<StoragePostModel>, IPostRepository
     {
+        #region Constructors and Destructors
+
         public PostRepository(IStorage storage, IStorageContext storageContext)
             : base(storage, storageContext)
         {
         }
 
-        #region Implementation of IPostRepository
+        #endregion
+
+        #region Public Methods and Operators
 
         public StoragePostModel Create(StorageAccountModel poster, string content)
         {
+            // TODO: StorageUserModel.Post
             try
             {
                 var id = this.Storage.Msg.Post(poster.Id, content);
                 return new StoragePostModel(this.StorageContext, null);
-                    /*new IMessage
+
+                /*new IMessage
                         {
                             Content = content,
                             Date = DateTime.Now,
@@ -41,5 +51,12 @@ namespace Tigwi.UI.Models.Storage
         }
 
         #endregion
+
+        // TODO: We need a find.
+
+        internal void SaveChanges()
+        {
+            
+        }
     }
 }

@@ -41,6 +41,8 @@ namespace Tigwi.UI.Models.Storage
 
         public void Delete(StorageAccountModel account)
         {
+            // TODO: fixme
+            account.MarkDeleted();
             this.Storage.Account.Delete(account.Id);
             this.EntitiesMap.Remove(account.Id);
         }
@@ -71,5 +73,13 @@ namespace Tigwi.UI.Models.Storage
         }
 
         #endregion
+
+        internal void SaveChanges()
+        {
+            foreach (var account in this.EntitiesMap)
+            {
+                account.Value.Save();
+            }
+        }
     }
 }
