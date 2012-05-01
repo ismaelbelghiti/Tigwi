@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using System.Xml.Serialization;
 using StorageLibrary;
 using Tigwi_API.Models;
@@ -14,24 +15,38 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult ChangeEmail()
         {
-            var infos = (ChangeInfo)(new XmlSerializer(typeof(ChangeInfo))).Deserialize(Request.InputStream);
-
             Error error;
 
             try
             {
-                var userId = infos.UserId ?? Storage.User.GetId(infos.UserLogin);
+                var infos = (ChangeInfo) (new XmlSerializer(typeof (ChangeInfo))).Deserialize(Request.InputStream);
 
-                //Set the mail address
-                Storage.User.SetInfo(userId, infos.Info);
+                if (infos.UserId == null && infos.UserLogin == null)
+                    error = new Error("UserId or UserLogin missing");
+                else if (infos.Info == null) // TODO ? More checkings on email
+                    error = new Error("Info missing");
+                else
+                {
+                    try
+                    {
+                        var userId = infos.UserId ?? Storage.User.GetId(infos.UserLogin);
 
-                // Result is an empty error XML element
-                error = new Error();
+                        //Set the mail address
+                        Storage.User.SetInfo(userId, infos.Info);
+
+                        // Result is an empty error XML element
+                        error = new Error();
+                    }
+                    catch (StorageLibException exception)
+                    {
+                        // Result is an non-empty error XML element
+                        error = new Error(exception.Code.ToString());
+                    }
+                }
             }
-            catch (StorageLibException exception)
+            catch (InvalidOperationException exception)
             {
-                // Result is an non-empty error XML element
-                error = new Error(exception.Code.ToString());
+                error = new Error(exception.Message + " " + exception.InnerException.Message);
             }
 
             return Serialize(new Answer(error));
@@ -44,25 +59,39 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult ChangeAvatar()
         {
-            //var infos = (ChangeInfo)(new XmlSerializer(typeof(ChangeInfo))).Deserialize(Request.InputStream);
-
             Error error;
 
             try
             {
-                //var userId = infos.UserId ?? Storage.User.GetId(infos.UserLogin);
+                var infos = (ChangeInfo) (new XmlSerializer(typeof (ChangeInfo))).Deserialize(Request.InputStream);
 
-                //TODO: come back to this when storage will hav implemented change avatar method
-                //Set the mail address
-                //Storage.User.ChangeAvatar(userId, infos.Info);
+                if (infos.UserId == null && infos.UserLogin == null)
+                    error = new Error("UserId or UserLogin missing");
+                else if (infos.Info == null) // TODO ? More checkings on avatar
+                    error = new Error("Info missing");
+                else
+                {
+                    try
+                    {
+                        //var userId = infos.UserId ?? Storage.User.GetId(infos.UserLogin);
 
-                // Result is an empty error XML element
-                error = new Error();
+                        //TODO: come back to this when storage will have implemented change avatar method
+                        //Set the mail address
+                        //Storage.User.ChangeAvatar(userId, infos.Info);
+
+                        // Result is an empty error XML element
+                        error = new Error();
+                    }
+                    catch (StorageLibException exception)
+                    {
+                        // Result is an non-empty error XML element
+                        error = new Error(exception.Code.ToString());
+                    }
+                }
             }
-            catch (StorageLibException exception)
+            catch (InvalidOperationException exception)
             {
-                // Result is an non-empty error XML element
-                error = new Error(exception.Code.ToString());
+                error = new Error(exception.Message + " " + exception.InnerException.Message);
             }
 
             return Serialize(new Answer(error));
@@ -75,30 +104,47 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult ChangePassword()
         {
-            var infos = (ChangePassword)(new XmlSerializer(typeof(ChangePassword))).Deserialize(Request.InputStream);
-
             Error error;
 
             try
             {
-                var userId = infos.UserId ?? Storage.User.GetId(infos.UserLogin);
+                var infos =
+                    (ChangePassword) (new XmlSerializer(typeof (ChangePassword))).Deserialize(Request.InputStream);
 
-                //TODO: implement old password checking
-                //Check the old password
-               // var password = Storage.User.GetPassword(userId);
-               // if (password != infos.OldPassword)
-               //     return whatsnecessary (raise an error)
+                if (infos.UserId == null && infos.UserLogin == null)
+                    error = new Error("UserId or UserLogin missing");
+                else if (infos.NewPassword == null)
+                    error = new Error("NewPassword missing");
+                else if (infos.OldPassword == null)
+                    error = new Error("OldPassword missing");
+                else
+                {
+                    try
+                    {
+                        var userId = infos.UserId ?? Storage.User.GetId(infos.UserLogin);
 
-                //Set the password
-                Storage.User.SetPassword(userId, infos.NewPassword);
+                        //TODO: implement old password checking
+                        //Check the old password
+                        // var password = Storage.User.GetPassword(userId);
+                        // if (password != infos.OldPassword)
+                        //     return whatsnecessary (raise an error)
 
-                // Result is an empty error XML element
-                error = new Error();
+                        //Set the password
+                        Storage.User.SetPassword(userId, infos.NewPassword);
+
+                        // Result is an empty error XML element
+                        error = new Error();
+                    }
+                    catch (StorageLibException exception)
+                    {
+                        // Result is an non-empty error XML element
+                        error = new Error(exception.Code.ToString());
+                    }
+                }
             }
-            catch (StorageLibException exception)
+            catch (InvalidOperationException exception)
             {
-                // Result is an non-empty error XML element
-                error = new Error(exception.Code.ToString());
+                error = new Error(exception.Message + " " + exception.InnerException.Message);
             }
 
             return Serialize(new Answer(error));
@@ -111,25 +157,41 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CreateAccount()
         {
-            var infos = (CreateAccount)(new XmlSerializer(typeof(CreateAccount))).Deserialize(Request.InputStream);
-
             Answer output;
 
             try
             {
-                var userId = infos.UserId ?? Storage.User.GetId(infos.UserLogin);
+                var infos = (CreateAccount) (new XmlSerializer(typeof (CreateAccount))).Deserialize(Request.InputStream);
 
-                //Create the account
-                var accountId = Storage.Account.Create(userId, infos.AccountName, infos.Description);
-               
-                // Result
-                output = new Answer( new ObjectCreated(accountId) );
+                if (infos.UserId == null && infos.UserLogin == null)
+                    output = new Answer(new Error("UserId or UserLogin missing"));
+                else if (infos.AccountName == null)
+                    output = new Answer(new Error("AccountName missing"));
+                else if (infos.Description == null) // TODO ? More checkings on description
+                    output = new Answer(new Error("Description missing"));
+                else
+                {
+                    try
+                    {
+                        var userId = infos.UserId ?? Storage.User.GetId(infos.UserLogin);
 
+                        //Create the account
+                        var accountId = Storage.Account.Create(userId, infos.AccountName, infos.Description);
+
+                        // Result
+                        output = new Answer(new ObjectCreated(accountId));
+
+                    }
+                    catch (StorageLibException exception)
+                    {
+                        // Result is an non-empty error XML element
+                        output = new Answer(new Error(exception.Code.ToString()));
+                    }
+                }
             }
-            catch (StorageLibException exception)
+            catch (InvalidOperationException exception)
             {
-                // Result is an non-empty error XML element
-                output = new Answer( new Error(exception.Code.ToString()));
+                output = new Answer(new Error(exception.Message + " " + exception.InnerException.Message));
             }
 
             return Serialize(output);
