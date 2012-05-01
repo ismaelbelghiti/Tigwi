@@ -7,56 +7,102 @@
 
     public abstract class ViewPage<TModel> : WebViewPage<TModel>
     {
-        #region Constructors and Destructors
+        #region Constants and Fields
 
-        protected ViewPage()
-        {
-            var controller = this.ViewContext.Controller as HomeController;
+        private StorageAccountModel currentAccount;
 
-            if (controller == null)
-            {
-                return;
-            }
-
-            this.CurrentUser = controller.CurrentUser;
-            this.CurrentAccount = controller.CurrentAccount;
-        }
+        private StorageUserModel currentUser;
 
         #endregion
 
         #region Public Properties
 
-        public StorageAccountModel CurrentAccount { get; set; }
+        public StorageAccountModel CurrentAccount
+        {
+            get
+            {
+                if (this.currentAccount == null)
+                {
+                    var controller = this.ViewContext.Controller as HomeController;
 
-        public StorageUserModel CurrentUser { get; set; }
+                    if (controller != null)
+                    {
+                        this.currentAccount = controller.CurrentAccount;
+                    }
+                }
+
+                return this.currentAccount;
+            }
+        }
+
+        public StorageUserModel CurrentUser
+        {
+            get
+            {
+                if (this.currentAccount == null)
+                {
+                    var controller = this.ViewContext.Controller as HomeController;
+
+                    if (controller != null)
+                    {
+                        this.currentUser = controller.CurrentUser;
+                    }
+                }
+
+                return this.currentUser;
+            }
+        }
 
         #endregion
     }
 
     public abstract class ViewPage : WebViewPage
     {
-        #region Constructors and Destructors
+        #region Constants and Fields
 
-        protected ViewPage()
-        {
-            var controller = this.ViewContext.Controller as HomeController;
+        private StorageAccountModel currentAccount;
 
-            if (controller == null)
-            {
-                return;
-            }
-
-            this.CurrentUser = controller.CurrentUser;
-            this.CurrentAccount = controller.CurrentAccount;
-        }
+        private StorageUserModel currentUser;
 
         #endregion
 
         #region Public Properties
 
-        public StorageAccountModel CurrentAccount { get; set; }
+        public StorageAccountModel CurrentAccount
+        {
+            get
+            {
+                if (this.currentAccount == null)
+                {
+                    var controller = this.ViewContext.Controller as HomeController;
 
-        public StorageUserModel CurrentUser { get; set; }
+                    if (controller != null)
+                    {
+                        this.currentAccount = controller.CurrentAccount;
+                    }
+                }
+
+                return this.currentAccount;
+            }
+        }
+
+        public StorageUserModel CurrentUser
+        {
+            get
+            {
+                if (this.currentAccount == null)
+                {
+                    var controller = this.ViewContext.Controller as HomeController;
+
+                    if (controller != null)
+                    {
+                        this.currentUser = controller.CurrentUser;
+                    }
+                }
+
+                return this.currentUser;
+            }
+        }
 
         #endregion
     }
