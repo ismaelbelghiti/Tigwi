@@ -115,13 +115,13 @@ namespace Tigwi.UI.Models.Storage
         protected void CleanInternalCollection()
         {
             var toRemove = new HashSet<T>();
-
+            /*
             foreach (var entity in this.internalCollection)
                 // TODO: .Where(entity => entity.Deleted))
             {
                 toRemove.Add(entity);
             }
-
+            */
             foreach (var entity in toRemove)
             {
                 this.internalCollection.Remove(entity);

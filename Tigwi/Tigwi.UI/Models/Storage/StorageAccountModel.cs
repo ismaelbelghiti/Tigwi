@@ -52,7 +52,7 @@ namespace Tigwi.UI.Models.Storage
                 this.MakeListCollection(() => this.Storage.List.GetAccountFollowedLists(this.Id, false));
             this.publicOwnedLists = this.MakeListCollection(
                 () => this.Storage.List.GetAccountOwnedLists(this.Id, false));
-            this.personalList = storageContext.Lists.Find(this.Storage.List.GetPersonalList(accountId));
+            this.personalList = null; // storageContext.Lists.Find(this.Storage.List.GetPersonalList(accountId));
         }
 
         #endregion

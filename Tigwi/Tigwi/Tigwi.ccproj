@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <PublishProfile Include="Profiles\seferoProduction.azurePubxml" />
+    <PublishProfile Include="Profiles\seferoProduction1.azurePubxml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StorageWorker\StorageWorker.csproj">

@@ -44,7 +44,7 @@ namespace Tigwi.UI.Controllers
 
         #region Properties
 
-        internal IAccountModel CurrentAccount
+        public IAccountModel CurrentAccount
         {
             get
             {
@@ -68,7 +68,7 @@ namespace Tigwi.UI.Controllers
                 return this.currentAccount;
             }
 
-            set
+            protected set
             {
                 /*if (!this.CurrentUser.Accounts.Contains(value))
                 {
@@ -79,7 +79,7 @@ namespace Tigwi.UI.Controllers
             }
         }
 
-        internal StorageUserModel CurrentUser
+        public StorageUserModel CurrentUser
         {
             get
             {
@@ -95,7 +95,7 @@ namespace Tigwi.UI.Controllers
                 return this.currentUser;
             }
 
-            set
+            protected set
             {
                 this.currentUser = value;
                 this.currentAccount = null;
