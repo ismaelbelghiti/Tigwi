@@ -1,31 +1,27 @@
 ﻿namespace Tigwi.UI.Controllers
 {
-    #region
-
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Security;
-    using System.Web.SessionState;
 
     using StorageLibrary;
 
     using Tigwi.UI.Models;
     using Tigwi.UI.Models.Storage;
 
-    #endregion
-
     public class HomeController : Controller
     {
         #region Constants and Fields
 
+        private StorageAccountModel currentAccount;
+
         private StorageUserModel currentUser;
 
         private IStorageContext storage;
-
-        private StorageAccountModel currentAccount;
 
         #endregion
 
@@ -55,8 +51,7 @@
                     CustomIdentity identity;
                     if (this.User != null && (identity = this.User.Identity as CustomIdentity) != null)
                     {
-                        this.currentAccount =
-                            this.Storage.Accounts.Find(identity.AccountId);
+                        this.currentAccount = this.Storage.Accounts.Find(identity.AccountId);
                     }
                     else
                     {
@@ -143,9 +138,16 @@
 
         #region Methods
 
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            base.OnActionExecuting(filterContext);
+            this.ViewBag.CurrentUser = this.CurrentUser;
+            this.ViewBag.CurrentAccount = this.CurrentAccount;
+        }
+
         protected void SaveIdentity(bool isPersistent)
         {
-            var existingCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+            var existingCookie = this.Request.Cookies[FormsAuthentication.FormsCookieName];
             var version = 1;
             var userData = new CookieData { UserId = this.CurrentUser.Id, AccountId = this.CurrentAccount.Id };
 
@@ -167,24 +169,17 @@
 
             // Create ticket
             var ticket = new FormsAuthenticationTicket(
-                version,
-                this.CurrentUser.Login,
-                DateTime.Now,
-                DateTime.Now + FormsAuthentication.Timeout,
-                isPersistent,
+                version, 
+                this.CurrentUser.Login, 
+                DateTime.Now, 
+                DateTime.Now + FormsAuthentication.Timeout, 
+                isPersistent, 
                 serializedUserData);
             var encrypted = FormsAuthentication.Encrypt(ticket);
 
             // Send cookie
             var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encrypted);
             this.Response.Cookies.Add(cookie);
-        }
-
-        protected override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            base.OnActionExecuting(filterContext);
-            this.ViewBag.CurrentUser = this.CurrentUser;
-            this.ViewBag.CurrentAccount = this.CurrentAccount;
         }
 
         #endregion
