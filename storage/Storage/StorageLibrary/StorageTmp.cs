@@ -172,6 +172,11 @@
 
         public Guid Create(Guid adminId, string name, string description)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
+
             var id = Guid.NewGuid();
             var adminInfos = this.motherStorage.user.GetFullInfo(adminId);
             var accountInfo = new FullAccountInfo
@@ -623,7 +628,15 @@
         {
             Guid id = Guid.NewGuid();
             AccountStorageTmp.FullAccountInfo accountInfo = this.motherStorage.account.GetFullInfo(accountId);
-            var message = new Message(id, accountId, accountInfo.AccountInfo.Name, string.Empty, DateTime.Now, content);
+            var message = new Message(id, accountId, accountInfo.AccountInfo.Name, string.Empty, DateTime.Now, content)
+                {
+                    Content = content,
+                    Date = DateTime.Now,
+                    Id = id,
+                    PosterAvatar = string.Empty,
+                    PosterId = accountId,
+                    PosterName = accountInfo.AccountInfo.Name
+                };
 
             foreach (var listId in accountInfo.MemberOfLists)
             {

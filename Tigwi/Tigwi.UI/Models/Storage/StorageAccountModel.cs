@@ -319,7 +319,10 @@ namespace Tigwi.UI.Models.Storage
                 this.memberLists.Save();
                 this.publicFollowedLists.Save();
                 this.publicOwnedLists.Save();
-                this.personalList.Save();
+                if (this.personalList != null)
+                {
+                    this.personalList.Save();
+                }
             }
         }
 

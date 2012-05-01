@@ -28,7 +28,15 @@ namespace Tigwi.UI.Models.Storage
             {
                 var id = this.Storage.Msg.Post(poster.Id, content);
 
-                var message = new Message(id, poster.Id, poster.Name, string.Empty, DateTime.Now, content);
+                var message = new Message(id, poster.Id, poster.Name, string.Empty, DateTime.Now, content)
+                    {
+                        Content = content,
+                        Id = id,
+                        Date = DateTime.Now,
+                        PosterAvatar = string.Empty,
+                        PosterId = poster.Id,
+                        PosterName = poster.Name
+                    };
 
                 return new StoragePostModel(this.StorageContext, message);
             }

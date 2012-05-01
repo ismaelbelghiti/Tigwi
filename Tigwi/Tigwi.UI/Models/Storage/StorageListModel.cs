@@ -192,7 +192,7 @@
         public ICollection<IPostModel> PostsBefore(DateTime date, int maximum = 100)
         {
             // TODO : multiple lists
-            var msgCollection = this.Storage.Msg.GetListsMsgFrom(new HashSet<Guid> { this.Id }, date, maximum);
+            var msgCollection = this.Storage.Msg.GetListsMsgTo(new HashSet<Guid> { this.Id }, date, maximum);
             return
                 new List<IPostModel>(msgCollection.Select(msg => new StoragePostModel(this.StorageContext, msg)))
                     .AsReadOnly();
