@@ -11,11 +11,11 @@ namespace Tigwi_API.Models
     {
         public ListApi(Guid id, string name)
         {
-            Id = id;
+            Id = id.ToString();
             Name = name;
         }
 
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
     }
 
