@@ -70,7 +70,7 @@ namespace Tigwi.UI.Models.Storage
 
             if (this.posts != null)
             {
-                this.users.SaveChanges();
+                this.posts.SaveChanges();
             }
 
             if (this.accounts != null)

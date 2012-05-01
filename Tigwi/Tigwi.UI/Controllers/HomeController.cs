@@ -70,10 +70,10 @@ namespace Tigwi.UI.Controllers
 
             set
             {
-                if (!this.CurrentUser.Accounts.Contains(value))
+                /*if (!this.CurrentUser.Accounts.Contains(value))
                 {
                     throw new NotImplementedException("User not a member of account");
-                }
+                }*/
 
                 this.currentAccount = value;
             }
@@ -111,10 +111,10 @@ namespace Tigwi.UI.Controllers
                 {
                     if (this.Session["Storage"] == null)
                     {
-                        this.Session["Storage"] = new StorageContext(new StorageTmp());
+                        this.Session["Storage"] = new StorageTmp();
                     }
 
-                    this.storage = this.Session["Storage"] as IStorageContext;
+                    this.storage = new StorageContext(this.Session["Storage"] as IStorage);
                 }
 
                 return this.storage;

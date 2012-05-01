@@ -174,6 +174,7 @@ namespace Tigwi.UI.Models.Storage
                 // TODO: catch exceptions.
                 foreach (var account in this.CollectionAdded.Where(item => item.Value).Select(item => item.Key))
                 {
+                    throw new Exception("Coucuo");
                     account.Save();
                     this.Storage.Account.Add(account.Id, this.Parent.Id);
                 }

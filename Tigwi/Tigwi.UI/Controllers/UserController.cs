@@ -100,6 +100,7 @@ namespace Tigwi.UI.Controllers
                     try
                     {
                         var newAccount = this.Storage.Accounts.Create(newUser, registerViewModel.Login, string.Empty);
+              
                         this.CurrentUser = newUser;
                         this.CurrentAccount = newAccount;
 

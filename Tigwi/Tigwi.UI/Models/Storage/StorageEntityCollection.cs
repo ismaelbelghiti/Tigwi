@@ -184,14 +184,14 @@ namespace Tigwi.UI.Models.Storage
             var toRemove = new HashSet<T>();
             foreach (var entity in this.InternalCollection)
             {
-                if (entity.Deleted)
+                /*if (entity.Deleted)
                 {
                     toRemove.Add(entity);
                 }
                 else
-                {
+                {*/
                     yield return entity;
-                }
+                //}
             }
 
             foreach (var entity in toRemove)

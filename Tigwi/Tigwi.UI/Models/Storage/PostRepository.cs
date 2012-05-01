@@ -27,17 +27,10 @@ namespace Tigwi.UI.Models.Storage
             try
             {
                 var id = this.Storage.Msg.Post(poster.Id, content);
-                return new StoragePostModel(this.StorageContext, null);
 
-                /*new IMessage
-                        {
-                            Content = content,
-                            Date = DateTime.Now,
-                            Id = id,
-                            PosterAvatar = string.Empty,
-                            PosterId = poster.Id,
-                            PosterName = poster.Name
-                        });*/
+                var message = new Message(id, poster.Id, poster.Name, string.Empty, DateTime.Now, content);
+
+                return new StoragePostModel(this.StorageContext, message);
             }
             catch (AccountNotFound ex)
             {

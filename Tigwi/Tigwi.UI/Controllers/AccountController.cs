@@ -107,8 +107,10 @@ namespace Tigwi.UI.Controllers
                 this.CurrentAccount = newAccount;
                 //TODO
                 this.SaveIdentity(false);
-                return this.RedirectToAction("Create");
+                this.Storage.SaveChanges();
+                return this.RedirectToAction("Create",accountCreation);
             }
+            throw new NotImplementedException("fuck you");
             return this.View(accountCreation);
         }
 

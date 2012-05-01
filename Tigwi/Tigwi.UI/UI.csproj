@@ -106,6 +106,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountModel.cs" />
+    <Compile Include="Models\Message.cs" />
+    <Compile Include="Models\WritePostViewModel.cs" />
     <Compile Include="Models\SearchViewModel.cs" />
     <Compile Include="Models\Account\AccountCreationViewModel.cs" />
     <Compile Include="Models\CookieData.cs" />
