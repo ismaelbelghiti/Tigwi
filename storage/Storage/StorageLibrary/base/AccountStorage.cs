@@ -157,7 +157,6 @@ namespace StorageLibrary
             Blob<HashSet<Guid>> bOwnedListsPrivate = new Blob<HashSet<Guid>>(connexion.listContainer, Path.L_OWNEDLISTS_PRIVATE + id);
             Blob<HashSet<Guid>> bFollowedLists = new Blob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDLISTS + id + Path.L_FOLLOWEDLISTS_DATA);
             Blob<HashSet<Guid>> bFollowedBy = new Blob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDBY + id);
-
             MsgSetBlobPack bTaggedMsg = new MsgSetBlobPack(connexion.msgContainer, Path.M_TAGGEDMESSAGES + id);
 
             // TODO : we could do it without a lock - or at least store the data before
@@ -171,7 +170,20 @@ namespace StorageLibrary
                 bOwnedListsPrivate.Set(new HashSet<Guid>());
                 bFollowedLists.Set(new HashSet<Guid>());
                 bFollowedBy.Set(new HashSet<Guid>());
+
                 bTaggedMsg.Init();
+
+                // Setup the personnal list
+                Guid personnalListId = Guid.NewGuid();
+                new Blob<Guid>(connexion.listContainer, Path.L_PERSO + id).Set(personnalListId);
+                new Blob<ListInfo>(connexion.listContainer, Path.L_INFO + personnalListId).Set(new ListInfo("", "", true, true));
+                new Blob<Guid>(connexion.listContainer, Path.L_OWNER + personnalListId).Set(id);
+                Mutex.Init(connexion.listContainer, Path.L_FOLLOWEDACCOUNTS + personnalListId + Path.L_FOLLOWEDACC_DATA);
+                Blob<HashSet<Guid>> bFollowedAccounts = new Blob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDACCOUNTS + personnalListId + Path.L_FOLLOWEDACC_DATA);
+                HashSet<Guid> persoListFollowed = new HashSet<Guid>();
+                persoListFollowed.Add(id);
+                bFollowedAccounts.Set(persoListFollowed);
+                new MsgSetBlobPack(connexion.msgContainer, Path.M_LISTMESSAGES + personnalListId).Init();
 
                 Mutex.Init(connexion.listContainer, Path.L_FOLLOWEDLISTS + id + Path.L_FOLLOWEDLISTS_LOCK);
 

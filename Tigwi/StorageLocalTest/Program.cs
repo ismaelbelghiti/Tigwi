@@ -985,7 +985,9 @@ namespace StorageLocalTest
             Console.WriteLine("Testing Messages");
             Guid account1 = storage.Account.GetId("accountThatExists");
             Guid account2 = storage.Account.GetId("otherAccountThatExists");
-            HashSet<Guid> lists1 = storage.List.GetAccountOwnedLists(account1, false);
+            Guid list = storage.List.GetPersonalList(account2);
+            HashSet<Guid> lists1 = new HashSet<Guid>();
+            lists1.Add(list);
 
             for (int i = 0; i < 100; i++)
             {
@@ -1010,7 +1012,7 @@ namespace StorageLocalTest
         static void Main(string[] args)
         {
             Console.WriteLine("Init connexions");
-            Storage storage = new Storage("ulyssestorage", "");
+            Storage storage = new Storage("ulyssestorage", "XBfWftDi/T9lWl1ms6WA7wy+aPrR8IcJg3vdHd9MG4qJNafOxQYUrQodmuo/lQTXQzHIPTJBbWsrd6cSd6wSSw==");
 
             Console.WriteLine("Clearing previous data");
             ClearContainer(storage.connexion.userContainer);
@@ -1032,9 +1034,9 @@ namespace StorageLocalTest
 
             Console.WriteLine("Init ok");
 
-            //TestUser(storage);
-            //TestAccounts(storage);
-            //TestList(storage, listId);
+            TestUser(storage);
+            TestAccounts(storage);
+            TestList(storage, listId);
 
             TestMessages(storage);
 
