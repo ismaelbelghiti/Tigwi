@@ -1,4 +1,6 @@
-﻿namespace Tigwi.UI.Controllers
+﻿using System.Collections.Generic;
+
+namespace Tigwi.UI.Controllers
 {
     using System;
     using System.Collections.Generic;

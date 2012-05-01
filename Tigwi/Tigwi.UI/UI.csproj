@@ -107,6 +107,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountModel.cs" />
+    <Compile Include="Models\SearchViewModel.cs" />
     <Compile Include="Models\OtherViewModel.cs" />
     <Compile Include="Models\CookieData.cs" />
     <Compile Include="Models\ListModel.cs" />
@@ -243,6 +244,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\_RegisterPartial.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Search.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
