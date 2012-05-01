@@ -1,9 +1,10 @@
 ﻿@using Tigwi.UI.Models
-@model List<Tigwi.UI.Models.PostViewModel>
-
-@for (int i = 0; i < Model.Count(); i++)
+@model ICollection<Tigwi.UI.Models.Storage.StoragePostModel>
+           
+@{int i=0;}
+@foreach( var post in Model)
 {
-    PostViewModel toSend = Model[i];
-    toSend.color = i%2;
+    var toSend=new PostViewModel { Post = post, Color = i%2};
+    i++;
     @Html.Partial("_ViewPost", toSend);
 }

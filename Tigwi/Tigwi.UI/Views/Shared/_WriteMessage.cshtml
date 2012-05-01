@@ -1,4 +1,4 @@
-﻿@model Tigwi.UI.Models.PostViewModel
+﻿@model Tigwi.UI.Models.Storage.StoragePostModel
 
 <script>
     $(document).ready(function () {
@@ -31,11 +31,8 @@
             @Html.Hidden("Poster",@CurrentAccount)
 
             @Html.LabelFor(m => m.Content)
-            @Html.EditorFor(m => m.Content)
+            @Html.TextAreaFor(m => m.Content,new { @class="input-xlarge span11",id="inputMessage", placeholder="Write a new Tweet !"})
             @Html.ValidationMessageFor(m => m.Content)
-            <textarea class="input-xlarge span11" 
-                      id="inputMessage" 
-                      placeholder="Write a new Tweet !"/>
             <button type="submit" class="btn btn-primary" id="inputButton">Post !</button>
         }
     </div>

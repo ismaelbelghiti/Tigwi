@@ -57,7 +57,7 @@ namespace Tigwi.UI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Write(PostViewModel post)
+        public ActionResult Write(StoragePostModel post)
         {
             if (ModelState.IsValid)
             {

@@ -1,0 +1,13 @@
+﻿@model Tigwi.UI.Models.Storage.StorageAccountModel
+
+@{
+    ViewBag.Title = "ShowAccount";
+}
+
+<section class="span2 userView">
+    <p>Oh Hai @Model.Name</p>
+</section>
+
+<section class="span5">
+    @Html.Partial("_ViewPostList", Model.PersonalList.PostsAfter(DateTime.MaxValue, 10));
+</section>
