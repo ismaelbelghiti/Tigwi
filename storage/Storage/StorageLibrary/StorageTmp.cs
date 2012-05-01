@@ -305,7 +305,7 @@
         }
 
         #endregion
-
+        
         #region Methods
 
         internal FullAccountInfo GetFullInfo(Guid accountId)
