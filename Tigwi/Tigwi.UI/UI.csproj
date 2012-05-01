@@ -102,6 +102,8 @@
     <Compile Include="Controllers\ListController.cs" />
     <Compile Include="Controllers\PostController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="CookieData.cs" />
+    <Compile Include="CustomIdentity.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -118,8 +120,6 @@
     <Compile Include="Models\IUserModel.cs" />
     <Compile Include="Models\SearchViewModel.cs" />
     <Compile Include="Models\Account\AccountCreationViewModel.cs" />
-    <Compile Include="Models\CookieData.cs" />
-    <Compile Include="Models\CustomIdentity.cs" />
     <Compile Include="Models\PostViewModel.cs" />
     <Compile Include="Models\Storage\AccountRepository.cs" />
     <Compile Include="Models\Storage\StorageEntityCollection.cs" />

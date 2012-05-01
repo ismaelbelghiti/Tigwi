@@ -133,13 +133,6 @@ namespace Tigwi.UI.Controllers
 
         #region Methods
 
-        protected override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            base.OnActionExecuting(filterContext);
-            this.ViewBag.CurrentUser = this.CurrentUser;
-            this.ViewBag.CurrentAccount = this.CurrentAccount;
-        }
-
         protected void SaveIdentity(bool isPersistent)
         {
             var existingCookie = this.Request.Cookies[FormsAuthentication.FormsCookieName];
