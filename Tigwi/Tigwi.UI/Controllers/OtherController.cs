@@ -11,11 +11,11 @@ namespace Tigwi.UI.Controllers
     {
         //
         // GET: /Other/
-
-        public ActionResult Index(string user="Me")
+        [HttpPost]
+        public ActionResult Index(SearchViewModel searchViewModel)
         {
 
-            return View(new OtherViewModel(user));
+            return View(new OtherViewModel(searchViewModel.searchString));
         }
 
     }
