@@ -12,7 +12,6 @@ namespace Tigwi.UI.Models.Storage
     #endregion
 
     public abstract class StorageEntityCollection<TParent, T> : ICollection<T>
-        where T : StorageEntityModel
     {
         #region Constants and Fields
 
@@ -117,7 +116,8 @@ namespace Tigwi.UI.Models.Storage
         {
             var toRemove = new HashSet<T>();
 
-            foreach (var entity in this.internalCollection.Where(entity => entity.Deleted))
+            foreach (var entity in this.internalCollection)
+                // TODO: .Where(entity => entity.Deleted))
             {
                 toRemove.Add(entity);
             }
@@ -184,6 +184,7 @@ namespace Tigwi.UI.Models.Storage
             var toRemove = new HashSet<T>();
             foreach (var entity in this.InternalCollection)
             {
+                // TODO:
                 /*if (entity.Deleted)
                 {
                     toRemove.Add(entity);

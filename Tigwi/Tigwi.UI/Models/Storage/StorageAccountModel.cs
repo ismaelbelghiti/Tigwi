@@ -10,7 +10,7 @@ namespace Tigwi.UI.Models.Storage
 
     #endregion
 
-    public class StorageAccountModel : StorageEntityModel
+    public class StorageAccountModel : StorageEntityModel, IAccountModel
     {
         #region Constants and Fields
 
@@ -26,7 +26,7 @@ namespace Tigwi.UI.Models.Storage
 
         private readonly UserCollectionAdapter users;
 
-        private StorageUserModel admin;
+        private IUserModel admin;
 
         private string description;
 
@@ -56,7 +56,7 @@ namespace Tigwi.UI.Models.Storage
 
         #region Public Properties
 
-        public StorageUserModel Admin
+        public IUserModel Admin
         {
             get
             {
@@ -72,7 +72,7 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public ICollection<StorageListModel> AllFollowedLists
+        public ICollection<IListModel> AllFollowedLists
         {
             get
             {
@@ -80,7 +80,7 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public ICollection<StorageListModel> AllOwnedLists
+        public ICollection<IListModel> AllOwnedLists
         {
             get
             {
@@ -103,7 +103,7 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public ICollection<StorageListModel> MemberOfLists
+        public ICollection<IListModel> MemberOfLists
         {
             get
             {
@@ -120,7 +120,7 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public StorageListModel PersonalList
+        public IListModel PersonalList
         {
             get
             {
@@ -128,7 +128,7 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public ICollection<StorageListModel> PublicFollowedLists
+        public ICollection<IListModel> PublicFollowedLists
         {
             get
             {
@@ -136,7 +136,7 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public ICollection<StorageListModel> PublicOwnedLists
+        public ICollection<IListModel> PublicOwnedLists
         {
             get
             {
@@ -144,7 +144,7 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public ICollection<StorageUserModel> Users
+        public ICollection<IUserModel> Users
         {
             get
             {
@@ -270,7 +270,7 @@ namespace Tigwi.UI.Models.Storage
 
         #endregion
 
-        internal class ListCollectionAdapter : StorageEntityCollection<StorageAccountModel, StorageListModel>
+        internal class ListCollectionAdapter : StorageEntityCollection<StorageAccountModel, IListModel>
         {
             #region Constructors and Destructors
 
@@ -301,21 +301,16 @@ namespace Tigwi.UI.Models.Storage
                     this.Storage.List.Remove(list.Id, this.Parent.Id);
                 }
 
-                foreach (var list in this.CachedCollection)
-                {
-                    list.Save();
-                }
-
                 this.CollectionAdded.Clear();
                 this.CollectionRemoved.Clear();
             }
 
-            protected override void ReverseAdd(StorageListModel item)
+            protected override void ReverseAdd(IListModel item)
             {
                 // item.CachedMembers.CacheAdd(this.Parent);
             }
 
-            protected override void ReverseRemove(StorageListModel item)
+            protected override void ReverseRemove(IListModel item)
             {
                 // item.CachedMembers.CacheRemove(this.Parent);
             }
@@ -323,7 +318,7 @@ namespace Tigwi.UI.Models.Storage
             #endregion
         }
 
-        internal class UserCollectionAdapter : StorageEntityCollection<StorageAccountModel, StorageUserModel>
+        internal class UserCollectionAdapter : StorageEntityCollection<StorageAccountModel, IUserModel>
         {
             #region Constructors and Destructors
 
@@ -341,14 +336,17 @@ namespace Tigwi.UI.Models.Storage
             {
                 foreach (var user in this.CollectionAdded.Where(item => item.Value).Select(item => item.Key))
                 {
-                    user.Save();
+                    var storageAccountModel = user as StorageAccountModel;
+                    if (storageAccountModel != null)
+                    {
+                        storageAccountModel.Save();
+                    }
                     this.Storage.Account.Add(this.Parent.Id, user.Id);
                 }
 
                 foreach (var user in this.CollectionRemoved.Where(item => item.Value).Select(item => item.Key))
                 {
                     // TODO: check we are not removing the admin (?)
-                    user.Save();
                     this.Storage.Account.Remove(this.Parent.Id, user.Id);
                 }
 
@@ -356,12 +354,12 @@ namespace Tigwi.UI.Models.Storage
                 this.CollectionRemoved.Clear();
             }
 
-            protected override void ReverseAdd(StorageUserModel item)
+            protected override void ReverseAdd(IUserModel item)
             {
                 item.Accounts.Add(this.Parent);
             }
 
-            protected override void ReverseRemove(StorageUserModel item)
+            protected override void ReverseRemove(IUserModel item)
             {
                 item.Accounts.Remove(this.Parent);
             }

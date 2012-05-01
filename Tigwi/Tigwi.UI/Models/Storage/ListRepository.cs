@@ -15,7 +15,7 @@ namespace Tigwi.UI.Models.Storage
 
         #endregion
 
-        public StorageListModel Create(StorageAccountModel account, string name, string description, bool isPrivate)
+        public IListModel Create(StorageAccountModel account, string name, string description, bool isPrivate)
         {
             try
             {

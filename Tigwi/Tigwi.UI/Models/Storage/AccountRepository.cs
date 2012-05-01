@@ -10,7 +10,6 @@ namespace Tigwi.UI.Models.Storage
 
     public class AccountRepository : StorageEntityRepository<StorageAccountModel>, IAccountRepository
     {
-
         #region Constructors and Destructors
 
         public AccountRepository(IStorage storageObj, IStorageContext storageContext)
@@ -22,7 +21,7 @@ namespace Tigwi.UI.Models.Storage
 
         #region Public Methods and Operators
 
-        public StorageAccountModel Create(StorageUserModel user, string name, string description)
+        public IAccountModel Create(StorageUserModel user, string name, string description)
         {
             try
             {
@@ -39,27 +38,21 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public void Delete(StorageAccountModel account)
+        public void Delete(IAccountModel interfaceAccount)
         {
             // TODO: fixme
+            var account = this.InternalFind(interfaceAccount.Id);
             account.MarkDeleted();
             this.Storage.Account.Delete(account.Id);
             this.EntitiesMap.Remove(account.Id);
         }
 
-        public StorageAccountModel Find(Guid id)
+        public IAccountModel Find(Guid id)
         {
-            StorageAccountModel account;
-            if (!this.EntitiesMap.TryGetValue(id, out account))
-            {
-                account = new StorageAccountModel(this.Storage, this.StorageContext, id);
-                this.EntitiesMap.Add(id, account);
-            }
-
-            return account;
+            return this.InternalFind(id);
         }
 
-        public StorageAccountModel Find(string name)
+        public IAccountModel Find(string name)
         {
             try
             {
@@ -74,6 +67,8 @@ namespace Tigwi.UI.Models.Storage
 
         #endregion
 
+        #region Methods
+
         internal void SaveChanges()
         {
             foreach (var account in this.EntitiesMap)
@@ -81,5 +76,19 @@ namespace Tigwi.UI.Models.Storage
                 account.Value.Save();
             }
         }
+
+        protected StorageAccountModel InternalFind(Guid id)
+        {
+            StorageAccountModel account;
+            if (!this.EntitiesMap.TryGetValue(id, out account))
+            {
+                account = new StorageAccountModel(this.Storage, this.StorageContext, id);
+                this.EntitiesMap.Add(id, account);
+            }
+
+            return account;
+        }
+
+        #endregion
     }
 }

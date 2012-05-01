@@ -4,7 +4,7 @@ namespace Tigwi.UI.Models
 {
     public class PostViewModel
     {
-        public StoragePostModel Post { get; set; }
+        public IPostModel Post { get; set; }
         public int Color { get; set; }
     }
 }

@@ -4,7 +4,7 @@ namespace Tigwi.UI.Models.Storage
 
     using StorageLibrary;
 
-    public class StoragePostModel
+    public class StoragePostModel : IPostModel
     {
         public StoragePostModel(IStorageContext storageContext, IMessage message)
         {
@@ -17,6 +17,6 @@ namespace Tigwi.UI.Models.Storage
 
         public string Content { get; private set; }
 
-        public StorageAccountModel Poster { get; private set; }
+        public IAccountModel Poster { get; private set; }
     }
 }
