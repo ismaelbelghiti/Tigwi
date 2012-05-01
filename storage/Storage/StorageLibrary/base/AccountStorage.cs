@@ -132,8 +132,6 @@ namespace StorageLibrary
 
         public Guid Create(Guid adminId, string name, string description)
         {
-            // TODO : create the personnal list 
-
             Guid nameHash = Hasher.Hash(name);
             Blob<Guid> bNameById = new Blob<Guid>(connexion.accountContainer, Path.A_IDBYNAME + nameHash);
 
@@ -145,6 +143,7 @@ namespace StorageLibrary
             AccountInfo info = new AccountInfo(name, description);
             HashSet<Guid> users = new HashSet<Guid>();
             users.Add(adminId);
+            Guid personnalListId = Guid.NewGuid();
 
             // init blobs
             Blob<IAccountInfo> bInfo = new Blob<IAccountInfo>(connexion.accountContainer, Path.A_INFO + id);
@@ -156,7 +155,8 @@ namespace StorageLibrary
             Blob<HashSet<Guid>> bOwnedListsPublic = new Blob<HashSet<Guid>>(connexion.listContainer, Path.L_OWNEDLISTS_PUBLIC + id);
             Blob<HashSet<Guid>> bOwnedListsPrivate = new Blob<HashSet<Guid>>(connexion.listContainer, Path.L_OWNEDLISTS_PRIVATE + id);
             Blob<HashSet<Guid>> bFollowedLists = new Blob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDLISTS + id + Path.L_FOLLOWEDLISTS_DATA);
-            Blob<HashSet<Guid>> bFollowedBy = new Blob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDBY + id);
+            Blob<HashSet<Guid>> bFollowedByPublic = new Blob<HashSet<Guid>>(connexion.listContainer, Path.LFollowedByPublic(id));
+            Blob<HashSet<Guid>> bFollowedByAll = new Blob<HashSet<Guid>>(connexion.listContainer, Path.LFollowedByAll(id)); 
             MsgSetBlobPack bTaggedMsg = new MsgSetBlobPack(connexion.msgContainer, Path.M_TAGGEDMESSAGES + id);
 
             // TODO : we could do it without a lock - or at least store the data before
@@ -169,12 +169,14 @@ namespace StorageLibrary
                 bOwnedListsPublic.Set(new HashSet<Guid>());
                 bOwnedListsPrivate.Set(new HashSet<Guid>());
                 bFollowedLists.Set(new HashSet<Guid>());
-                bFollowedBy.Set(new HashSet<Guid>());
+                bFollowedByPublic.Set(new HashSet<Guid>());
+                HashSet<Guid> followedByAll = new HashSet<Guid>();
+                followedByAll.Add(personnalListId);
+                bFollowedByAll.Set(followedByAll);
 
                 bTaggedMsg.Init();
 
                 // Setup the personnal list
-                Guid personnalListId = Guid.NewGuid();
                 new Blob<Guid>(connexion.listContainer, Path.L_PERSO + id).Set(personnalListId);
                 new Blob<ListInfo>(connexion.listContainer, Path.L_INFO + personnalListId).Set(new ListInfo("", "", true, true));
                 new Blob<Guid>(connexion.listContainer, Path.L_OWNER + personnalListId).Set(id);

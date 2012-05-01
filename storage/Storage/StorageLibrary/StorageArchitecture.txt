@@ -26,7 +26,8 @@ list ->		------------------------------
 									  /lock		: Mutex
 			followingaccounts/<list ID>			: HashSet<Guid> -- accounts following this list 
 
-			followedby/<account ID>				: HashSet<Guid> -- list following this account publicly
+			followedby/<account ID>/public		: HashSet<Guid> -- list following this account publicly
+			followedby/<account ID>/all
 			followedaccounts/<list ID>/data		: HashSet<Guid> -- accounts in this list 
 									  /lock		: Mutex
 
@@ -52,5 +53,6 @@ CHECKS :
 	- that consrtaints are respected on personnal list
 
 BUG :
-	- avoid fo0llow a private list 
+	- avoid follow a private list 
 	- add/remove the messages from the listmessage when we add/remove an account from the list
+	- private lists do not works

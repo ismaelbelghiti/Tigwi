@@ -107,9 +107,7 @@ namespace StorageLibrary
             try
             {
                 Blob<AccountInfo> bAccountInfo = new Blob<AccountInfo>(connexion.accountContainer, Path.A_INFO + accountId);
-                Blob<Guid> bPersonnalListId = new Blob<Guid>(connexion.listContainer, Path.L_PERSO + accountId);
                 AccountInfo accountInfo = bAccountInfo.GetIfExists(new AccountNotFound());
-                Guid personnalListId = bPersonnalListId.GetIfExists(new AccountNotFound());
 
                 Message message = new Message(id, accountId, accountInfo.Name, "", DateTime.Now, content);
 
@@ -118,9 +116,8 @@ namespace StorageLibrary
 
                 // Add in listMsg
                 // TODO : handle the fact that followedBy might change during this process
-                Blob<HashSet<Guid>> bFollowedBy = new Blob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDBY + accountId);
-                HashSet<Guid> lists = bFollowedBy.GetIfExists(new AccountNotFound());
-                lists.Add(personnalListId); // HACK : change this to take into account all private lists 
+                Blob<HashSet<Guid>> bFollowedByAll = new Blob<HashSet<Guid>>(connexion.listContainer, Path.LFollowedByAll(accountId));
+                HashSet<Guid> lists = bFollowedByAll.GetIfExists(new AccountNotFound());
                 foreach(Guid listId in lists) 
                 {
                     MsgSetBlobPack msgSet = new MsgSetBlobPack(connexion.msgContainer, Path.M_LISTMESSAGES + listId);

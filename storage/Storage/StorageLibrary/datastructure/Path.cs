@@ -31,7 +31,20 @@ namespace StorageLibrary
         public const string L_FOLLOWEDLISTS_DATA = "/data";
         public const string L_FOLLOWEDLISTS_LOCK = "/lock";
         public const string L_FOLLOWINGACCOUNTS = "followingaccounts/";
-        public const string L_FOLLOWEDBY = "followedby/";
+
+        const string L_FOLLOWEDBY = "followedby/";
+        const string L_FOLLOWEDBY_PUBLIC = "/public";
+        const string L_FOLLOWEDBY_ALL = "/all";
+
+        static public string LFollowedByPublic(Guid accountId)
+        {
+            return L_FOLLOWEDBY + accountId + L_FOLLOWEDBY_PUBLIC;
+        }
+        static public string LFollowedByAll(Guid accountId)
+        {
+            return L_FOLLOWEDBY + accountId + L_FOLLOWEDBY_ALL;
+        }
+
         public const string L_FOLLOWEDACCOUNTS = "followedaccounts/";
         public const string L_FOLLOWEDACC_DATA = "/data";
         public const string L_FOLLOWEDACC_LOCK = "/lock";
