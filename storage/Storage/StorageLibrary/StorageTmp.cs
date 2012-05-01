@@ -305,7 +305,7 @@
         }
 
         #endregion
-
+        
         #region Methods
 
         internal FullAccountInfo GetFullInfo(Guid accountId)
@@ -505,7 +505,8 @@
                     Id = id, 
                     Followers = new HashSet<Guid> { ownerId }, 
                     ListInfo = new ListInfo(name, description, isPrivate, isPersonal), 
-                    Members = new HashSet<Guid> { ownerId }, 
+                    Members = new HashSet<Guid> { ownerId },
+                    Messages = new List<IMessage>(),
                     OwnerId = ownerId
                 };
 

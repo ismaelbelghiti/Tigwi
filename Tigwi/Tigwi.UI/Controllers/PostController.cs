@@ -57,14 +57,18 @@ namespace Tigwi.UI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Write(IPostModel post)
+        public ActionResult Write(WritePostViewModel post)
         {
             if (ModelState.IsValid)
             {
-                this.Storage.Posts.Create(post.Poster, post.Content);
+                this.Storage.Posts.Create(CurrentAccount, post.Content);
+                //throw new NotImplementedException(post.Poster.Name + "  " + post.Content);
+                this.Storage.SaveChanges();
                 return this.View();
+
             }
             //
+            throw new NotImplementedException(CurrentAccount.Name + "  " + post.Content);
             return this.View();
         }
 
