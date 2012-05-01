@@ -5,8 +5,8 @@
 }
 
 <h2>Register, yo!</h2>
-
-@using (Html.BeginForm())
+ 
+@using (Html.BeginForm("Register","User",FormMethod.Post))
 {
     @Html.ValidationSummary()
 

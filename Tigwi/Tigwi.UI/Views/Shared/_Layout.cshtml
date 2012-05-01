@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Tigwi.UI.Models.User
+
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8" />
@@ -10,19 +12,32 @@
         <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet"/>
         <link href="@Url.Content("~/Content/bootstrap-responsive.min.css")" rel="stylesheet"/>
         <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet"/>
+        <script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+        <script src="@Url.Content("~/Scripts/modernizr-2.5.3.js")" type="text/javascript"></script>
+        <script src="@Url.Content("~/Scripts/bootstrap.js")" type="text/javascript"></script>
+        
+        <script>
+            $(document).ready(function () {
+                $('.dropdown-toggle').dropdown();
+                $('.dropdown input, .dropdown label').click(function (e) {
+                    e.stopPropagation();
+                });
+            });
+        </script>
         
     </head>
 
-    <body>
+  <body>
 
-        <div class="navbar navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container-fluid">
-                    <ul class="nav">
-                      
-                        <li @((ViewBag.Cur == "Home") ? Html.Raw("class=\"active\"") : Html.Raw("class=\"\""))>@Html.ActionLink("Home", "Index", "Home")</li>
-                        <li @((ViewBag.Cur == "Me") ? Html.Raw("class=\"dropdown active\"") : Html.Raw("class=\"dropdown \""))>
-                            @*
+      <div class="navbar navbar-fixed-top">
+          <div class="navbar-inner">
+              <div class="container-fluid">
+                  <ul class="nav">
+                      @if (@User.Identity.IsAuthenticated)
+                      {
+                          <li @((ViewBag.Cur == "Home") ? Html.Raw("class=\"active\"") : Html.Raw("class=\"\""))>@Html.ActionLink("Home", "Index", "Home")</li>
+                          <li @((ViewBag.Cur == "Me") ? Html.Raw("class=\"dropdown active\"") : Html.Raw("class=\"dropdown \""))>
+                              
                           <a href="#"
                              class="dropdown-toggle"
                              data-toggle="dropdown">
@@ -30,52 +45,71 @@
                               <b class="caret"></b>
                           </a>
                           <ul class="dropdown-menu">
-                              @foreach (string accName in ViewBag.Accounts)
+                              @foreach (string acc in ViewBag.Accounts)
                               {
-                                  <li>@Html.ActionLink(accName,"Index","Home")</li> 
+                                  <li>@Html.ActionLink(acc,"Index","Home")</li> 
                               }
+                              <li class="divider"></li>
+                              <li>@Html.ActionLink("Add User", "Create", "Account")</li>
                           </ul>
-                          *@
-                        </li>
-                        <li @((ViewBag.Cur == "Favs") ? Html.Raw("class=\"active\"") : Html.Raw("class=\"\""))>@Html.ActionLink("Favs", "Index", "Home")</li>
-                        <li>
-                            <form class="navbar-search">
-                                <input type="text" class="search-query" placeholder="Search"/>
-                            </form>
-                        </li>
-                        <li class="dropdown">
-                            <a href="#"
-                               class="dropdown-toggle"
-                               data-toggle="dropdown">
-                                <i class="icon-cog icon-white"> </i>
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a>item1</a></li>
-                                <li><a>item2</a></li>
-                                <li><a>item3</a></li>
-                                <li><a>item4</a></li>
-                                <li class="divider"></li>
-                                <li><a>Disconnect</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+                          
+                          </li>
+                          <li @((ViewBag.Cur == "Favs") ? Html.Raw("class=\"active\"") : Html.Raw("class=\"\""))>@Html.ActionLink("Favs", "Index", "Home")</li>
+                      }
+                      else
+                      {
+                          <li><a data-toggle="modal" href="#myModal" >Register</a></li>
+                          <li class="dropdown">
+                              <a class="dropdown-toggle" href="#" data-toggle="dropdown">Login</a>
+                              <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
+                                  @Html.Partial("_LogOnPartial", new UserLogOnViewModel())
+                              </div>
+                          </li>
+                      }
 
-        <div class="container-fluid">
-            <section id="main">
-                @RenderBody()
-            </section>
+                      <li class="divider-vertical"></li>
+                      <li>
+                          <form class="navbar-search pull-right">
+                              <input type="text" class="search-query" placeholder="Search"/>
+                          </form>
+                      </li>
+                      @if (@User.Identity.IsAuthenticated)
+                      {
+                          <li class="dropdown">
+                              <a href="#"
+                                 class="dropdown-toggle"
+                                 data-toggle="dropdown">
+                                  <i class="icon-cog icon-white"> </i>
+                                  <b class="caret"></b>
+                              </a>
+                              <ul class="dropdown-menu">
+                                  <li><a>item1</a></li>
+                                  <li><a>item2</a></li>
+                                  <li><a>item3</a></li>
+                                  <li><a>item4</a></li>
+                                  <li class="divider"></li>
+                                  <li><a>Disconnect</a></li>
+                              </ul>
+                          </li>
+                      }
+                  </ul>
+              </div>
+          </div>
+      </div>
 
-            <footer>
-                <p>&copy; Tigwi 2012</p>
-            </footer>
-        </div>
-        <script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
-        <script src="@Url.Content("~/Scripts/modernizr-2.5.3.js")" type="text/javascript"></script>
-        <script src="@Url.Content("~/Scripts/bootstrap.js")" type="text/javascript"></script>
-    </body>
+      <div class="container-fluid">
+          <section id="main">
+              <div class="modal hide" id="myModal">
+                  @Html.Partial("_RegisterPartial", new RegisterViewModel())
+              </div>
+              @RenderBody()
+          </section>
+
+          <footer>
+              <p>&copy; Tigwi 2012</p>
+          </footer>
+      </div>
+      
+  </body>
 </html>
 

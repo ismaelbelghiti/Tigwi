@@ -1,4 +1,4 @@
-namespace Tigwi.UI.Models
+namespace Tigwi.UI.Models.User
 {
     using System.ComponentModel.DataAnnotations;
 
@@ -6,12 +6,12 @@ namespace Tigwi.UI.Models
     {
         [Key]
         [Required]
-        [Display(Name = "Username")]
+        [Display(Name = "Username :")]
         public string Login { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Password :")]
         public string Password { get; set; }
 
         [Display(Name = "Remember me ?")]

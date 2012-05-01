@@ -68,6 +68,7 @@ namespace Tigwi.UI.Controllers
         /// <returns></returns>
         public ActionResult Register()
         {
+            ViewBag.notValid = false;
             return this.View();
         }
 
@@ -111,6 +112,7 @@ namespace Tigwi.UI.Controllers
             }
 
             // Somthing went wrong, display register page again
+            ViewBag.notValid = true;
             return this.View(registerViewModel);
         }
 

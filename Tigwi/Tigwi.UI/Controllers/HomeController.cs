@@ -130,6 +130,12 @@
 
         public ActionResult Index()
         {
+            this.ViewBag.CurrentUser = "Zak";
+            this.ViewBag.Accounts = new List<string>();
+            this.ViewBag.Accounts.Add("Me");
+            this.ViewBag.Accounts.Add("A");
+            this.ViewBag.Accounts.Add("B");
+            this.ViewBag.curAccount = "Me";
             return this.View();
         }
 
