@@ -8,7 +8,8 @@ namespace Tigwi.UI.Models
 
     public class SearchViewModel
     {
-        public string searchString { get; private set; }
+        
+        public string searchString { get; set; }
 
     }
 }

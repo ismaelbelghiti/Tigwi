@@ -10,7 +10,7 @@ namespace Tigwi.UI.Controllers
     public class OtherController : Controller
     {
         //
-        // GET: /Other/
+        // POST: /Other/
         [HttpPost]
         public ActionResult Index(SearchViewModel searchViewModel)
         {

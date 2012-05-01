@@ -1,0 +1,37 @@
+@model Tigwi.UI.Models.Account.AccountCreationViewModel
+
+@{
+    Html.EnableClientValidation();
+}
+
+
+<div class="modal-header">
+    <button class="close" data-dismiss="modal">×</button>
+    <h3>Add an Account</h3>
+</div>
+
+@using (Html.BeginForm("Create", "Account", FormMethod.Post))
+{    
+    <div class="modal-body">
+
+        @Html.ValidationSummary()
+
+        @Html.LabelFor(m => m.Name)
+        @Html.EditorFor(m => m.Name)
+        @Html.ValidationMessageFor(m => m.Name)
+
+        @Html.LabelFor(m => m.Description)
+        @Html.EditorFor(m => m.Description)
+        @Html.ValidationMessageFor(m => m.Description)
+   
+    </div>
+    
+    
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <button class="btn btn-primary" type="submit">Add</button>
+        
+    </div>
+}
+
+
