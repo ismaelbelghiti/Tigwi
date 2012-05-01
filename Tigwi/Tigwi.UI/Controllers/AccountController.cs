@@ -50,6 +50,16 @@ namespace Tigwi.UI.Controllers
         }
 
         /// <summary>
+        /// Shows a page listing all the posts of the user.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult ShowAccount(SearchViewModel search)
+        {
+            return this.View(this.Storage.Accounts.Find(search.searchString));
+        }
+
+        /// <summary>
         /// Makes the given account active (the one which will post things by default, etc.)
         /// </summary>
         /// <returns></returns>
@@ -93,12 +103,12 @@ namespace Tigwi.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var newAccount = this.Storage.Accounts.Create(accountCreation.User, accountCreation.Name, accountCreation.Description);
+                var newAccount = this.Storage.Accounts.Create(CurrentUser, accountCreation.Name, accountCreation.Description);
                 this.CurrentAccount = newAccount;
+                //TODO
+                this.SaveIdentity(false);
                 return this.RedirectToAction("Create");
             }
-            //
-            ViewBag.notValid = true;
             return this.View(accountCreation);
         }
 
