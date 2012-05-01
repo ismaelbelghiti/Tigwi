@@ -13,8 +13,7 @@ namespace StorageLibrary
     {
         // TODO : find the best value
         // We split the set of messages in packs because we don't want to retrive a 10M blob from the storage
-        const int msgPackSize = 100;
-        const TimeSpan limitDateDiff = TimeSpan.FromSeconds(5);
+        TimeSpan limitDateDiff = TimeSpan.FromSeconds(5);
 
         StrgConnexion connexion;
 
@@ -23,56 +22,39 @@ namespace StorageLibrary
             this.connexion = connexion;
         }
 
-        // partialy implemented
         public List<IMessage> GetListsMsgFrom(HashSet<Guid> listsId, DateTime firstMsgTime, int msgNumber)
         {
             // TODO : add some parallization
-            SortedSet<IMessage> messages = listsId.Aggregate(new SortedSet<IMessage>(),
-                (set, id) => new Blob<SortedSet<IMessage>>(connexion.msgContainer, Path.M_LISTMESSAGES + id).GetIfExists(new ListNotFound()));
+            MessageSet messages = new MessageSet();
+            foreach (Guid id in listsId)
+            {
+                MsgSetBlobPack blob = new MsgSetBlobPack(connexion.msgContainer, Path.M_LISTMESSAGES + id);
+                messages.UnionWith(blob.GetMessagesFrom(firstMsgTime, msgNumber, new ListNotFound()));
+            }
 
-            // TODO : take into account previous messages
-
-            List<IMessage> msgList = messages.GetViewBetween(Message.FirstMessage(firstMsgTime), Message.LastMessage()).ToList();
+            List<IMessage> msgList = messages.ToList();
             if (msgList.Count > msgNumber)
                 msgList.GetRange(0, msgNumber);
 
-            return msgList;
+            return TruncateMessages(msgList);
         }
 
-        // NYI
         public List<IMessage> GetListsMsgTo(HashSet<Guid> listsId, DateTime lastMsgTime, int msgNumber)
         {
+            // TODO : add some parallization
+            MessageSet messages = new MessageSet();
+            lastMsgTime = TruncateDate(lastMsgTime);
+            foreach (Guid id in listsId)
+            {
+                MsgSetBlobPack blob = new MsgSetBlobPack(connexion.msgContainer, Path.M_LISTMESSAGES + id);
+                messages.UnionWith(blob.GetMessagesTo( lastMsgTime, msgNumber, new ListNotFound()));
+            }
 
-            throw new NotImplementedException();
-            //if (DateTime.Now - lastMsgTime < new TimeSpan(60000000000) && msgNumber < 100)
-            //{
-            //    List<IMessage> messages = listsId.Aggregate<Guid, List<IMessage>>(new List<IMessage>(), (messagelist, list) =>
-            //        (System.Collections.Generic.List<IMessage>)
-            //    messagelist.Union<IMessage>(new Blob<List<IMessage>>(connexion.msgContainer, Path.M_LISTMESSAGES + list).GetIfExists(new ListNotFound())));
-            //    messages.Sort();
-            //    messages.Reverse();
-            //    return messages.GetRange(0, msgNumber);
-            //}
-            //else
-            //{
-            // /*   List<IMessage> messages = listsId.Aggregate<Guid, List<IMessage>>(new List<IMessage>(), (messagelist, list) =>
-            //        (System.Collections.Generic.List<IMessage>)
-            //    messagelist.Union<IMessage>(
-            //    (new Blob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDACCOUNTS + list + Path.L_FOLLOWEDACC_DATA)).GetIfExists(new ListNotFound()).
-            //    Aggregate<Guid, List<IMessage>>(new List<IMessage>(), (listmessages, account) =>
-            //        (System.Collections.Generic.List<IMessage>)
-            //    listmessages.Union<IMessage>(
-            //    connexion.msgContainer.GetDirectoryReference(account + "/").ListBlobs().OrderBy(blob => blob.Uri.AbsolutePath).
-            //    TakeWhile(blob => (Int64.Parse(blob.Uri.AbsolutePath) > lastMsgId.ToBinary())).Aggregate<IEnumerable<IListBlobItem>,List<IMessage>>
-            //    (new List<IMessage>(), (blobmessages,currentblob) =>
-            //        (System.Collections.Generic.List<IMessage>)
-            //        blobmessages.Union<IMessage>(new Blob<List<IMessage>>(connexion.msgContainer, Path.M_ACCOUNTMESSAGES + account + "/" + currentblob.Uri.AbsolutePath).Get()))
-            //        ))));
-            //    messages.Sort();
-            //    messages.Reverse();
-            //    return messages.GetRange(0, msgNumber);*/
-            //    throw new NotImplementedException();
-            //}
+            List<IMessage> msgList = messages.ToList();
+            if (msgList.Count > msgNumber)
+                msgList.GetRange(0, msgNumber);
+
+            return TruncateMessages(msgList);
         }
 
         public void Tag(Guid accountId, Guid msgId)
@@ -116,6 +98,7 @@ namespace StorageLibrary
         }
 
         // partialy implemented
+        // TODO : update to reflect changes in the architecture
         public Guid Post(Guid accountId, string content)
         {
             Guid id = Guid.NewGuid();
@@ -133,18 +116,13 @@ namespace StorageLibrary
 
                 // Add in listMsg
                 Blob<HashSet<Guid>> bFollowedBy = new Blob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDBY + accountId);
-
                 foreach(Guid listId in bFollowedBy.GetIfExists(new AccountNotFound()))
                 {
-                    MsgSetBlob msgSet = new MsgSetBlob(connexion.msgContainer, Path.M_LISTMESSAGES + listId);
-                    msgSet.AddAndDelete(message, msgPackSize);
+                    MsgSetBlobPack msgSet = new MsgSetBlobPack(connexion.msgContainer, Path.M_LISTMESSAGES + listId);
+                    msgSet.AddMessage(message);
                 }
             }
-            catch 
-            {
-                // Remove the message
-                bMessage.Delete();
-            }
+            catch { }
             
             // TODO : Add in accountMsg
 

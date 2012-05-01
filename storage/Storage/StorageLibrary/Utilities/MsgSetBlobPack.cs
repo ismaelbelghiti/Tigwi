@@ -32,10 +32,10 @@ namespace StorageLibrary.Utilities
             blob.Set(new MessageSet());
         }
 
+        // TODO : change list to set for a better merge
         public List<IMessage> GetMessagesFrom(DateTime date, int msgCount, Exception e)
         {
-            List<IMessage> msgList = null;
-
+            MessageSet msgSet = null;
             // if their is a change in te architecture of packs while we retreive messages, then we try again
             // To detect when the structure has changed, we add a guid in metadata to get the version of the structure
             do
@@ -52,26 +52,26 @@ namespace StorageLibrary.Utilities
                 // get the messages
                 try
                 {
-                    MessageSet msgSet = GetMessageSet(new Blob<MessageSet>(blobsList[blobIndex].Value));
-                    msgList = msgSet.GetViewBetween(Message.FirstMessage(date), Message.LastMessage()).ToList();
+                    msgSet = GetMessageSet(new Blob<MessageSet>(blobsList[blobIndex].Value));
+                    msgSet = msgSet.GetViewBetween(Message.FirstMessage(date), Message.LastMessage());
 
                     // get messages from following sets while we need them
-                    for(blobIndex++; blobIndex<blobsList.Count && msgList.Count < msgCount; blobIndex++)
-                    {
-                        msgSet = GetMessageSet(new Blob<MessageSet>(blobsList[blobIndex].Value));
-                        msgList.AddRange(msgSet);
-                    }
+                    for(blobIndex++; blobIndex<blobsList.Count && msgSet.Count < msgCount; blobIndex++)
+                        msgSet.UnionWith(GetMessageSet(new Blob<MessageSet>(blobsList[blobIndex].Value)));
                 }
                 catch (VersionHasChanged) { continue; }
 
             } while (false);
 
+            List<IMessage> msgList = msgSet.ToList();
             if (msgList.Count > msgCount)
                 msgList = msgList.GetRange(0, msgCount);
 
             return msgList;
         }
 
+        // TODO : change list to set for a better merge
+        // TODO : repercute changes from GetMessageFrom
         public List<IMessage> GetMessagesTo(DateTime date, int msgCount, Exception e)
         {
             List<IMessage> msgList = null;

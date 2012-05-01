@@ -23,7 +23,15 @@ namespace StorageLibrary.Utilities
 
         public MessageSet() : base(new MsgComparer()) { }
 
+        public MessageSet(SortedSet<IMessage> set) : base(set, new MsgComparer()) { }
+
         public MessageSet(IEnumerable<IMessage> items) : base(items, new MsgComparer()) { }
+
+        // TODO : replace this by something more efficient
+        public new MessageSet GetViewBetween(IMessage first, IMessage last)
+        {
+            return new MessageSet(base.GetViewBetween(first, last));
+        }
 
         protected MessageSet(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }

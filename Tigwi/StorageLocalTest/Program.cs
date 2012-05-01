@@ -989,11 +989,11 @@ namespace StorageLocalTest
 
             for (int i = 0; i < 100; i++)
             {
-                storage.Msg.Tag(account1, storage.Msg.Post(account2, "message " + i));
+                storage.Msg.Post(account2, "message " + i);
                 Console.Write(".");
             }
 
-            foreach (var m in storage.Msg.GetTaggedFrom(account1, DateTime.MinValue, 100))
+            foreach (var m in storage.Msg.GetListsMsgTo(lists1, DateTime.MaxValue, 60))
                 Console.WriteLine(m.Content);
 
             Console.WriteLine();
