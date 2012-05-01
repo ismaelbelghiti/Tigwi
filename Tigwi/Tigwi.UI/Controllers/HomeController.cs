@@ -42,7 +42,7 @@
 
         #region Properties
 
-        protected StorageAccountModel CurrentAccount
+        internal StorageAccountModel CurrentAccount
         {
             get
             {
@@ -77,7 +77,7 @@
             }
         }
 
-        protected StorageUserModel CurrentUser
+        internal StorageUserModel CurrentUser
         {
             get
             {
