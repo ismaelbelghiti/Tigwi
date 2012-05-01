@@ -2,6 +2,8 @@
 
 namespace Tigwi_API.Models
 {
+    // Models for request bodies
+
     [Serializable]
     public class ListAndAccount
     {

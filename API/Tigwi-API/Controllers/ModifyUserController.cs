@@ -20,10 +20,7 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                var userId = infos.UserId;
-                //TODO: find how to test userId to know if the information was sent or not
-                //if (userId == )
-                //    userId = Storage.User.GetId(infos.UserLogin);
+                var userId = infos.UserId ?? Storage.User.GetId(infos.UserLogin);
 
                 //Set the mail address
                 Storage.User.SetInfo(userId, infos.Info);
@@ -47,16 +44,13 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult ChangeAvatar()
         {
-            var infos = (ChangeInfo)(new XmlSerializer(typeof(ChangeInfo))).Deserialize(Request.InputStream);
+            //var infos = (ChangeInfo)(new XmlSerializer(typeof(ChangeInfo))).Deserialize(Request.InputStream);
 
             Error error;
 
             try
             {
-                // var userId = infos.UserId;
-                //TODO: find how to test userId to know if the information was sent or not
-                // if (userId == )
-                //    userId = Storage.User.GetId(infos.UserLogin);
+                //var userId = infos.UserId ?? Storage.User.GetId(infos.UserLogin);
 
                 //TODO: come back to this when storage will hav implemented change avatar method
                 //Set the mail address
@@ -87,10 +81,7 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                var userId = infos.UserId;
-                //TODO: find how to test userId to know if the information was sent or not
-                //if (userId == )
-                //    userId = Storage.User.GetId(infos.UserLogin);
+                var userId = infos.UserId ?? Storage.User.GetId(infos.UserLogin);
 
                 //TODO: implement old password checking
                 //Check the old password
@@ -126,10 +117,7 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                var userId = infos.UserId;
-                //TODO: find how to test userId to know if the information was sent or not
-                //if (userId == )
-                //    userId = Storage.User.GetId(infos.UserLogin);
+                var userId = infos.UserId ?? Storage.User.GetId(infos.UserLogin);
 
                 //Create the account
                 var accountId = Storage.Account.Create(userId, infos.AccountName, infos.Description);
