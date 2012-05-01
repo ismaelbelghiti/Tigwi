@@ -30,8 +30,7 @@ list ->		------------------------------
 			followedaccounts/<list ID>/data		: HashSet<Guid> -- accounts in this list 
 									  /lock		: Mutex
 
-message ->	listmessages/<list ID>				: MessageSet -- 100 last messages of the list
-	OR		listmessages/<list ID>/<date>		: MessageSet
+message ->	listmessages/<list ID>/<date>		: MessageSet
 			accountmessages/<poster ID>/<date>	: List<IMessage> -- ~100 messages from <poster>, the first of the list is dated <date>
 			taggedmessages/<account ID>/<date>	: SortedSet<IMessage> -- minDate should alway exists
 			message/<messageID>					: IMessage

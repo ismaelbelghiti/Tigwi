@@ -13,7 +13,7 @@ namespace Tigwi_API.Controllers
     {
 
         // Initialize storage when instanciating a controller
-        protected ApiController ()
+        public ApiController ()
         {
             Storage = new Storage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY");
         }
@@ -79,21 +79,33 @@ namespace Tigwi_API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CreateUser()
         {
-            var user = (NewUser)(new XmlSerializer(typeof(NewUser))).Deserialize(Request.InputStream);
-
             Answer output;
 
             try
             {
-                var userId = Storage.User.Create(user.Login, user.Email, user.Password);
+                var user = (NewUser) (new XmlSerializer(typeof (NewUser))).Deserialize(Request.InputStream);
+                
+                if (user.Login == null || user.Email == null || user.Password == null)
+                    output = new Answer(new Error("Bad entry"));
+                else
+                {
+                    try
+                    {
+                        var userId = Storage.User.Create(user.Login, user.Email, user.Password);
 
-                // Result is an empty error XML element
-                output = new Answer(new ObjectCreated(userId));
+                        // Result is an empty error XML element
+                        output = new Answer(new ObjectCreated(userId));
+                    }
+                    catch (StorageLibException exception)
+                    {
+                        // Result is an non-empty error XML element
+                        output = new Answer(new Error(exception.Code.ToString()));
+                    }
+                }
             }
-            catch (StorageLibException exception)
+            catch(InvalidOperationException)
             {
-                // Result is an non-empty error XML element
-                output = new Answer(new Error(exception.Code.ToString()));
+                output = new Answer(new Error("Bad xml entry"));
             }
 
             return Serialize(output);

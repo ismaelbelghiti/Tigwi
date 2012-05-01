@@ -1,5 +1,4 @@
-﻿using System;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Xml.Serialization;
 using StorageLibrary;
 using Tigwi_API.Models;
@@ -18,7 +17,7 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // POST : modifyaccount/write
+        // POST : /modifyaccount/write
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -30,9 +29,7 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                var accountId = msg.AccountId;
-                if (accountId == new Guid("default") )
-                    accountId = Storage.Account.GetId(msg.AccountName);
+                var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
 
                 var msgId = Storage.Msg.Post(accountId, msg.Message.Content);
 
@@ -49,7 +46,7 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // POST : modifyaccount/copy
+        // POST : /modifyaccount/copy
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -61,9 +58,7 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                var accountId = msg.AccountId;
-                if (accountId == new Guid("default"))
-                    accountId = Storage.Account.GetId(msg.AccountName);
+                var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
 
                 var msgId = Storage.Msg.Copy(accountId, msg.MessageId);
 
@@ -80,7 +75,7 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // POST : modifyaccount/delete
+        // POST : /modifyaccount/delete
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -93,9 +88,7 @@ namespace Tigwi_API.Controllers
             try
             {
                 //TODO: find out how to use this information, if necessary (?)
-               // var accountId = msg.AccountId;
-               // if (accountId == new Guid("default"))
-               //     accountId = Storage.Account.GetId(msg.AccountName);
+                //var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
 
                 Storage.Msg.Remove(msg.MessageId);
 
@@ -112,7 +105,7 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // POST : modifyaccount/tag
+        // POST : /modifyaccount/tag
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -124,11 +117,9 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                var accountId = msg.AccountId;
-                if (accountId == new Guid("default"))
-                    accountId = Storage.Account.GetId(msg.AccountName);
+                var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
 
-              Storage.Msg.Tag(accountId, msg.MessageId);
+                Storage.Msg.Tag(accountId, msg.MessageId);
 
                 //Result is an empty error
                 error = new Error();
@@ -143,7 +134,7 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // POST : modifyaccount/tag
+        // POST : /modifyaccount/untag
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -155,9 +146,7 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                var accountId = msg.AccountId;
-                if (accountId == new Guid("default"))
-                    accountId = Storage.Account.GetId(msg.AccountName);
+                var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
 
                 Storage.Msg.Untag(accountId, msg.MessageId);
 
@@ -174,7 +163,7 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // POST : /modifyaccount/suscribelist
+        // POST : /modifyaccount/subscribelist
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -186,7 +175,7 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                var accountId = Storage.Account.GetId(subscribe.AccountName);
+                var accountId = subscribe.AccountId ?? Storage.Account.GetId(subscribe.AccountName);
 
                 Storage.List.Follow(subscribe.Subscription, accountId);
 
@@ -215,7 +204,7 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                var accountId = Storage.Account.GetId(listCreation.Account);
+                var accountId = listCreation.AccountId ?? Storage.Account.GetId(listCreation.AccountName);
                 var listToCreate = listCreation.ListInfo;
 
                 var listId = Storage.List.Create(accountId, listToCreate.Name, listToCreate.Description,
@@ -234,7 +223,7 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // POST modifyaccount/changedescription
+        // POST /modifyaccount/changedescription
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -246,9 +235,7 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                var accountId = infos.AccountId;
-                if (accountId == new Guid("default"))
-                    accountId = Storage.Account.GetId(infos.AccountName);
+                var accountId = infos.AccountId ?? Storage.Account.GetId(infos.AccountName);
 
                 //Set the informations
                 Storage.Account.SetInfo(accountId, infos.Description);
@@ -266,7 +253,7 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // POST modifyaccount/adduser
+        // POST : /modifyaccount/adduser
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -278,13 +265,9 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                var accountId = infos.AccountId;
-                if (accountId == new Guid("default"))
-                    accountId = Storage.Account.GetId(infos.AccountName);
+                var accountId = infos.AccountId ?? Storage.Account.GetId(infos.AccountName);
 
-                var userId = infos.UserId;
-                if (userId == new Guid("default") )
-                   userId = Storage.User.GetId(infos.UserLogin);
+                var userId = infos.UserId ?? Storage.User.GetId(infos.UserLogin);
 
                 //Set the informations
                 Storage.Account.Add(accountId, userId);
@@ -302,7 +285,7 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // POST modifyaccount/adduser
+        // POST : /modifyaccount/adduser
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -314,13 +297,9 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                var accountId = infos.AccountId;
-                if (accountId == new Guid("default"))
-                    accountId = Storage.Account.GetId(infos.AccountName);
+                var accountId = infos.AccountId ?? Storage.Account.GetId(infos.AccountName);
 
-                var userId = infos.UserId;
-                if (userId == new Guid("default"))
-                    userId = Storage.User.GetId(infos.UserLogin);
+                var userId = infos.UserId ?? Storage.User.GetId(infos.UserLogin);
 
                 //Set the informations
                 Storage.Account.Remove(accountId, userId);
@@ -339,7 +318,7 @@ namespace Tigwi_API.Controllers
 
 
         //
-        // POST modifyaccount/changeadmin
+        // POST : /modifyaccount/changeadmin
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -351,13 +330,9 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                var accountId = infos.AccountId;
-                if (accountId == new Guid("default"))
-                    accountId = Storage.Account.GetId(infos.AccountName);
+                var accountId = infos.AccountId ?? Storage.Account.GetId(infos.AccountName);
 
-                var userId = infos.UserId;
-                if (userId == new Guid("default"))
-                    userId = Storage.User.GetId(infos.UserLogin);
+                var userId = infos.UserId ?? Storage.User.GetId(infos.UserLogin);
 
                 //Set the informations
                 Storage.Account.SetAdminId(accountId, userId);

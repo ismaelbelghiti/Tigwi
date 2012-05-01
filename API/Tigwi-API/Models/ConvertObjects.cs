@@ -6,8 +6,17 @@ using System.Xml.Serialization;
 
 namespace Tigwi_API.Models
 {
+    // class useful for general request /createuser
+    [Serializable]
+    [XmlRootAttribute("User")]
+    public class NewUser
+    {
+        public string Login { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
 
-    // models for answers to GET requests
+    // models to answer to requests
     [Serializable]
     public abstract class Content
     {}
@@ -15,15 +24,16 @@ namespace Tigwi_API.Models
     [Serializable]
     public class Message 
     {
+        public Message() {}
         public Message(IMessage msg, IStorage storage)
         {
-            Id = msg.Id;
+            Id = msg.Id.ToString();
             PostTime = msg.Date;
             Poster = storage.Account.GetInfo(msg.PosterId).Name;
             Content = msg.Content;
         }
 
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         public DateTime PostTime { get; set; }
 
@@ -63,14 +73,15 @@ namespace Tigwi_API.Models
     [Serializable]
     public class Account : Content
     {
+        public Account () {}
         public Account(Guid id, string name, string description)
         {
-            Id = id;
+            Id = id.ToString();
             Name = name;
             Description = description;
         }
 
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
     }
@@ -99,23 +110,25 @@ namespace Tigwi_API.Models
     [Serializable]
     public class User : Content
     {
+        public User () {}
         public User (IUserInfo user, Guid userId)
         {
             Login = user.Login;
             Avatar = user.Avatar;
             Email = user.Email;
-            Id = userId;
+            Id = userId.ToString();
         }
 
         public string Login { get; set; }
         public string Avatar { get; set; }
         public string Email { get; set; }
-        public Guid Id { get; set; } 
+        public string Id { get; set; } 
     }
 
     [Serializable]
     public class Users : Content
     {
+        public Users() {}
         public Users(List<User> listUsers)
         {
             Size = listUsers.Count();
@@ -131,26 +144,17 @@ namespace Tigwi_API.Models
     [Serializable]
     public class ObjectCreated : Content
     {
+        public ObjectCreated() {}
         public ObjectCreated(Guid id)
         {
-            Id = id;
+            Id = id.ToString();
         }
 
         [XmlAttribute]
-        public Guid Id;
+        public string Id;
     }
-
-    [Serializable]
-    [XmlRootAttribute("User")]
-    public class NewUser
-    {
-        public string Login { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-    }
-
+    
     // models to answer to requests with errors (can be empty) messages
-
     [Serializable]
     public class Error
     {
@@ -167,8 +171,15 @@ namespace Tigwi_API.Models
         public String Code { get; set; }
     }
 
-    //General class to send informations
+    // General class to send information
     [Serializable]
+    [XmlInclude(typeof(Messages))]
+    [XmlInclude(typeof(Account))]
+    [XmlInclude(typeof(Accounts))]
+    [XmlInclude(typeof(Lists))]
+    [XmlInclude(typeof(User))]
+    [XmlInclude(typeof(Users))]
+    [XmlInclude(typeof(ObjectCreated))]
     public class Answer
     {
         public Answer()

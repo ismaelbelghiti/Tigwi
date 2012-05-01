@@ -68,6 +68,8 @@ namespace StorageLibrary
             Blob<HashSet<Guid>> bFollowingAccounts = new Blob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWINGACCOUNTS + id);
             Blob<HashSet<Guid>> bFollowedAccounts = new Blob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDACCOUNTS + id + Path.L_FOLLOWEDACC_DATA);
 
+            MsgSetBlobPack bMessages = new MsgSetBlobPack(connexion.msgContainer, Path.M_LISTMESSAGES + id);
+
             // store the data
             bInfo.Set(info);
             bOwner.Set(ownerId);
@@ -75,7 +77,6 @@ namespace StorageLibrary
             bFollowedAccounts.Set(new HashSet<Guid>());
             Mutex.Init(connexion.listContainer, Path.L_FOLLOWEDACCOUNTS + id + Path.L_FOLLOWEDACC_LOCK);
 
-            MsgSetBlob bMessages = new MsgSetBlob(connexion.msgContainer, Path.M_LISTMESSAGES + id);
             bMessages.Init();
 
             // add the lists to owned lists and check that the user exists. if he doesn't, delete the data stored
