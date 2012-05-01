@@ -8,6 +8,7 @@ using System.Web.Routing;
 namespace Tigwi.UI
 {
     using System.IO;
+    using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Security.Principal;
     using System.Web.ClientServices;
@@ -63,7 +64,7 @@ namespace Tigwi.UI
         {
             var cookie = Request.Cookies[FormsAuthentication.FormsCookieName];
 
-            if (cookie == null)
+            if (cookie == null || string.IsNullOrEmpty(cookie.Value))
             {
                 return;
             }
@@ -72,7 +73,7 @@ namespace Tigwi.UI
             var serialized = Convert.FromBase64String(ticket.UserData);
             var userData = (new BinaryFormatter()).Deserialize(new MemoryStream(serialized)) as CookieData;
 
-            if (userData == null)
+            if (userData == null || userData.UserId == Guid.Empty)
             {
                 return;
             }

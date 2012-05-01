@@ -51,7 +51,8 @@ namespace Tigwi.UI.Controllers
 
                     this.SaveIdentity(userLogOnViewModel.RememberMe);
 
-                    return this.RedirectToAction("Timeline", "Account");
+                    return this.RedirectToAction("Index", "Home");
+                    // return this.RedirectToAction("Timeline", "Account");
                 }
                 catch (UserNotFoundException ex)
                 {
@@ -60,6 +61,15 @@ namespace Tigwi.UI.Controllers
             }
 
             return this.View(userLogOnViewModel);
+        }
+
+        public ActionResult LogOut()
+        {
+            this.CurrentUser = null;
+            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName) { Expires = DateTime.MinValue };
+            this.Response.AppendCookie(cookie);
+
+            return this.RedirectToAction("Index", "Home");
         }
 
         /// <summary>
@@ -95,7 +105,8 @@ namespace Tigwi.UI.Controllers
 
                         this.SaveIdentity(registerViewModel.RememberMe);
 
-                        return this.RedirectToAction("Welcome");
+                        return this.RedirectToAction("Index", "Home");
+                        // return this.RedirectToAction("Welcome");
                     }
                     catch (DuplicateAccountException ex)
                     {
