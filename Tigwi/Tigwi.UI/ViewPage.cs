@@ -13,7 +13,7 @@
 
         private IAccountModel currentAccount;
 
-        private StorageUserModel currentUser;
+        private IUserModel currentUser;
 
         #endregion
 
@@ -37,7 +37,7 @@
             }
         }
 
-        public StorageUserModel CurrentUser
+        public IUserModel CurrentUser
         {
             get
             {

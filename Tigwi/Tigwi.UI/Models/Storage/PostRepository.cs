@@ -12,7 +12,7 @@ namespace Tigwi.UI.Models.Storage
     {
         #region Constructors and Destructors
 
-        public PostRepository(IStorage storage, IStorageContext storageContext)
+        public PostRepository(IStorage storage, StorageContext storageContext)
             : base(storage, storageContext)
         {
         }

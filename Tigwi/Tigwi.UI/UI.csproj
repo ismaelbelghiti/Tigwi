@@ -105,6 +105,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\IAccountRepository.cs" />
+    <Compile Include="Models\IListRepository.cs" />
+    <Compile Include="Models\IPostRepository.cs" />
+    <Compile Include="Models\IStorageContext.cs" />
+    <Compile Include="Models\IUserRepository.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\WritePostViewModel.cs" />
     <Compile Include="Models\IAccountModel.cs" />
@@ -117,12 +122,7 @@
     <Compile Include="Models\CustomIdentity.cs" />
     <Compile Include="Models\PostViewModel.cs" />
     <Compile Include="Models\Storage\AccountRepository.cs" />
-    <Compile Include="Models\Storage\IListRepository.cs" />
-    <Compile Include="Models\Storage\IPostRepository.cs" />
-    <Compile Include="Models\Storage\IStorageContext.cs" />
     <Compile Include="Models\Storage\StorageEntityCollection.cs" />
-    <Compile Include="Models\Storage\IAccountRepository.cs" />
-    <Compile Include="Models\Storage\IUserRepository.cs" />
     <Compile Include="Models\Storage\StorageAccountModel.cs" />
     <Compile Include="Models\Storage\ListRepository.cs" />
     <Compile Include="Models\Storage\PostRepository.cs" />

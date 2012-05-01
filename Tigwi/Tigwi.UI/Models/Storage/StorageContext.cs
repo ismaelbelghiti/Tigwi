@@ -88,11 +88,43 @@ namespace Tigwi.UI.Models.Storage
 
         #region Properties
 
-        private IStorage StorageObj
+        internal IStorage StorageObj
         {
             get
             {
                 return this.storageObj;
+            }
+        }
+
+        internal AccountRepository InternalAccounts
+        {
+            get
+            {
+                return this.accounts ?? (this.accounts = new AccountRepository(this.StorageObj, this));
+            }
+        }
+
+        internal ListRepository InternalLists
+        {
+            get
+            {
+                return this.lists ?? (this.lists = new ListRepository(this.StorageObj, this));
+            }
+        }
+
+        internal PostRepository InternalPosts
+        {
+            get
+            {
+                return this.posts ?? (this.posts = new PostRepository(this.StorageObj, this));
+            }
+        }
+
+        internal UserRepository InternalUsers
+        {
+            get
+            {
+                return this.users ?? (this.users = new UserRepository(this.StorageObj, this));
             }
         }
 

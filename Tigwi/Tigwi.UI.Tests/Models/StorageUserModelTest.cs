@@ -17,9 +17,9 @@ namespace Tigwi.UI.Tests.Models
     [TestFixture]
     public class StorageUserModelTest
     {
-        protected IUserModel UserModel { get; set; }
+        protected StorageUserModel UserModel { get; set; }
 
-        protected IStorageContext Storage { get; set; }
+        protected StorageContext Storage { get; set; }
 
         #region SetUp / TearDown
 
@@ -58,9 +58,7 @@ namespace Tigwi.UI.Tests.Models
             user.Email = "basile.clement@ens.fr";
             Assert.That(user.Email, Is.EqualTo("basile.clement@ens.fr"));
 
-            user.Save();
-
-            user.Repopulate();
+            storage.SaveChanges();
             Assert.That(user.Email, Is.EqualTo("basile.clement@ens.fr"));
         }
 

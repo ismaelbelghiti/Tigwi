@@ -1,7 +1,5 @@
-namespace Tigwi.UI.Models.Storage
+namespace Tigwi.UI.Models
 {
-    using System;
-
     public interface IPostRepository
     {
         #region Public Methods and Operators

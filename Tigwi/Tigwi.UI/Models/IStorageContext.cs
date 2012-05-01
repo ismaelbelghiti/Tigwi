@@ -1,4 +1,4 @@
-namespace Tigwi.UI.Models.Storage
+namespace Tigwi.UI.Models
 {
     public interface IStorageContext
     {

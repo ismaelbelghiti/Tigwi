@@ -6,7 +6,7 @@ namespace Tigwi.UI.Models.Storage
 
     public abstract class StorageEntityModel
     {
-        protected StorageEntityModel(IStorage storage, IStorageContext storageContext, Guid id)
+        protected StorageEntityModel(IStorage storage, StorageContext storageContext, Guid id)
         {
             this.Storage = storage;
             this.StorageContext = storageContext;
@@ -23,7 +23,7 @@ namespace Tigwi.UI.Models.Storage
 
         internal bool Deleted { get; set; }
 
-        protected IStorageContext StorageContext { get; set; }
+        protected StorageContext StorageContext { get; set; }
 
         internal void MarkDeleted()
         {

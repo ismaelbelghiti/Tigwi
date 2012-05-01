@@ -8,14 +8,14 @@ namespace Tigwi.UI.Models.Storage
     {
         #region Constructors and Destructors
 
-        public ListRepository(IStorage storage, IStorageContext storageContext)
+        public ListRepository(IStorage storage, StorageContext storageContext)
             : base(storage, storageContext)
         {
         }
 
         #endregion
 
-        public IListModel Create(StorageAccountModel account, string name, string description, bool isPrivate)
+        public IListModel Create(IAccountModel account, string name, string description, bool isPrivate)
         {
             try
             {
@@ -28,14 +28,19 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public void Delete(StorageListModel list)
+        public void Delete(IListModel list)
         {
             // TODO: fixme
             this.Storage.List.Delete(list.Id);
             this.EntitiesMap.Remove(list.Id);
         }
 
-        public StorageListModel Find(Guid listId)
+        public IListModel Find(Guid listId)
+        {
+            return this.InternalFind(listId);
+        }
+
+        internal StorageListModel InternalFind(Guid listId)
         {
             StorageListModel list;
             if (!this.EntitiesMap.TryGetValue(listId, out list))

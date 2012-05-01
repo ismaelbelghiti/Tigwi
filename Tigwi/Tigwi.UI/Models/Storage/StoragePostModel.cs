@@ -6,11 +6,14 @@ namespace Tigwi.UI.Models.Storage
 
     public class StoragePostModel : IPostModel
     {
-        public StoragePostModel(IStorageContext storageContext, IMessage message)
+        public StoragePostModel(StorageContext storageContext, IMessage message)
         {
             this.PostDate = message.Date;
             this.Content = message.Content;
-            this.Poster = storageContext.Accounts.Find(message.PosterId); //TODO: PopulateWith(name: message.PosterName, avatar: message.PosterAvatar)
+            this.Id = message.Id;
+            this.Poster =
+                storageContext.InternalAccounts.InternalFind(message.PosterId).PopulateWith(
+                    name: message.PosterName, avatar: message.PosterAvatar);
         }
 
         public DateTime PostDate { get; private set; }
@@ -18,5 +21,7 @@ namespace Tigwi.UI.Models.Storage
         public string Content { get; private set; }
 
         public IAccountModel Poster { get; private set; }
+
+        public Guid Id { get; private set; }
     }
 }

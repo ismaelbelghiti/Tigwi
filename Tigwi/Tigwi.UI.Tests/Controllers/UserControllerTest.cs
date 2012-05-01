@@ -18,6 +18,7 @@ namespace Tigwi.UI.Tests.Controllers
 
     using StorageLibrary;
 
+    using Tigwi.UI.Models;
     using Tigwi.UI.Models.Storage;
     using Tigwi.UI.Models.User;
 

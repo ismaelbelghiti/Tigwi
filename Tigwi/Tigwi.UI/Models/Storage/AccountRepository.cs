@@ -12,7 +12,7 @@ namespace Tigwi.UI.Models.Storage
     {
         #region Constructors and Destructors
 
-        public AccountRepository(IStorage storageObj, IStorageContext storageContext)
+        public AccountRepository(IStorage storageObj, StorageContext storageContext)
             : base(storageObj, storageContext)
         {
         }
@@ -21,7 +21,7 @@ namespace Tigwi.UI.Models.Storage
 
         #region Public Methods and Operators
 
-        public IAccountModel Create(StorageUserModel user, string name, string description)
+        public IAccountModel Create(IUserModel user, string name, string description)
         {
             try
             {
@@ -41,8 +41,10 @@ namespace Tigwi.UI.Models.Storage
         public void Delete(IAccountModel interfaceAccount)
         {
             // TODO: fixme
-            var account = this.InternalFind(interfaceAccount.Id);
+            var account = interfaceAccount as StorageAccountModel ?? this.InternalFind(interfaceAccount.Id);
             account.MarkDeleted();
+            
+            // Should we do this now ?
             this.Storage.Account.Delete(account.Id);
             this.EntitiesMap.Remove(account.Id);
         }
@@ -77,7 +79,7 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        protected StorageAccountModel InternalFind(Guid id)
+        internal StorageAccountModel InternalFind(Guid id)
         {
             StorageAccountModel account;
             if (!this.EntitiesMap.TryGetValue(id, out account))

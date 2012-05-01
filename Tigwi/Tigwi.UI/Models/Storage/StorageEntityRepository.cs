@@ -7,14 +7,14 @@ namespace Tigwi.UI.Models.Storage
 
     public class StorageEntityRepository<T>
     {
-        protected StorageEntityRepository(IStorage storage, IStorageContext storageContext)
+        protected StorageEntityRepository(IStorage storage, StorageContext storageContext)
         {
             this.Storage = storage;
             this.StorageContext = storageContext;
             this.EntitiesMap = new Dictionary<Guid, T>();
         }
 
-        protected IStorageContext StorageContext { get; private set; }
+        protected StorageContext StorageContext { get; private set; }
 
         protected IStorage Storage { get; private set; }
 

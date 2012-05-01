@@ -1,6 +1,8 @@
-namespace Tigwi.UI.Models.Storage
+namespace Tigwi.UI.Models
 {
     using System;
+
+    using Tigwi.UI.Models.Storage;
 
     public interface IAccountRepository
     {
@@ -14,7 +16,7 @@ namespace Tigwi.UI.Models.Storage
         /// <param name="description">The account's description.</param>
         /// <returns>The <see cref="StorageAccountModel" /> representing the newly created account.</returns>
         /// <exception cref="DuplicateAccountException">When there is an already existing account with the same name.</exception>
-        IAccountModel Create(StorageUserModel user, string name, string description);
+        IAccountModel Create(IUserModel user, string name, string description);
 
         /// <summary>
         /// Deletes an existing account and replace it by a shallow "Deleted" object.

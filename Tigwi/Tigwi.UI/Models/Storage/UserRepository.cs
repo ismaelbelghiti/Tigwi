@@ -7,14 +7,14 @@ namespace Tigwi.UI.Models.Storage
 
     public class UserRepository : StorageEntityRepository<StorageUserModel>, IUserRepository
     {
-        public UserRepository(IStorage storage, IStorageContext storageContext)
+        public UserRepository(IStorage storage, StorageContext storageContext)
             : base(storage, storageContext)
         {
         }
 
         #region Public Methods and Operators
 
-        public StorageUserModel Create(string login, string email)
+        public IUserModel Create(string login, string email)
         {
             // Create a new user via medium-level storage calls and return the corresponding Model
             try
@@ -28,7 +28,7 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public void Delete(StorageUserModel user)
+        public void Delete(IUserModel user)
         {
             // TODO: fixme
             var id = user.Id;
@@ -38,7 +38,12 @@ namespace Tigwi.UI.Models.Storage
             this.EntitiesMap.Remove(id);
         }
 
-        public StorageUserModel Find(Guid user)
+        public IUserModel Find(Guid user)
+        {
+            return this.InternalFind(user);
+        }
+
+        internal StorageUserModel InternalFind(Guid user)
         {
             StorageUserModel userModel;
 
@@ -52,7 +57,7 @@ namespace Tigwi.UI.Models.Storage
             return userModel;
         }
 
-        public StorageUserModel Find(string login)
+        public IUserModel Find(string login)
         {
             try
             {

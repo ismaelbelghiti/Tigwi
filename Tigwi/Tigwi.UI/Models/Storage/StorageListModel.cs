@@ -30,7 +30,7 @@
 
         #region Constructors and Destructors
 
-        public StorageListModel(IStorage storage, IStorageContext storageContext, Guid listId)
+        public StorageListModel(IStorage storage, StorageContext storageContext, Guid listId)
             : base(storage, storageContext, listId)
         {
         }
@@ -182,6 +182,7 @@
 
         public ICollection<IPostModel> PostsAfter(DateTime date, int maximum = 100)
         {
+            // TODO : multiple lists
             var msgCollection = this.Storage.Msg.GetListsMsgFrom(new HashSet<Guid> { this.Id }, date, maximum);
             return
                 new List<IPostModel>(msgCollection.Select(msg => new StoragePostModel(this.StorageContext, msg)))
@@ -190,6 +191,7 @@
 
         public ICollection<IPostModel> PostsBefore(DateTime date, int maximum = 100)
         {
+            // TODO : multiple lists
             var msgCollection = this.Storage.Msg.GetListsMsgFrom(new HashSet<Guid> { this.Id }, date, maximum);
             return
                 new List<IPostModel>(msgCollection.Select(msg => new StoragePostModel(this.StorageContext, msg)))
@@ -220,38 +222,45 @@
 
         internal override void Save()
         {
-            if (this.InfosUpdated)
+            if (this.Deleted)
             {
-                this.Storage.List.SetInfo(this.Id, this.Name, this.Description, this.IsPrivate);
+                this.Storage.List.Delete(this.Id);
             }
-
-            if (this.members != null)
+            else
             {
-                this.members.Save();
-            }
+                if (this.InfosUpdated)
+                {
+                    this.Storage.List.SetInfo(this.Id, this.Name, this.Description, this.IsPrivate);
+                }
 
-            if (this.followers != null)
-            {
-                this.followers.Save();
+                if (this.members != null)
+                {
+                    this.members.Save();
+                }
+
+                if (this.followers != null)
+                {
+                    this.followers.Save();
+                }
             }
         }
 
         #endregion
 
-        internal class AccountCollectionAdapter : StorageEntityCollection<StorageListModel, IAccountModel>
+        internal class AccountCollectionAdapter : StorageEntityCollection<StorageListModel, StorageAccountModel, IAccountModel>
         {
             #region Constructors and Destructors
 
             public AccountCollectionAdapter(
                 IStorage storage, 
-                IStorageContext storageContext, 
+                StorageContext storageContext, 
                 StorageListModel parent, 
                 Func<ICollection<Guid>> fetchIdCollection, 
                 Action<StorageAccountModel> reverseAdd, 
                 Action<StorageAccountModel> reverseRemove)
-                : base(storage, storageContext, parent, fetchIdCollection)
+                : base(storage, storageContext, parent, fetchIdCollection, account => account.Id)
             {
-                this.GetModel = storageContext.Accounts.Find;
+                this.GetModel = storageContext.InternalAccounts.InternalFind;
                 this.DoReverseAdd = reverseAdd;
                 this.DoReverseRemove = reverseRemove;
             }
@@ -270,14 +279,17 @@
 
             internal override void Save()
             {
-                foreach (var accountAdded in this.CollectionAdded.Where(item => item.Value).Select(item => item.Key))
+                if (!this.Parent.Deleted)
                 {
-                    this.Storage.List.Add(this.Parent.Id, accountAdded.Id);
-                }
+                    foreach (var accountAdded in this.CollectionAdded.Where(item => item.Value && !item.Key.Deleted).Select(item => item.Key))
+                    {
+                        this.Storage.List.Add(this.Parent.Id, accountAdded.Id);
+                    }
 
-                foreach (var accountRemoved in this.CollectionRemoved.Where(item => item.Value).Select(item => item.Key))
-                {
-                    this.Storage.List.Remove(this.Parent.Id, accountRemoved.Id);
+                    foreach (var accountRemoved in this.CollectionRemoved.Where(item => item.Value && !item.Key.Deleted).Select(item => item.Key))
+                    {
+                        this.Storage.List.Remove(this.Parent.Id, accountRemoved.Id);
+                    }
                 }
 
                 this.CollectionAdded.Clear();
@@ -288,22 +300,14 @@
 
             #region Methods
 
-            protected override void ReverseAdd(IAccountModel item)
+            protected override void ReverseAdd(StorageAccountModel account)
             {
-                var account = item as StorageAccountModel;
-                if (account != null)
-                {
-                    this.DoReverseAdd(account);
-                }
+                this.DoReverseAdd(account);
             }
 
-            protected override void ReverseRemove(IAccountModel item)
+            protected override void ReverseRemove(StorageAccountModel account)
             {
-                var account = item as StorageAccountModel;
-                if (account != null)
-                {
-                    this.DoReverseRemove(account);
-                }
+                this.DoReverseRemove(account);
             }
 
             #endregion

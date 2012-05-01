@@ -21,7 +21,7 @@ namespace Tigwi.UI.Controllers
 
         private IAccountModel currentAccount;
 
-        private StorageUserModel currentUser;
+        private IUserModel currentUser;
 
         private IStorageContext storage;
 
@@ -30,9 +30,8 @@ namespace Tigwi.UI.Controllers
         #region Constructors and Destructors
 
         public HomeController()
+            // : this(new StorageContext(new Storage(__AZURE_STORAGE_ACCOUNT_NAME, __AZURE_STORAGE_ACCOUNT_KEY)))
         {
-            // this.storage = new StorageContext(new Storage("devstoreaccount1", "Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw=="));
-            // this.storage = new StorageContext(new StorageTmp());
         }
 
         public HomeController(IStorageContext storageContext)
@@ -79,7 +78,7 @@ namespace Tigwi.UI.Controllers
             }
         }
 
-        public StorageUserModel CurrentUser
+        public IUserModel CurrentUser
         {
             get
             {

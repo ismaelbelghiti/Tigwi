@@ -15,6 +15,7 @@ namespace Tigwi.UI.Tests.Models
 
     using StorageLibrary;
 
+    using Tigwi.UI.Models;
     using Tigwi.UI.Models.Storage;
 
     [TestFixture]
