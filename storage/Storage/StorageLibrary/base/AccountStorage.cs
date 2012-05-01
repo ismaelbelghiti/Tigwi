@@ -22,20 +22,18 @@ namespace StorageLibrary
         // Interface implementation
         public Guid GetId(string name)
         {
-            Blob<Guid> blob = new Blob<Guid>(connexion.accountContainer, Path.A_IDBYNAME + Hasher.Hash(name));
-            return blob.GetIfExists(new AccountNotFound());
+            return blobFactory.AIdByName(name).GetIfExists(new AccountNotFound());
         }
 
         public IAccountInfo GetInfo(Guid accountId)
         {
-            Blob<IAccountInfo> blob = new Blob<IAccountInfo>(connexion.accountContainer, Path.A_INFO + accountId);
-            return blob.GetIfExists(new AccountNotFound());
+            return blobFactory.AInfo(accountId).GetIfExists(new AccountNotFound());
         }
 
         public void SetInfo(Guid accountId, string description)
         {
-            Blob<AccountInfo> bInfo = new Blob<AccountInfo>(connexion.accountContainer, Path.A_INFO + accountId);
-            AccountInfo info = bInfo.GetIfExists(new AccountNotFound());
+            Blob<IAccountInfo> bInfo = blobFactory.AInfo(accountId);
+            IAccountInfo info = bInfo.GetIfExists(new AccountNotFound());
             info.Description = description;
             if (!bInfo.SetIfExists(info))
                 throw new AccountNotFound();
@@ -43,19 +41,17 @@ namespace StorageLibrary
 
         public HashSet<Guid> GetUsers(Guid accountId)
         {
-            Blob<HashSet<Guid>> blob = new Blob<HashSet<Guid>>(connexion.accountContainer, Path.A_USERS + accountId);
-            return blob.GetIfExists(new AccountNotFound());
+            return blobFactory.AUsers(accountId).GetIfExists(new AccountNotFound());
         }
 
         public Guid GetAdminId(Guid accountId)
         {
-            Blob<Guid> blob = new Blob<Guid>(connexion.accountContainer, Path.A_ADMINID + accountId);
-            return blob.GetIfExists(new AccountNotFound());
+            return blobFactory.AAdminId(accountId).GetIfExists(new AccountNotFound());
         }
 
         public void SetAdminId(Guid accountId, Guid userId)
         {
-            Blob<Guid> bAdmin = new Blob<Guid>(connexion.accountContainer, Path.A_ADMINID + accountId);
+            //Blob<Guid> bAdmin = new Blob<Guid>(connexion.accountContainer, Path.A_ADMINID + accountId);
             Blob<HashSet<Guid>> bUserAccounts = blobFactory.UAccountsData(userId);
 
             using (blobFactory.UAccountsLock(userId))
@@ -64,15 +60,14 @@ namespace StorageLibrary
                 // we check if the user is already on this account
                 if (!userAccounts.Contains(accountId))
                 {
-                    HashSetBlob<Guid> accountUsers = new HashSetBlob<Guid>(connexion.accountContainer, Path.A_USERS + accountId);
-                    if (!accountUsers.Add(userId))
+                    if (!blobFactory.AUsers(accountId).AddWithRetry(userId))
                         throw new AccountNotFound();
 
                     userAccounts.Add(accountId);
                     bUserAccounts.Set(userAccounts);
                 }
 
-                if (!bAdmin.SetIfExists(userId))
+                if (!blobFactory.AAdminId(accountId).SetIfExists(userId))
                 {
                     userAccounts.Remove(accountId);
                     bUserAccounts.Set(userAccounts);
@@ -83,47 +78,26 @@ namespace StorageLibrary
 
         public void Add(Guid accountId, Guid userId)
         {
-            Blob<HashSet<Guid>> bUserAccounts = blobFactory.UAccountsData(userId);
-
             using (blobFactory.UAccountsLock(userId))
             {
-                HashSetBlob<Guid> accountUsers = new HashSetBlob<Guid>(connexion.accountContainer, Path.A_USERS + accountId);
-                if (!accountUsers.Add(userId))
+                if (!blobFactory.AUsers(accountId).AddWithRetry(userId))
                     throw new AccountNotFound();
 
-                HashSet<Guid> userAccounts = bUserAccounts.Get();
-                userAccounts.Add(accountId);
-                bUserAccounts.Set(userAccounts);
-
-                // not necessary ????
-                //if (!accountUsers.Exists)
-                //{
-                //    userAccounts.Remove(accountId);
-                //    bUserAccounts.Set(userAccounts);
-                //    throw new AccountNotFound();
-                //}
+                blobFactory.UAccountsData(userId).Add(accountId);
             }
         }
 
         public void Remove(Guid accountId, Guid userId)
         {
-            Blob<HashSet<Guid>> bUserAccounts = blobFactory.UAccountsData(userId);
-            Blob<Guid> bAdminId = new Blob<Guid>(connexion.accountContainer, Path.A_ADMINID + accountId);
-
             try
             {
                 using (blobFactory.UAccountsLock(userId))
                 {
-                    if (bAdminId.GetIfExists(new AccountNotFound()).Equals(userId))
+                    if (blobFactory.AAdminId(accountId).GetIfExists(new AccountNotFound()).Equals(userId))
                         throw new UserIsAdmin();
 
-                    HashSetBlob<Guid> accountUsers = new HashSetBlob<Guid>(connexion.accountContainer, Path.A_USERS + accountId);
-                    accountUsers.Remove(userId);
-
-
-                    HashSet<Guid> userAccounts = bUserAccounts.Get();
-                    userAccounts.Remove(accountId);
-                    bUserAccounts.Set(userAccounts);
+                    blobFactory.AUsers(accountId).RemoveWithRetry(userId);
+                    blobFactory.UAccountsData(userId).Remove(accountId);
                 }
 
             }
@@ -134,72 +108,55 @@ namespace StorageLibrary
 
         public Guid Create(Guid adminId, string name, string description)
         {
-            Guid nameHash = Hasher.Hash(name);
-            Blob<Guid> bNameById = new Blob<Guid>(connexion.accountContainer, Path.A_IDBYNAME + nameHash);
-
-            if (!bNameById.SetIfNotExists(Guid.Empty))
+            // lock the name
+            Blob<Guid> bIdByName = blobFactory.AIdByName(name);
+            if (!bIdByName.SetIfNotExists(Guid.Empty))
                 throw new AccountAlreadyExists();
 
-            // create the data
-            Guid id = Guid.NewGuid();
-            AccountInfo info = new AccountInfo(name, description);
-            HashSet<Guid> users = new HashSet<Guid>();
-            users.Add(adminId);
-            Guid personnalListId = Guid.NewGuid();
-
-            // init blobs
-            Blob<IAccountInfo> bInfo = new Blob<IAccountInfo>(connexion.accountContainer, Path.A_INFO + id);
-            Blob<HashSet<Guid>> bAccountUsers = new Blob<HashSet<Guid>>(connexion.accountContainer, Path.A_USERS + id);
-            Blob<Guid> bAdminId = new Blob<Guid>(connexion.accountContainer, Path.A_ADMINID + id);
-
-            Blob<HashSet<Guid>> bUserAccounts = blobFactory.UAccountsData(adminId);
-
-            Blob<HashSet<Guid>> bOwnedListsPublic = new Blob<HashSet<Guid>>(connexion.listContainer, Path.L_OWNEDLISTS_PUBLIC + id);
-            Blob<HashSet<Guid>> bOwnedListsPrivate = new Blob<HashSet<Guid>>(connexion.listContainer, Path.L_OWNEDLISTS_PRIVATE + id);
-            Blob<HashSet<Guid>> bFollowedLists = new Blob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDLISTS + id + Path.L_FOLLOWEDLISTS_DATA);
-            Blob<HashSet<Guid>> bFollowedByPublic = new Blob<HashSet<Guid>>(connexion.listContainer, Path.LFollowedByPublic(id));
-            Blob<HashSet<Guid>> bFollowedByAll = new Blob<HashSet<Guid>>(connexion.listContainer, Path.LFollowedByAll(id)); 
-            MsgSetBlobPack bTaggedMsg = new MsgSetBlobPack(connexion.msgContainer, Path.M_TAGGEDMESSAGES + id);
+            Guid accountId = Guid.NewGuid();         
 
             // TODO : we could do it without a lock - or at least store the data before
             using (blobFactory.UAccountsLock(adminId))
             {
+                Guid personnalListId = Guid.NewGuid();
+
                 // store the data
-                bInfo.Set(info);
-                bAccountUsers.Set(users);
-                bAdminId.Set(adminId);
-                bOwnedListsPublic.Set(new HashSet<Guid>());
-                bOwnedListsPrivate.Set(new HashSet<Guid>());
-                bFollowedLists.Set(new HashSet<Guid>());
-                bFollowedByPublic.Set(new HashSet<Guid>());
+                HashSet<Guid> users = new HashSet<Guid>();
+                users.Add(adminId);
+                blobFactory.AUsers(accountId).Set(users);
+
                 HashSet<Guid> followedByAll = new HashSet<Guid>();
                 followedByAll.Add(personnalListId);
-                bFollowedByAll.Set(followedByAll);
+                blobFactory.LFollowedByAll(accountId).Set(followedByAll);
 
-                bTaggedMsg.Init();
+                blobFactory.AInfo(accountId).Set(new AccountInfo(name, description));
+                blobFactory.AAdminId(accountId).Set(adminId);
+                blobFactory.LOwnedListsPublic(accountId).Set(new HashSet<Guid>());
+                blobFactory.LOwnedListsPrivate(accountId).Set(new HashSet<Guid>());
+                blobFactory.LFollowedListsData(accountId).Set(new HashSet<Guid>());
+                blobFactory.LFollowedByPublic(accountId).Set(new HashSet<Guid>());
+                blobFactory.LFollowedListsLockInit(accountId);
+                blobFactory.MTaggedMessages(accountId).Init();
 
                 // Setup the personnal list
-                new Blob<Guid>(connexion.listContainer, Path.L_PERSO + id).Set(personnalListId);
-                new Blob<ListInfo>(connexion.listContainer, Path.L_INFO + personnalListId).Set(new ListInfo("", "", true, true));
-                new Blob<Guid>(connexion.listContainer, Path.L_OWNER + personnalListId).Set(id);
-                Mutex.Init(connexion.listContainer, Path.L_FOLLOWEDACCOUNTS + personnalListId + Path.L_FOLLOWEDACC_DATA);
-                Blob<HashSet<Guid>> bFollowedAccounts = new Blob<HashSet<Guid>>(connexion.listContainer, Path.L_FOLLOWEDACCOUNTS + personnalListId + Path.L_FOLLOWEDACC_DATA);
-                HashSet<Guid> persoListFollowed = new HashSet<Guid>();
-                persoListFollowed.Add(id);
-                bFollowedAccounts.Set(persoListFollowed);
-                new MsgSetBlobPack(connexion.msgContainer, Path.M_LISTMESSAGES + personnalListId).Init();
+                blobFactory.LPersonnalList(accountId).Set(personnalListId);
+                blobFactory.LInfo(personnalListId).Set(new ListInfo("", "", true, true));
+                blobFactory.LOwner(personnalListId).Set(accountId);
+                blobFactory.LFollowedAccountLockInit(personnalListId);
+                blobFactory.MListMessages(personnalListId).Init();
 
-                Mutex.Init(connexion.listContainer, Path.L_FOLLOWEDLISTS + id + Path.L_FOLLOWEDLISTS_LOCK);
+                HashSet<Guid> personnalListFollowedAccounts = new HashSet<Guid>();
+                personnalListFollowedAccounts.Add(accountId);
+                blobFactory.LFollowedAccountsData(personnalListId).Set(personnalListFollowedAccounts);
 
                 // we finish by unlocking the name
-                bNameById.Set(id);
+                bIdByName.Set(accountId);
 
-                HashSet<Guid> userAccounts = bUserAccounts.Get();
-                userAccounts.Add(id);
-                bUserAccounts.Set(userAccounts);
+                // we make this account accessible
+                blobFactory.UAccountsData(adminId).Add(accountId);
             }
 
-            return id;
+            return accountId;
         }
 
         public void Delete(Guid accountId)

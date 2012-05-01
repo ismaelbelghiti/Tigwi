@@ -91,9 +91,6 @@
     <Compile Include="datastructure\Message.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="datastructure\Path.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="datastructure\UserInfo.cs">
       <SubType>Code</SubType>
     </Compile>

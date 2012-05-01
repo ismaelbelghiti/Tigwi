@@ -11,7 +11,8 @@ using StorageLibrary.exception;
 namespace StorageLibrary.Utilities
 {
     // TODO : maybe the guid to dectect changes is not the best fing in terms of performance
-    class MsgSetBlobPack
+    // TODO : change to private
+    public class MsgSetBlobPack
     {
         const int splitSize = 200;
         const int mergeSize = 50;

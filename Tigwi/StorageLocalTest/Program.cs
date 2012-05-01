@@ -10,7 +10,7 @@ namespace StorageLocalTest
     class Program
     {
         const string azureAccountName = "ulyssestorage";
-        const string azureAccountKey = "WJHW/rX9U0ruYBANj96g/ACkmZE+5904U5OIYcxn0x/CcfQ3Z/zbU+SvN7uFsaWgs9tQDrqYqFouv3iNhMA+aQ==";
+        const string azureAccountKey = "msghjEpjqpRmtvwNUT1ra2Bw5sK5JhlHFuCYRhc3/Xwr5Ofl8W6TUz/0ObKKly051EFxLpXp6PeRHm4s+Xojrw==";
 
         static void TestUser(IStorage storage)
         {
