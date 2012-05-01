@@ -27,7 +27,7 @@ namespace Tigwi.UI.Models.User
         [Display(Name = "Confirm password")]
         public string ConfirmPassword { get; set; }
 
-        [Display(Name = "Remeber me ?")]
+        [Display(Name = "Remember me ?")]
         public bool RememberMe { get; set; }
     }
 }

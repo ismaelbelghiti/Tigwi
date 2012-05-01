@@ -2,14 +2,23 @@
     ViewBag.Title = "Home Page";
 }
 
-<!--<p>@ViewContext.Controller.ValueProvider.GetValue("controller").RawValue</p>-->
+
 
 <div class="row-fluid">
-    <section class="span2">
-        @Html.Partial("_ListView")
-    </section>
-    <section class="span5">
-        @Html.Partial("_WriteMessage")
-        
-    </section>
+    @if(@User.Identity.IsAuthenticated){
+        <section class="span2">
+            @Html.Partial("_ListView")
+        </section>
+        <section class="span5">
+            @Html.Partial("_WriteMessage")
+        </section>
+    }
+    else{
+        <section class="span2 userView">
+            <p>Tigwi is fun and better than Twitter, which we copied entirely ! Cheers !</p>
+        </section>
+        <section class="span5">
+            <p>Some interesting messages here ...</p>
+        </section>
+    }
 </div>

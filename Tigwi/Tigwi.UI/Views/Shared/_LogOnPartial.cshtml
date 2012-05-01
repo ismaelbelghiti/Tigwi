@@ -1,7 +1,12 @@
-﻿@if(Request.IsAuthenticated) {
-    <text>Welcome <strong>@User.Identity.Name</strong>!
-    [ @Html.ActionLink("Log Off", "LogOff", "Account") ]</text>
+﻿@model Tigwi.UI.Models.User.UserLogOnViewModel
+@using (Html.BeginForm("LogOn", "User", FormMethod.Post, new { @class = "navbar-form" }))
+{
+    <div style="margin-bottom: 10px">
+    @Html.LabelFor(m => m.Login)
+    @Html.TextBoxFor(m => m.Login)
+    @Html.LabelFor(m => m.Password)
+    @Html.PasswordFor(m => m.Password)
+    <button class="btn" type="submit">Gogogo</button>
+    </div>
 }
-else {
-    @:[ @Html.ActionLink("Log On", "LogOn", "Account") ]
-}
+ 
