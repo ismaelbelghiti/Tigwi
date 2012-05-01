@@ -14,7 +14,7 @@ namespace Tigwi.UI.Models
             posts = new List<PostViewModel>();
             for (int i=0;i<50;i++)
             {
-                posts.Add(new PostViewModel(user));
+                posts.Add(new PostViewModel());
             }
         }
         public List<PostViewModel>posts { get; private set; }

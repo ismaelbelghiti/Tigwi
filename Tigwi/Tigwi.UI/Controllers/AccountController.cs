@@ -93,7 +93,7 @@ namespace Tigwi.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var newAccount = this.Storage.Accounts.Create(this.CurrentUser, accountCreation.Name, accountCreation.Description);
+                var newAccount = this.Storage.Accounts.Create(accountCreation.User, accountCreation.Name, accountCreation.Description);
                 this.CurrentAccount = newAccount;
                 return this.RedirectToAction("Create");
             }

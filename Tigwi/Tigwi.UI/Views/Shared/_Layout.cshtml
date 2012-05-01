@@ -35,7 +35,7 @@
           <div class="navbar-inner">
               <div class="container-fluid">
                   <ul class="nav">
-                      @if (@User.Identity.IsAuthenticated)
+                      @if (@User.Identity.IsAuthenticated )
                       {
                           <li @((ViewBag.Cur == "Home") ? Html.Raw("class=\"active\"") : Html.Raw("class=\"\""))>@Html.ActionLink("Home", "Index", "Home")</li>
                           <li @((ViewBag.Cur == "Me") ? Html.Raw("class=\"dropdown active\"") : Html.Raw("class=\"dropdown \""))>
@@ -43,16 +43,16 @@
                           <a href="#"
                              class="dropdown-toggle"
                              data-toggle="dropdown">
-                              @*ViewBag.CurAccount*@
+                              @CurrentAccount.Name
                               <b class="caret"></b>
                           </a>
                               <ul class="dropdown-menu">
-                                  @*
-                                  @foreach (string acc in ViewBag.Accounts)
+                                  
+                                  @foreach (var acc in CurrentUser.Accounts)
                                   {
-                                      <li>@Html.ActionLink(acc,"Index","Home")</li> 
+                                      <li>@Html.ActionLink(acc.Name,"Index","Home")</li> 
                                   }
-                                  <li class="divider"></li>*@
+                                  <li class="divider"></li>
                                   <li><a data-toggle="modal" href="#addAccountModal" >Add Account</a></li>
                               </ul>
                           

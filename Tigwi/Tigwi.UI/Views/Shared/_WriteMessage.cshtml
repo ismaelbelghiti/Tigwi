@@ -1,9 +1,12 @@
-﻿
+﻿@model Tigwi.UI.Models.PostViewModel
+
 <script>
     $(document).ready(function () {
         $('#inputMessage').attr("rows", 1);
+        $('#inputButton').hide();
         $('#inputMessage').focus(function () {
             $(this).attr("rows", 5);
+            $('#inputButton').show();
             if (this.value == this.defaultValue) {
                 this.value = '';
             }
@@ -13,6 +16,7 @@
         });
         $('#inputMessage').blur(function () {
             $(this).attr("rows", 1);
+            $('#inputButton').hide();
             if ($.trim(this.value == '')) {
                 this.value = (this.defaultValue ? this.defaultValue : '');
             }
@@ -20,10 +24,21 @@
     });  
  </script>
 
- <article>
-        <div class="row-fluid">
+<article>
+    <div class="row-fluid">
+        @using (Html.BeginForm("Write", "Post", FormMethod.Post))
+        {
+            @Html.Hidden("Poster",@CurrentAccount)
+
+            @Html.LabelFor(m => m.Content)
+            @Html.EditorFor(m => m.Content)
+            @Html.ValidationMessageFor(m => m.Content)
             <textarea class="input-xlarge span11" 
-          id="inputMessage" 
-          placeholder="Write a new Tweet !"></textarea>
-        </div>
-    </article>
+                      id="inputMessage" 
+                      placeholder="Write a new Tweet !"/>
+            <button type="submit" class="btn btn-primary" id="inputButton">Post !</button>
+        }
+    </div>
+</article>
+
+ 

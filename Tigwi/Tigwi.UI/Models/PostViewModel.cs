@@ -1,4 +1,5 @@
 ﻿using System;
+using Tigwi.UI.Models.Storage;
 
 namespace Tigwi.UI.Models
 {
@@ -6,20 +7,18 @@ namespace Tigwi.UI.Models
 
     public class PostViewModel
     {
-        public PostViewModel(string poster)
-        {
-            Poster = poster;
-            Content =
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum aliquet sollicitudin rhoncus. In hac habitasse platea dictumst volutpat.";
-        }
-        public virtual string Poster { get; private set; }
+        [Required]
+        public virtual StorageAccountModel Poster { get; set; }
 
+        [Required]
         [DataType(DataType.DateTime)]
-        public virtual DateTime PostingDate { get; private set; }
+        public virtual DateTime PostingDate { get; set; }
 
+        [Required]
+        [StringLength(140)]
         [DataType(DataType.MultilineText)]
         public virtual string Content { get; set; }
 
-        public int color { get; set; }
+        public int Color { get; set; }
     }
 }

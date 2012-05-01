@@ -15,6 +15,8 @@
     <div class="modal-body">
 
         @Html.ValidationSummary()
+        
+        @Html.Hidden("User", CurrentUser)
 
         @Html.LabelFor(m => m.Name)
         @Html.EditorFor(m => m.Name)
