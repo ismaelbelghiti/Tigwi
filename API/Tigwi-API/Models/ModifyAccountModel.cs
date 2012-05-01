@@ -10,7 +10,7 @@ namespace Tigwi_API.Models
     public class MsgToWrite
     {
         public string AccountName { get; set; }
-        public Guid AccountId = new Guid("default");
+        public Guid? AccountId;
         public MsgToPost Message { get; set; }
     }
 
@@ -25,7 +25,7 @@ namespace Tigwi_API.Models
     public class ActionOnMessage
     {
         public string AccountName { get; set; }
-        public Guid AccountId = new Guid("default");
+        public Guid? AccountId;
         public Guid MessageId { get; set; }
     }
 
@@ -47,7 +47,7 @@ namespace Tigwi_API.Models
     public class SubscribeList
     {
         public string AccountName { get; set; }
-        public Guid AccountId = new Guid("default");
+        public Guid? AccountId;
         public Guid Subscription { get; set; }
     }
 
@@ -70,7 +70,7 @@ namespace Tigwi_API.Models
     public class ChangeDescription
     {
         public string AccountName { get; set; }
-        public Guid AccountId = new Guid("default");
+        public Guid? AccountId;
         public string Description { get; set; }
     }
 
@@ -78,9 +78,9 @@ namespace Tigwi_API.Models
     public class AccountUser
     {
         public string AccountName { get; set; }
-        public Guid AccountId  = new Guid("default");
+        public Guid? AccountId;
         public string UserLogin { get; set; }
-        public Guid UserId = new Guid("default");
+        public Guid? UserId;
     }
 
     [Serializable]
