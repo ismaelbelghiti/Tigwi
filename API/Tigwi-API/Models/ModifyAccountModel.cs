@@ -26,7 +26,7 @@ namespace Tigwi_API.Models
     {
         public string AccountName { get; set; }
         public Guid? AccountId;
-        public Guid MessageId { get; set; }
+        public Guid? MessageId { get; set; }
     }
 
     [Serializable]
@@ -48,7 +48,7 @@ namespace Tigwi_API.Models
     {
         public string AccountName { get; set; }
         public Guid? AccountId;
-        public Guid Subscription { get; set; }
+        public Guid? Subscription { get; set; }
     }
 
     [Serializable]
