@@ -91,14 +91,6 @@
       <RoleName>UI</RoleName>
       <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
     </ProjectReference>
-    <ProjectReference Include="..\Tigwi_test\Tigwi_test.csproj">
-      <Name>Tigwi_test</Name>
-      <Project>{52f3b785-4c0b-4e7b-9dbe-e988cfcd68c8}</Project>
-      <Private>True</Private>
-      <RoleType>Worker</RoleType>
-      <RoleName>Tigwi_test</RoleName>
-      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
-    </ProjectReference>
   </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>

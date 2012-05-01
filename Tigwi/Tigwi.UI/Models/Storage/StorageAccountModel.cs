@@ -26,6 +26,8 @@ namespace Tigwi.UI.Models.Storage
 
         private readonly UserCollectionAdapter users;
 
+        private readonly IListModel personalList;
+
         private IUserModel admin;
 
         private string description;
@@ -50,6 +52,7 @@ namespace Tigwi.UI.Models.Storage
                 this.MakeListCollection(() => this.Storage.List.GetAccountFollowedLists(this.Id, false));
             this.publicOwnedLists = this.MakeListCollection(
                 () => this.Storage.List.GetAccountOwnedLists(this.Id, false));
+            this.personalList = storageContext.Lists.Find(this.Storage.List.GetPersonalList(accountId));
         }
 
         #endregion
@@ -124,7 +127,7 @@ namespace Tigwi.UI.Models.Storage
         {
             get
             {
-                throw new NotImplementedException();
+                return this.personalList;
             }
         }
 
