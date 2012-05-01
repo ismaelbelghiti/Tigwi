@@ -10,6 +10,7 @@ using Tigwi.UI.Models;
 namespace Tigwi.UI.Controllers
 {
     using Tigwi.UI.Models.Storage;
+    using Tigwi.UI.Models.Account;
 
     public class AccountController : HomeController
     {
@@ -78,7 +79,7 @@ namespace Tigwi.UI.Controllers
         /// <returns></returns>
         public ActionResult Create()
         {
-            throw new NotImplementedException("AccountController.Create");
+            return this.View();
         }
 
         /// <summary>
@@ -88,9 +89,17 @@ namespace Tigwi.UI.Controllers
         /// <param name="accountCreation"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Create(/*AccountCreationModel*/object accountCreation)
+        public ActionResult Create(AccountCreationViewModel accountCreation)
         {
-            throw new NotImplementedException("AccountController.Create[POST]");
+            if (ModelState.IsValid)
+            {
+                var newAccount = this.Storage.Accounts.Create(accountCreation.User, accountCreation.Name, accountCreation.Description);
+                this.CurrentAccount = newAccount;
+                return this.RedirectToAction("Create");
+            }
+            //
+            ViewBag.notValid = true;
+            return this.View(accountCreation);
         }
 
         /// <summary>
