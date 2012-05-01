@@ -44,7 +44,7 @@ namespace Tigwi.UI.Controllers
 
         #region Properties
 
-        protected StorageAccountModel CurrentAccount
+        internal StorageAccountModel CurrentAccount
         {
             get
             {
@@ -79,7 +79,7 @@ namespace Tigwi.UI.Controllers
             }
         }
 
-        protected StorageUserModel CurrentUser
+        internal StorageUserModel CurrentUser
         {
             get
             {

@@ -106,7 +106,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <Shadow Include="Test References\Tigwi.UI.accessor" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\storage\Storage\StorageLibrary\StorageLibrary.csproj">
