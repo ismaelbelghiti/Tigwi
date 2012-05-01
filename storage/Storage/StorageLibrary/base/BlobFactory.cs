@@ -74,7 +74,7 @@ namespace StorageLibrary
 
         public Mutex UAccountsLock(Guid userId)
         {
-            return new Mutex(userContainer, U_ACCOUNTS + userId + LOCK, new AccountNotFound());
+            return new Mutex(userContainer, U_ACCOUNTS + userId + LOCK, new UserNotFound());
         }
 
         public void UAccountsLockInit(Guid userId)
