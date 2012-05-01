@@ -1,5 +1,6 @@
 ﻿namespace Tigwi.UI
 {
+    using System;
     using System.Web.Mvc;
 
     using Tigwi.UI.Controllers;
@@ -39,7 +40,7 @@
         {
             get
             {
-                if (this.currentAccount == null)
+                if (this.currentUser == null)
                 {
                     var controller = this.ViewContext.Controller as HomeController;
 
@@ -90,7 +91,7 @@
         {
             get
             {
-                if (this.currentAccount == null)
+                if (this.currentUser == null)
                 {
                     var controller = this.ViewContext.Controller as HomeController;
 
