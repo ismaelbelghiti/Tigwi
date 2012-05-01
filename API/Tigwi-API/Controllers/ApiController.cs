@@ -13,7 +13,7 @@ namespace Tigwi_API.Controllers
     {
 
         // Initialize storage when instanciating a controller
-        protected ApiController ()
+        public ApiController ()
         {
             Storage = new Storage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY");
         }

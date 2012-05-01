@@ -62,7 +62,8 @@ namespace Tigwi_API.Models
     [Serializable]
     public class CreateList
     {
-        public string Account { get; set; }
+        public string AccountName { get; set; }
+        public Guid? AccountId;
         public ListInfo ListInfo { get; set; }
     }
 

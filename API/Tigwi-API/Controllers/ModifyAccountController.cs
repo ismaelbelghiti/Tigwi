@@ -17,7 +17,7 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // POST : modifyaccount/write
+        // POST : /modifyaccount/write
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -46,7 +46,7 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // POST : modifyaccount/copy
+        // POST : /modifyaccount/copy
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -75,7 +75,7 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // POST : modifyaccount/delete
+        // POST : /modifyaccount/delete
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -105,7 +105,7 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // POST : modifyaccount/tag
+        // POST : /modifyaccount/tag
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -134,7 +134,7 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // POST : modifyaccount/tag
+        // POST : /modifyaccount/untag
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -163,7 +163,7 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // POST : /modifyaccount/suscribelist
+        // POST : /modifyaccount/subscribelist
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -175,7 +175,7 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                var accountId = Storage.Account.GetId(subscribe.AccountName);
+                var accountId = subscribe.AccountId ?? Storage.Account.GetId(subscribe.AccountName);
 
                 Storage.List.Follow(subscribe.Subscription, accountId);
 
@@ -204,7 +204,7 @@ namespace Tigwi_API.Controllers
 
             try
             {
-                var accountId = Storage.Account.GetId(listCreation.Account);
+                var accountId = listCreation.AccountId ?? Storage.Account.GetId(listCreation.AccountName);
                 var listToCreate = listCreation.ListInfo;
 
                 var listId = Storage.List.Create(accountId, listToCreate.Name, listToCreate.Description,
@@ -223,7 +223,7 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // POST modifyaccount/changedescription
+        // POST /modifyaccount/changedescription
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -253,7 +253,7 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // POST modifyaccount/adduser
+        // POST : /modifyaccount/adduser
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -285,7 +285,7 @@ namespace Tigwi_API.Controllers
         }
 
         //
-        // POST modifyaccount/adduser
+        // POST : /modifyaccount/adduser
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -318,7 +318,7 @@ namespace Tigwi_API.Controllers
 
 
         //
-        // POST modifyaccount/changeadmin
+        // POST : /modifyaccount/changeadmin
 
         //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]

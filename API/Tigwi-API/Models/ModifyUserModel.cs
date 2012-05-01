@@ -5,7 +5,7 @@ namespace Tigwi_API.Models
     [Serializable]
     public class ChangeInfo
     {
-        public Guid UserId { get; set; }
+        public Guid? UserId { get; set; }
         public string UserLogin { get; set; }
         public string Info { get; set; }
     }
@@ -13,7 +13,7 @@ namespace Tigwi_API.Models
     [Serializable]
     public class ChangePassword
     {
-        public Guid UserId { get; set; }
+        public Guid? UserId { get; set; }
         public string UserLogin { get; set; }
         public string OldPassword { get; set; }
         public string NewPassword { get; set; }
@@ -22,7 +22,7 @@ namespace Tigwi_API.Models
     [Serializable]
     public class CreateAccount
     {
-        public Guid UserId { get; set; }
+        public Guid? UserId { get; set; }
         public string UserLogin { get; set; }
         public string AccountName { get; set; }
         public string Description { get; set; }
