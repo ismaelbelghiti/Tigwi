@@ -37,6 +37,10 @@ message ->	listmessages/<list ID>/<date>		: MessageSet
 			message/<messageID>					: IMessage
 
 TODO :
+	- Create a console application to init the storage
+		This application will have to :
+		-> create the containers if they don't exist
+		-> clean them, but not delete them (we can't use a container who has just been deleted !!!)
 	- Should the personnal list have the same ID than the account ?
 	- check messages size in the storage
 	- be able to upload avatars
@@ -55,4 +59,3 @@ CHECKS :
 BUG :
 	- avoid follow a private list 
 	- add/remove the messages from the listmessage when we add/remove an account from the list
-	- private lists do not works

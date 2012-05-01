@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="base\AccountStorage.cs" />
+    <Compile Include="base\BlobFactory.cs" />
     <Compile Include="base\ListStorage.cs" />
     <Compile Include="base\MsgStorage.cs" />
     <Compile Include="base\Storage.cs" />
