@@ -13,7 +13,7 @@ namespace Tigwi.UI.Models.Storage
     /// <summary>
     /// The user model adapter.
     /// </summary>
-    public class StorageUserModel : StorageEntityModel
+    public class StorageUserModel : StorageEntityModel, IUserModel
     {
         #region Constants and Fields
 
@@ -39,7 +39,7 @@ namespace Tigwi.UI.Models.Storage
 
         #region Public Properties
 
-        public ICollection<StorageAccountModel> Accounts
+        public ICollection<IAccountModel> Accounts
         {
             get
             {
@@ -155,7 +155,7 @@ namespace Tigwi.UI.Models.Storage
 
         #endregion
 
-        private class AccountCollectionAdapter : StorageEntityCollection<StorageUserModel, StorageAccountModel>
+        private class AccountCollectionAdapter : StorageEntityCollection<StorageUserModel, IAccountModel>
         {
             #region Constructors and Destructors
 
@@ -171,36 +171,37 @@ namespace Tigwi.UI.Models.Storage
 
             internal override void Save()
             {
-                // TODO: catch exceptions.
+                // TODO: catch exceptions (?)
                 foreach (var account in this.CollectionAdded.Where(item => item.Value).Select(item => item.Key))
                 {
-                    account.Save();
                     this.Storage.Account.Add(account.Id, this.Parent.Id);
                 }
 
                 foreach (var account in this.CollectionRemoved.Where(item => item.Value).Select(item => item.Key))
                 {
-                    account.Save();
                     this.Storage.Account.Remove(account.Id, this.Parent.Id);
-                }
-
-                foreach (var account in this.CachedCollection)
-                {
-                    account.Save();
                 }
 
                 this.CollectionAdded.Clear();
                 this.CollectionRemoved.Clear();
             }
 
-            protected override void ReverseAdd(StorageAccountModel item)
+            protected override void ReverseAdd(IAccountModel item)
             {
-                item.InternalUsers.CacheAdd(this.Parent);
+                var account = item as StorageAccountModel;
+                if (account != null)
+                {
+                    account.InternalUsers.CacheAdd(this.Parent);
+                }
             }
 
-            protected override void ReverseRemove(StorageAccountModel item)
+            protected override void ReverseRemove(IAccountModel item)
             {
-                item.InternalUsers.CacheRemove(this.Parent);
+                var account = item as StorageAccountModel;
+                if (account != null)
+                {
+                    account.InternalUsers.CacheRemove(this.Parent);
+                }
             }
 
             #endregion

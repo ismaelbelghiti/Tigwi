@@ -13,7 +13,7 @@ namespace Tigwi.UI.Models.Account
     {
         [Required]
         [Display(Name = "User")]
-        public StorageUserModel User { get; set; }
+        public IUserModel User { get; set; }
 
         [Required]
         [Display(Name = "Name")]

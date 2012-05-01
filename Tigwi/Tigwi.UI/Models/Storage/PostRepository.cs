@@ -21,7 +21,7 @@ namespace Tigwi.UI.Models.Storage
 
         #region Public Methods and Operators
 
-        public StoragePostModel Create(StorageAccountModel poster, string content)
+        public IPostModel Create(IAccountModel poster, string content)
         {
             // TODO: StorageUserModel.Post
             try
@@ -45,7 +45,7 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public void Delete(StoragePostModel post)
+        public void Delete(IPostModel post)
         {
             throw new NotImplementedException();
         }

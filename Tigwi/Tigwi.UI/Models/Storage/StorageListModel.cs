@@ -10,7 +10,7 @@
 
     #endregion
 
-    public class StorageListModel : StorageEntityModel
+    public class StorageListModel : StorageEntityModel, IListModel
     {
         #region Constants and Fields
 
@@ -58,7 +58,7 @@
             }
         }
 
-        public ICollection<StorageAccountModel> Followers
+        public ICollection<IAccountModel> Followers
         {
             get
             {
@@ -117,7 +117,7 @@
             }
         }
 
-        public ICollection<StorageAccountModel> Members
+        public ICollection<IAccountModel> Members
         {
             get
             {
@@ -180,19 +180,19 @@
 
         #region Public Methods and Operators
 
-        public ICollection<StoragePostModel> PostsAfter(DateTime date, int maximum = 100)
+        public ICollection<IPostModel> PostsAfter(DateTime date, int maximum = 100)
         {
             var msgCollection = this.Storage.Msg.GetListsMsgFrom(new HashSet<Guid> { this.Id }, date, maximum);
             return
-                new List<StoragePostModel>(msgCollection.Select(msg => new StoragePostModel(this.StorageContext, msg)))
+                new List<IPostModel>(msgCollection.Select(msg => new StoragePostModel(this.StorageContext, msg)))
                     .AsReadOnly();
         }
 
-        public ICollection<StoragePostModel> PostsBefore(DateTime date, int maximum = 100)
+        public ICollection<IPostModel> PostsBefore(DateTime date, int maximum = 100)
         {
             var msgCollection = this.Storage.Msg.GetListsMsgFrom(new HashSet<Guid> { this.Id }, date, maximum);
             return
-                new List<StoragePostModel>(msgCollection.Select(msg => new StoragePostModel(this.StorageContext, msg)))
+                new List<IPostModel>(msgCollection.Select(msg => new StoragePostModel(this.StorageContext, msg)))
                     .AsReadOnly();
         }
 
@@ -238,7 +238,7 @@
 
         #endregion
 
-        internal class AccountCollectionAdapter : StorageEntityCollection<StorageListModel, StorageAccountModel>
+        internal class AccountCollectionAdapter : StorageEntityCollection<StorageListModel, IAccountModel>
         {
             #region Constructors and Destructors
 
@@ -288,14 +288,22 @@
 
             #region Methods
 
-            protected override void ReverseAdd(StorageAccountModel item)
+            protected override void ReverseAdd(IAccountModel item)
             {
-                this.DoReverseAdd(item);
+                var account = item as StorageAccountModel;
+                if (account != null)
+                {
+                    this.DoReverseAdd(account);
+                }
             }
 
-            protected override void ReverseRemove(StorageAccountModel item)
+            protected override void ReverseRemove(IAccountModel item)
             {
-                this.DoReverseRemove(item);
+                var account = item as StorageAccountModel;
+                if (account != null)
+                {
+                    this.DoReverseRemove(account);
+                }
             }
 
             #endregion

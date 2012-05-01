@@ -19,7 +19,7 @@ namespace Tigwi.UI.Controllers
     {
         #region Constants and Fields
 
-        private StorageAccountModel currentAccount;
+        private IAccountModel currentAccount;
 
         private StorageUserModel currentUser;
 
@@ -44,7 +44,7 @@ namespace Tigwi.UI.Controllers
 
         #region Properties
 
-        internal StorageAccountModel CurrentAccount
+        internal IAccountModel CurrentAccount
         {
             get
             {

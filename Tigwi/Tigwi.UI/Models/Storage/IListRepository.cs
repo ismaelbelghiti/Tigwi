@@ -10,7 +10,7 @@ namespace Tigwi.UI.Models.Storage
     {
         #region Public Methods and Operators
 
-        StorageListModel Create(StorageAccountModel account, string name, string description, bool isPrivate);
+        IListModel Create(StorageAccountModel account, string name, string description, bool isPrivate);
 
         void Delete(StorageListModel list);
 

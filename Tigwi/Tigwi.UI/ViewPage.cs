@@ -4,13 +4,14 @@
     using System.Web.Mvc;
 
     using Tigwi.UI.Controllers;
+    using Tigwi.UI.Models;
     using Tigwi.UI.Models.Storage;
 
     public abstract class ViewPage<TModel> : WebViewPage<TModel>
     {
         #region Constants and Fields
 
-        private StorageAccountModel currentAccount;
+        private IAccountModel currentAccount;
 
         private StorageUserModel currentUser;
 
@@ -18,7 +19,7 @@
 
         #region Public Properties
 
-        public StorageAccountModel CurrentAccount
+        public IAccountModel CurrentAccount
         {
             get
             {
@@ -61,15 +62,15 @@
     {
         #region Constants and Fields
 
-        private StorageAccountModel currentAccount;
+        private IAccountModel currentAccount;
 
-        private StorageUserModel currentUser;
+        private IUserModel currentUser;
 
         #endregion
 
         #region Public Properties
 
-        public StorageAccountModel CurrentAccount
+        public IAccountModel CurrentAccount
         {
             get
             {
@@ -87,7 +88,7 @@
             }
         }
 
-        public StorageUserModel CurrentUser
+        public IUserModel CurrentUser
         {
             get
             {
