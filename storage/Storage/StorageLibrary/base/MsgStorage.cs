@@ -14,6 +14,7 @@ namespace StorageLibrary
         // TODO : find the best value
         // We split the set of messages in packs because we don't want to retrive a 10M blob from the storage
         const int msgPackSize = 100;
+        const TimeSpan limitDateDiff = TimeSpan.FromSeconds(5);
 
         StrgConnexion connexion;
 
@@ -103,13 +104,15 @@ namespace StorageLibrary
         public List<IMessage> GetTaggedFrom(Guid accoundId, DateTime firstMsgDate, int msgNumber)
         {
             MsgSetBlobPack bMessages = new MsgSetBlobPack(connexion.msgContainer, Path.M_TAGGEDMESSAGES + accoundId);
-            return bMessages.GetMessagesFrom(firstMsgDate, msgNumber, new AccountNotFound());
+            List<IMessage> msgs = bMessages.GetMessagesFrom(firstMsgDate, msgNumber, new AccountNotFound());
+
+            return TruncateMessages(msgs);
         }
 
-        public List<IMessage> GetTaggedTo(Guid accountId, DateTime lastMsgId, int msgNumber)
+        public List<IMessage> GetTaggedTo(Guid accountId, DateTime lastMsgDate, int msgNumber)
         {
             MsgSetBlobPack bMessages = new MsgSetBlobPack(connexion.msgContainer, Path.M_TAGGEDMESSAGES + accountId);
-            return bMessages.GetMessagesTo(lastMsgId, msgNumber, new AccountNotFound());
+            return bMessages.GetMessagesTo( TruncateDate(lastMsgDate), msgNumber, new AccountNotFound());
         }
 
         // partialy implemented
@@ -158,6 +161,19 @@ namespace StorageLibrary
         public void Remove(Guid id)
         {
             throw new NotImplementedException();
+        }
+
+        DateTime TruncateDate(DateTime d)
+        {
+            DateTime limitDate = DateTime.Now - limitDateDiff;
+            return d < limitDate ? d : limitDate;
+        }
+
+        List<IMessage> TruncateMessages(List<IMessage> msgs)
+        {
+            // we remove msg to recents because their is no time synchronisation between azure VMs
+            DateTime dateLimit = DateTime.Now - limitDateDiff;
+            return msgs.TakeWhile(m => m.Date < dateLimit).ToList();    // TODO : improve performance
         }
     }
 }
