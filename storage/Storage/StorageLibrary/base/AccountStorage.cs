@@ -9,13 +9,11 @@ namespace StorageLibrary
 {
     public class AccountStorage : IAccountStorage
     {
-        StrgConnexion connexion; // TODO : to be removed
         BlobFactory blobFactory;
 
         // Constuctor
-        public AccountStorage(StrgConnexion connexion, BlobFactory blobFactory)
+        public AccountStorage(BlobFactory blobFactory)
         {
-            this.connexion = connexion;
             this.blobFactory = blobFactory;
         }
 
@@ -144,10 +142,7 @@ namespace StorageLibrary
                 blobFactory.LOwner(personnalListId).Set(accountId);
                 blobFactory.LFollowedAccountLockInit(personnalListId);
                 blobFactory.MListMessages(personnalListId).Init();
-
-                HashSet<Guid> personnalListFollowedAccounts = new HashSet<Guid>();
-                personnalListFollowedAccounts.Add(accountId);
-                blobFactory.LFollowedAccountsData(personnalListId).Set(personnalListFollowedAccounts);
+                blobFactory.LFollowedAccountsData(personnalListId).Set(new HashSet<Guid>());
 
                 // we finish by unlocking the name
                 bIdByName.Set(accountId);

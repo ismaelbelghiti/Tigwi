@@ -185,11 +185,6 @@ namespace StorageLibrary
             return new MsgSetBlobPack(msgContainer, M_LISTMESSAGES + listId);
         }
 
-        public MsgSetBlobPack MAccountMessages(Guid accountId)
-        {
-            return new MsgSetBlobPack(msgContainer, M_ACCOUNTMESSAGES + accountId);
-        }
-
         public Blob<IMessage> MMessage(Guid messageId)
         {
             return new Blob<IMessage>(msgContainer, M_MESSAGE + messageId);
@@ -227,7 +222,6 @@ namespace StorageLibrary
         const string L_FOLLOWEDACCOUNTS = "followedaccounts/";
 
         const string M_LISTMESSAGES = "listmessages/";
-        const string M_ACCOUNTMESSAGES = "accountmessages/";
         const string M_MESSAGE = "message/";
         const string M_TAGGEDMESSAGES = "taggedmessages/";
 	}

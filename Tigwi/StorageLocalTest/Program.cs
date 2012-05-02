@@ -10,7 +10,7 @@ namespace StorageLocalTest
     class Program
     {
         const string azureAccountName = "ulyssestorage";
-        const string azureAccountKey = "msghjEpjqpRmtvwNUT1ra2Bw5sK5JhlHFuCYRhc3/Xwr5Ofl8W6TUz/0ObKKly051EFxLpXp6PeRHm4s+Xojrw==";
+        const string azureAccountKey = "jnfLEhtEGAZ6YzRoYSahJpgUzXL2438grLGeFn/lnhxNJGonwD/jO+7QU2u/UECHeYsF4uigIfXKGsqRbjRsTQ==";
 
         static void TestUser(IStorage storage)
         {
@@ -1021,12 +1021,6 @@ namespace StorageLocalTest
             Console.WriteLine("Init connexions");
             Storage storage = new Storage(azureAccountName, azureAccountKey);
 
-            
-            ClearContainer(storage.connexion.userContainer);
-            ClearContainer(storage.connexion.accountContainer);
-            ClearContainer(storage.connexion.listContainer);
-            ClearContainer(storage.connexion.msgContainer);
-
             Console.WriteLine("Filling with initial data");
             Guid userId = storage.User.Create("userThatExists", "userThatExists@gmail.com", "userThatExistsPass");
             Guid accountId = storage.Account.Create(userId, "accountThatExists", "accountThatExistsDesc");
@@ -1041,11 +1035,11 @@ namespace StorageLocalTest
 
             Console.WriteLine("Init ok");
 
-            TestUser(storage);
-            TestAccounts(storage);
-            TestList(storage, listId);
+            //TestUser(storage);
+            //TestAccounts(storage);
+            //TestList(storage, listId);
 
-            //TestMessages(storage);
+            TestMessages(storage);
 
             storage.Msg.GetTaggedFrom(accountId, DateTime.MinValue, 100);
 

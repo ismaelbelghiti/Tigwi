@@ -74,7 +74,7 @@ namespace StorageLibrary.Utilities
         // TODO : repercute changes from GetMessageFrom
         public List<IMessage> GetMessagesTo(DateTime date, int msgCount, Exception e)
         {
-            List<IMessage> msgList = null;
+            MessageSet msgSet = null;
 
             // TODO : use something else than reverse
             do
@@ -91,26 +91,22 @@ namespace StorageLibrary.Utilities
                 // get the messages
                 try
                 {
-                    MessageSet msgSet = GetMessageSet(new Blob<MessageSet>(blobsList[blobIndex].Value));
-                    msgList = msgSet.GetViewBetween(Message.FirstMessage() , Message.LastMessage(date)).ToList();
-
-                    msgList.Reverse();
+                    msgSet = GetMessageSet(new Blob<MessageSet>(blobsList[blobIndex].Value));
+                    msgSet = msgSet.GetViewBetween(Message.FirstMessage() , Message.LastMessage(date));
 
                     // get messages from following sets while we need them
-                    for (blobIndex--; blobIndex >= 0 && msgList.Count < msgCount; blobIndex--)
-                    {
-                        msgSet = GetMessageSet(new Blob<MessageSet>(blobsList[blobIndex].Value));
-                        msgList.AddRange(msgSet.Reverse());
-                    }
+                    for (blobIndex--; blobIndex >= 0 && msgSet.Count < msgCount; blobIndex--)
+                        msgSet.UnionWith(GetMessageSet(new Blob<MessageSet>(blobsList[blobIndex].Value)));                     
                 }
                 catch (VersionHasChanged) { continue; }
 
+               
             } while (false);
 
+            List<IMessage> msgList = msgSet.ToList();
             if (msgList.Count > msgCount)
-                msgList = msgList.GetRange(0, msgCount);
+                msgList = msgList.GetRange(msgList.Count - msgCount, msgCount);
 
-            msgList.Reverse();
             return msgList;
         }
 

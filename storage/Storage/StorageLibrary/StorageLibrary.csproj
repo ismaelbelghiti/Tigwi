@@ -81,7 +81,6 @@
     <Compile Include="Utilities\MsgSetBlob.cs" />
     <Compile Include="Utilities\MsgSetBlobPack.cs" />
     <Compile Include="Utilities\Mutex.cs" />
-    <Compile Include="Utilities\StrgConnexion.cs" />
     <Compile Include="datastructure\AccountInfo.cs">
       <SubType>Code</SubType>
     </Compile>

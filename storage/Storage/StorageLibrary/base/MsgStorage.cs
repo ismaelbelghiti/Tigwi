@@ -11,16 +11,14 @@ namespace StorageLibrary
 {
     public class MsgStorage : IMsgStorage
     {
-        // TODO : find the best value
-        // We split the set of messages in packs because we don't want to retrive a 10M blob from the storage
-        TimeSpan limitDateDiff = TimeSpan.FromSeconds(5);
+        // We differ messages post to be sure they have been inserted were they should be in time
+        // This is also necessary because of the bad time synchronisation in azure
+        TimeSpan limitDateDiff = TimeSpan.FromSeconds(20);
 
-        StrgConnexion connexion; // TODO : to be removed
         BlobFactory blobFactory;
 
-        public MsgStorage(StrgConnexion connexion, BlobFactory blobFactory)
+        public MsgStorage(BlobFactory blobFactory)
         {
-            this.connexion = connexion;
             this.blobFactory = blobFactory;
         }
 
@@ -87,8 +85,6 @@ namespace StorageLibrary
             return blobFactory.MTaggedMessages(accountId).GetMessagesTo(TruncateDate(lastMsgDate), msgNumber, new AccountNotFound());
         }
 
-        // partialy implemented
-        // TODO : update to reflect changes in the architecture
         public Guid Post(Guid accountId, string content)
         {
             Guid messageId = Guid.NewGuid();
@@ -97,17 +93,23 @@ namespace StorageLibrary
             try
             {
                 IAccountInfo accountInfo = blobFactory.AInfo(accountId).GetIfExists(new AccountNotFound());
+                Guid personnalListId = blobFactory.LPersonnalList(accountId).GetIfExists(new AccountNotFound());
                 Message message = new Message(messageId, accountId, accountInfo.Name, "", DateTime.Now, content);
+                MsgSetBlobPack bPersonnalListMsgs = blobFactory.MListMessages(personnalListId);
 
                 // Save the message
                 bMessage.Set(message);
+                if (!bPersonnalListMsgs.AddMessage(message))
+                    throw new AccountNotFound();
 
-                // Add in listMsg
-                // TODO : handle the fact that followedBy might change during this process
-                foreach(Guid listId in blobFactory.LFollowedByAll(accountId).GetIfExists(new AccountNotFound())) 
-                    blobFactory.MListMessages(listId).AddMessage(message);
+                // Add in listMsg -- if a list is added during the foreach, then the message will be added by the addition of the list
+                foreach (Guid listId in blobFactory.LFollowedByAll(accountId).GetIfExists(new AccountNotFound()))
+                {
+                    try { blobFactory.MListMessages(listId).AddMessage(message); }
+                    catch { }
+                }
             }
-            catch { bMessage.Delete(); }
+            catch { bMessage.Delete();  }
             
             // TODO : Add in accountMsg
 
