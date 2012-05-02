@@ -1,4 +1,4 @@
-﻿Tigwi - API Specification by L. de HARO, A. de MYTTENAERE and T. ZIMMERMANN 
+Tigwi - API Specification by L. de HARO, A. de MYTTENAERE and T. ZIMMERMANN 
 
 #General methods
 
@@ -20,16 +20,13 @@ http://api.tigwi.com/api/createuser
 ###Response
 General structure of the response :
 
+
     <Answer>
         <!-- Error Type -->
-		<Content> 
-            <!-- See below -->
-        </Content> 
+        <Content xsi:type="ObjectCreated" 
+           Id="UniqueIdentifierOfCreatedObject" />
     </Answer>    
-  
-Content:
 
-     <ObjectCreated Id="UniqueIdentifierOfCreatedObject"/>
 
 Error type:  
 *In case an error occurs:
