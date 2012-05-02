@@ -25,20 +25,19 @@
     margin-left: 15px;
 }
 
-.message {
+.message:nth-child(odd) {
     border-radius: 15px;
     margin: 10px;
     padding: 10px;
     border-width: 5px;
-}
-
-.message0
-{
     border-style: none none none solid;
     border-color: lightgray;
 }
-.message1
-{
+.message:nth-child(even) {
+    border-radius: 15px;
+    margin: 10px;
+    padding: 10px;
+    border-width: 5px;
     border-style: none solid none none;
     border-color: darkgray;
 }

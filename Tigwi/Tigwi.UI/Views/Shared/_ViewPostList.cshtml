@@ -1,10 +1,8 @@
 ﻿@using Tigwi.UI.Models
 @model ICollection<IPostModel>
            
-@{int i=0;}
 @foreach( var post in Model.Reverse())
 {
-    var toSend=new PostViewModel { Post = post, Color = i%2};
-    i++;
+    var toSend = new PostViewModel {Post = post};
     @Html.Partial("_ViewPost", toSend)
 }
