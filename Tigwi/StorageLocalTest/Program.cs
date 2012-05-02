@@ -134,7 +134,7 @@ namespace StorageLocalTest
 
                 try
                 {
-                    Guid sameuser = storage.User.Create("userThatExists", "bidon@test2.com", "pass");
+                    Guid sameuser = storage.User.Create("userThatExists", "bidon@test2.com", new Byte[1]);
                     Console.WriteLine("Error, User.Create does not detect existing user");
                 }
                 catch (UserAlreadyExists) { }
@@ -160,7 +160,7 @@ namespace StorageLocalTest
 
                 try
                 {
-                    Guid userTempId = storage.User.Create("userTemp", "bidon@test2.com", "pass");
+                    Guid userTempId = storage.User.Create("userTemp", "bidon@test2.com", new Byte[1]);
                     storage.User.Delete(userTempId);
                     storage.User.GetId("userTemp");
                     Console.WriteLine("Error, User.Delete does not delete");
@@ -188,8 +188,8 @@ namespace StorageLocalTest
 
                 try
                 {
-                    string pass = storage.User.GetPassword(storage.User.GetId("userThatExists"));
-                    if (pass != "userThatExistsPass")
+                    Byte[] pass = storage.User.GetPassword(storage.User.GetId("userThatExists"));
+                    if (pass != new Byte[1])
                         Console.WriteLine("Error, User.GetPassword does not get the good password");
                 }
                 catch (UserNotFound) { Console.WriteLine("Error, User.GetPassword unable to find the id"); }
@@ -204,7 +204,7 @@ namespace StorageLocalTest
 
                 try
                 {
-                    storage.User.SetPassword(Guid.NewGuid(), "dontexistspass");
+                    storage.User.SetPassword(Guid.NewGuid(), new Byte[1]);
                     Console.WriteLine("Error, SetPassword doed not raise UserNotFound");
                 }
                 catch (UserNotFound) { }
@@ -214,11 +214,11 @@ namespace StorageLocalTest
 
                 try
                 {
-                    storage.User.SetPassword(storage.User.GetId("userThatExists"), "babar");
-                    string pass = storage.User.GetPassword(storage.User.GetId("userThatExists"));
-                    if (pass != "babar")
+                    storage.User.SetPassword(storage.User.GetId("userThatExists"), new Byte[1]);
+                    Byte[] pass = storage.User.GetPassword(storage.User.GetId("userThatExists"));
+                    if (pass != new Byte[1])
                         Console.WriteLine("Error, User.SetPassword does not set the good password");
-                    storage.User.SetPassword(storage.User.GetId("userThatExists"), "userThatExistsPass");
+                    storage.User.SetPassword(storage.User.GetId("userThatExists"), new Byte[1]);
                 }
                 catch (UserNotFound) { Console.WriteLine("Error, User.SetPassword unable to find the id"); }
                 catch (Exception) { Console.WriteLine("Unhandled exception in storage.User.SetPassword/GetPassword"); }
@@ -1022,9 +1022,9 @@ namespace StorageLocalTest
             Storage storage = new Storage(azureAccountName, azureAccountKey);
 
             Console.WriteLine("Filling with initial data");
-            Guid userId = storage.User.Create("userThatExists", "userThatExists@gmail.com", "userThatExistsPass");
+            Guid userId = storage.User.Create("userThatExists", "userThatExists@gmail.com", new Byte[1]);
             Guid accountId = storage.Account.Create(userId, "accountThatExists", "accountThatExistsDesc");
-            storage.User.Create("otherUserThatExists", "otherUserThatExists@gmail.com", "otherUserThatExistsPass");
+            storage.User.Create("otherUserThatExists", "otherUserThatExists@gmail.com", new Byte[1]);
             Guid otherAccountId = storage.Account.Create(userId, "otherAccountThatExists", "otherAccountThatExistsDesc");
 
             Guid listId = storage.List.Create(storage.Account.GetId("accountThatExists"), "listThatExists", "Yeah", false);

@@ -51,7 +51,7 @@ namespace StorageLibrary
             return blobFactory.UAccountsData(userId).GetIfExists(new UserNotFound());
         }
 
-        public Guid Create(string login, string email, string password)
+        public Guid Create(string login, string email, Byte[] password)
         {
             // TODO unreserve the name if an error occure
 
@@ -70,7 +70,7 @@ namespace StorageLibrary
             // init blobs
             Blob<IUserInfo> bInfo = blobFactory.UInfo(userId);
             Blob<HashSet<Guid>> bAccounts = blobFactory.UAccountsData(userId);
-            Blob<string> bPassword = blobFactory.UPassword(userId);
+            Blob<Byte[]> bPassword = blobFactory.UPassword(userId);
             blobFactory.UAccountsLockInit(userId);
 
             // store the data
@@ -90,12 +90,12 @@ namespace StorageLibrary
             throw new NotImplementedException();
         }
 
-        public string GetPassword(Guid userId)
+        public Byte[] GetPassword(Guid userId)
         {
             return blobFactory.UPassword(userId).GetIfExists(new UserNotFound());
         }
 
-        public void SetPassword(Guid userId, string pass)
+        public void SetPassword(Guid userId, Byte[] pass)
         {
             if (!blobFactory.UPassword(userId).SetIfExists(pass))
                 throw new UserNotFound();

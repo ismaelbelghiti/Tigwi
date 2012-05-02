@@ -71,7 +71,6 @@ namespace StorageLibrary.Utilities
         }
 
         // TODO : change list to set for a better merge
-        // TODO : repercute changes from GetMessageFrom
         public List<IMessage> GetMessagesTo(DateTime date, int msgCount, Exception e)
         {
             MessageSet msgSet = null;
@@ -224,6 +223,12 @@ namespace StorageLibrary.Utilities
         {
             foreach (CloudBlob b in dir.ListBlobs())
                 b.Delete();
+        }
+
+        public void UnionWith(MsgSetBlobPack other)
+        {
+            // get all messages lazyly
+            throw new NotImplementedException();
         }
 
         List<KeyValuePair<DateTime, CloudBlob>> GetBlobs()

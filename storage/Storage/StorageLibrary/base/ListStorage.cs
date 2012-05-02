@@ -126,6 +126,11 @@ namespace StorageLibrary
 
         public void Add(Guid listId, Guid accountId)
         {
+            // if accountId isn't already in list, we add its msgs
+            // then we add him inside
+            Guid PersonnalListId = blobFactory.LPersonnalList(accountId).GetIfExists(new AccountNotFound());
+            // TODO : merge the 2 MsgSetBlobPack
+            
             using (blobFactory.LFollowedAccountLock(listId))
             {
                 if (!blobFactory.LFollowedByAll(accountId).AddWithRetry(listId))
@@ -138,7 +143,6 @@ namespace StorageLibrary
 
                 blobFactory.LFollowedAccountsData(listId).Add(accountId);
             }
-
         }
 
         public void Remove(Guid listId, Guid accountId)

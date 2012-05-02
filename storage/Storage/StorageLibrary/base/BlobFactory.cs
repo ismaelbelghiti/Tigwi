@@ -67,9 +67,9 @@ namespace StorageLibrary
             return new Blob<IUserInfo>(userContainer, U_INFO + userId);
         }
 
-        public Blob<string> UPassword(Guid userId)
+        public Blob<Byte[]> UPassword(Guid userId)
         {
-            return new Blob<string>(userContainer, U_PASSWORD + userId);
+            return new Blob<Byte[]>(userContainer, U_PASSWORD + userId);
         }
 
         public Mutex UAccountsLock(Guid userId)
