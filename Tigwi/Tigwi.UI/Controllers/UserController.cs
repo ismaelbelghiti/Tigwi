@@ -6,15 +6,30 @@ using System.Web.Mvc;
 
 namespace Tigwi.UI.Controllers
 {
-    public class UserController : Controller
+    using System.Web.Security;
+
+    using StorageLibrary;
+
+    using Tigwi.UI.Models;
+    using Tigwi.UI.Models.Storage;
+    using Tigwi.UI.Models.User;
+
+    public class UserController : HomeController
     {
+        public UserController()
+        {}
+
+        public UserController(StorageContext storage)
+            : base(storage)
+        {}
+
         /// <summary>
         /// Show a page proposing the user to log in.
         /// </summary>
         /// <returns></returns>
         public ActionResult LogOn()
         {
-            throw new NotImplementedException("UserController.LogOn");
+            return this.View();
         }
 
         /// <summary>
@@ -24,9 +39,37 @@ namespace Tigwi.UI.Controllers
         /// <param name="userLogOnViewModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult LogOn(/*UserLogOnViewModel*/object userLogOnViewModel)
+        public ActionResult LogOn(UserLogOnViewModel userLogOnViewModel)
         {
-            throw new NotImplementedException("UserController.LogOn[POST]");
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // TODO: real authentication
+                    var loggingUser = this.Storage.Users.Find(userLogOnViewModel.Login);
+                    this.CurrentUser = loggingUser;
+
+                    this.SaveIdentity(userLogOnViewModel.RememberMe);
+
+                    return this.RedirectToAction("Index", "Home");
+                    // return this.RedirectToAction("Timeline", "Account");
+                }
+                catch (UserNotFoundException ex)
+                {
+                    ModelState.AddModelError("Login", ex.Message);
+                }
+            }
+
+            return this.View(userLogOnViewModel);
+        }
+
+        public ActionResult LogOut()
+        {
+            this.CurrentUser = null;
+            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName) { Expires = DateTime.MinValue };
+            this.Response.AppendCookie(cookie);
+
+            return this.RedirectToAction("Index", "Home");
         }
 
         /// <summary>
@@ -35,18 +78,59 @@ namespace Tigwi.UI.Controllers
         /// <returns></returns>
         public ActionResult Register()
         {
-            throw new NotImplementedException("UserController.Register");
+            ViewBag.notValid = false;
+            return this.View();
         }
 
         /// <summary>
         /// Register a new user into the system.
         /// </summary>
-        /// <param name="collection"></param>
+        /// <param name="registerViewModel">A ViewModel containing the data useful for the user creation.</param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Register(FormCollection collection)
+        public ActionResult Register(RegisterViewModel registerViewModel)
         {
-            throw new NotImplementedException("UserController.Register[POST]");
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // TODO: real authentication
+                    var newUser = this.Storage.Users.Create(registerViewModel.Login, registerViewModel.Email);
+
+                    try
+                    {
+                        var newAccount = this.Storage.Accounts.Create(newUser, registerViewModel.Login, string.Empty);
+              
+                        this.CurrentUser = newUser;
+                        this.CurrentAccount = newAccount;
+
+                        this.SaveIdentity(registerViewModel.RememberMe);
+
+                        return this.RedirectToAction("Index", "Home");
+                        // return this.RedirectToAction("Welcome");
+                    }
+                    catch (DuplicateAccountException ex)
+                    {
+                        this.Storage.Users.Delete(newUser);
+                        this.Storage.SaveChanges();
+                        ModelState.AddModelError("Login", ex.Message);
+                    }
+                }
+                catch (DuplicateUserException ex)
+                {
+                    // TODO: We need more granularity (login failed ? email failed ? propositions ?)
+                    ModelState.AddModelError("Login", ex.Message);
+                }
+            }
+
+            // Somthing went wrong, display register page again
+            ViewBag.notValid = true;
+            return this.View(registerViewModel);
+        }
+
+        public ActionResult Welcome()
+        {
+            throw new NotImplementedException("UserController.Welcome");
         }
 
         /// <summary>

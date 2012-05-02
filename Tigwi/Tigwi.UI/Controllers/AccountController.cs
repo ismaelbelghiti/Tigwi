@@ -9,24 +9,78 @@ using Tigwi.UI.Models;
 
 namespace Tigwi.UI.Controllers
 {
-    public class AccountController : Controller
+    using Tigwi.UI.Models.Storage;
+    using Tigwi.UI.Models.Account;
+
+    public class AccountController : HomeController
     {
+        public AccountController()
+        {
+        }
+
+        public AccountController(IStorageContext storageContext)
+            : base(storageContext)
+        {
+        }
+        
+        [Authorize]
+        public ActionResult Timeline()
+        {
+            if (this.CurrentAccount == null)
+            {
+                throw new NotImplementedException("Not connected.");
+            }
+
+            return this.View();
+        }
+
         /// <summary>
         /// Shows a page listing all the accounts of the active user.
         /// </summary>
         /// <returns></returns>
         public ActionResult List()
         {
-            throw new NotImplementedException("AccountController.List");
+            if (this.CurrentUser != null)
+            {
+                return this.View(this.CurrentUser.Accounts);
+            }
+
+            // User must be connected
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Shows a page listing all the posts of the user.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult ShowAccount(SearchViewModel search)
+        {
+            return this.View(this.Storage.Accounts.Find(search.searchString));
         }
 
         /// <summary>
         /// Makes the given account active (the one which will post things by default, etc.)
         /// </summary>
         /// <returns></returns>
-        public ActionResult MakeActive()
+        [Authorize]
+        public ActionResult MakeActive(Guid accountId)
         {
-            throw new NotImplementedException("AccountController.MakeActive");
+            var account = this.Storage.Accounts.Find(accountId);
+
+            try
+            {
+                // Set current account with automatic validation
+                this.CurrentAccount = account;
+
+                // Tell the user everything went OK
+                throw new NotImplementedException();
+            }
+            catch (Exception)
+            {
+                // Tell the user he must be connected
+                throw new NotImplementedException();
+            }
         }
 
         /// <summary>
@@ -35,7 +89,7 @@ namespace Tigwi.UI.Controllers
         /// <returns></returns>
         public ActionResult Create()
         {
-            throw new NotImplementedException("AccountController.Create");
+            return this.View();
         }
 
         /// <summary>
@@ -45,9 +99,19 @@ namespace Tigwi.UI.Controllers
         /// <param name="accountCreation"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Create(/*AccountCreationModel*/object accountCreation)
+        public ActionResult Create(AccountCreationViewModel accountCreation)
         {
-            throw new NotImplementedException("AccountController.Create[POST]");
+            if (ModelState.IsValid)
+            {
+                var newAccount = this.Storage.Accounts.Create(CurrentUser, accountCreation.Name, accountCreation.Description);
+                this.CurrentAccount = newAccount;
+                //TODO
+                this.SaveIdentity(false);
+                this.Storage.SaveChanges();
+                return this.RedirectToAction("Create",accountCreation);
+            }
+            throw new NotImplementedException("fuck you");
+            return this.View(accountCreation);
         }
 
         /// <summary>

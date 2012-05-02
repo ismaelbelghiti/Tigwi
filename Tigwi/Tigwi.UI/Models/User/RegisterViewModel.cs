@@ -1,8 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
 namespace Tigwi.UI.Models.User
 {
     using System.ComponentModel.DataAnnotations;
@@ -12,20 +7,27 @@ namespace Tigwi.UI.Models.User
     {
         [Key]
         [Required]
+        [Display(Name = "Username")]
         public string Login { get; set; }
 
         [Required]
         [DataType(DataType.EmailAddress)]
+        [Display(Name = "Email address")]
         public string Email { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
-        [MinLength(8)]
+        [StringLength(100, MinimumLength = 6)]
+        [Display(Name = "Password")]
         public string Password { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
         [Compare("Password")]
+        [Display(Name = "Confirm password")]
         public string ConfirmPassword { get; set; }
+
+        [Display(Name = "Remember me ?")]
+        public bool RememberMe { get; set; }
     }
 }

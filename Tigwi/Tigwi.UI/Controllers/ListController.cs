@@ -6,16 +6,20 @@ using System.Web.Mvc;
 
 namespace Tigwi.UI.Controllers
 {
-    public class ListController : Controller
+    using Tigwi.UI.Models;
+
+    public class ListController : HomeController
     {
         /// <summary>
         /// Shows the messages posted in the list.
         /// </summary>
-        /// <param name="listName"></param>
+        /// <param name="listId"></param>
         /// <returns></returns>
-        public ActionResult Details(string listName)
+        public ActionResult Details(Guid listId)
         {
-            throw new NotImplementedException("ListController.Details");
+            var list = this.Storage.Lists.Find(listId);
+
+            return this.View(list);
         }
 
         /// <summary>

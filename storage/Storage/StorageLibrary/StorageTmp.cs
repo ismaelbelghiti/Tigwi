@@ -45,7 +45,6 @@
                 };
             this.idFromLogin.Add(login, id);
             this.infoFromId.Add(id, userInfo);
-            this.storage.Account.Create(id, login, "Main account");
 
             return id;
         }
@@ -173,6 +172,11 @@
 
         public Guid Create(Guid adminId, string name, string description)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("name");
+            }
+
             var id = Guid.NewGuid();
             var adminInfos = this.motherStorage.user.GetFullInfo(adminId);
             var accountInfo = new FullAccountInfo
@@ -184,6 +188,11 @@
                     FollowerOfLists = new HashSet<Guid>(), 
                     MemberOfLists = new HashSet<Guid>()
                 };
+
+            if (this.idFromName.ContainsKey(name))
+            {
+                throw new AccountAlreadyExists();
+            }
 
             this.infoFromId.Add(id, accountInfo);
             this.idFromName.Add(name, id);
@@ -301,7 +310,7 @@
         }
 
         #endregion
-
+        
         #region Methods
 
         internal FullAccountInfo GetFullInfo(Guid accountId)
@@ -501,7 +510,8 @@
                     Id = id, 
                     Followers = new HashSet<Guid> { ownerId }, 
                     ListInfo = new ListInfo(name, description, isPrivate, isPersonal), 
-                    Members = new HashSet<Guid> { ownerId }, 
+                    Members = new HashSet<Guid> { ownerId },
+                    Messages = new List<IMessage>(),
                     OwnerId = ownerId
                 };
 
@@ -618,7 +628,15 @@
         {
             Guid id = Guid.NewGuid();
             AccountStorageTmp.FullAccountInfo accountInfo = this.motherStorage.account.GetFullInfo(accountId);
-            var message = new Message(id, accountId, accountInfo.AccountInfo.Name, string.Empty, DateTime.Now, content);
+            var message = new Message(id, accountId, accountInfo.AccountInfo.Name, string.Empty, DateTime.Now, content)
+                {
+                    Content = content,
+                    Date = DateTime.Now,
+                    Id = id,
+                    PosterAvatar = string.Empty,
+                    PosterId = accountId,
+                    PosterName = accountInfo.AccountInfo.Name
+                };
 
             foreach (var listId in accountInfo.MemberOfLists)
             {

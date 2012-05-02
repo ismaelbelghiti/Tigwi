@@ -6,15 +6,41 @@ using System.Web.Mvc;
 
 namespace Tigwi.UI.Controllers
 {
-    public class PostController : Controller
+    using Tigwi.UI.Models;
+    using Tigwi.UI.Models.Storage;
+
+    public class PostController : HomeController
     {
+        public PostController()
+        {
+        }
+
+        public PostController(IStorageContext storageContext)
+            : base(storageContext)
+        {
+        }
+
         /// <summary>
         /// Tags (favorites) a post.
         /// </summary>
         /// <returns></returns>
-        public ActionResult Tag()
+        public ActionResult Tag(Guid postId)
         {
-            throw new NotImplementedException("PostController.Tag");
+            var currentAccount = this.CurrentAccount;
+
+            // Check for connection
+            if (currentAccount == null)
+            {
+                // TODO: redirect to login/sign up page
+                throw new Exception("Must be connected.");
+            }
+            throw new Exception("fuck");
+            /*
+            // Actually tag the post
+            var post = this.Storage.Posts.Find(postId);
+            post.TagBy(currentAccount);
+
+            return this.View(post);*/
         }
 
         /// <summary>
@@ -30,9 +56,20 @@ namespace Tigwi.UI.Controllers
         /// Write a new post.
         /// </summary>
         /// <returns></returns>
-        public ActionResult Write()
+        [HttpPost]
+        public ActionResult Write(WritePostViewModel post)
         {
-            throw new NotImplementedException("PostController.Write");
+            if (ModelState.IsValid)
+            {
+                this.Storage.Posts.Create(CurrentAccount, post.Content);
+                //throw new NotImplementedException(post.Poster.Name + "  " + post.Content);
+                this.Storage.SaveChanges();
+                return this.View();
+
+            }
+            //
+            throw new NotImplementedException(CurrentAccount.Name + "  " + post.Content);
+            return this.View();
         }
 
         /// <summary>

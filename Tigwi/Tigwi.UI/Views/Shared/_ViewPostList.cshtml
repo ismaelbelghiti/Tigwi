@@ -1,0 +1,10 @@
+﻿@using Tigwi.UI.Models
+@model ICollection<IPostModel>
+           
+@{int i=0;}
+@foreach( var post in Model)
+{
+    var toSend=new PostViewModel { Post = post, Color = i%2};
+    i++;
+    @Html.Partial("_ViewPost", toSend);
+}

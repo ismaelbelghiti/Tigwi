@@ -1,0 +1,30 @@
+﻿@model Tigwi.UI.Models.User.RegisterViewModel
+
+@{
+    ViewBag.Title = "Register, yo!";
+}
+
+<h2>Register, yo!</h2>
+ 
+@using (Html.BeginForm("Register","User",FormMethod.Post))
+{
+    @Html.ValidationSummary()
+
+    @Html.LabelFor(m => m.Login)
+    @Html.EditorFor(m => m.Login)
+    @Html.ValidationMessageFor(m => m.Login)
+
+    @Html.LabelFor(m => m.Email)
+    @Html.EditorFor(m => m.Email)
+    @Html.ValidationMessageFor(m => m.Email)
+
+    @Html.LabelFor(m => m.Password)
+    @Html.EditorFor(m => m.Password)
+    @Html.ValidationMessageFor(m => m.Password)
+
+    @Html.LabelFor(m => m.ConfirmPassword)
+    @Html.EditorFor(m => m.ConfirmPassword)
+    @Html.ValidationMessageFor(m => m.ConfirmPassword)
+
+    <button type="submit">I wanna join!</button>
+}
