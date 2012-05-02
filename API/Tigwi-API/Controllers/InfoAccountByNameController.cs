@@ -59,7 +59,7 @@ namespace Tigwi_API.Controllers
         
         //
         // GET : /infoaccount/subscriberaccounts/{accountName}/{number}
-        public ActionResult SubscriberAccounts(string accountName, int number)
+        public ActionResult SubscribersAccounts(string accountName, int number)
         {
             Answer output;
 
@@ -236,7 +236,7 @@ namespace Tigwi_API.Controllers
         //
         // GET : /infoaccount/usersallowed/{accountName}/{number}
         //[Authorize] (?)
-        public ActionResult UsersAllowed(string accountName, int number)
+        public ActionResult AllowedUsers(string accountName, int number)
         {
             Answer output;
 

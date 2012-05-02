@@ -1,4 +1,4 @@
-﻿Tigwi - API Specification by L. de HARO, A. de MYTTENAERE and T. ZIMMERMANN 
+Tigwi - API Specification by L. de HARO, A. de MYTTENAERE and T. ZIMMERMANN 
 
 #Get inofrmation about an _user_
 
@@ -10,7 +10,7 @@ Obtain main informations of user _userLogin_.
 ###URL
 http://api.tigwi.com/infouser/maininfo/userLogin  
 or  
-http://api.tigwi.com/infouser/maininfo/userId
+http://api.tigwi.com/infouserbyid/maininfo/userId
 ###Request
 _left empty_
 ###Response
@@ -45,7 +45,7 @@ Error type:
 * In **URL**, _userLogin_ is the login of the user whose informations you want to get.
 * In **URL**, _userId_ is the unique identifier of the user whose informations you want to get.
 
-##Get the accounts where te user can post
+##Get the accounts where an user can post
 ###Purpose
 Obtain a number _numberOfAccounts_ of accounts where user _userLogin_ can write.
 No particular order provided
@@ -54,7 +54,7 @@ No particular order provided
 ###URL
 http://api.tigwi.com/infouser/authorizedaccounts/userLogin/numberOfAccounts
 or  
-http://api.tigwi.com/infouser/authorizedaccounts/userId/numberOfAccounts
+http://api.tigwi.com/infouserbyid/authorizedaccounts/userId/numberOfAccounts
 ###Request
 _left empty_
 ###Response
@@ -119,21 +119,35 @@ http://api.tigwi.com/modifyuser/changeemail
     </ChangeInfo>
 
 ###Response
-In case an error occurs
+General structure of the response :
+
+
+    <Answer>
+        <!-- Error Type -->
+        <Content xsi:type="ObjectCreated" 
+           Id="UniqueIdentifierOfCreatedObject" />
+    </Answer>    
+
+
+Error type:  
+*In case an error occurs:
+
 
     <Error Code="codeOfError"/>
 
-If no error occurs
 
+*Otherwise:
+   
     <Error/>
 
 
 ###Informations
 * You **must** be authenticated as _userLogin_ to use this method.
 * In **Request**, _userLogin_ is the login of the user whose email you want to change.
-* In **Request**, _userId_ is the unique identifier of the user whose email you want to change. If you use both `<UserLogin>` and `<UserId>`, only `<UserId>` will be taken into account.
+* In **Request**, _userId_ is the unique identifier of the user whose email you want to change. 
+*In **Request**, if you use both `<UserLogin>` and `<UserId>`, only `<UserId>` will be used (in particular if they don't refer to the same user).
 
-##Change an user's email
+##Change an user's avatar
 ###Purpose
 If you're authenticated as _userLogin_, you can change the avatar provided in you personnal informations.
 ###HTTP method
@@ -151,20 +165,33 @@ http://api.tigwi.com/modifyuser/changeavatar
     </ChangeInfo>
 
 ###Response
-In case an error occurs
+General structure of the response :
+
+
+    <Answer>
+        <!-- Error Type -->
+        <Content xsi:type="ObjectCreated" 
+           Id="UniqueIdentifierOfCreatedObject" />
+    </Answer>    
+
+
+Error type:  
+*In case an error occurs:
+
 
     <Error Code="codeOfError"/>
 
-If no error occurs
 
+*Otherwise:
+   
     <Error/>
 
 
 ###Informations
 * You **must** be authenticated as _userLogin_ to use this method.
 * In **Request**, _userLogin_ is the login of the user whose avatar you want to change.
-* In **Request**, _userId_ is the unique identifier of the user whose avatar you want to change. If you use both `<UserLogin>` and `<UserId>`, only `<UserId>` will be taken into account.
-
+* In **Request**, _userId_ is the unique identifier of the user whose avatar you want to change. 
+*In **Request**, if you use both `<UserLogin>` and `<UserId>`, only `<UserId>` will be used (in particular if they don't refer to the same user).
 
 ##Change an user's password
 ###Purpose
@@ -185,19 +212,33 @@ http://api.tigwi.com/modifyuser/changepassword
     </ChangePassword>
 
 ###Response
-In case an error occurs
+General structure of the response :
+
+
+    <Answer>
+        <!-- Error Type -->
+        <Content xsi:type="ObjectCreated" 
+           Id="UniqueIdentifierOfCreatedObject" />
+    </Answer>    
+
+
+Error type:  
+*In case an error occurs:
+
 
     <Error Code="codeOfError"/>
 
-If no error occurs
 
+*Otherwise:
+   
     <Error/>
 
 
 ###Informations
 * You **must** be authenticated as _userLogin_ to use this method.
 * In **Request**, _userLogin_ is the login of the user whose password you want to change.
-* In **Request**, _userId_ is the unique identifier of the user whose email you want to change. If you use both `<UserLogin>` and `<UserId>`, only `<UserId>` will be taken into account.
+* In **Request**, _userId_ is the unique identifier of the user whose email you want to change. 
+*In **Request**, if you use both `<UserLogin>` and `<UserId>`, only `<UserId>` will be used (in particular if they don't refer to the same user).
 * In **Request**, you have to provide your old password, even if you're already authenticated, to be sure that no one is changing your password against your will.
 
 ##Create an account
@@ -221,16 +262,13 @@ http://api.tigwi.com/modifyuser/createaccount
 ###Response
 General structure of the response :
 
+
     <Answer>
         <!-- Error Type -->
-		<Content> 
-            <!-- See below -->
-        </Content> 
+        <Content xsi:type="ObjectCreated" 
+           Id="UniqueIdentifierOfCreatedObject" />
     </Answer>    
-  
-Content:
 
-     <ObjectCreated Id="UniqueIdentifierOfCreatedObject"/>
 
 Error type:  
 *In case an error occurs:
@@ -245,8 +283,10 @@ Error type:
 
 
 
+
 ###Informations
 * You **must** be authenticated as _userLogin_ to use this method.
 * In **Request**, _userLogin_ is the login of the user whose email you want to change.
-* In **Request**, _userId_ is the unique identifier of the user who wants to create an account. If you use both `<UserLogin>` and `<UserId>`, only `<UserId>` will be taken into account.
+* In **Request**, _userId_ is the unique identifier of the user who wants to create an account. 
+*In **Request**, if you use both `<UserLogin>` and `<UserId>`, only `<UserId>` will be used (in particular if they don't refer to the same user).
 * In **Response**, you get the information about the account just created.
