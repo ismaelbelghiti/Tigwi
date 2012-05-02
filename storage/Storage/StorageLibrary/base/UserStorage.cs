@@ -90,6 +90,46 @@ namespace StorageLibrary
             throw new NotImplementedException();
         }
 
+        public Guid GetIdByOpenIdUri(string openIdUri)
+        {
+            Blob<Guid> blob = blobFactory.UIdByOpenIdUri(openIdUri);
+            Guid id = blob.GetIfExists(new UserNotFound());
+            if (id.Equals(Guid.Empty))
+                throw new UserNotFound();
+            return id;
+        }
+
+        public void AssociateOpenIdUri(Guid userId, string openIdUri)
+        {
+            using (blobFactory.UOpenIdsLock(userId))
+            {
+                if (!blobFactory.UOpenIdsData(userId).AddWithRetry(openIdUri))
+                    throw new UserNotFound();
+
+                if (!blobFactory.UIdByOpenIdUri(openIdUri).SetIfNotExists(userId))
+                    throw new OpenIdUriDuplicated();
+            }
+        }
+
+        public HashSet<string> ListOpenIdUris(Guid userId)
+        {
+            return blobFactory.UOpenIdsData(userId).GetIfExists(new UserNotFound());
+        }
+
+        public void DeassociateOpenIdUri(Guid userId, string openIdUri)
+        {
+            try
+            {
+                using (blobFactory.UOpenIdsLock(userId))
+                {
+                    blobFactory.UOpenIdsData(userId).RemoveWithRetry(openIdUri);
+                    if (!blobFactory.UIdByOpenIdUri(openIdUri).TryDelete())
+                        throw new OpenIdUriNotAssociated();
+                }
+            }
+            catch (UserNotFound) { ;}
+        }
+
         public Byte[] GetPassword(Guid userId)
         {
             return blobFactory.UPassword(userId).GetIfExists(new UserNotFound());

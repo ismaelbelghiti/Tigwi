@@ -20,6 +20,5 @@ namespace StorageLibrary
         public string Avatar { get; set; }
 
         public string Email { get; set; }
-
     }
 }
