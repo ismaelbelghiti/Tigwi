@@ -130,7 +130,7 @@ namespace Tigwi_API.Controllers
                         //     return whatsnecessary (raise an error)
 
                         //Set the password
-                        Storage.User.SetPassword(userId, infos.NewPassword);
+                        // TODO : use the new version Storage.User.SetPassword(userId, infos.NewPassword);
 
                         // Result is an empty error XML element
                         error = new Error();

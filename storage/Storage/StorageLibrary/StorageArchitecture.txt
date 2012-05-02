@@ -1,5 +1,4 @@
 ﻿user ->		idbylogin/<login hash>				: Guid (= 0 if the login is reserved but not used)
-			idbyopenid/<openid hash>			: Guid
 			info/<user ID>						: UserInfo
 			accounts/<user ID>/data				: HashSet<Guid> -- you must take the mutex before touching to this
 							 /lock				: Mutex -- must be taken if you add this user to an account->users or if you add an account to this user
@@ -27,7 +26,7 @@ list ->		------------------------------
 			followingaccounts/<list ID>			: HashSet<Guid> -- accounts following this list 
 
 			followedby/<account ID>/public		: HashSet<Guid> -- list following this account publicly
-			followedby/<account ID>/all
+			followedby/<account ID>/all			: without personnal list
 			followedaccounts/<list ID>/data		: HashSet<Guid> -- accounts in this list 
 									  /lock		: Mutex
 
@@ -36,13 +35,10 @@ message ->	listmessages/<list ID>/<date>		: MessageSet
 			taggedmessages/<account ID>/<date>	: SortedSet<IMessage> -- minDate should alway exists
 			message/<messageID>					: IMessage
 
+100 messages in a MsgPack = 10 Ko
+
 TODO :
-	- Create a console application to init the storage
-		This application will have to :
-		-> create the containers if they don't exist
-		-> clean them, but not delete them (we can't use a container who has just been deleted !!!)
 	- Should the personnal list have the same ID than the account ?
-	- check messages size in the storage
 	- be able to upload avatars
 	- avoid create each container evry times : only once in the begining
 	- Find something better than a sortedSet to sort messages. Maybe we should code our own KeyedCollection ?
@@ -54,8 +50,9 @@ TODO :
 CHECKS :
 	- check that we dont write on a deleted blob while using retry
 	- find out what happends when we try to list blobs in a directory that does not exists
-	- that consrtaints are respected on personnal list
+	- that constraints are respected on personnal list
 
 BUG :
+	- if we add/remove a list while we post a message, then it cause a problem
 	- avoid follow a private list 
 	- add/remove the messages from the listmessage when we add/remove an account from the list

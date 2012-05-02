@@ -35,7 +35,7 @@ namespace StorageLibrary
         /// create a user
         /// </summary>
         /// <exception cref="UserAlreadyExists">if the login is already used</exception>
-        Guid Create(string login, string email, string password);
+        Guid Create(string login, string email, Byte[] password);
        
         /// <summary>
         /// delete a user
@@ -49,12 +49,12 @@ namespace StorageLibrary
         /// To be used to check a user password
         /// </summary>
         /// <exception cref="UserNotFound"></exception>
-        string GetPassword(Guid userId);
+        Byte[] GetPassword(Guid userId);
 
         /// <summary>
         /// Change a user password
         /// </summary>
         /// <exception cref="UserNotFound"></exception>
-        void SetPassword(Guid userId, string password);
+        void SetPassword(Guid userId, Byte[] password);
     }
 }

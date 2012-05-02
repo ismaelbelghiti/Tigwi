@@ -81,9 +81,8 @@ namespace StorageLibrary.Utilities
             blob.UploadByteArray(b0);
         }
 
-        static public void Delete(CloudBlobContainer container, string mutexName)
+        public void Delete()
         {
-            CloudBlob blob = container.GetBlobReference(mutexName);
             blob.DeleteIfExists();
         }
     }

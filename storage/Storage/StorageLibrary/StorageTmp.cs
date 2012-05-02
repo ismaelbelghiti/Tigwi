@@ -29,7 +29,7 @@
 
         #region Public Methods and Operators
 
-        public Guid Create(string login, string email, string password)
+        public Guid Create(string login, string email, Byte[] password)
         {
             if (this.idFromLogin.ContainsKey(login))
             {
@@ -75,7 +75,7 @@
             return this.GetFullInfo(userId).UserInfo;
         }
 
-        public string GetPassword(Guid userID)
+        public Byte[] GetPassword(Guid userID)
         {
             throw new NotImplementedException();
         }
@@ -86,7 +86,7 @@
             userInfo.UserInfo.Email = email;
         }
 
-        public void SetPassword(Guid userID, string password)
+        public void SetPassword(Guid userID, Byte[] password)
         {
             throw new NotImplementedException();
         }
@@ -771,19 +771,19 @@
 
         public void InitWithStupidData()
         {
-            this.User.Create("Ismael", "isma.proj@gmail.com", string.Empty);
+            this.User.Create("Ismael", "isma.proj@gmail.com", new Byte[1]);
             this.Account.Create(this.User.GetId("Ismael"), "La vie d'Isma", "Suivez un mec cool ...");
             this.Account.Create(this.User.GetId("Ismael"), "Algorea", "Suivez les news d'Algorea ...");
             this.Account.Add(this.Account.GetId("La vie d'Isma"), this.User.GetId("Ismael"));
             this.Account.Add(this.Account.GetId("Algorea"), this.User.GetId("Ismael"));
 
-            this.User.Create("Ulysse", "ulysse.beaugnon@ens.fr", string.Empty);
+            this.User.Create("Ulysse", "ulysse.beaugnon@ens.fr", new Byte[1]);
             this.Account.Create(this.User.GetId("Ulysse"), "Ulysse a la plage", string.Empty);
             this.Account.Create(this.User.GetId("Ulysse"), "Ulysse a la montagne", string.Empty);
             this.Account.Add(this.Account.GetId("Ulysse a la plage"), this.User.GetId("Ulysse"));
             this.Account.Add(this.Account.GetId("Ulysse a la montagne"), this.User.GetId("Ulysse"));
 
-            this.User.Create("Basile", "basile@ens.fr", string.Empty);
+            this.User.Create("Basile", "basile@ens.fr", new Byte[1]);
             this.Account.Create(this.User.GetId("Basile"), "Basile le surfeur", string.Empty);
             this.Account.Add(this.Account.GetId("Basile le surfeur"), this.User.GetId("Basile"));
 

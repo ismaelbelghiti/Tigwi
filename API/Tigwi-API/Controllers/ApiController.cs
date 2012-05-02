@@ -95,7 +95,9 @@ namespace Tigwi_API.Controllers
                 {
                     try
                     {
-                        var userId = Storage.User.Create(user.Login, user.Email, user.Password);
+                        // TODO : use new version 
+                        //var userId = Storage.User.Create(user.Login, user.Email, user.Password);
+                        var userId = new Guid(); 
 
                         // Result is an empty error XML element
                         output = new Answer(new ObjectCreated(userId));
