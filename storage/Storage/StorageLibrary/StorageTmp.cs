@@ -54,6 +54,26 @@
             throw new NotImplementedException();
         }
 
+        public Guid GetIdByOpenIdUri(string openIdUri)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AssociateOpenIdUri(Guid userId, string openIdUri)
+        {
+            throw new NotImplementedException();
+        }
+
+        public HashSet<string> ListOpenIdUris(Guid userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeassociateOpenIdUri(Guid userId, string openIdUri)
+        {
+            throw new NotImplementedException();
+        }
+
         public HashSet<Guid> GetAccounts(Guid userId)
         {
             return this.GetFullInfo(userId).Accounts;
