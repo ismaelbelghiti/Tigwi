@@ -1,10 +1,14 @@
-﻿@model System.Web.Mvc.HandleErrorInfo
+﻿@using Tigwi.UI.Models.Storage
+@model System.Web.Mvc.HandleErrorInfo
 
 @{
     ViewBag.Title = "Error";
 }
 
-<h2>
-    Sorry, an error occurred while processing your request.
-    @Model.Exception.ToString()
-</h2>
+@section Body
+{
+    <h2>
+        Oops, it seems there was an error while processing your request.
+    </h2>
+    <p>@Model.Exception.ToString()</p>
+}

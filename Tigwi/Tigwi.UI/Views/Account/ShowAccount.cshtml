@@ -4,10 +4,12 @@
     ViewBag.Title = "ShowAccount";
 }
 
-<section class="span2 userView">
-    <p>Oh Hai @Model.Name</p>
-</section>
+@section LeftInfos
+{
+        <p>Oh Hai @Model.Name</p>
+}
 
-<section class="span5">
+@section Body
+{
     @Html.Partial("_ViewPostList", Model.PersonalList.PostsAfter(DateTime.MinValue, 10));
-</section>
+}

@@ -3,7 +3,7 @@
     padding-bottom: 40px;
 }
 
-.listView {
+.leftInfos {
     border-style: solid none none solid;
     border-top-left-radius: 10px;
     border-top-right-radius: 5px;
@@ -41,15 +41,4 @@
 {
     border-style: none solid none none;
     border-color: darkgray;
-}
-
-
-.userView {
-    border-style: solid none none solid;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 5px;
-    border-width: 2px;
-    border-color: gainsboro;
-    padding-top: 10px;
-    padding-left: 5px;
 }

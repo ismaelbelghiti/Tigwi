@@ -60,7 +60,7 @@ namespace Tigwi.UI.Models.Storage
         {
             get
             {
-                return false; // todo this.internalCollection.IsReadOnly;
+                return this.internalCollection.IsReadOnly;
             }
         }
 
@@ -113,22 +113,6 @@ namespace Tigwi.UI.Models.Storage
                 this.CleanInternalCollection();
 
                 return this.internalCollection;
-            }
-        }
-
-        protected void CleanInternalCollection()
-        {
-            var toRemove = new HashSet<T>();
-            /*
-            foreach (var entity in this.internalCollection)
-                // TODO: .Where(entity => entity.Deleted))
-            {
-                toRemove.Add(entity);
-            }*/
-
-            foreach (var entity in toRemove)
-            {
-                this.internalCollection.Remove(entity);
             }
         }
 
@@ -208,7 +192,7 @@ namespace Tigwi.UI.Models.Storage
                 }
                 else
                 {
-                yield return entity;
+                    yield return entity;
 
                 }
             }
@@ -268,7 +252,7 @@ namespace Tigwi.UI.Models.Storage
             {
                 toRemove.Add(entity);
             }
-            
+
             foreach (var entity in toRemove)
             {
                 this.internalCollection.Remove(entity);
@@ -312,14 +296,10 @@ namespace Tigwi.UI.Models.Storage
             foreach (var guid in this.FetchIdCollection())
             {
                 var model = this.GetModel(guid);
-<<<<<<< Updated upstream:Tigwi/Tigwi.UI/Models/Storage/StorageEntityCollection.cs
                 if (!model.Deleted)
                 {
                     this.internalCollection.Add(model);
                 }
-=======
-                this.internalCollection.Add(model);
->>>>>>> Stashed changes:Tigwi/Tigwi.UI/Models/Storage/StorageEntityCollection.cs
             }
         }
 

@@ -29,86 +29,94 @@
         
     </head>
 
-  <body>
+    <body>
 
-      <div class="navbar navbar-fixed-top">
-          <div class="navbar-inner">
-              <div class="container-fluid">
-                  <ul class="nav">
-                      @if (@User.Identity.IsAuthenticated )
-                      {
-                          <li @((ViewBag.Cur == "Home") ? Html.Raw("class=\"active\"") : Html.Raw("class=\"\""))>@Html.ActionLink("Home", "Index", "Home")</li>
-                          <li @((ViewBag.Cur == "Me") ? Html.Raw("class=\"dropdown active\"") : Html.Raw("class=\"dropdown \""))>  
-                          <a href="#"
-                             class="dropdown-toggle"
-                             data-toggle="dropdown">
-                              @CurrentAccount.Name
-                              <b class="caret"></b>
-                          </a>
-                              <ul class="dropdown-menu">
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <ul class="nav">
+                        @if (@User.Identity.IsAuthenticated )
+                        {
+                            <li @((ViewBag.Cur == "Home") ? Html.Raw("class=\"active\"") : Html.Raw("class=\"\""))>@Html.ActionLink("Home", "Index", "Home")</li>
+                            <li @((ViewBag.Cur == "Me") ? Html.Raw("class=\"dropdown active\"") : Html.Raw("class=\"dropdown \""))>  
+                                <a href="#"
+                                   class="dropdown-toggle"
+                                   data-toggle="dropdown">
+                                    @CurrentAccount.Name
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
                                   
-                                  @foreach (var acc in CurrentUser.Accounts)
-                                  {
-                                      <li>@Html.ActionLink(acc.Name, "Index", "Home")</li> 
-                                  }
-                                  <li class="divider"></li>
-                                  <li><a data-toggle="modal" href="#addAccountModal" >Add Account</a></li>
-                              </ul>
+                                    @foreach (var acc in CurrentUser.Accounts)
+                                    {
+                                        <li>@Html.ActionLink(acc.Name, "MakeActive", "Account", new { accountId = acc.Id },null)</li> 
+                                    }
+                                    <li class="divider"></li>
+                                    <li><a data-toggle="modal" href="#addAccountModal" >Add Account</a></li>
+                                </ul>
                           
-                          </li>
-                          <li @((ViewBag.Cur == "Favs") ? Html.Raw("class=\"active\"") : Html.Raw("class=\"\""))>@Html.ActionLink("Favs", "Index", "Home")</li>
-                      }
-                      else
-                      {
-                          <li><a data-toggle="modal" href="#registerModal" >Register</a></li>
-                          <li class="dropdown">
-                              <a class="dropdown-toggle" href="#" data-toggle="dropdown">Login</a>
-                              <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
-                                  @Html.Partial("_LogOnPartial", new UserLogOnViewModel())
-                              </div>
-                          </li>
-                      }
+                            </li>
+                            <li @((ViewBag.Cur == "Favs") ? Html.Raw("class=\"active\"") : Html.Raw("class=\"\""))>@Html.ActionLink("Favs", "Index", "Home")</li>
+                        }
+                        else
+                        {
+                            <li><a data-toggle="modal" href="#registerModal" >Register</a></li>
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" href="#" data-toggle="dropdown">Login</a>
+                                <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
+                                    @Html.Partial("_LogOnPartial", new UserLogOnViewModel())
+                                </div>
+                            </li>
+                        }
 
-                      <li class="divider-vertical"></li>
-                      @Html.Partial("_Search", new SearchViewModel())
-                      @if (@User.Identity.IsAuthenticated)
-                      {
-                          <li class="dropdown">
-                              <a href="#"
-                                 class="dropdown-toggle"
-                                 data-toggle="dropdown">
-                                  <i class="icon-cog icon-white"> </i>
-                                  <b class="caret"></b>
-                              </a>
-                              <ul class="dropdown-menu">
-                                  <li><a>item1</a></li>
-                                  <li><a>item2</a></li>
-                                  <li class="divider"></li>
-                                  <li>@Html.ActionLink("Disconnect", "LogOut", "User")</li>
-                              </ul>
-                          </li>
-                      }
-                  </ul>
-              </div>
-          </div>
-      </div>
-
-      <div class="container-fluid">
-          <section id="main">
-              <div class="modal hide" id="registerModal">
-                  @Html.Partial("_RegisterPartial", new RegisterViewModel())
-              </div>
-              <div class="modal hide" id="addAccountModal">
-                  @Html.Partial("_CreateAccountPartial", new AccountCreationViewModel())
-              </div>
-              @RenderBody()
-          </section>
-
-          <footer>
-              <p>&copy; Tigwi 2012</p>
-          </footer>
-      </div>
+                        <li class="divider-vertical"></li>
+                        @Html.Partial("_Search", new SearchViewModel())
+                        @if (@User.Identity.IsAuthenticated)
+                        {
+                            <li class="dropdown">
+                                <a href="#"
+                                   class="dropdown-toggle"
+                                   data-toggle="dropdown">
+                                    <i class="icon-cog icon-white"> </i>
+                                    <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a>item1</a></li>
+                                    <li><a>item2</a></li>
+                                    <li class="divider"></li>
+                                    <li>@Html.ActionLink("Disconnect", "LogOut", "User")</li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
       
-  </body>
+        <section class="modal hide" id="registerModal">
+            @Html.Partial("_RegisterPartial", new RegisterViewModel())
+        </section>
+
+        <section class="modal hide" id="addAccountModal">
+            @Html.Partial("_CreateAccountPartial", new AccountCreationViewModel())
+        </section>
+
+        <div class="container-fluid">
+            <section id="main"> 
+                <section class="span2 leftInfos">
+                    @RenderSection("LeftInfos",false)
+                </section>
+
+                <section class="span5">
+                    @RenderSection("Body",true)
+                </section>
+            </section>
+          
+        </div>
+    </body>
+    <footer style="padding-top: 40px; padding-left: 40px;">
+        <p>&copy; Tigwi 2012</p>
+    </footer>
+
 </html>
 

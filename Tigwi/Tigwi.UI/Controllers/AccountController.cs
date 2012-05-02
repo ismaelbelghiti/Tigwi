@@ -50,15 +50,6 @@ namespace Tigwi.UI.Controllers
         }
 
         /// <summary>
-        /// Shows a form for creating a new account associated with the active user.
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult AccountNotFoundView()
-        {
-            return this.View();
-        }
-
-        /// <summary>
         /// Shows a page listing all the posts of the user.
         /// </summary>
         /// <returns></returns>
@@ -69,9 +60,9 @@ namespace Tigwi.UI.Controllers
             {
                 return this.View(this.Storage.Accounts.Find(search.searchString));
             }
-            catch(AccountNotFoundException)
+            catch(AccountNotFoundException error)
             {
-                return RedirectToAction("AccountNotFoundView", "Account");
+                return this.View("Error", new HandleErrorInfo(error,"Account","ShowAccount"));
             }
         }
 
@@ -88,9 +79,11 @@ namespace Tigwi.UI.Controllers
             {
                 // Set current account with automatic validation
                 this.CurrentAccount = account;
-
+                this.SaveIdentity(false);
                 // Tell the user everything went OK
-                throw new NotImplementedException();
+
+                return this.RedirectToAction("Index", "Home");
+                //throw new NotImplementedException();
             }
             catch (Exception)
             {
