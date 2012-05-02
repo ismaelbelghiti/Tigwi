@@ -1,8 +1,7 @@
 ﻿@using Tigwi.UI.Models
 @model ICollection<IPostModel>
            
-@foreach( var post in Model.Reverse())
+@foreach( var post in Model)
 {
-    var toSend = new PostViewModel {Post = post};
-    @Html.Partial("_ViewPost", toSend)
+    @Html.Partial("_ViewPost", post)
 }

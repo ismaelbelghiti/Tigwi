@@ -123,7 +123,14 @@ namespace Tigwi.UI.Controllers
 
         public ActionResult Index()
         {
-            return this.View();
+            if (User.Identity.IsAuthenticated)
+            {
+                return this.View(this.Storage.Accounts.Find(CurrentAccount.Name));
+            }
+            else
+            {
+                return this.View();
+            }
         }
 
         #endregion

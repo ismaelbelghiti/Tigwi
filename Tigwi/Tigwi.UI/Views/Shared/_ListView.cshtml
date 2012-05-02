@@ -1,10 +1,21 @@
-﻿<section class="listView">
+﻿@using Tigwi.UI.Models
+
+@model IEnumerable<IListModel>
+
+@*
+<section class="listView">
     <ul>
-        <li><i class="icon-folder-close"></i>lapin</li>
-        <li><i class="icon-folder-open"></i>mignon</li>
+    @foreach (var element in Model)
+    {
+        <li><input type="checkbox"/> <i class="icon-folder-open">@element.Name <br />
         <ul class="list-user">
-            <li><i class="icon-user"></i>raxou</li>
-            <li><i class="icon-user"></i>dakeyras</li>
+        @foreach (var membre in element.Members)
+        {
+            <li><i class="icon-user"></i>@membre.Name</li>
+        }
         </ul>
+        </li>
+    }
     </ul>
 </section>
+*@
