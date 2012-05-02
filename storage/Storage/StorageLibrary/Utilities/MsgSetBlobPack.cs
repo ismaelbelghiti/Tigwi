@@ -109,6 +109,38 @@ namespace StorageLibrary.Utilities
             return msgList;
         }
 
+        public MessageSet GetMessagesBetween(DateTime first, DateTime last)
+        {
+            MessageSet msgSet = null;
+            // if their is a change in te architecture of packs while we retreive messages, then we try again
+            // To detect when the structure has changed, we add a guid in metadata to get the version of the structure
+            do
+            {
+                // get blobs
+                List<KeyValuePair<DateTime, CloudBlob>> blobsList = GetBlobs();
+                if (!blobsList.Any())
+                    return new MessageSet();
+
+                // get the right blob
+                // TODO : find a better datasutrcture to do this faster
+                int blobIndex = blobsList.IndexOf(blobsList.Last(p => p.Key <= first));
+
+                // get the messages
+                try
+                {
+                    msgSet = GetMessageSet(new Blob<MessageSet>(blobsList[blobIndex].Value));
+
+                    // get messages from following sets while we need them
+                    for (blobIndex++; blobIndex < blobsList.Count && msgSet.Max.Date < last; blobIndex++ )
+                        msgSet.UnionWith(GetMessageSet(new Blob<MessageSet>(blobsList[blobIndex].Value)));
+                }
+                catch (VersionHasChanged) { continue; }
+
+            } while (false);
+           
+            return msgSet.GetViewBetween(Message.FirstMessage(first), Message.LastMessage(last));
+        }
+
         // return false to warn that the message was not added
         public bool AddMessage(IMessage message)
         {
@@ -225,10 +257,32 @@ namespace StorageLibrary.Utilities
                 b.Delete();
         }
 
-        public void UnionWith(MsgSetBlobPack other)
+        public bool UnionWith(MsgSetBlobPack other)
         {
-            // get all messages lazyly
-            throw new NotImplementedException();
+            DateTime progress = DateTime.MinValue;
+
+            while (progress != DateTime.MaxValue)
+            {
+                List<KeyValuePair<DateTime, CloudBlob>> blobsList = GetBlobs();
+                if (!blobsList.Any())
+                    return false;
+                try
+                {
+                    for (int i = 0; i < blobsList.Count; i++)
+                    {
+                        DateTime upperBound = i == blobsList.Count ? DateTime.MaxValue : blobsList[i + 1].Key;
+                        if (upperBound < progress)
+                            continue;
+
+                        MessageSet set = GetMessageSet(new Blob<MessageSet>(blobsList[i].Value));
+                        set.UnionWith(other.GetMessagesBetween(blobsList[i].Key, upperBound));
+                        progress = upperBound;
+                    }
+                }
+                catch (VersionHasChanged) { continue; }
+            }
+
+            return true;
         }
 
         List<KeyValuePair<DateTime, CloudBlob>> GetBlobs()
