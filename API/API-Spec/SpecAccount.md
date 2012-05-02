@@ -10,7 +10,7 @@ Obtain a number _n_ of the account _accountName_ 's last posted messages
 ###URL
 http://api.tigwi.com/infoaccount/messages/accountName/numberOfMessages  
 or  
-http://api.tigwi.com/infoaccount/messages/accountId/numberOfMessages
+http://api.tigwi.com/infoaccountbyid/messages/accountId/numberOfMessages
 ###Request
 _left empty_
 ###Response
@@ -67,7 +67,7 @@ No particular order provided
 ###URL
 http://api.tigwi.com/infoaccount/publiclysubscribedsaccounts/accountName/numberOfSubscriptions  
 or  
-http://api.tigwi.com/infoaccount/publiclysubscribedaccounts/accountId/numberOfSubscriptions
+http://api.tigwi.com/infoaccountbyid/publiclysubscribedaccounts/accountId/numberOfSubscriptions
 ###Request
 _left empty_
 ###Response
@@ -124,7 +124,7 @@ Authentication required.
 ###URL
 http://api.tigwi.com/infoaccount/subscribedaccounts/accountName/numberOfSubscriptions  
 or  
-http://api.tigwi.com/infoaccount/subscribedaccounts/accountId/numberOfSubscriptions
+http://api.tigwi.com/infoaccountbyid/subscribedaccounts/accountId/numberOfSubscriptions
 ###Request
 _left empty_
 ###Response
@@ -164,7 +164,7 @@ Error Type:
     <Error/>
 
 ###Informations
-* You **must** be authenticated as _accountName_ to have access to these informations. 
+* You **must** be authenticated as an authorized user of account  _accountName_ to have access to these informations. 
 * In **URL**, _accountName_ is the name of the account whose subscriptions you want to get.
 * In **URL**, _accountId_ is the unique identifier of the account whose subscriptions you want to get.
 * In **URL**, _numberOfSubscriptions_ is the number of subscriptions you want to get. It is optional and default is set to 20.
@@ -180,7 +180,7 @@ No particular order provided
 ###URL
 http://api.tigwi.com/infoaccount/subscribersaccounts/accountName/numberOfSubscribers  
 or  
-http://api.tigwi.com/infoaccount/subscribersaccounts/accountId/numberOfSubscribers
+http://api.tigwi.com/infoaccountbyid/subscribersaccounts/accountId/numberOfSubscribers
 ###Request
 _left empty_
 ###Response
@@ -227,14 +227,14 @@ Error Type:
 
 ##Get an account's followed public lists
 ###Purpose
-Obtain a number _n_ of the account _accountName_ 's followed public lists.
+Obtain a number _numberOfLists_ of the account _accountName_ 's followed public lists.
 No particular order provided.
 ###HTTP method
 *GET*
 ###URL
 http://api.tigwi.com/infoaccount/subscribedpubliclists/accountName/numberOfLists  
 or  
-http://api.tigwi.com/infoaccount/subscribedpubliclists/accountId/numberOfLists
+http://api.tigwi.com/infoaccountbyid/subscribedpubliclists/accountId/numberOfLists
 ###Request
 _left empty_
 ###Response
@@ -273,7 +273,8 @@ Error Type:
     <Error/>
 
 ###Informations
-* In **URL**, _accountName_ is the name of the account whose followed lists you want to get.
+* In **URL**, _accountName_ is the name of the account whose publicly followed lists you want to get.
+* In **URL**, _accountId_ is the unique identifier of the account whose publicly followed lists you want to get.
 * In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
 * You will only receive lists that the owner has declared public.
@@ -289,7 +290,7 @@ Authentication required.
 ###URL
 http://api.tigwi.com/infoaccount/subscribedlists/accountName/numberOfLists  
 or  
-http://api.tigwi.com/infoaccount/subscribedlists/accountId/numberOfLists
+http://api.tigwi.com/infoaccountbyid/subscribedlists/accountId/numberOfLists
 ###Request
 _left empty_
 ###Response
@@ -328,7 +329,7 @@ Error Type:
     <Error/>
 
 ###Informations
-* You **must** be authenticated and authorize to use _accountName_ account to use this method.
+* You **must** be authenticated as an authorized user of account  _accountName_ to use this method.
 * In **URL**, _accountName_ is the name of the account whose followed lists you want to get.
 * In **URL**, _accountId_ is the unique Identifier of the account whose followed lists you want to get.
 * In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default is set to 20.
@@ -343,7 +344,7 @@ No particular order provided
 ###URL
 http://api.tigwi.com/infoaccount/subscriberlists/accountName/numberOfSubscribers  
 or  
-http://api.tigwi.com/infoaccount/subscriberlists/accountId/numberOfSubscribers
+http://api.tigwi.com/infoaccountbyid/subscriberlists/accountId/numberOfSubscribers
 ###Request
 _left empty_
 ###Response
@@ -390,14 +391,14 @@ Error Type:
 
 ##Get an account's owned public lists
 ###Purpose
-Obtain a number _n_ of the account _accountName_ 's owned public lists.
+Obtain a number _numberOfLists_ of the account _accountName_ 's owned public lists.
 No particular order provided
 ###HTTP method
 *GET*
 ###URL
 http://api.tigwi.com/infoaccount/ownedpubliclists/accountName/numberOfLists  
 or  
-http://api.tigwi.com/infoaccount/ownedpubliclists/accountId/numberOfLists
+http://api.tigwi.com/infoaccountbyid/ownedpubliclists/accountId/numberOfLists
 ###Request
 _left empty_
 ###Response
@@ -446,13 +447,14 @@ Error Type:
 ##Get an account's owned lists
 ###Purpose
 Obtain a number _n_ of the account _accountName_ 's owned lists, either public or private.
-No particular order provided. Authentication required.
+No particular order provided.
+Authentication required.
 ###HTTP method
 *GET*
 ###URL
 http://api.tigwi.com/infoaccount/ownedlists/accountName/numberOfLists  
 or  
-http://api.tigwi.com/infoaccount/ownedlists/accountId/numberOfLists
+http://api.tigwi.com/infoaccountbyid/ownedlists/accountId/numberOfLists
 ###Request
 _left empty_
 ###Response
@@ -491,7 +493,7 @@ Error Type:
     <Error/>
 
 ###Informations
-* You **must** be authenticated as _accountName_ to have access to these informations. 
+* You **must** be authenticated as an authorized user of account _accountName_ to have access to these informations. 
 * In **URL**, _accountName_ is the name of the account whose lists you want to get.
 * In **URL**, _accountId_ is the unique identifier of the account whose lists you want to get.
 * In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default is set to 20.
@@ -500,14 +502,14 @@ Error Type:
 
 ##Get an account's main informations
 ###Purpose
-Obtain the account _accountName_ 's unique id.
-You need to be authenticated and authorize to use this account to get its id.
+Obtain the account _accountName_ 's main informations.
+Authentication required.
 ###HTTP method
 *GET*
 ###URL
 http://api.tigwi.com/infoaccount/maininfo/accountName  
 or  
-http://api.tigwi.com/infoaccount/maininfo/accountId
+http://api.tigwi.com/infoaccountbyid/maininfo/accountId
 ###Request
 _left empty_
 ###Response
@@ -538,7 +540,7 @@ Error Type:
     <Error/>
 
 ###Informations
-* You **must** be authenticated as an authorized user of _accountName_ to access this information.
+* You **must** be authenticated as an authorized user of account  _accountName_ to access this information.
 * In **URL**, _accountName_ is the name of the account whose main informations you want to get.
 * In **URL**, _accountId_ is the name of the account whose main informations you want to get.
 
@@ -546,13 +548,13 @@ Error Type:
 ##Get an account's users
 ###Purpose
 Obtain a number _numberOfUsers_ of the account _accountName_ users.
-You need to be authenticated and authorize to use this account to get this information.
+Authentication required
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/usersallowed/accountName/numberOfUsers  
+http://api.tigwi.com/infoaccount/allowedusers/accountName/numberOfUsers  
 or  
-http://api.tigwi.com/infoaccount/usersallowed/accountId/numberOfUsers
+http://api.tigwi.com/infoaccountbyid/allowedusers/accountId/numberOfUsers
 ###Request
 _left empty_
 ###Response
@@ -574,7 +576,7 @@ Content:
 
 User:
 
-    <User>
+    <User Size="sizeOfList">
         <Login> ... </Login>
         <Avatar> ... </Avatar>
         <Email> ... </Emain>
@@ -591,20 +593,22 @@ Error Type:
     <Error/>
 
 ###Informations
-* You **must** be authenticated as an authorized user of _accountName_ to access this information.
+* You **must** be authenticated as an authorized user of account  _accountName_ to access this information.
 * In **URL**, _accountName_ is the name of the account whose allowed users you want to get.
 * In **URL**, _accountId_ is the unique identifier of the account whose allowed users you want to get.
+* In **URL**, _numberOfUsers_ is the number of users you want to get. It is optional and default is set to 20.
+* In **Response**, _sizeOfList_ is the number of users returned (different from _numberOfLists_ if there are not enough lists to provide).
 
 ##Get an account's administrator's informations.
 ###Purpose
-Obtain a number _numberOfUsers_ of the account _accountName_ users.
-You need to be authenticated and authorize to use this account to get this information.
+Get the informations of account _accountName_'administrator
+Authentication required.
 ###HTTP method
 *GET*
 ###URL
 http://api.tigwi.com/infoaccount/administrator/accountName/numberOfUsers  
 or  
-http://api.tigwi.com/infoaccount/administrator/accountId/numberOfUsers
+http://api.tigwi.com/infoaccountbyid/administrator/accountId/numberOfUsers
 ###Request
 _left empty_
 ###Response
@@ -636,7 +640,7 @@ Error Type:
     <Error/>
 
 ###Informations
-* You **must** be authenticated as an authorized user of _accountName_ to access this information.
+* You **must** be authenticated as an authorized user of account _accountName_ to access this information.
 * In **URL**, _accountName_ is the name of the account whose administrator's informations you want to get.
 * In **URL**, _accountId_ is the unique identifier of the account whose administrator's informations you want to get.
 
@@ -646,7 +650,8 @@ These methods require authentication. You must be authenticated as a _user_ with
 
 ##Post a message
 ###Purpose
-For someone to send a message on an authorized account. Authentication required.
+For someone to send a message on an authorized account. 
+Authentication required.
 ###HTTP method
 *POST*
 ###URL
@@ -654,8 +659,10 @@ http://api.tigwi.com/modifyaccount/write
 ###Request
 
     <Write>
-       <User> nameOfUser </User>
-	   <Account> nameOfAccount </Account> 
+	   <AccountName> accountName </AccountName>
+       // or you can use
+       <AccountId> accountId </AccountId>
+ 
        <Message>
             <Content> <!-- your message --> </Content>
        </Message>
@@ -666,14 +673,9 @@ General structure of the response :
 
     <Answer>
         <!-- Error Type -->
-		<Content> 
-            <!-- See below -->
-        </Content> 
+        <Content xsi:type="ObjectCreated" 
+           Id="UniqueIdentifierOfCreatedObject" />
     </Answer>    
-  
-Content:
-
-     <ObjectCreated Id="UniqueIdentifierOfCreatedObject"/>
 
 Error type:  
 *In case an error occurs:
@@ -688,8 +690,11 @@ Error type:
 
 
 ###Informations
-* You **must** be authenticated as _nameofUser_ and authorized to use _nameOfAccount_ to post a message.
+* You **must** be authenticated as an authorized user of account _nameOfAccount_ to post a message.
 * In **Request**, the size of your message is limited to 140 characters, but this limit is tested by the server. It raises an error if the message is too long.
+* In **Request**, _accountName_ is the name of the account where you intend to post a message.
+* In **Request**, _accountId_ is the unique identifier of the account where you intend to post a message.
+* In **Request**, if you use both `<AccountName>` and `<AccountId>`, only the `<AccountId>` will be used (in particular when they don't refer to the same account).
 * In **Response**, the identifier provided is the message created's one.
 
 ##Copy a message
@@ -712,16 +717,13 @@ http://api.tigwi.com/modifyaccount/copy
 ###Response
 General structure of the response :
 
+
     <Answer>
         <!-- Error Type -->
-		<Content> 
-            <!-- See below -->
-        </Content> 
+        <Content xsi:type="ObjectCreated" 
+           Id="UniqueIdentifierOfCreatedObject" />
     </Answer>    
-  
-Content:
 
-     <ObjectCreated Id="UniqueIdentifierOfCreatedObject"/>
 
 Error type:  
 *In case an error occurs:
@@ -736,8 +738,12 @@ Error type:
 
 
 ###Informations
-* You **must** be authenticated and authorized to use _nameOfAccount_ to post a message.
-* In **Response**, the identifier provided is the message created's one.
+* You **must** be authenticated as an authorized user of account _nameOfAccount_ to copy a message.
+* In **Request**, _accountName_ is the name of the account where you intend to copy a message.
+* In **Request**, _accountId_ is the unique identifier of the account where you intend to copy a message.
+* In **Request**, if you use both `<AccountName>` and `<AccountId>`, only the `<AccountId>` will be used (in particular when they don't refer to the same account).
+* In **Response**, the identifier provided is the message created's one (copying a message means creating a new one with the same content).
+
 
 
 ##Remove a message
@@ -758,18 +764,33 @@ http://api.tigwi.com/modifyaccount/delete
     </Delete>
 
 ###Response
-In case an error occurs
+General structure of the response :
+
+
+    <Answer>
+        <!-- Error Type -->
+        <Content xsi:type="ObjectCreated" 
+           Id="UniqueIdentifierOfCreatedObject" />
+    </Answer>    
+
+
+Error type:  
+*In case an error occurs:
+
 
     <Error Code="codeOfError"/>
 
 
-If no error occurs
-
+*Otherwise:
+   
     <Error/>
 
+
 ###Informations
-* You **must** be authenticated as an authorized user of _accountName_ to remove a message.
-* In **Request**, if you indicate both _accountName_ and _accountId_, only the Id will be used (in particular when they don't refer to the same account).
+* You **must** be authenticated as an authorized user of account _accountName_ to remove a message.
+* In **Request**, _accountName_ is the name of the account where you intend to delete a message.
+* In **Request**, _accountId_ is the unique identifier of the account where you intend to delete a message.
+* In **Request**, if you use both `<AccountName>` and `<AccountId>`, only the `<AccountId>` will be used (in particular when they don't refer to the same account).
 
 ##Add a message to an account's favorite
 ###Purpose
@@ -789,22 +810,37 @@ http://api.tigwi.com/modifyaccount/tag
     </Tag>
 
 ###Response
-In case an error occurs
+General structure of the response :
+
+
+    <Answer>
+        <!-- Error Type -->
+        <Content xsi:type="ObjectCreated" 
+           Id="UniqueIdentifierOfCreatedObject" />
+    </Answer>    
+
+
+Error type:  
+*In case an error occurs:
+
 
     <Error Code="codeOfError"/>
 
 
-If no error occurs
-
+*Otherwise:
+   
     <Error/>
+
 
 ###Informations
 * You **must** be authenticated as an authorized user of _accountName_ to tag a message.
-* In **Request**, if you indicate both _accountName_ and _accountId_, only the Id will be used (in particular when they don't refer to the same account).
+* In **Request**, _accountName_ is the name of the account where you intend to tag a message.
+* In **Request**, _accountId_ is the unique identifier of the account where you intend to tag a message.
+* In **Request**, if you use both `<AccountName>` and `<AccountId>`, only the `<AccountId>` will be used (in particular when they don't refer to the same account).
 
 ##Remove a message from an account's favorite
 ###Purpose
-To tag a message as one of _accountName_'s favorites. Authentication required.
+To untag a message from _accountName_'s favorites. Authentication required.
 ###HTTP method
 *POST*
 ###URL
@@ -820,22 +856,38 @@ http://api.tigwi.com/modifyaccount/untag
     </Untag>
 
 ###Response
-In case an error occurs
+General structure of the response :
+
+
+    <Answer>
+        <!-- Error Type -->
+        <Content xsi:type="ObjectCreated" 
+           Id="UniqueIdentifierOfCreatedObject" />
+    </Answer>    
+
+
+Error type:  
+*In case an error occurs:
+
 
     <Error Code="codeOfError"/>
 
 
-If no error occurs
-
+*Otherwise:
+   
     <Error/>
 
+
 ###Informations
-* You **must** be authenticated as an authorized user of _accountName_ to remove a tagged message.
-* In **Request**, if you indicate both _accountName_ and _accountId_, only the Id will be used (in particular when they don't refer to the same account).
+* You **must** be authenticated as an authorized user of account _accountName_ to remove a tagged message.
+* In **Request**, _accountName_ is the name of the account where you intend to untag a message.
+* In **Request**, _accountId_ is the unique identifier of the account where you intend to untag a message.
+* In **Request**, if you use both `<AccountName>` and `<AccountId>`, only the `<AccountId>` will be used (in particular when they don't refer to the same account).
 
 ##Create a list
 ###Purpose
-For someone to create a new, empty list. Authentication required.
+For someone to create a new, empty list.
+Authentication required.
 
 ###HTTP method
 *POST*
@@ -856,16 +908,13 @@ http://api.tigwi.com/modifyaccount/createlist/
 ###Response
 General structure of the response :
 
+
     <Answer>
         <!-- Error Type -->
-		<Content> 
-            <!-- See below -->
-        </Content> 
+        <Content xsi:type="ObjectCreated" 
+           Id="UniqueIdentifierOfCreatedObject" />
     </Answer>    
-  
-Content:
 
-     <ObjectCreated Id="UniqueIdentifierOfCreatedObject"/>
 
 Error type:  
 *In case an error occurs:
@@ -878,14 +927,15 @@ Error type:
    
     <Error/>
 
-###Informations
-* You **must** be authenticated and authorized to use _nameOfSubscriber_ to use this method.
 
-* In **Request**, _nameOfSubscriber_ is the name of the account who wants to follow the list _nameOfSubscription_.
+###Informations
+* You **must** be authenticated and authorized to use account _nameOfSubscriber_ to use this method.
+
+* In **Request**, _nameOfSubscriber_ is the name of the account who wants to create the list _nameOfList_.
 
 * In **Request**, _nameOfList_ is the name you want to give to the new list.
 
-* In **Request**, _aRapidDescription_ is a short text to remember what the list is about.
+* In **Request**, _aQuickDescription_ is a short text to remember what the list is about.
 
 * In **Request**, _privateSetting_ value must be _false_ if you want the new list to be public or _true_ if only you can see that list.
 
@@ -907,17 +957,30 @@ http://api.tigwi.com/modifyaccount/subscribelist/
     </SubscribeList>
 
 ###Response
-In case an error occurs
+General structure of the response :
+
+
+    <Answer>
+        <!-- Error Type -->
+        <Content xsi:type="ObjectCreated" 
+           Id="UniqueIdentifierOfCreatedObject" />
+    </Answer>    
+
+
+Error type:  
+*In case an error occurs:
+
 
     <Error Code="codeOfError"/>
 
-If no error occurs
 
+*Otherwise:
+   
     <Error/>
 
 
 ###Informations
-* You **must** be authenticated and authorized to use the account _nameOfSubscriber_ to use this method.
+* You **must** be authenticated as an authorized user of account _nameOfSubscriber_ to use this method.
 * In **Request**, _nameOfSubscriber_ is the name of the account who wants to follow the list _idOfSubscription_.
 * In **Request**, _idOfSubscriber_ is the unique identifier of the account who wants to follow the list _idOfSubscription_.
 
@@ -932,29 +995,39 @@ http://api.tigwi.com/modifyaccount/changedescription/
     
     <ChangeDescription>
         <AccountName> accountName </AccountName>
+        // or you can use
+        <AccountId> accountId </AccountId>
+        
         <Descritpion> <!-- New description --> </Description>
     </ChangeDescription>
 
-or
-
-    <ChanegDescription>
-         <AccountId> accountId </AccountId>
-         <Description> <!-- New description --> </Description>
-    </ChangeDescription>
-
 ###Response
-In case an error occurs
+General structure of the response :
+
+
+    <Answer>
+        <!-- Error Type -->
+        <Content xsi:type="ObjectCreated" 
+           Id="UniqueIdentifierOfCreatedObject" />
+    </Answer>    
+
+
+Error type:  
+*In case an error occurs:
+
 
     <Error Code="codeOfError"/>
 
-If no error occurs
 
+*Otherwise:
+   
     <Error/>
-
 
 ###Informations
 * You **must** be authenticated as the administrator of the account _accountName_ to use this method.
-* In **Request**, _accountName_ is the name of the account whose description you want to change.
+* In **Request**, _accountName_ is the name of the account where you intend to untag a message.
+* In **Request**, _accountId_ is the unique identifier of the account where you intend to untag a message.
+* In **Request**, if you use both `<AccountName>` and `<AccountId>`, only the `<AccountId>` will be used (in particular when they don't refer to the same account).
 
 
 ##Authorize an user to use an account
@@ -978,19 +1051,36 @@ http://api.tigwi.com/modifyaccount/adduser/
 
 
 ###Response
-In case an error occurs
+General structure of the response :
+
+
+    <Answer>
+        <!-- Error Type -->
+        <Content xsi:type="ObjectCreated" 
+           Id="UniqueIdentifierOfCreatedObject" />
+    </Answer>    
+
+
+Error type:  
+*In case an error occurs:
+
 
     <Error Code="codeOfError"/>
 
-If no error occurs
 
+*Otherwise:
+   
     <Error/>
 
 
 ###Informations
 * You **must** be authenticated as the administrator of the account _accountName_ to use this method.
-* In **Request**, _accountName_ is the name of the account where you want to add an user.
-* In **Request** if you use, either for the account or the user, the field "Id", it will have maximal priority. That is to say if you use both `<AccountName>` and `<AccountId>` with informations that do not correspond, it's the Id that will be used by the method.
+* In **Request**, _accountName_ is the name of the account where you intend to allow an user.
+* In **Request**, _accountId_ is the unique identifier of the account where you intend to allow an user.
+* In **Request**, if you use both `<AccountName>` and `<AccountId>`, only the `<AccountId>` will be used (in particular when they don't refer to the same account).
+* In **Request**, _userLogin_ is the login of the user you want to allow to write on this account.
+* In **Request**, _userId_ is the unique identifier of the user you want to allow to write on this account.
+* In **Request**, if you use both `<UserLogin>` and `<UserId>`, only the `<UserId>` will be used (in particular when they don't refer to the same user).
 
 ##Forbid an user to use an account
 ###Purpose
@@ -1013,24 +1103,41 @@ http://api.tigwi.com/modifyaccount/removeuser/
 
 
 ###Response
-In case an error occurs
+General structure of the response :
+
+
+    <Answer>
+        <!-- Error Type -->
+        <Content xsi:type="ObjectCreated" 
+           Id="UniqueIdentifierOfCreatedObject" />
+    </Answer>    
+
+
+Error type:  
+*In case an error occurs:
+
 
     <Error Code="codeOfError"/>
 
-If no error occurs
 
+*Otherwise:
+   
     <Error/>
 
 
 ###Informations
 * You **must** be authenticated as the administrator of the account _accountName_ to use this method.
-* In **Request**, _accountName_ is the name of the account where you want to add an user.
-* In **Request** if you use, either for the account or the user, the field "Id", it will have maximal priority. That is to say if you use both `<AccountName>` and `<AccountId>` with informations that do not correspond, it's the Id that will be used by the method.
+* In **Request**, _accountName_ is the name of the account where you intend to remove an user.
+* In **Request**, _accountId_ is the unique identifier of the account where you intend to remove an user.
+* In **Request**, if you use both `<AccountName>` and `<AccountId>`, only the `<AccountId>` will be used (in particular when they don't refer to the same account).
+* In **Request**, _userLogin_ is the login of the user you want to forbid to write on this account.
+* In **Request**, _userId_ is the unique identifier of the user you want to forbid to write on this account.
+* In **Request**, if you use both `<UserLogin>` and `<UserId>`, only the `<UserId>` will be used (in particular when they don't refer to the same user).
 
 
 ##Change the administrator of an account
 ###Purpose
-If you're authenticated as the administrator of the account _accountName_, you can renouce to your rights and name user _userLogin_ as new administrator.
+If you're authenticated as the administrator of the account _accountName_, you can renouce to your rights and name user _userLogin_ as new administrator. (There can be only one administrator at a time for an account.)
 ###HTTP method
 *POST*
 ###URL
@@ -1049,17 +1156,33 @@ http://api.tigwi.com/modifyaccount/changeadmin/
 
 
 ###Response
-In case an error occurs
+General structure of the response :
+
+
+    <Answer>
+        <!-- Error Type -->
+        <Content xsi:type="ObjectCreated" 
+           Id="UniqueIdentifierOfCreatedObject" />
+    </Answer>    
+
+
+Error type:  
+*In case an error occurs:
+
 
     <Error Code="codeOfError"/>
 
-If no error occurs
 
+*Otherwise:
+   
     <Error/>
-
 
 ###Informations
 * You **must** be authenticated as the administrator of the account _accountName_ to use this method.
-* In **Request**, _accountName_ is the name of the account whose administrator you want to change.
-* In **Request** if you use, either for the account or the user, the field "Id", it will have maximal priority. That is to say if you use both `<AccountName>` and `<AccountId>` with informations that do not correspond, it's the Id that will be used by the method.
+* In **Request**, _accountName_ is the name of the account where you intend to change the administrator.
+* In **Request**, _accountId_ is the unique identifier of the account where you intend to change the administrator.
+* In **Request**, if you use both `<AccountName>` and `<AccountId>`, only the `<AccountId>` will be used (in particular when they don't refer to the same account).
+* In **Request**, _userLogin_ is the login of the user who's going to be the new administrator.
+* In **Request**, _userId_ is the unique identifier of the user who's going to be the new administrator.
+* In **Request**, if you use both `<UserLogin>` and `<UserId>`, only the `<UserId>` will be used (in particular when they don't refer to the same user).
 

@@ -11,7 +11,8 @@ using StorageLibrary.exception;
 namespace StorageLibrary.Utilities
 {
     // TODO : maybe the guid to dectect changes is not the best fing in terms of performance
-    class MsgSetBlobPack
+    // TODO : change to private
+    public class MsgSetBlobPack
     {
         const int splitSize = 200;
         const int mergeSize = 50;
@@ -70,10 +71,9 @@ namespace StorageLibrary.Utilities
         }
 
         // TODO : change list to set for a better merge
-        // TODO : repercute changes from GetMessageFrom
         public List<IMessage> GetMessagesTo(DateTime date, int msgCount, Exception e)
         {
-            List<IMessage> msgList = null;
+            MessageSet msgSet = null;
 
             // TODO : use something else than reverse
             do
@@ -90,27 +90,55 @@ namespace StorageLibrary.Utilities
                 // get the messages
                 try
                 {
-                    MessageSet msgSet = GetMessageSet(new Blob<MessageSet>(blobsList[blobIndex].Value));
-                    msgList = msgSet.GetViewBetween(Message.FirstMessage() , Message.LastMessage(date)).ToList();
-
-                    msgList.Reverse();
+                    msgSet = GetMessageSet(new Blob<MessageSet>(blobsList[blobIndex].Value));
+                    msgSet = msgSet.GetViewBetween(Message.FirstMessage() , Message.LastMessage(date));
 
                     // get messages from following sets while we need them
-                    for (blobIndex--; blobIndex >= 0 && msgList.Count < msgCount; blobIndex--)
-                    {
-                        msgSet = GetMessageSet(new Blob<MessageSet>(blobsList[blobIndex].Value));
-                        msgList.AddRange(msgSet.Reverse());
-                    }
+                    for (blobIndex--; blobIndex >= 0 && msgSet.Count < msgCount; blobIndex--)
+                        msgSet.UnionWith(GetMessageSet(new Blob<MessageSet>(blobsList[blobIndex].Value)));                     
+                }
+                catch (VersionHasChanged) { continue; }
+
+               
+            } while (false);
+
+            List<IMessage> msgList = msgSet.ToList();
+            if (msgList.Count > msgCount)
+                msgList = msgList.GetRange(msgList.Count - msgCount, msgCount);
+
+            return msgList;
+        }
+
+        public MessageSet GetMessagesBetween(DateTime first, DateTime last)
+        {
+            MessageSet msgSet = null;
+            // if their is a change in te architecture of packs while we retreive messages, then we try again
+            // To detect when the structure has changed, we add a guid in metadata to get the version of the structure
+            do
+            {
+                // get blobs
+                List<KeyValuePair<DateTime, CloudBlob>> blobsList = GetBlobs();
+                if (!blobsList.Any())
+                    return new MessageSet();
+
+                // get the right blob
+                // TODO : find a better datasutrcture to do this faster
+                int blobIndex = blobsList.IndexOf(blobsList.Last(p => p.Key <= first));
+
+                // get the messages
+                try
+                {
+                    msgSet = GetMessageSet(new Blob<MessageSet>(blobsList[blobIndex].Value));
+
+                    // get messages from following sets while we need them
+                    for (blobIndex++; blobIndex < blobsList.Count && msgSet.Max.Date < last; blobIndex++ )
+                        msgSet.UnionWith(GetMessageSet(new Blob<MessageSet>(blobsList[blobIndex].Value)));
                 }
                 catch (VersionHasChanged) { continue; }
 
             } while (false);
-
-            if (msgList.Count > msgCount)
-                msgList = msgList.GetRange(0, msgCount);
-
-            msgList.Reverse();
-            return msgList;
+           
+            return msgSet.GetViewBetween(Message.FirstMessage(first), Message.LastMessage(last));
         }
 
         // return false to warn that the message was not added
@@ -227,6 +255,34 @@ namespace StorageLibrary.Utilities
         {
             foreach (CloudBlob b in dir.ListBlobs())
                 b.Delete();
+        }
+
+        public bool UnionWith(MsgSetBlobPack other)
+        {
+            DateTime progress = DateTime.MinValue;
+
+            while (progress != DateTime.MaxValue)
+            {
+                List<KeyValuePair<DateTime, CloudBlob>> blobsList = GetBlobs();
+                if (!blobsList.Any())
+                    return false;
+                try
+                {
+                    for (int i = 0; i < blobsList.Count; i++)
+                    {
+                        DateTime upperBound = i == blobsList.Count ? DateTime.MaxValue : blobsList[i + 1].Key;
+                        if (upperBound < progress)
+                            continue;
+
+                        MessageSet set = GetMessageSet(new Blob<MessageSet>(blobsList[i].Value));
+                        set.UnionWith(other.GetMessagesBetween(blobsList[i].Key, upperBound));
+                        progress = upperBound;
+                    }
+                }
+                catch (VersionHasChanged) { continue; }
+            }
+
+            return true;
         }
 
         List<KeyValuePair<DateTime, CloudBlob>> GetBlobs()

@@ -11,7 +11,7 @@ namespace StorageLibrary.Utilities
     {
         public HashSetBlob(CloudBlobContainer container, string blobName) : base(container, blobName) { }
 
-        public bool Add(T item)
+        public bool AddWithRetry(T item)
         {
             HashSet<T> set;
 
@@ -19,9 +19,7 @@ namespace StorageLibrary.Utilities
             {
                 try
                 {
-                    BlobStream stream = blob.OpenRead();
-                    set = (HashSet<T>)formatter.Deserialize(stream);
-                    stream.Close();
+                    set = base.Get();
                 }
                 catch { return false; }
 
@@ -33,7 +31,21 @@ namespace StorageLibrary.Utilities
             return true;
         }
 
-        public bool Remove(T item)
+        public void Add(T item)
+        {
+            HashSet<T> set = base.Get();
+            set.Add(item);
+            base.Set(set);
+        }
+
+        public void Remove(T item)
+        {
+            HashSet<T> set = base.Get();
+            set.Remove(item);
+            base.Set(set);
+        }
+
+        public bool RemoveWithRetry(T item)
         {
             HashSet<T> set;
 
@@ -41,9 +53,7 @@ namespace StorageLibrary.Utilities
             {
                 try
                 {
-                    BlobStream stream = blob.OpenRead();
-                    set = (HashSet<T>)formatter.Deserialize(stream);
-                    stream.Close();
+                    set = base.Get();
                 }
                 catch { return false; }
 

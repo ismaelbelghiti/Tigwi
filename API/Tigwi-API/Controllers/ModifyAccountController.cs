@@ -248,6 +248,7 @@ namespace Tigwi_API.Controllers
         // POST /modifyaccount/changedescription
 
         //[Authorize]
+        // According to spec, authentication must check that the user is the administrator of the account
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult ChangeDescription()
         {
@@ -278,6 +279,7 @@ namespace Tigwi_API.Controllers
         // POST : /modifyaccount/adduser
 
         //[Authorize]
+        // According to spec, authentication must check that the user is the administrator of the account
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult RemoveUser()
         {
@@ -310,6 +312,7 @@ namespace Tigwi_API.Controllers
         // POST : /modifyaccount/adduser
 
         //[Authorize]
+        // According to spec, authentication must check that the user is the administrator of the account
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult AddUser()
         {
@@ -343,6 +346,7 @@ namespace Tigwi_API.Controllers
         // POST : /modifyaccount/changeadmin
 
         //[Authorize]
+        // According to spec, authentication must check that the user is the administrator of the account
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult ChangeAdmin()
         {

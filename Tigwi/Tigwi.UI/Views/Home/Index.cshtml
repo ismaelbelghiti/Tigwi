@@ -6,7 +6,7 @@
 {
     @if(User.Identity.IsAuthenticated)
     {
-        @Html.Partial("_ListView")
+        @Html.Partial("_ListView", CurrentAccount.AllFollowedLists)
     }
     else
     {
