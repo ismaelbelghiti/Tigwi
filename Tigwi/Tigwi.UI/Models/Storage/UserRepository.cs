@@ -56,7 +56,7 @@ namespace Tigwi.UI.Models.Storage
             {
                 // Create a new user via medium-level storage calls, then find it by its ID.
                 // TODO: prepopulate ?
-                Guid id = this.Storage.User.Create(login, email, string.Empty);
+                Guid id = this.Storage.User.Create(login, email, new Byte[1]);
                 return this.Find(id);
             }
             catch (UserAlreadyExists userAlreadyExists)
