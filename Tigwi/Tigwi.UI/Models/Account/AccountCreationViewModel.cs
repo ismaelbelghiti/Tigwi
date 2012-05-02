@@ -11,10 +11,6 @@ namespace Tigwi.UI.Models.Account
 
     public class AccountCreationViewModel
     {
-       
-        //[Required]
-        [Display(Name = "User")]
-        public IUserModel User { get; set; }
 
         [Required]
         [Display(Name = "Name")]

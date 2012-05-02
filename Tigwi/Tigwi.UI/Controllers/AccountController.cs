@@ -56,7 +56,14 @@ namespace Tigwi.UI.Controllers
         [HttpPost]
         public ActionResult ShowAccount(SearchViewModel search)
         {
-            return this.View(this.Storage.Accounts.Find(search.searchString));
+            try
+            {
+                return this.View(this.Storage.Accounts.Find(search.searchString));
+            }
+            catch(AccountNotFoundException error)
+            {
+                return this.View("Error", new HandleErrorInfo(error,"Account","ShowAccount"));
+            }
         }
 
         /// <summary>
@@ -72,9 +79,11 @@ namespace Tigwi.UI.Controllers
             {
                 // Set current account with automatic validation
                 this.CurrentAccount = account;
-
+                this.SaveIdentity(false);
                 // Tell the user everything went OK
-                throw new NotImplementedException();
+
+                return this.RedirectToAction("Index", "Home");
+                //throw new NotImplementedException();
             }
             catch (Exception)
             {
@@ -89,7 +98,7 @@ namespace Tigwi.UI.Controllers
         /// <returns></returns>
         public ActionResult Create()
         {
-            return this.View();
+            return this.RedirectToAction("Index","Home");
         }
 
         /// <summary>
@@ -110,7 +119,7 @@ namespace Tigwi.UI.Controllers
                 this.Storage.SaveChanges();
                 return this.RedirectToAction("Create",accountCreation);
             }
-            throw new NotImplementedException("fuck you");
+            throw new NotImplementedException("model not valid");
             return this.View(accountCreation);
         }
 

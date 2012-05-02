@@ -192,7 +192,7 @@ namespace Tigwi.UI.Models.Storage
                 }
                 else
                 {
-                yield return entity;
+                    yield return entity;
 
                 }
             }
@@ -252,7 +252,7 @@ namespace Tigwi.UI.Models.Storage
             {
                 toRemove.Add(entity);
             }
-            
+
             foreach (var entity in toRemove)
             {
                 this.internalCollection.Remove(entity);
