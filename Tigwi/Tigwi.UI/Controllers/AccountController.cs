@@ -71,9 +71,9 @@ namespace Tigwi.UI.Controllers
         /// </summary>
         /// <returns></returns>
         [Authorize]
-        public ActionResult MakeActive(Guid accountId)
+        public ActionResult MakeActive(string accountName)
         {
-            var account = this.Storage.Accounts.Find(accountId);
+            var account = this.Storage.Accounts.Find(accountName);
 
             try
             {

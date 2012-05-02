@@ -64,6 +64,7 @@ namespace Tigwi.UI
                 new { controller = "Home", action = "Index" },
                 new { userName = @"[a-zA-Z0-9][a-zA-Z0-9_]*", controller = @"Followers|Followed|Tweets" }
             );*/
+            routes.MapRoute("UsersAccounts", "{accountName}/Activate", new {controller = "Account", action = "MakeActive"});
             routes.MapRoute(
                 "Default", 
                 // Route name

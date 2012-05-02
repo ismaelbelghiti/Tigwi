@@ -1,4 +1,7 @@
-﻿@{
+﻿@using Tigwi.UI.Models
+@model Tigwi.UI.Models.IAccountModel
+
+@{
     ViewBag.Title = "Home Page";
 }
 
@@ -19,7 +22,8 @@
 {
     @if(User.Identity.IsAuthenticated)
     {
-        @Html.Partial("_WriteMessage")
+        <div>@Html.Partial("_WriteMessage", new WritePostViewModel())</div>
+        <div>@Html.Partial("_ViewPostList", Model.PersonalList.PostsBefore(DateTime.MaxValue, 10))</div>
     }
     else
     {
