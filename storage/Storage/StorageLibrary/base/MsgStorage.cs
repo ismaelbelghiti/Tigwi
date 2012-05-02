@@ -11,16 +11,14 @@ namespace StorageLibrary
 {
     public class MsgStorage : IMsgStorage
     {
-        // TODO : find the best value
-        // We split the set of messages in packs because we don't want to retrive a 10M blob from the storage
-        TimeSpan limitDateDiff = TimeSpan.FromSeconds(5);
+        // We differ messages post to be sure they have been inserted were they should be in time
+        // This is also necessary because of the bad time synchronisation in azure
+        TimeSpan limitDateDiff = TimeSpan.FromSeconds(20);
 
-        StrgConnexion connexion; // TODO : to be removed
         BlobFactory blobFactory;
 
-        public MsgStorage(StrgConnexion connexion, BlobFactory blobFactory)
+        public MsgStorage(BlobFactory blobFactory)
         {
-            this.connexion = connexion;
             this.blobFactory = blobFactory;
         }
 
@@ -28,11 +26,8 @@ namespace StorageLibrary
         {
             // TODO : add some parallization
             MessageSet messages = new MessageSet();
-            foreach (Guid id in listsId)
-            {
-                MsgSetBlobPack blob = new MsgSetBlobPack(connexion.msgContainer, Path.M_LISTMESSAGES + id);
-                messages.UnionWith(blob.GetMessagesFrom(firstMsgTime, msgNumber, new ListNotFound()));
-            }
+            foreach (Guid listId in listsId)
+                messages.UnionWith(blobFactory.MListMessages(listId).GetMessagesFrom(firstMsgTime, msgNumber, new ListNotFound()));
 
             List<IMessage> msgList = messages.ToList();
             if (msgList.Count > msgNumber)
@@ -46,11 +41,8 @@ namespace StorageLibrary
             // TODO : add some parallization
             MessageSet messages = new MessageSet();
             lastMsgTime = TruncateDate(lastMsgTime);
-            foreach (Guid id in listsId)
-            {
-                MsgSetBlobPack blob = new MsgSetBlobPack(connexion.msgContainer, Path.M_LISTMESSAGES + id);
-                messages.UnionWith(blob.GetMessagesTo( lastMsgTime, msgNumber, new ListNotFound()));
-            }
+            foreach (Guid listId in listsId)
+                messages.UnionWith(blobFactory.MListMessages(listId).GetMessagesTo( lastMsgTime, msgNumber, new ListNotFound()));
 
             List<IMessage> msgList = messages.ToList();
             if (msgList.Count > msgNumber)
@@ -62,11 +54,10 @@ namespace StorageLibrary
         public void Tag(Guid accountId, Guid msgId)
         {
             // retrive the message
-            IMessage message = (new Blob<IMessage>(connexion.msgContainer, Path.M_MESSAGE + msgId)).GetIfExists(new MessageNotFound());
+            IMessage message = blobFactory.MMessage(msgId).GetIfExists(new MessageNotFound());
 
             // Tag it
-            MsgSetBlobPack msgsBlob = new MsgSetBlobPack(connexion.msgContainer, Path.M_TAGGEDMESSAGES + accountId);
-            if (!msgsBlob.AddMessage(message))
+            if (!blobFactory.MTaggedMessages(accountId).AddMessage(message))
                 throw new AccountNotFound();
         }
 
@@ -76,61 +67,53 @@ namespace StorageLibrary
             IMessage message;
             try
             {
-                message = (new Blob<IMessage>(connexion.msgContainer, Path.M_MESSAGE + msgId)).GetIfExists(new MessageNotFound());
+                message = blobFactory.MMessage(msgId).GetIfExists(new MessageNotFound());
             }
             catch { return; }
 
             // remove the message from tagged
-            MsgSetBlobPack msgsBlob = new MsgSetBlobPack(connexion.msgContainer, Path.M_TAGGEDMESSAGES + accountId);
-            msgsBlob.RemoveMessage(message);
+            blobFactory.MTaggedMessages(accountId).RemoveMessage(message);
         }
 
         public List<IMessage> GetTaggedFrom(Guid accoundId, DateTime firstMsgDate, int msgNumber)
         {
-            MsgSetBlobPack bMessages = new MsgSetBlobPack(connexion.msgContainer, Path.M_TAGGEDMESSAGES + accoundId);
-            List<IMessage> msgs = bMessages.GetMessagesFrom(firstMsgDate, msgNumber, new AccountNotFound());
-
-            return TruncateMessages(msgs);
+            return TruncateMessages(blobFactory.MTaggedMessages(accoundId).GetMessagesFrom(firstMsgDate, msgNumber, new AccountNotFound()));
         }
 
         public List<IMessage> GetTaggedTo(Guid accountId, DateTime lastMsgDate, int msgNumber)
         {
-            MsgSetBlobPack bMessages = new MsgSetBlobPack(connexion.msgContainer, Path.M_TAGGEDMESSAGES + accountId);
-            return bMessages.GetMessagesTo( TruncateDate(lastMsgDate), msgNumber, new AccountNotFound());
+            return blobFactory.MTaggedMessages(accountId).GetMessagesTo(TruncateDate(lastMsgDate), msgNumber, new AccountNotFound());
         }
 
-        // partialy implemented
-        // TODO : update to reflect changes in the architecture
         public Guid Post(Guid accountId, string content)
         {
-            Guid id = Guid.NewGuid();
+            Guid messageId = Guid.NewGuid();
+            Blob<IMessage> bMessage = blobFactory.MMessage(messageId);
 
-            Blob<IMessage> bMessage = new Blob<IMessage>(connexion.msgContainer, Path.M_MESSAGE + id);
             try
             {
-                Blob<AccountInfo> bAccountInfo = new Blob<AccountInfo>(connexion.accountContainer, Path.A_INFO + accountId);
-                AccountInfo accountInfo = bAccountInfo.GetIfExists(new AccountNotFound());
-
-                Message message = new Message(id, accountId, accountInfo.Name, "", DateTime.Now, content);
+                IAccountInfo accountInfo = blobFactory.AInfo(accountId).GetIfExists(new AccountNotFound());
+                Guid personnalListId = blobFactory.LPersonnalList(accountId).GetIfExists(new AccountNotFound());
+                Message message = new Message(messageId, accountId, accountInfo.Name, "", DateTime.Now, content);
+                MsgSetBlobPack bPersonnalListMsgs = blobFactory.MListMessages(personnalListId);
 
                 // Save the message
                 bMessage.Set(message);
+                if (!bPersonnalListMsgs.AddMessage(message))
+                    throw new AccountNotFound();
 
-                // Add in listMsg
-                // TODO : handle the fact that followedBy might change during this process
-                Blob<HashSet<Guid>> bFollowedByAll = new Blob<HashSet<Guid>>(connexion.listContainer, Path.LFollowedByAll(accountId));
-                HashSet<Guid> lists = bFollowedByAll.GetIfExists(new AccountNotFound());
-                foreach(Guid listId in lists) 
+                // Add in listMsg -- if a list is added during the foreach, then the message will be added by the addition of the list
+                foreach (Guid listId in blobFactory.LFollowedByAll(accountId).GetIfExists(new AccountNotFound()))
                 {
-                    MsgSetBlobPack msgSet = new MsgSetBlobPack(connexion.msgContainer, Path.M_LISTMESSAGES + listId);
-                    msgSet.AddMessage(message);
+                    try { blobFactory.MListMessages(listId).AddMessage(message); }
+                    catch { }
                 }
             }
-            catch { bMessage.Delete(); }
+            catch { bMessage.Delete();  }
             
             // TODO : Add in accountMsg
 
-            return id;
+            return messageId;
         }
 
         // NYI

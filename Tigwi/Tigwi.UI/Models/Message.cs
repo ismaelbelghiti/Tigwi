@@ -6,14 +6,16 @@ using StorageLibrary;
 
 namespace Tigwi.UI.Models
 {
-    public class Message :  IMessage
+    public class Message : IMessage
     {
         public Message(Guid id, Guid posterId, string posterName, string posterAvatar, DateTime date, string content)
         {
-            Id = id;
-            PosterId = posterId;
-            Date = date;
-            Content = content;
+            this.Id = id;
+            this.PosterId = posterId;
+            this.PosterName = posterName;
+            this.PosterAvatar = posterAvatar;
+            this.Date = date;
+            this.Content = content;
         }
 
         public Guid Id { get; set; }

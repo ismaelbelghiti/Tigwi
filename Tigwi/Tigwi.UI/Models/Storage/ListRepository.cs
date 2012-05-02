@@ -1,25 +1,67 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ListRepository.cs" company="ENS Paris">
+//   BSD
+// </copyright>
+// <summary>
+//   An implementation of the <see cref="IListRepository" /> interface for Azure Storage.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace Tigwi.UI.Models.Storage
 {
     using System;
 
     using StorageLibrary;
 
+    /// <summary>
+    /// An implementation of the <see cref="IListRepository" /> interface for Azure Storage.
+    /// </summary>
     public class ListRepository : StorageEntityRepository<StorageListModel>, IListRepository
     {
         #region Constructors and Destructors
 
-        public ListRepository(IStorage storage, StorageContext storageContext)
-            : base(storage, storageContext)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ListRepository"/> class. 
+        /// </summary>
+        /// <param name="storageContext">
+        /// The storage context.
+        /// </param>
+        public ListRepository(StorageContext storageContext)
+            : base(storageContext)
         {
         }
 
         #endregion
 
+        #region Public Methods and Operators
+
+        /// <summary>
+        /// Creates a new list associated with the given account.
+        /// </summary>
+        /// <param name="account">
+        /// The account to be the list's owner.
+        /// </param>
+        /// <param name="name">
+        /// The list's name.
+        /// </param>
+        /// <param name="description">
+        /// The list's description.
+        /// </param>
+        /// <param name="isPrivate">
+        /// A boolean indicating whether the list is private or public.
+        /// </param>
+        /// <returns>
+        /// An <see cref="IListModel"/> representing the newly created list.
+        /// </returns>
+        /// <exception cref="AccountNotFoundException">
+        /// When the account does not exist.
+        /// </exception>
         public IListModel Create(IAccountModel account, string name, string description, bool isPrivate)
         {
+            // TODO: place in IAccountModel.CreateList()
             try
             {
-                var id = this.Storage.List.Create(account.Id, name, description, isPrivate);
+                Guid id = this.Storage.List.Create(account.Id, name, description, isPrivate);
                 return this.Find(id);
             }
             catch (AccountNotFound ex)
@@ -28,6 +70,12 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
+        /// <summary>
+        /// Delete a given list.
+        /// </summary>
+        /// <param name="list">
+        /// The list to delete.
+        /// </param>
         public void Delete(IListModel list)
         {
             // TODO: fixme
@@ -35,14 +83,39 @@ namespace Tigwi.UI.Models.Storage
             this.EntitiesMap.Remove(list.Id);
         }
 
+        /// <summary>
+        /// Find a list by its ID.
+        /// </summary>
+        /// <param name="listId">
+        /// The list id.
+        /// </param>
+        /// <returns>
+        /// A lazy <see cref="IListModel" /> representing the list.
+        /// </returns>
         public IListModel Find(Guid listId)
         {
+            // Simply a type cast
             return this.InternalFind(listId);
         }
 
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Find a list by its ID and returns it with its true type, <see cref="StorageListModel" />.
+        /// </summary>
+        /// <param name="listId">
+        /// The list id.
+        /// </param>
+        /// <returns>
+        /// A lazy <see cref="StorageListModel" /> representing the list.
+        /// </returns>
         internal StorageListModel InternalFind(Guid listId)
         {
             StorageListModel list;
+            
+            // Try to hit the cache
             if (!this.EntitiesMap.TryGetValue(listId, out list))
             {
                 list = new StorageListModel(this.Storage, this.StorageContext, listId);
@@ -52,6 +125,9 @@ namespace Tigwi.UI.Models.Storage
             return list;
         }
 
+        /// <summary>
+        /// Commit the changes.
+        /// </summary>
         internal void SaveChanges()
         {
             foreach (var list in this.EntitiesMap)
@@ -59,5 +135,7 @@ namespace Tigwi.UI.Models.Storage
                 list.Value.Save();
             }
         }
+
+        #endregion
     }
 }

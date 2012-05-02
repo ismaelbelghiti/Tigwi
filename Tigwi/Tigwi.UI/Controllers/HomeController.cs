@@ -30,7 +30,7 @@ namespace Tigwi.UI.Controllers
         #region Constructors and Destructors
 
         public HomeController()
-            // : this(new StorageContext(new Storage(__AZURE_STORAGE_ACCOUNT_NAME, __AZURE_STORAGE_ACCOUNT_KEY)))
+            // : this(new StorageContext(new Storage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY")))
         {
         }
 
@@ -49,10 +49,10 @@ namespace Tigwi.UI.Controllers
             {
                 if (this.currentAccount == null)
                 {
-                    CustomIdentity identity;
-                    if (this.User != null && (identity = this.User.Identity as CustomIdentity) != null)
+                    var identity = this.User.Identity;
+                    if (this.User != null && identity is CustomIdentity)
                     {
-                        this.currentAccount = this.Storage.Accounts.Find(identity.AccountId);
+                        this.currentAccount = this.Storage.Accounts.Find((identity as CustomIdentity).AccountId);
                     }
                     else
                     {
@@ -82,13 +82,10 @@ namespace Tigwi.UI.Controllers
         {
             get
             {
-                if (this.currentUser == null && this.User.Identity is CustomIdentity)
+                var identity = this.User.Identity;
+                if (this.currentUser == null && identity is CustomIdentity) 
                 {
-                    var storageInfos = this.User.Identity as CustomIdentity;
-                    if (storageInfos != null)
-                    {
-                        this.currentUser = this.Storage.Users.Find(storageInfos.UserId);
-                    }
+                    this.currentUser = this.Storage.Users.Find((identity as CustomIdentity).UserId);
                 }
 
                 return this.currentUser;
@@ -132,13 +129,6 @@ namespace Tigwi.UI.Controllers
         #endregion
 
         #region Methods
-
-        protected override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            base.OnActionExecuting(filterContext);
-            this.ViewBag.CurrentUser = this.CurrentUser;
-            this.ViewBag.CurrentAccount = this.CurrentAccount;
-        }
 
         protected void SaveIdentity(bool isPersistent)
         {
