@@ -64,7 +64,7 @@ namespace Tigwi.UI.Controllers
                 this.Storage.Posts.Create(CurrentAccount, post.Content);
                 //throw new NotImplementedException(post.Poster.Name + "  " + post.Content);
                 this.Storage.SaveChanges();
-                return this.View();
+                return this.RedirectToAction("Index","Home");
 
             }
             //

@@ -98,7 +98,7 @@ namespace Tigwi.UI.Controllers
         /// <returns></returns>
         public ActionResult Create()
         {
-            return this.View();
+            return this.RedirectToAction("Index","Home");
         }
 
         /// <summary>
