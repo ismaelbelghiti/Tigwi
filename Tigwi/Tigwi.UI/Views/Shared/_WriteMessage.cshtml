@@ -1,6 +1,6 @@
 ﻿@model Tigwi.UI.Models.WritePostViewModel
 
-<script>
+<script type="text/javascript">
     $(document).ready(function () {
         $('#inputMessage').attr("rows", 1);
         $('#inputButton').hide();
@@ -14,12 +14,18 @@
                 this.select();
             }
         });
-
         $('#inputMessage').blur(function () {
-            $(this).attr("rows", 1);
-            $('#inputButton').hide();
+            if (this.value == this.defaultValue || this.value == '') {
+                $(this).attr("rows", 1);
+                $('#inputButton').hide();
+            }
+        });
+        
+        $('#inputButton').click(function() {
             $('#writeMessageForm').submit();
         });
+        
+        
     });  
  </script>
 
@@ -27,7 +33,6 @@
     <div class="row-fluid">
         @using (Html.BeginForm("Write", "Post",FormMethod.Post,new { id = "writeMessageForm"}))
         {
-            @Html.LabelFor(m => m.Content)
             @Html.TextAreaFor(m => m.Content,new { @class="input-xlarge span11",id="inputMessage", placeholder="Write a new Tweet !"})
             @Html.ValidationMessageFor(m => m.Content)
             <button type="submit" class="btn btn-primary" id="inputButton">Post !</button>

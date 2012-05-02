@@ -83,7 +83,6 @@ namespace Tigwi.UI.Controllers
                 // Tell the user everything went OK
 
                 return this.RedirectToAction("Index", "Home");
-                //throw new NotImplementedException();
             }
             catch (Exception)
             {
