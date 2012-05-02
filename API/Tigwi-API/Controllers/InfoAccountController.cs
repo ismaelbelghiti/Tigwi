@@ -115,7 +115,7 @@ namespace Tigwi_API.Controllers
             return new Answer(accountToReturn);
         }
 
-
+        // WARNING : The following methods may be a little too complicated and not necessary in an API
         protected Answer AnswerUsersAllowed(Guid accountId, int number)
         {
             // get users posting on this account

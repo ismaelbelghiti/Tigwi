@@ -72,6 +72,7 @@ namespace Tigwi_API.Controllers
             return new Users(users); 
         }
 
+        // WARNING : maybe this method is not good in an API
         // General methods
 
         //
