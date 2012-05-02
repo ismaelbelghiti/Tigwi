@@ -51,7 +51,7 @@ namespace Tigwi_API.Controllers
             return Serialize(output);
         }
 
-        //
+        // Is copying like retweeting ?
         // POST : /modifyaccount/copy
 
         //[Authorize]
@@ -275,8 +275,10 @@ namespace Tigwi_API.Controllers
             return Serialize(new Answer(error));
         }
 
+        // WARNING : are the following methods really necessary in an API ?
+
         //
-        // POST : /modifyaccount/adduser
+        // POST : /modifyaccount/removeuser
 
         //[Authorize]
         // According to spec, authentication must check that the user is the administrator of the account

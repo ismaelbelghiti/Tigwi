@@ -15,7 +15,7 @@ namespace Tigwi_API.Controllers
         // Initialize storage when instanciating a controller
         public ApiController ()
         {
-            Storage = new Storage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY");
+            Storage = new Storage("sefero", "GU0GjvcPoXKzDFgBSPFbWmCPQrIRHAT6fholbMnxtteY5vQVgYTcWKk/25i/F4m9MFoGHXNf4oYgeAKo+mFO5Q==");
         }
 
         protected ContentResult Serialize(Answer output)
@@ -72,6 +72,7 @@ namespace Tigwi_API.Controllers
             return new Users(users); 
         }
 
+        // WARNING : maybe this method is not good in an API
         // General methods
 
         //

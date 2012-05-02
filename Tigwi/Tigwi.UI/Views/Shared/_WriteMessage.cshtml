@@ -14,22 +14,19 @@
                 this.select();
             }
         });
-        /*
+
         $('#inputMessage').blur(function () {
             $(this).attr("rows", 1);
-            if ($.trim(this.value == '')) {
-                this.value = (this.defaultValue ? this.defaultValue : '');
-            }
-        });*/
+            $('#inputButton').hide();
+            $('#writeMessageForm').submit();
+        });
     });  
  </script>
 
 <article>
     <div class="row-fluid">
-        @using (Html.BeginForm("Write", "Post"))
+        @using (Html.BeginForm("Write", "Post",FormMethod.Post,new { id = "writeMessageForm"}))
         {
-            @Html.Hidden("Poster", CurrentAccount)
-
             @Html.LabelFor(m => m.Content)
             @Html.TextAreaFor(m => m.Content,new { @class="input-xlarge span11",id="inputMessage", placeholder="Write a new Tweet !"})
             @Html.ValidationMessageFor(m => m.Content)

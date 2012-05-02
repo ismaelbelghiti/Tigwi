@@ -3,7 +3,7 @@
     padding-bottom: 40px;
 }
 
-.listView {
+.leftInfos {
     border-style: solid none none solid;
     border-top-left-radius: 10px;
     border-top-right-radius: 5px;
@@ -25,31 +25,19 @@
     margin-left: 15px;
 }
 
-.message {
+.message:nth-child(odd) {
     border-radius: 15px;
     margin: 10px;
     padding: 10px;
     border-width: 5px;
-}
-
-.message0
-{
     border-style: none none none solid;
     border-color: lightgray;
 }
-.message1
-{
+.message:nth-child(even) {
+    border-radius: 15px;
+    margin: 10px;
+    padding: 10px;
+    border-width: 5px;
     border-style: none solid none none;
     border-color: darkgray;
-}
-
-
-.userView {
-    border-style: solid none none solid;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 5px;
-    border-width: 2px;
-    border-color: gainsboro;
-    padding-top: 10px;
-    padding-left: 5px;
 }

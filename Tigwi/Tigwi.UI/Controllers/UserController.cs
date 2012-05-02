@@ -103,7 +103,7 @@ namespace Tigwi.UI.Controllers
               
                         this.CurrentUser = newUser;
                         this.CurrentAccount = newAccount;
-
+                        this.Storage.SaveChanges();
                         this.SaveIdentity(registerViewModel.RememberMe);
 
                         return this.RedirectToAction("Index", "Home");
@@ -124,7 +124,6 @@ namespace Tigwi.UI.Controllers
             }
 
             // Somthing went wrong, display register page again
-            ViewBag.notValid = true;
             return this.View(registerViewModel);
         }
 

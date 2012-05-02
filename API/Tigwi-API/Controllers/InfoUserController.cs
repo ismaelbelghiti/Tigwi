@@ -16,7 +16,7 @@ namespace Tigwi_API.Controllers
             return new Answer(userToReturn);
         }
 
-
+        // WARNING : maybe a little too complicated and useless in an API
         protected Answer AnswerAuthorizedAccounts(Guid userId, int number)
         {
             var authorizedAccounts = Storage.User.GetAccounts(userId);

@@ -1,4 +1,6 @@
-﻿using System;
+﻿// WARNING : All these methods are (unfortunately) a little useless and maybe not good in an API
+
+using System;
 using System.Web.Mvc;
 using System.Xml.Serialization;
 using StorageLibrary;
@@ -175,8 +177,9 @@ namespace Tigwi_API.Controllers
                     {
                         var userId = infos.UserId ?? Storage.User.GetId(infos.UserLogin);
 
-                        //Create the account
+                        // Create the account
                         var accountId = Storage.Account.Create(userId, infos.AccountName, infos.Description);
+                        // TODO : give the rights to the user
 
                         // Result
                         output = new Answer(new ObjectCreated(accountId));
