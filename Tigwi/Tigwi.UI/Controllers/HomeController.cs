@@ -30,7 +30,7 @@ namespace Tigwi.UI.Controllers
         #region Constructors and Destructors
 
         public HomeController()
-            // : this(new StorageContext(new Storage(__AZURE_STORAGE_ACCOUNT_NAME, __AZURE_STORAGE_ACCOUNT_KEY)))
+            // : this(new StorageContext(new Storage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY")))
         {
         }
 
