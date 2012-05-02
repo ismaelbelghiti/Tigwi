@@ -2,23 +2,28 @@
     ViewBag.Title = "Home Page";
 }
 
-
-
-<div class="row-fluid">
-    @if(@User.Identity.IsAuthenticated){
-        <section class="span2">
-            @Html.Partial("_ListView")
-        </section>
-        <section class="span5">
-            @Html.Partial("_WriteMessage")
-        </section>
+@section LeftInfos
+{
+    @if(User.Identity.IsAuthenticated)
+    {
+        @Html.Partial("_ListView")
     }
-    else{
-        <section class="span2 userView">
-            <p>Tigwi is fun and better than Twitter, which we copied entirely ! Cheers !</p>
-        </section>
-        <section class="span5">
-            <p>Some interesting messages here ...</p>
-        </section>
+    else
+    {
+        <p>Tigwi is fun and better than Twitter, which we copied entirely ! Cheers !</p>
     }
-</div>
+    
+}
+
+@section Body
+{
+    @if(User.Identity.IsAuthenticated)
+    {
+        @Html.Partial("_WriteMessage")
+    }
+    else
+    {
+        <p>Some interesting messages here ...</p>
+    }
+    
+}
