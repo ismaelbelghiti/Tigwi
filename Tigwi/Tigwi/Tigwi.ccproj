@@ -111,7 +111,7 @@
   </Target>
   -->
   <Target Name="AfterBuild" Condition=" '$(AzureStorageAccountKey)' != '' And '$(AzureStorageAccountName)' != '' And Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets')">
-    <FileUpdate Files="@(ServiceConfiguration)" Regex="DefaultEndpointsProtocol=https;AccountName=$(AzureStorageAccountName);AccountKey=$(AzureStorageAccountKey)" ReplacementText="UseDevelopmentStorage=true" />
+    <FileUpdate Files="@(ServiceConfiguration)" Regex="DefaultEndpointsProtocol=https;AccountName=$(AzureStorageAccountName);AccountKey=$(AzureStorageAccountKey.Replace('+','\+'))" ReplacementText="UseDevelopmentStorage=true" />
     <FileUpdate Files="@(ConnectionFiles)" Regex="$(AzureStorageAccountName)" ReplacementText="__AZURE_STORAGE_ACCOUNT_NAME" />
     <FileUpdate Files="@(ConnectionFiles)" Regex="$(AzureStorageAccountKey.Replace('+','\+'))"  ReplacementText="__AZURE_STORAGE_ACCOUNT_KEY" />
   </Target>
