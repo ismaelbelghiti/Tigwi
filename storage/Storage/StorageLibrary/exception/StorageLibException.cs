@@ -52,6 +52,16 @@ namespace StorageLibrary
         public IsPersonnalList() : base(StrgLibErr.IsPersonalList) { }
     }
 
+    public class OpenIdUriNotAssociated : StorageLibException
+    {
+        public OpenIdUriNotAssociated() : base(StrgLibErr.OpenIdUriNotAssociated) { }
+    }
+
+    public class OpenIdUriDuplicated : StorageLibException
+    {
+        public OpenIdUriDuplicated() : base(StrgLibErr.OpenIdUriDuplicated) { }
+    }
+
     // Deprecated
     public enum StrgLibErr
     {
@@ -64,6 +74,8 @@ namespace StorageLibrary
         UserIsAdmin,
         IsPersonalList,
         AccountIsOwner,
+        OpenIdUriNotAssociated,
+        OpenIdUriDuplicated,
     }
 
     // Deprecated

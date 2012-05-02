@@ -1,7 +1,10 @@
 ﻿user ->		idbylogin/<login hash>				: Guid (= 0 if the login is reserved but not used)
+			idbyopeniduri/<openiduri hash>		: Guid
 			info/<user ID>						: UserInfo
 			accounts/<user ID>/data				: HashSet<Guid> -- you must take the mutex before touching to this
 							 /lock				: Mutex -- must be taken if you add this user to an account->users or if you add an account to this user
+			openids/<user ID>/data				: HashSet<Guid> -- you must take the mutex before touching this
+							/lock				: Mutex -- must be taken if you add an openid to this user or if you associate an openid to this user
 			password/<user ID>					: string
 				
 // TODO :

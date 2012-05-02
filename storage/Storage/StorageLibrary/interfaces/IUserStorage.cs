@@ -44,6 +44,32 @@ namespace StorageLibrary
         /// <exception cref="UserIsAdmin">To avoid deleting an account</exception>
         void Delete(Guid userId);
 
+        /// <summary>
+        /// Get a user id given an openid uri
+        /// </summary>
+        /// <exception cref="UserNotFound"> if no user has this openid uri</exception>
+        Guid GetIdByOpenIdUri(string openIdUri);
+
+        /// <summary>
+        /// Associate an user to an openid uri
+        /// </summary>
+        /// <exception cref="UserNotFound"> if no user has this id</exception>
+        /// <exception cref="DuplicateOpenIdUri"> if an user already has this openid uri</exception>
+        Guid AssociateOpenIdUri(Guid userId, string openIdUri);
+
+        /// <summary>
+        /// List the openid uri associated to an user
+        /// </summary>
+        /// <exception cref="UserNotFound"> if not user has this id</exception>
+        HashSet<string> ListOpenIdUris(Guid userId);
+
+        /// <summary>
+        /// Deassociate an openid uri from an user
+        /// </summary>
+        /// <exception cref="UserNotFound"> if no user has this id</exception>
+        /// <exception cref="OpenIdUriNotAssociated"> if the given uri is not associated to the given user</exception>
+        void DeassociateOpenIdUri(Guid userId, string openIdUri);
+
         // TODO : implement this
         /// <summary>
         /// To be used to check a user password

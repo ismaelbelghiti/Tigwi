@@ -62,9 +62,30 @@ namespace StorageLibrary
             return new Blob<Guid>(userContainer, U_IDBYLOGIN + loginHash);
         }
 
+        public Blob<Guid> UIdByOpenIdUri(string openIdUri)
+        {
+            Guid openIdUriHash = Hasher.Hash(openIdUri);
+            return new Blob<Guid>(userContainer, U_IDBYOPENIDURI + openIdUriHash);
+        }
+
         public Blob<IUserInfo> UInfo(Guid userId)
         {
             return new Blob<IUserInfo>(userContainer, U_INFO + userId);
+        }
+
+        public HashSetBlob<string> UOpenIdsData(Guid userId)
+        {
+            return new HashSetBlob<string>(userContainer, U_OPENIDS + userId + DATA);
+        }
+
+        public Mutex UOpenIdsLock(Guid userId)
+        {
+            return new Mutex(userContainer, U_OPENIDS + userId + LOCK, new UserNotFound());
+        }
+
+        public void UOpenIdsLockInit(Guid userId)
+        {
+            Mutex.Init(userContainer, U_OPENIDS + userId + LOCK);
         }
 
         public Blob<Byte[]> UPassword(Guid userId)
@@ -204,7 +225,9 @@ namespace StorageLibrary
 
         const string U_INFO = "info/";
         const string U_ACCOUNTS = "accounts/";
+        const string U_OPENIDS = "openids/";
         const string U_IDBYLOGIN = "idbylogin/";
+        const string U_IDBYOPENIDURI = "idbyopeniduri/";
         const string U_PASSWORD = "password/";
 
         const string A_IDBYNAME = "idbyname/";
