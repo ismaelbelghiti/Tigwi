@@ -29,6 +29,26 @@
 
         #region Public Methods and Operators
 
+        public Guid GetIdByOpenIdUri(string openIdUri)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AssociateOpenIdUri(Guid userId, string openIdUri)
+        {
+            throw new NotImplementedException();
+        }
+
+        public HashSet<string> ListOpenIdUris(Guid userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeassociateOpenIdUri(Guid userId, string openIdUri)
+        {
+            throw new NotImplementedException();
+        }
+
         public Guid Create(string login, string email, Byte[] password)
         {
             if (this.idFromLogin.ContainsKey(login))
