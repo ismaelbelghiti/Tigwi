@@ -5,7 +5,6 @@ using System.Text;
 using StorageLibrary.Utilities;
 using Microsoft.WindowsAzure.StorageClient;
 using System.Globalization;
-using System.Runtime.Serialization.Formatters.Binary;
 using StorageLibrary.exception;
 
 namespace StorageLibrary.Utilities
