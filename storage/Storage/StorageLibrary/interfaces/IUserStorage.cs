@@ -54,7 +54,7 @@ namespace StorageLibrary
         /// Associate an user to an openid uri
         /// </summary>
         /// <exception cref="UserNotFound"> if no user has this id</exception>
-        /// <exception cref="DuplicateOpenIdUri"> if an user already has this openid uri</exception>
+        /// <exception cref="OpenIdUriDuplicated"> if an user already has this openid uri</exception>
         void AssociateOpenIdUri(Guid userId, string openIdUri);
 
         /// <summary>
