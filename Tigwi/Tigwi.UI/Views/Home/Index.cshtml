@@ -18,16 +18,12 @@
     
 }
 
-@section Body
+@if(User.Identity.IsAuthenticated)
 {
-    @if(User.Identity.IsAuthenticated)
-    {
-        <div>@Html.Partial("_WriteMessage", new WritePostViewModel())</div>
-        <div>@Html.Partial("_ViewPostList", Model.PersonalList.PostsBefore(DateTime.MaxValue, 10))</div>
-    }
-    else
-    {
-        <p>Some interesting messages here ...</p>
-    }
-    
+    <div>@Html.Partial("_WriteMessage", new WritePostViewModel())</div>
+    <div>@Html.Partial("_ViewPostList", Model.PersonalList.PostsBefore(DateTime.MaxValue, 10))</div>
+}
+else
+{
+    <p>Some interesting messages here ...</p>
 }
