@@ -140,9 +140,8 @@ namespace StorageLibrary
                 blobFactory.LPersonnalList(accountId).Set(personnalListId);
                 blobFactory.LInfo(personnalListId).Set(new ListInfo("", "", true, true));
                 blobFactory.LOwner(personnalListId).Set(accountId);
-                blobFactory.LFollowedAccountLockInit(personnalListId);
                 blobFactory.MListMessages(personnalListId).Init();
-                blobFactory.LFollowedAccountsData(personnalListId).Set(new HashSet<Guid>());
+                blobFactory.LFollowedAccounts(personnalListId).Set(new HashSet<Guid>());
 
                 // we finish by unlocking the name
                 bIdByName.Set(accountId);

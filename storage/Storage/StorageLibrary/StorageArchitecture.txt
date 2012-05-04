@@ -1,58 +1,90 @@
-﻿user ->		idbylogin/<login hash>				: Guid (= 0 if the login is reserved but not used)
-			info/<user ID>						: UserInfo
-			accounts/<user ID>/data				: HashSet<Guid> -- you must take the mutex before touching to this
-							 /lock				: Mutex -- must be taken if you add this user to an account->users or if you add an account to this user
-			password/<user ID>					: string
-				
-// TODO :
-// add the possibility (not obligation) to have an openID url
+﻿user ->		idbylogin/<login hash>					: Guid (= 0 if the login is reserved but not used)
+			info/<user ID>							: UserInfo
+			accounts/<user ID>/data					: HashSet<Guid> -- you must take the mutex before touching to this
+							 /lock					: Mutex -- must be taken if you add this user to an account->users or if you add an account to this user
+			password/<user ID>						: string
+			
+account ->	idbyname/<name hash>					: Guid (= 0 if the name is reserved but not used)
+			info/<account ID>						: AccountInfo
+			users/<account ID>						: HashSet<Guid> -- you must take the corresponding mutex before touching to this
+			adminid/<account ID>					: Guid
 
-account ->	idbyname/<name hash>				: Guid (= 0 if the name is reserved but not used)
-			info/<account ID>					: AccountInfo
-			users/<account ID>					: HashSet<Guid> -- you must take the corresponding mutex before touching to this
-			adminid/<account ID>				: Guid
 
 list ->		------------------------------
-			personnallist/<account ID>			: Guid -- refere to a list ID
-			info/<list ID>						: ListInfo
+			personnallist/<account ID>				: Guid -- refere to a list ID -- doesn't apear anywhere else
+			info/<list ID>							: ListInfo
 
-			ownedlists/public/<account ID>		: HashSet<Guid> -- public lists owned by someone
-			ownedlists/private/<account ID>		: HashSet<Guid> -- private lists owned by someone
-													
-			owner/<list ID>	S					: Guid -- refere to an account ID
+			ownedlists/public/<account ID>			: HashSet<Guid> -- public lists owned by someone
+			ownedlists/private/<account ID>			: HashSet<Guid> -- private lists owned by someone
+														
+			owner/<list ID>	S						: Guid -- refere to an account ID
 
-			followedlists/<account ID>/data		: HashSet<Guid> -- lists followed by someone - you don't follow your personnal list - without owned lists
-									  /lock		: Mutex
-			followingaccounts/<list ID>			: HashSet<Guid> -- accounts following this list 
+			followedlists/<account ID>/data			: HashSet<Guid> -- lists followed by someone - you don't follow your personnal list - without owned lists
+									  /lock			: Mutex
+			followingaccounts/<list ID>				: HashSet<Guid> -- accounts following this list 
 
-			followedby/<account ID>/public		: HashSet<Guid> -- list following this account publicly
-			followedby/<account ID>/all			: without personnal list
-			followedaccounts/<list ID>/data		: HashSet<Guid> -- accounts in this list 
-									  /lock		: Mutex
-
-message ->	listmessages/<list ID>/<date>		: MessageSet
-			accountmessages/<poster ID>/<date>	: List<IMessage> -- ~100 messages from <poster>, the first of the list is dated <date>
-			taggedmessages/<account ID>/<date>	: SortedSet<IMessage> -- minDate should alway exists
-			message/<messageID>					: IMessage
+			followedby/<account ID>/public		C0	: HashSet<Guid> -- list following this account publicly
+			followedby/<account ID>/all			A0	: without personnal list
+													  might contain inexistent lists, but they will be removed soon
+			followedaccounts/<list ID>			B0	: HashSet<Guid> -- accounts in this list 
+			
+message ->	listmessages/<list ID>/<date>			: MessageSet
+			accountmessages/<poster ID>/<date>		: List<IMessage> -- ~100 messages from <poster>, the first of the list is dated <date>
+			taggedmessages/<account ID>/<date>		: SortedSet<IMessage> -- minDate should alway exists
+			message/<messageID>						: IMessage
 
 100 messages in a MsgPack = 10 Ko
 
-TODO :
+For florian :
+- Authentification 
+- Serializer -> Protobuf.Net
+
+----
+Apprendre a utiliser des worker
+Apprendre a mesurer le temps d'execution des fonctions
+Benchmark OpenWrite/UploadByteArray
+-> faire un tableau selon la taille de blob (jusqua 1M, echelle log)
+Repercuter les changement bnecessaires dans Blob
+
+- Test to Nunit
+- password/Auth tests
+- Cleanup
+			
+TODO :		
 	- Should the personnal list have the same ID than the account ?
 	- be able to upload avatars
 	- avoid create each container evry times : only once in the begining
 	- Find something better than a sortedSet to sort messages. Maybe we should code our own KeyedCollection ?
 		http://msdn.microsoft.com/en-us/library/5z658b67%28v=vs.80%29.aspx
-	- export msg post function to a worker role
 	- use something else instead of openWrite since it is much slower according to :
 		http://toolheaven.net/post/Azure-and-blob-write-performance.aspx
+	- Avatars :
+		Remove them from messages
+		Make them accessible from a public container
+		Be able to upload new avatars
+	- Parralelisation
+	- clean the storage only if necessary
 
-CHECKS :
+CHECKS :	
 	- check that we dont write on a deleted blob while using retry
 	- find out what happends when we try to list blobs in a directory that does not exists
 	- that constraints are respected on personnal list
-
-BUG :
-	- if we add/remove a list while we post a message, then it cause a problem
+			
+BUG :		
 	- avoid follow a private list 
-	- add/remove the messages from the listmessage when we add/remove an account from the list
+	- remove the messages from the listmessage when we add removing an account from the list
+			
+PRIORITIES :
+- we could maybe remove a lot of mutex :
+	- A += b if b   isnt already in a
+	- B += a
+
+	- B -= a if a is in B
+	- A -= b
+
+	- be carefull on deletion !!!! -> we can check that all operations have ended be we must be carefull
+
+- export msg post function to a worker role
+
+
+

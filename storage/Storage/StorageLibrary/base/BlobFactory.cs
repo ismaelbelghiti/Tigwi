@@ -164,19 +164,9 @@ namespace StorageLibrary
             return new HashSetBlob<Guid>(listContainer, L_FOLLOWEDBY + accountId + ALL);
         }
 
-        public Mutex LFollowedAccountLock(Guid listId)
+        public HashSetBlob<Guid> LFollowedAccounts(Guid listId)
         {
-            return new Mutex(listContainer, L_FOLLOWEDACCOUNTS + listId + LOCK, new ListNotFound());
-        }
-
-        public void LFollowedAccountLockInit(Guid listId)
-        {
-            Mutex.Init(listContainer, L_FOLLOWEDACCOUNTS + listId + LOCK);
-        }
-
-        public HashSetBlob<Guid> LFollowedAccountsData(Guid listId)
-        {
-            return new HashSetBlob<Guid>(listContainer, L_FOLLOWEDACCOUNTS + listId + DATA);
+            return new HashSetBlob<Guid>(listContainer, L_FOLLOWEDACCOUNTS + listId);
         }
 
         // msg blobs

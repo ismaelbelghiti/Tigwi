@@ -38,6 +38,7 @@ namespace StorageLibrary.Utilities
             base.Set(set);
         }
 
+
         public void Remove(T item)
         {
             HashSet<T> set = base.Get();
