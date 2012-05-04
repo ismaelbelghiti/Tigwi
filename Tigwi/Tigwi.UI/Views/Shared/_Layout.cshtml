@@ -49,7 +49,7 @@
                                   
                                     @foreach (var acc in CurrentUser.Accounts)
                                     {
-                                        <li>@Html.ActionLink(acc.Name, "MakeActive", "Account", new { accountId = acc.Id },null)</li> 
+                                        <li>@Html.ActionLink(acc.Name, "MakeActive", "Account", new { accountName = acc.Name },null)</li> 
                                     }
                                     <li class="divider"></li>
                                     <li><a data-toggle="modal" href="#addAccountModal" >Add Account</a></li>
@@ -108,15 +108,15 @@
                 </section>
 
                 <section class="span5">
-                    @RenderSection("Body",true)
+                    @RenderBody()
                 </section>
             </section>
           
         </div>
+        
+        <footer style="padding-top: 40px; padding-left: 40px;">
+            <p>&copy; Tigwi 2012</p>
+        </footer>
     </body>
-    <footer style="padding-top: 40px; padding-left: 40px;">
-        <p>&copy; Tigwi 2012</p>
-    </footer>
-
 </html>
 

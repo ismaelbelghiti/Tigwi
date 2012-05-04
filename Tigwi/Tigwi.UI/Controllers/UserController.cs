@@ -78,7 +78,6 @@ namespace Tigwi.UI.Controllers
         /// <returns></returns>
         public ActionResult Register()
         {
-            ViewBag.notValid = false;
             return this.View();
         }
 
@@ -105,9 +104,7 @@ namespace Tigwi.UI.Controllers
                         this.CurrentAccount = newAccount;
                         this.Storage.SaveChanges();
                         this.SaveIdentity(registerViewModel.RememberMe);
-
                         return this.RedirectToAction("Index", "Home");
-                        // return this.RedirectToAction("Welcome");
                     }
                     catch (DuplicateAccountException ex)
                     {

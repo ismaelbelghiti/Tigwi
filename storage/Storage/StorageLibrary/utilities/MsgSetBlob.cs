@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.WindowsAzure.StorageClient;
-using System.Runtime.Serialization.Formatters.Binary;
+using ProtoBuf;
 
 namespace StorageLibrary.Utilities
 {
@@ -19,7 +19,7 @@ namespace StorageLibrary.Utilities
         public void Init()
         {
             BlobStream stream = blob.OpenWrite();
-            formatter.Serialize(stream, new MessageSet());
+            Serializer.Serialize(stream, new MessageSet());
             stream.Close();
         }
 
@@ -37,7 +37,7 @@ namespace StorageLibrary.Utilities
                 try
                 {
                     stream = blob.OpenRead();
-                    set = (MessageSet)formatter.Deserialize(stream);
+                    set = Serializer.Deserialize<MessageSet>(stream);
                     stream.Close();
                 }
                 catch { return false; }

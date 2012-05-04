@@ -120,7 +120,6 @@
     <Compile Include="Models\IUserModel.cs" />
     <Compile Include="Models\SearchViewModel.cs" />
     <Compile Include="Models\Account\AccountCreationViewModel.cs" />
-    <Compile Include="Models\PostViewModel.cs" />
     <Compile Include="Models\Storage\AccountRepository.cs" />
     <Compile Include="Models\Storage\StorageEntityCollection.cs" />
     <Compile Include="Models\Storage\StorageAccountModel.cs" />

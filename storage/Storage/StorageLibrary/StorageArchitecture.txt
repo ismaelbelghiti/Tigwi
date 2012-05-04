@@ -1,14 +1,17 @@
-﻿user ->		idbylogin/<login hash>					: Guid (= 0 if the login is reserved but not used)
-			info/<user ID>							: UserInfo
-			accounts/<user ID>/data					: HashSet<Guid> -- you must take the mutex before touching to this
-							 /lock					: Mutex -- must be taken if you add this user to an account->users or if you add an account to this user
-			password/<user ID>						: string
-			
-account ->	idbyname/<name hash>					: Guid (= 0 if the name is reserved but not used)
-			info/<account ID>						: AccountInfo
-			users/<account ID>						: HashSet<Guid> -- you must take the corresponding mutex before touching to this
-			adminid/<account ID>					: Guid
+user ->		idbylogin/<login hash>				: Guid (= 0 if the login is reserved but not used)
+			idbyopeniduri/<openiduri hash>		: Guid
+			info/<user ID>						: UserInfo
+			accounts/<user ID>/data				: HashSet<Guid> -- you must take the mutex before touching to this
+							 /lock				: Mutex -- must be taken if you add this user to an account->users or if you add an account to this user
+			openids/<user ID>/data				: HashSet<Guid> -- you must take the mutex before touching this
+							/lock				: Mutex -- must be taken if you add an openid to this user or if you associate an openid to this user
+			password/<user ID>					: string
 
+
+account ->	idbyname/<name hash>				: Guid (= 0 if the name is reserved but not used)
+			info/<account ID>					: AccountInfo
+			users/<account ID>					: HashSet<Guid> -- you must take the corresponding mutex before touching to this
+			adminid/<account ID>				: Guid
 
 list ->		------------------------------
 			personnallist/<account ID>				: Guid -- refere to a list ID -- doesn't apear anywhere else
