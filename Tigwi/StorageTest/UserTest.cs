@@ -10,12 +10,24 @@ namespace StorageTest
     [TestFixture]
     public class UserTest
     {
+        const string azureAccountName = "ulyssestorage";
+        const string azureAccountKey = "jnfLEhtEGAZ6YzRoYSahJpgUzXL2438grLGeFn/lnhxNJGonwD/jO+7QU2u/UECHeYsF4uigIfXKGsqRbjRsTQ==";
+
         public IStorage storage;
 
         [SetUp]
         public void InitStorage()
         {
-            storage = new StorageTmp();
+            bool UseStorageTmp = true;
+            if (UseStorageTmp)
+                storage = new StorageTmp();
+            else
+            {
+                BlobFactory blobFactory = new BlobFactory(azureAccountName, azureAccountKey);
+                blobFactory.InitStorage();
+                storage = new Storage(azureAccountName, azureAccountKey);
+            }
+
             Guid userId = storage.User.Create("userThatExists", "userThatExists@gmail.com", new Byte[1]);
             Guid accountId = storage.Account.Create(userId, "accountThatExists", "accountThatExistsDesc");
             storage.User.Create("otherUserThatExists", "otherUserThatExists@gmail.com", new Byte[1]);

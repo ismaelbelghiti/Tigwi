@@ -11,12 +11,24 @@ namespace StorageTest
     class ListTest
     {
         public IStorage storage;
+        const string azureAccountName = "ulyssestorage";
+        const string azureAccountKey = "jnfLEhtEGAZ6YzRoYSahJpgUzXL2438grLGeFn/lnhxNJGonwD/jO+7QU2u/UECHeYsF4uigIfXKGsqRbjRsTQ==";
+
         Guid listIdThatExists; 
 
         [SetUp]
         public void InitStorage()
         {
-            storage = new StorageTmp();
+            bool UseStorageTmp = true;
+            if (UseStorageTmp)
+                storage = new StorageTmp();
+            else
+            {
+                BlobFactory blobFactory = new BlobFactory(azureAccountName, azureAccountKey);
+                blobFactory.InitStorage();
+                storage = new Storage(azureAccountName, azureAccountKey);
+            }
+
             Guid userId = storage.User.Create("userThatExists", "userThatExists@gmail.com", new Byte[1]);
             Guid accountId = storage.Account.Create(userId, "accountThatExists", "accountThatExistsDesc");
             storage.User.Create("otherUserThatExists", "otherUserThatExists@gmail.com", new Byte[1]);
@@ -193,9 +205,9 @@ namespace StorageTest
             HashSet<Guid> listsFollowed = storage.List.GetAccountFollowedLists(otherAccountId, false);
             HashSet<Guid> followers = storage.List.GetFollowingAccounts(listIdThatExists);
 
-           Assert.IsTrue(listsFollowed.Contains(otherAccountId));
-           Assert.IsTrue(followers.Contains(listIdThatExists));
-           storage.List.Follow(listIdThatExists, otherAccountId);
+            Assert.IsTrue(!listsFollowed.Contains(otherAccountId));
+            Assert.IsTrue(!followers.Contains(listIdThatExists));
+            storage.List.Follow(listIdThatExists, otherAccountId);
         }
 
         #endregion
@@ -206,13 +218,13 @@ namespace StorageTest
         [ExpectedException(typeof(ListNotFound))]
         public void GetAccountsListNotFound()
         {
-
+            storage.List.GetAccounts(new Guid());
         }
 
         [Test]
         public void GetAccountsNormalBehaviour()
         {
-
+            Assert.IsTrue(storage.List.GetAccounts(listIdThatExists).Contains(storage.Account.GetId("accountThatExists")));
         }
 
         #endregion
@@ -223,21 +235,17 @@ namespace StorageTest
         [ExpectedException(typeof(ListNotFound))]
         public void AddListNotFound()
         {
-
+            storage.List.Add(Guid.NewGuid(), storage.Account.GetId("accountThatExists"));
         }
 
         [Test]
         [ExpectedException(typeof(AccountNotFound))]
         public void AddAccountNotFound()
         {
-
+            storage.List.Add(listIdThatExists, Guid.NewGuid());
         }
 
-        [Test]
-        public void AddNormalBehaviour()
-        {
-
-        }
+        //test normal beahaviour : already tested
 
         #endregion
 
@@ -246,7 +254,11 @@ namespace StorageTest
         [Test]
         public void RemoveNormalBehaviour()
         {
-
+            Guid accountThatExistsId = storage.Account.GetId("accountThatExists");
+            storage.List.Remove(listIdThatExists, accountThatExistsId);
+            HashSet<Guid> accounts = storage.List.GetAccounts(listIdThatExists);
+            Assert.IsTrue(!accounts.Contains(accountThatExistsId));
+            storage.List.Add(listIdThatExists, accountThatExistsId);
         }
 
         #endregion
@@ -257,13 +269,21 @@ namespace StorageTest
         [ExpectedException(typeof(AccountNotFound))]
         public void GetAccountOwnedListsAccountNotFound()
         {
+            storage.List.GetAccountOwnedLists(Guid.NewGuid(), false);
+        }
 
+        [Test]
+        [ExpectedException(typeof(AccountNotFound))]
+        public void GetAccountOwnedListsAccountNotFoundBis()
+        {
+            storage.List.GetAccountOwnedLists(Guid.NewGuid(), true);
         }
 
         [Test]
         public void GetAccountOwnedListsNormalBehaviour()
         {
-
+            HashSet<Guid> ownedLists = storage.List.GetAccountOwnedLists(storage.Account.GetId("accountThatExists"), false);
+            Assert.IsTrue(ownedLists.Contains(listIdThatExists));
         }
 
         #endregion
@@ -274,13 +294,21 @@ namespace StorageTest
         [ExpectedException(typeof(AccountNotFound))]
         public void GetAccountFollowedListsAccountNotFound()
         {
+            storage.List.GetAccountFollowedLists(new Guid(), false);
+        }
 
+        [Test]
+        [ExpectedException(typeof(AccountNotFound))]
+        public void GetAccountFollowedListsAccountNotFoundBis()
+        {
+            storage.List.GetAccountFollowedLists(new Guid(), true);
         }
 
         [Test]
         public void GetAccountFollowedListsNormalBehaviour()
         {
-
+            HashSet<Guid> followedList = storage.List.GetAccountFollowedLists(storage.Account.GetId("otherAccountThatExists"), false);
+            Assert.IsTrue(followedList.Contains(listIdThatExists));
         }
 
         #endregion
@@ -291,13 +319,14 @@ namespace StorageTest
         [ExpectedException(typeof(AccountNotFound))]
         public void GetFollowingListsAccountNotFound()
         {
-
+            storage.List.GetFollowingLists(Guid.NewGuid());
         }
 
         [Test]
         public void GetFollowingListsNormalBehaviour()
         {
-
+            HashSet<Guid> followingLists = storage.List.GetFollowingLists(storage.Account.GetId("accountThatExists"));
+            Assert.IsTrue(followingLists.Contains(listIdThatExists));
         }
 
         #endregion
@@ -308,13 +337,14 @@ namespace StorageTest
         [ExpectedException(typeof(ListNotFound))]
         public void GetFollowingAccountsListNotFound()
         {
-
+            storage.List.GetFollowingAccounts(new Guid());
         }
 
         [Test]
         public void GetFollowingAccountsNormalBehaviour()
         {
-
+            HashSet<Guid> followingAccounts = storage.List.GetFollowingAccounts(listIdThatExists);
+            Assert.IsTrue(followingAccounts.Contains(storage.Account.GetId("accountThatExists")));
         }
         #endregion
     }
