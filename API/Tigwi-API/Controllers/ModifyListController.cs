@@ -96,6 +96,7 @@ namespace Tigwi_API.Controllers
 
         // WARNING : The following methods are redundant with the ones in ModifyAccount (which is the right place)
 
+        /*
         //
         // POST : /modifylist/followlist/
 
@@ -138,7 +139,9 @@ namespace Tigwi_API.Controllers
 
             return Serialize(new Answer(error));
         }
+        */
 
+        /*
         //
         // POST : /modifylist/unfollowlist/
 
@@ -181,6 +184,6 @@ namespace Tigwi_API.Controllers
 
             return Serialize(new Answer(error));
         }
-
+        */
     }
 }
