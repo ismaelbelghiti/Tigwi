@@ -7,7 +7,6 @@ namespace Tigwi_API.Controllers
 {
     public class InfoAccountByNameController : InfoAccountController
     {
-
         // TEST
         // GET: /infoaccount/test/{accountName}/{number}
         public string Test(string accountName, int number)
@@ -35,7 +34,7 @@ namespace Tigwi_API.Controllers
             return Serialize(output);
         }
 
-
+        /*
         //
         // GET: /infoaccount/taggedmessages/{accountName}/{number}
         public ActionResult TaggedMessages(string accountName, int number)
@@ -55,6 +54,7 @@ namespace Tigwi_API.Controllers
 
             return Serialize(output);
         }
+        */
 
         
         //
@@ -232,7 +232,7 @@ namespace Tigwi_API.Controllers
             return Serialize(output);
         }
 
-        
+        /*
         //
         // GET : /infoaccount/usersallowed/{accountName}/{number}
         //[Authorize] (?)
@@ -253,8 +253,9 @@ namespace Tigwi_API.Controllers
 
             return Serialize(output);
         }
+        */
 
-
+        /*
         //
         // GET : infoaccount/administrator/{accountName}
         //[Authorize]
@@ -275,6 +276,7 @@ namespace Tigwi_API.Controllers
 
             return Serialize(output);
         }
+        */
         
     }
 }
