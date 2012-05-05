@@ -107,6 +107,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="MockStorage.cs" />
     <Compile Include="Models\IAccountRepository.cs" />
     <Compile Include="Models\IListModelCollection.cs" />
     <Compile Include="Models\IListRepository.cs" />

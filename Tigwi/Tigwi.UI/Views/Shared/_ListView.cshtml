@@ -1,29 +1,23 @@
 ﻿@using Tigwi.UI.Models
 
-@model IEnumerable<IListModel>
+@model ICollection<IListModel>
 
-@*
-*   Code final en commentaire car necessite des fonctions non implémentées
-*   Code statique de demo en attendant après les commentaires
-*@
-
-@*
 <section class="listView">
     <ul>
-    @foreach (var element in Model)
+    @foreach (var list in Model)
     {
         <li class="accordion-group">
             <div class="accordion-heading">
                 <input type="checkbox"/>
-                <a class="accordion-toggle" data-toggle="collapse" href="#list-@element.Name">
-                    <i class="icon-folder-close"></i> @element.Name
+                <a class="accordion-toggle" data-toggle="collapse" href="#list-@list.Id">
+                    <i class="icon-folder-close"></i> @list.Name
                 </a>
             </div>
-        <div id="list-@element.Name" class="accordion-body collapse"><div class="accordion-inner">
+        <div id="list-@list.Id" class="accordion-body collapse"><div class="accordion-inner">
         <ul class="list-user">
-            @foreach (var membre in element.Members)
+            @foreach (var member in list.Members)
             {
-                <li><i class="icon-user"></i>@membre.Name</li>
+                <li><i class="icon-user"></i>@member.Name</li>
             }
         </ul>
         </div></div>
@@ -31,8 +25,8 @@
     }
     </ul>
 </section>
-*@
 
+@*
 <section class="listView">
     <ul>
         <li class="accordion-group">
@@ -90,4 +84,4 @@
         </div></div>
         </li>
     </ul>
-</section>
+</section>*@
