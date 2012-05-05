@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Tigwi.UI.Models
 {
-    public interface IListModels : ICollection<IListModel>
+    public interface IListModelCollection : ICollection<IListModel>
     {
         ICollection<Guid> Ids { get; }
 
