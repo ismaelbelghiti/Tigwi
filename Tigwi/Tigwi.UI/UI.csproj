@@ -108,11 +108,13 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\IAccountRepository.cs" />
+    <Compile Include="Models\IListModels.cs" />
     <Compile Include="Models\IListRepository.cs" />
     <Compile Include="Models\IPostRepository.cs" />
     <Compile Include="Models\IStorageContext.cs" />
     <Compile Include="Models\IUserRepository.cs" />
     <Compile Include="Models\Message.cs" />
+    <Compile Include="Models\Storage\StorageListModels.cs" />
     <Compile Include="Models\WritePostViewModel.cs" />
     <Compile Include="Models\IAccountModel.cs" />
     <Compile Include="Models\IPostModel.cs" />
