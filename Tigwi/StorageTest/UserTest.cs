@@ -105,14 +105,10 @@ namespace StorageTest
         [ExpectedException(typeof(UserAlreadyExists))]
         public void CreateUserAlreadyExists()
         {
-
+            storage.User.Create("userThatExists", "bidon@test2.com", new Byte[1]);
         }
 
-        [Test]
-        public void CreateNormalBehaviour()
-        {
-
-        }
+        //test normal behaviour : Done with "userThatExists"
 
         #endregion
 
@@ -122,13 +118,16 @@ namespace StorageTest
         [ExpectedException(typeof(UserIsAdmin))]
         public void DeleteUserIsAdmin()
         {
-
+            storage.User.Delete(storage.User.GetId("userThatExists"));
         }
 
         [Test]
+        [ExpectedException(typeof(UserNotFound))]
         public void DeleteNormalBehaviour()
         {
-
+            Guid userTempId = storage.User.Create("userTemp", "bidon@test2.com", new Byte[1]);
+            storage.User.Delete(userTempId);
+            storage.User.GetId("userTemp");
         }
 
         #endregion
@@ -221,13 +220,14 @@ namespace StorageTest
         [ExpectedException(typeof(UserNotFound))]
         public void GetPasswordUserNotFound()
         {
-
+            storage.User.GetPassword(new Guid());
         }
 
         [Test]
         public void GetPasswordNormalBehaviour()
         {
-
+            Byte[] pass = storage.User.GetPassword(storage.User.GetId("userThatExists"));
+            Assert.AreEqual(pass, new Byte[1]);
         }
 
         #endregion
@@ -238,13 +238,15 @@ namespace StorageTest
         [ExpectedException(typeof(UserNotFound))]
         public void SetPasswordUserNotFound()
         {
-
+            storage.User.SetPassword(Guid.NewGuid(), new Byte[1]);
         }
 
         [Test]
         public void SetPasswordNormalBehaviour()
         {
-
+            storage.User.SetPassword(storage.User.GetId("userThatExists"), new Byte[1]);
+            Byte[] pass = storage.User.GetPassword(storage.User.GetId("userThatExists"));
+            Assert.AreEqual(pass, new Byte[1]);
         }
 
         #endregion
