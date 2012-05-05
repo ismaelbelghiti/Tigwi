@@ -86,13 +86,16 @@ namespace StorageTest
         [ExpectedException(typeof(AccountNotFound))]
         public void GetUsersAccountNotFound()
         {
-
+            HashSet<Guid> users = storage.Account.GetUsers(Guid.NewGuid());
         }
 
         [Test]
         public void GetUsersNormalBehaviour()
         {
-
+            Guid userId = storage.User.GetId("userThatExists");
+            Guid accountId = storage.Account.GetId("accountThatExists");
+            HashSet<Guid> users = storage.Account.GetUsers(accountId);
+            Assert.IsTrue(users.Contains(userId));
         }
 
         #endregion
@@ -103,13 +106,16 @@ namespace StorageTest
         [ExpectedException(typeof(AccountNotFound))]
         public void GetAdminIdAccountNotFound()
         {
-
+            storage.Account.GetAdminId(new Guid());
         }
 
         [Test]
         public void GetAdminIdNormalBehaviour()
         {
-
+             Guid userId = storage.User.GetId("userThatExists");
+             Guid accountId = storage.Account.GetId("accountThatExists");
+             Guid admin = storage.Account.GetAdminId(accountId);
+             Assert.AreEqual(admin, userId);
         }
 
         #endregion
@@ -120,24 +126,28 @@ namespace StorageTest
         [ExpectedException(typeof(AccountNotFound))]
         public void SetAdminIdAccountNotFound()
         {
-
+            Guid userId = storage.User.GetId("userThatExists");
+            Guid accountId = storage.Account.GetId("accountThatDoesntExist");
+            storage.Account.SetAdminId(accountId, userId);
         }
 
         [Test]
         [ExpectedException(typeof(UserNotFound))]
         public void SetAdminIdUserNotFound()
         {
-
+            Guid userId = storage.User.GetId("userThatDoesntExist");
+            Guid accountId = storage.Account.GetId("accountThatExists");
+            storage.Account.SetAdminId(accountId, userId);
         }
 
         [Test]
         public void SetAdminIdNormalBehaviour()
         {
-
+            Guid userId = storage.User.GetId("userThatExists");
+            Guid accountId = storage.Account.GetId("accountThatExists");
         }
 
         #endregion
-
 
         #region void Add(Guid accountId, Guid userId)
 
@@ -145,20 +155,29 @@ namespace StorageTest
         [ExpectedException(typeof(AccountNotFound))]
         public void AddAccountNotFound()
         {
-
+            Guid otherUserId = storage.User.GetId("otherUserThatExists");
+            storage.Account.Add(otherUserId, otherUserId);
         }
 
         [Test]
         [ExpectedException(typeof(UserNotFound))]
         public void AddUserNotFound()
         {
-
+            Guid accountId = storage.Account.GetId("accountThatExists");
+            Guid otherUserId = storage.User.GetId("otherUserThatDoesnotExists");
+            storage.Account.Add(accountId, otherUserId);
         }
 
         [Test]
         public void AddNormalBehaviour()
         {
-
+            Guid accountId = storage.Account.GetId("accountThatExists");
+            Guid otherUserId = storage.User.GetId("otherUserThatExists");
+            storage.Account.Add(accountId, otherUserId);
+            HashSet<Guid> users = storage.Account.GetUsers(accountId);
+            Assert.IsTrue(users.Contains(otherUserId));
+            HashSet<Guid> accounts = storage.User.GetAccounts(otherUserId);
+            Assert.IsTrue(accounts.Contains(accountId));
         }
 
         #endregion
@@ -169,13 +188,36 @@ namespace StorageTest
         [ExpectedException(typeof(UserIsAdmin))]
         public void RemoveUserIsAdmin()
         {
+            Guid userId = storage.User.GetId("userThatExists");
+            Guid accountId = storage.Account.GetId("accountThatExists");
+            storage.Account.Remove(accountId, userId);
+        }
 
+        [Test]
+        public void RemoveWhenWrongAccountId()
+        {
+            Guid userId = storage.User.GetId("userThatExists");
+            storage.Account.Remove(Guid.NewGuid(), userId);
+        }
+
+        [Test]
+        public void RemoveWhenWrongUserId()
+        {
+            Guid accountId = storage.Account.GetId("accountThatExists");
+            storage.Account.Remove(accountId, Guid.NewGuid());
         }
 
         [Test]
         public void RemoveNormalBehaviour()
         {
-
+            Guid accountId = storage.Account.GetId("accountThatExists");
+            Guid otherUserId = storage.User.GetId("otherUserThatExists");
+            storage.Account.Add(accountId, otherUserId);
+            storage.Account.Remove(accountId, otherUserId);
+            HashSet<Guid> users = storage.Account.GetUsers(accountId);
+            Assert.IsTrue(!users.Contains(otherUserId));
+            HashSet<Guid> accounts = storage.User.GetAccounts(otherUserId);
+            Assert.IsTrue(!accounts.Contains(accountId));
         }
 
         #endregion
@@ -187,21 +229,18 @@ namespace StorageTest
         [ExpectedException(typeof(UserNotFound))]
         public void CreateUserNotFound()
         {
-
+            storage.Account.Create(Guid.NewGuid(), "acountThatExists", "description2");
         }
 
         [Test]
         [ExpectedException(typeof(AccountAlreadyExists))]
         public void CreateAccountAlreadyExists()
         {
-
+            Guid userId = storage.User.GetId("userThatExists");
+            storage.Account.Create(userId, "acountThatExists", "description2");
         }
 
-        [Test]
-        public void CreateNormalBehaviour()
-        {
-
-        }
+        // test normal behavior done while doing init
 
         #endregion
 
@@ -209,9 +248,18 @@ namespace StorageTest
         #region void Delete(Guid accountId)
 
         [Test]
+        public void DeleteWithWrongAccountId()
+        {
+            storage.Account.Delete(new Guid());
+        }
+
+        [Test]
+        [ExpectedException(typeof(AccountNotFound))]
         public void DeleteNormalBehaviour()
         {
-
+            Guid otherAccountId = storage.Account.GetId("otherAccountThatExists");
+            storage.Account.Delete(otherAccountId);
+            storage.Account.GetId("otherAccountThatExists");
         }
 
         #endregion
