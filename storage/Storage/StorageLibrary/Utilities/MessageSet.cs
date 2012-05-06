@@ -8,12 +8,12 @@ using ProtoBuf;
 namespace StorageLibrary.Utilities
 {
     [Serializable]
-    public class MessageSet : SortedSet<IMessage>, ISerializable
+    public class MessageSet : SortedSet<Message>, ISerializable
     {
         [Serializable]
-        class MsgComparer : IComparer<IMessage>
+        class MsgComparer : IComparer<Message>
         {
-            public int Compare(IMessage x, IMessage y)
+            public int Compare(Message x, Message y)
             {
                 if (x.Date == y.Date)
                     return x.Id.CompareTo(y.Id);
@@ -24,12 +24,12 @@ namespace StorageLibrary.Utilities
 
         public MessageSet() : base(new MsgComparer()) { }
 
-        public MessageSet(SortedSet<IMessage> set) : base(set, new MsgComparer()) { }
+        public MessageSet(SortedSet<Message> set) : base(set, new MsgComparer()) { }
 
-        public MessageSet(IEnumerable<IMessage> items) : base(items, new MsgComparer()) { }
+        public MessageSet(IEnumerable<Message> items) : base(items, new MsgComparer()) { }
 
         // TODO : replace this by something more efficient
-        public new MessageSet GetViewBetween(IMessage first, IMessage last)
+        public new MessageSet GetViewBetween(Message first, Message last)
         {
             return new MessageSet(base.GetViewBetween(first, last));
         }

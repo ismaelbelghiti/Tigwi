@@ -14,7 +14,7 @@ namespace StorageLibrary.Utilities
     /// <summary>
     /// Base class for class used to manipulate objects in the cloud
     /// </summary>
-    public class Blob<T>
+    public class Blob<T> where T : new()
     {
         protected CloudBlob blob;
 
@@ -76,7 +76,7 @@ namespace StorageLibrary.Utilities
         public T Get()
         {
             BlobStream stream = blob.OpenRead();
-            T t = Serializer.Deserialize<T>(stream);
+            T t = Deserialize(stream);
             stream.Close();
             return t;
         }
@@ -93,7 +93,7 @@ namespace StorageLibrary.Utilities
             try
             {
                 BlobStream stream = blob.OpenRead();
-                T t = Serializer.Deserialize<T>(stream);
+                T t = Deserialize(stream);
                 stream.Close();
                 return t;
             }
@@ -217,6 +217,14 @@ namespace StorageLibrary.Utilities
             {
                 return blob.Metadata;
             }
+        }
+
+        T Deserialize(Stream stream)
+        {
+            T t = Serializer.Deserialize<T>(stream);
+            if (t == null)
+                t = new T();
+            return t;
         }
     }
 }

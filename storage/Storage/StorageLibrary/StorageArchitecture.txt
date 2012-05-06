@@ -67,6 +67,8 @@ TODO :
 		Be able to upload new avatars
 	- Parralelisation
 	- clean the storage only if necessary
+	- implement constraints on personal list
+	- when we add messages, we should start by the first ones
 
 CHECKS :	
 	- check that we dont write on a deleted blob while using retry

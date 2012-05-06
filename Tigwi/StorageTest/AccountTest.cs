@@ -12,12 +12,12 @@ namespace StorageTest
     {
         public IStorage storage;
         const string azureAccountName = "ulyssestorage";
-        const string azureAccountKey = "jnfLEhtEGAZ6YzRoYSahJpgUzXL2438grLGeFn/lnhxNJGonwD/jO+7QU2u/UECHeYsF4uigIfXKGsqRbjRsTQ==";
+        const string azureAccountKey = "fc2HTyfP0m2r3zlNYmMc3Pjvbfmy63ovoCP9Zkz0yoyuId3AeyrTswLcye2VDr3hzDvAQbdeKUlXBX3lFTcNWQ==";
 
         [SetUp]
         public void InitStorage()
         {
-            bool UseStorageTmp = true;
+            bool UseStorageTmp = false;
             if (UseStorageTmp)
                 storage = new StorageTmp();
             else

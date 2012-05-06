@@ -7,12 +7,18 @@ using ProtoBuf;
 namespace StorageLibrary
 {
     [ProtoContract]
-    class AccountInfo : IAccountInfo
+    public class AccountInfo : IAccountInfo
     {
         public AccountInfo(string name, string description)
         {
             Name = name;
             Description = description;
+        }
+
+        public AccountInfo()
+        {
+            Name = null;
+            Description = null;
         }
 
         [ProtoMember(1)]

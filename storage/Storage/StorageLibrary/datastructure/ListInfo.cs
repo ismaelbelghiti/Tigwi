@@ -7,7 +7,7 @@ using ProtoBuf;
 namespace StorageLibrary
 {
     [ProtoContract]
-    class ListInfo : IListInfo
+    public class ListInfo : IListInfo
     {
         public ListInfo(string name, string description, bool isPrivate, bool isPersonnal)
         {
@@ -15,6 +15,14 @@ namespace StorageLibrary
             Description = description;
             IsPrivate = isPrivate;
             IsPersonnal = isPersonnal;
+        }
+
+        public ListInfo()
+        {
+            Name = null;
+            Description = null;
+            IsPrivate = false;
+            IsPersonnal = false;
         }
 
         [ProtoMember(1)]

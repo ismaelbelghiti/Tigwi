@@ -32,7 +32,7 @@ namespace StorageLibrary.Utilities
         }
 
         // TODO : change list to set for a better merge
-        public List<IMessage> GetMessagesFrom(DateTime date, int msgCount, Exception e)
+        public List<Message> GetMessagesFrom(DateTime date, int msgCount, Exception e)
         {
             MessageSet msgSet = null;
             // if their is a change in te architecture of packs while we retreive messages, then we try again
@@ -62,7 +62,7 @@ namespace StorageLibrary.Utilities
 
             } while (false);
 
-            List<IMessage> msgList = msgSet.ToList();
+            List<Message> msgList = msgSet.ToList();
             if (msgList.Count > msgCount)
                 msgList = msgList.GetRange(0, msgCount);
 
@@ -70,7 +70,7 @@ namespace StorageLibrary.Utilities
         }
 
         // TODO : change list to set for a better merge
-        public List<IMessage> GetMessagesTo(DateTime date, int msgCount, Exception e)
+        public List<Message> GetMessagesTo(DateTime date, int msgCount, Exception e)
         {
             MessageSet msgSet = null;
 
@@ -101,7 +101,7 @@ namespace StorageLibrary.Utilities
                
             } while (false);
 
-            List<IMessage> msgList = msgSet.ToList();
+            List<Message> msgList = msgSet.ToList();
             if (msgList.Count > msgCount)
                 msgList = msgList.GetRange(msgList.Count - msgCount, msgCount);
 
@@ -141,7 +141,7 @@ namespace StorageLibrary.Utilities
         }
 
         // return false to warn that the message was not added
-        public bool AddMessage(IMessage message)
+        public bool AddMessage(Message message)
         {
             while (true)
             {
@@ -195,7 +195,7 @@ namespace StorageLibrary.Utilities
             }
         }
 
-        public void RemoveMessage(IMessage message)
+        public void RemoveMessage(Message message)
         {
             while (true)
             {

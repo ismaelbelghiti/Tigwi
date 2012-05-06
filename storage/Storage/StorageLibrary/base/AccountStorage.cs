@@ -30,8 +30,8 @@ namespace StorageLibrary
 
         public void SetInfo(Guid accountId, string description)
         {
-            Blob<IAccountInfo> bInfo = blobFactory.AInfo(accountId);
-            IAccountInfo info = bInfo.GetIfExists(new AccountNotFound());
+            Blob<AccountInfo> bInfo = blobFactory.AInfo(accountId);
+            AccountInfo info = bInfo.GetIfExists(new AccountNotFound());
             info.Description = description;
             if (!bInfo.SetIfExists(info))
                 throw new AccountNotFound();

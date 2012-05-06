@@ -7,7 +7,7 @@ using ProtoBuf;
 namespace StorageLibrary
 {
     [ProtoContract]
-    class Message : IMessage
+    public class Message : IMessage
     {
         public Message(Guid id, Guid posterId, string PosterName, string PosterAvatar, DateTime date, string content)
         {
@@ -15,6 +15,15 @@ namespace StorageLibrary
             PosterId = posterId;
             Date = date;
             Content = content;
+        }
+
+        public Message()
+        {
+            Id = new Guid();
+            PosterId = new Guid();
+            Date = DateTime.MinValue;
+            Content = null;
+            PosterAvatar = null;
         }
 
         [ProtoMember(1)]

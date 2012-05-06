@@ -51,7 +51,7 @@ namespace StorageLibrary
             followingAccounts.Add(ownerId);
 
             // Creation of blobs in list container
-            Blob<IListInfo> bInfo = blobFactory.LInfo(listId);
+            Blob<ListInfo> bInfo = blobFactory.LInfo(listId);
             Blob<Guid> bOwner = blobFactory.LOwner(listId);
             HashSetBlob<Guid> bOwned = isPrivate ? blobFactory.LOwnedListsPrivate(ownerId) : blobFactory.LOwnedListsPublic(ownerId);
             Blob<HashSet<Guid>> bFollowingAccounts = blobFactory.LFollowingAccounts(listId);
@@ -152,23 +152,55 @@ namespace StorageLibrary
                 blobFactory.LFollowedByPublic(accountId).AddWithRetry(listId);
         }
 
-        // TODO add changes due to mutex removal
         // TODO : remove messages
         public void Remove(Guid listId, Guid accountId)
         {
-            // We don't check wether the list is private or not because it would be much more complicated and slower
-            // it is much easier to remove the list form FollowingLists even if she doesn't belong to this set
+            try
+            {
+                // Do the job if the list is public
+                if (!blobFactory.LInfo(listId).GetIfExists(new ListNotFound()).IsPrivate)
+                {
+                    HashSet<Guid> LFollowedByPublic;
+                    Blob<HashSet<Guid>> bLFollowedByPublic = blobFactory.LFollowedByPublic(accountId);
+                    do
+                    {
+                        LFollowedByPublic = bLFollowedByPublic.GetIfExists(new AccountNotFound());
 
-            //try
-            //{
-            //    using (blobFactory.LFollowedAccountLock(listId))
-            //    {
-            //        blobFactory.LFollowedByPublic(accountId).RemoveWithRetry(listId);
-            //        blobFactory.LFollowedByAll(accountId).RemoveWithRetry(listId);
-            //        blobFactory.LFollowedAccountsData(listId).Remove(accountId);
-            //    }
-            //}
-            //catch (AccountNotFound) { }
+                        // check that we are not already working on this list
+                        if (!LFollowedByPublic.Contains(listId))
+                            return;
+
+                        LFollowedByPublic.Remove(listId);
+                    } while (!bLFollowedByPublic.TrySet(LFollowedByPublic));
+                }
+
+                // Remove from following accounts
+                HashSet<Guid> LFollowedAccounts;
+                Blob<HashSet<Guid>> bLFollowedAccounts = blobFactory.LFollowedAccounts(listId);
+                do
+                {
+                    LFollowedAccounts = bLFollowedAccounts.GetIfExists(new ListNotFound());
+
+                    // check that we are not already working on this list
+                    if (!LFollowedAccounts.Contains(accountId))
+                        return;
+
+                    LFollowedAccounts.Remove(accountId);
+                } while (!bLFollowedAccounts.TrySet(LFollowedAccounts));
+
+
+                // TODO :
+                // - remove from msgs
+                // PROBLEM : we migh add msgs to the list while we try to remove them
+                // SOLUTIONS : 
+                // - hide them and remove them only after
+                // - it would allow an add to cancel a remove
+                // - problem : when do we remove them ?
+                //      
+
+                blobFactory.LFollowedByAll(accountId).RemoveWithRetry(listId);
+            }
+            catch { }
         }
 
         public HashSet<Guid> GetAccountOwnedLists(Guid accountId, bool withPrivate)
