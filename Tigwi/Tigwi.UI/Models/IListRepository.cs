@@ -57,11 +57,11 @@ namespace Tigwi.UI.Models
         IListModel Find(Guid listId);
 
         /// <summary>
-        /// Finds the <see cref="IListModels"/> corresponding to the given set of IDs.
+        /// Finds the <see cref="IListModelCollection"/> corresponding to the given set of IDs.
         /// </summary>
         /// <param name="listsId">The set of IDs to find</param>
         /// <returns></returns>
-        IListModels Find(ICollection<Guid> listsId);
+        IListModelCollection Find(ICollection<Guid> listsId);
 
         #endregion
     }

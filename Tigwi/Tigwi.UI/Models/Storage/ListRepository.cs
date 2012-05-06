@@ -99,9 +99,9 @@ namespace Tigwi.UI.Models.Storage
             return this.InternalFind(listId);
         }
 
-        public IListModels Find(ICollection<Guid> listsId)
+        public IListModelCollection Find(ICollection<Guid> listsId)
         {
-            return new StorageListModels(this.StorageContext, listsId);
+            return new StorageListModelCollection(this.StorageContext, listsId);
         }
 
         #endregion

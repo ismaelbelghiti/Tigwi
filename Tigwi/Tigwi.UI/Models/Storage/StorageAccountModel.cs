@@ -79,7 +79,7 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public ICollection<IListModel> AllFollowedLists
+        public IListModelCollection AllFollowedLists
         {
             get
             {
@@ -87,7 +87,7 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public ICollection<IListModel> AllOwnedLists
+        public IListModelCollection AllOwnedLists
         {
             get
             {
@@ -128,7 +128,7 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public ICollection<IListModel> MemberOfLists
+        public IListModelCollection MemberOfLists
         {
             get
             {
@@ -157,7 +157,7 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public ICollection<IListModel> PublicFollowedLists
+        public IListModelCollection PublicFollowedLists
         {
             get
             {
@@ -165,7 +165,7 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public ICollection<IListModel> PublicOwnedLists
+        public IListModelCollection PublicOwnedLists
         {
             get
             {
@@ -334,7 +334,7 @@ namespace Tigwi.UI.Models.Storage
         #endregion
 
         internal class ListCollectionAdapter :
-            StorageEntityCollection<StorageAccountModel, StorageListModel, IListModel>
+            StorageEntityCollection<StorageAccountModel, StorageListModel, IListModel>, IListModelCollection
         {
             #region Constructors and Destructors
 
@@ -386,6 +386,38 @@ namespace Tigwi.UI.Models.Storage
             protected override void ReverseRemove(StorageListModel item)
             {
                 // TODO item.CachedMembers.CacheRemove(this.Parent);
+            }
+
+            #endregion
+
+            #region Implementation of IListModelCollection
+
+            public ICollection<Guid> Ids
+            {
+                get
+                {
+                    // TODO: berk berk berk
+                    var ids = new HashSet<Guid>(this.InternalCollection.Select(model => model.Id));
+                    return ids;
+                }
+            }
+
+            public ICollection<IPostModel> PostsAfter(DateTime date, int maximum = 100)
+            {
+                var msgCollection = this.Parent.StorageContext.StorageObj.Msg.GetListsMsgFrom(
+                new HashSet<Guid>(this.Ids), date, maximum);
+                return
+                    new List<IPostModel>(msgCollection.Select(msg => new StoragePostModel(this.Parent.StorageContext, msg)))
+                        .AsReadOnly();
+            }
+
+            public ICollection<IPostModel> PostsBefore(DateTime date, int maximum = 100)
+            {
+                var msgCollection = this.Parent.StorageContext.StorageObj.Msg.GetListsMsgTo(
+                new HashSet<Guid>(this.Ids), date, maximum);
+                return
+                    new List<IPostModel>(msgCollection.Select(msg => new StoragePostModel(this.Parent.StorageContext, msg)))
+                        .AsReadOnly();
             }
 
             #endregion

@@ -8,9 +8,9 @@ namespace Tigwi.UI.Models.Storage
     using System.Collections;
 
     // TODO: extend StorageEntityCollection
-    public class StorageListModels : IListModels
+    public class StorageListModelCollection : IListModelCollection
     {
-        public StorageListModels(StorageContext context, IEnumerable<Guid> ids)
+        public StorageListModelCollection(StorageContext context, IEnumerable<Guid> ids)
         {
             this.InternalStorage = context;
             this.InternalDictionary = new Dictionary<Guid, StorageListModel>();
@@ -98,7 +98,7 @@ namespace Tigwi.UI.Models.Storage
 
         #endregion
 
-        #region Implementation of IListModels
+        #region Implementation of IListModelCollection
 
         public ICollection<Guid> Ids
         {
