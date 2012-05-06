@@ -240,7 +240,7 @@ namespace StorageTest
         [ExpectedException(typeof(UserNotFound))]
         public void CreateUserNotFound()
         {
-            storage.Account.Create(Guid.NewGuid(), "acountThatExists", "description2");
+            storage.Account.Create(Guid.NewGuid(), "accountThatDoesntExists", "description2");
         }
 
         [Test]
@@ -248,13 +248,12 @@ namespace StorageTest
         public void CreateAccountAlreadyExists()
         {
             Guid userId = storage.User.GetId("userThatExists");
-            storage.Account.Create(userId, "acountThatExists", "description2");
+            storage.Account.Create(userId, "accountThatExists", "description2");
         }
 
         // test normal behavior done while doing init
 
         #endregion
-
 
         #region void Delete(Guid accountId)
 

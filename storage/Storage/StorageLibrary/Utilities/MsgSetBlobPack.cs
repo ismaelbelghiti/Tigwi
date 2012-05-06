@@ -269,7 +269,7 @@ namespace StorageLibrary.Utilities
                 {
                     for (int i = 0; i < blobsList.Count; i++)
                     {
-                        DateTime upperBound = i == blobsList.Count ? DateTime.MaxValue : blobsList[i + 1].Key;
+                        DateTime upperBound = (i + 1 < blobsList.Count) ? blobsList[i + 1].Key : DateTime.MaxValue;
                         if (upperBound < progress)
                             continue;
 
