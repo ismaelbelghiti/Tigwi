@@ -150,13 +150,15 @@ namespace StorageTest
         [ExpectedException(typeof(UserNotFound))]
         public void GetIdByOpenIdUriUserNotFound()
         {
-
+            storage.User.AssociateOpenIdUri(new Guid(), "babar");
         }
 
         [Test]
         public void GetIdByOpenIdUriNormalBehaviour()
         {
-
+            Guid userId = storage.User.GetId("userThatExists");
+            storage.User.AssociateOpenIdUri(userId, "testGetItNB");
+            Assert.AreEqual(userId, storage.User.GetIdByOpenIdUri("testGetItNB"));
         }
 
         #endregion
@@ -167,21 +169,19 @@ namespace StorageTest
         [ExpectedException(typeof(UserNotFound))]
         public void AssociateOpenIdUriUserNotFound()
         {
-
+            storage.User.AssociateOpenIdUri(new Guid(), "babar");
         }
 
         [Test]
         [ExpectedException(typeof(OpenIdUriDuplicated))]
         public void AssociateOpenIdUriOpenIdUriDuplicated()
         {
-
+            Guid userId = storage.User.GetId("userThatExists");
+            storage.User.AssociateOpenIdUri(userId, "testAssDup");
+            storage.User.AssociateOpenIdUri(userId, "testAssDup");
         }
 
-        [Test]
-        public void AssociateOpenIdUriNormalBehaviour()
-        {
-
-        }
+        //Normal beahaviour already tested
 
         #endregion
 
@@ -191,13 +191,15 @@ namespace StorageTest
         [ExpectedException(typeof(UserNotFound))]
         public void ListOpenIdUrisUserNotFound()
         {
-
+            storage.User.ListOpenIdUris(new Guid());
         }
 
         [Test]
         public void ListOpenIdUrisNormalBehaviour()
         {
-
+            Guid userId = storage.User.GetId("userThatExists");
+            storage.User.AssociateOpenIdUri(userId, "testListOID");
+            Assert.IsTrue(storage.User.ListOpenIdUris(userId).Contains("testListOID"));
         }
 
         #endregion
@@ -208,20 +210,24 @@ namespace StorageTest
         [ExpectedException(typeof(UserNotFound))]
         public void DeassociateOpenIdUriUserNotFound()
         {
-
+            storage.User.DeassociateOpenIdUri(new Guid(), "babar");
         }
 
         [Test]
         [ExpectedException(typeof(OpenIdUriNotAssociated))]
         public void DeassociateOpenIdUriOpenIdUriNotAssociated()
         {
-
+            Guid userId = storage.User.GetId("userThatExists");
+            storage.User.DeassociateOpenIdUri(userId, "notAss");
         }
 
         [Test]
         public void DeassociateOpenIdUriNormalBehaviour()
         {
-
+            Guid userId = storage.User.GetId("userThatExists");
+            storage.User.AssociateOpenIdUri(userId, "testListDeassNB");
+            storage.User.DeassociateOpenIdUri(userId, "testListDeassNB");
+            Assert.IsTrue(!storage.User.ListOpenIdUris(userId).Contains("testListDeassNB"));
         }
 
         #endregion
