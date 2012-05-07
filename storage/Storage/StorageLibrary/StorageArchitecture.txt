@@ -28,7 +28,6 @@ list ->		------------------------------
 
 			followedby/<account ID>/public		C0	: HashSet<Guid> -- list following this account publicly
 			followedby/<account ID>/all			A0	: without personnal list
-													  might contain inexistent lists, but they will be removed soon
 			followedaccounts/<list ID>			B0	: HashSet<Guid> -- accounts in this list 
 			
 message ->	listmessages/<list ID>/<date>			: MessageSet

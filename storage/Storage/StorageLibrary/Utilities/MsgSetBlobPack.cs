@@ -256,6 +256,7 @@ namespace StorageLibrary.Utilities
                 b.Delete();
         }
 
+        // TODO : begin by the lasts msgs
         public bool UnionWith(MsgSetBlobPack other)
         {
             DateTime progress = DateTime.MinValue;
@@ -275,6 +276,35 @@ namespace StorageLibrary.Utilities
 
                         MessageSet set = GetMessageSet(new Blob<MessageSet>(blobsList[i].Value));
                         set.UnionWith(other.GetMessagesBetween(blobsList[i].Key, upperBound));
+                        progress = upperBound;
+                    }
+                }
+                catch (VersionHasChanged) { continue; }
+            }
+
+            return true;
+        }
+
+        // TODO : begin by the lasts msgs
+        public bool ExceptWith(MsgSetBlobPack other)
+        {
+            DateTime progress = DateTime.MinValue;
+
+            while (progress != DateTime.MaxValue)
+            {
+                List<KeyValuePair<DateTime, CloudBlob>> blobsList = GetBlobs();
+                if (!blobsList.Any())
+                    return false;
+                try
+                {
+                    for (int i = 0; i < blobsList.Count; i++)
+                    {
+                        DateTime upperBound = (i + 1 < blobsList.Count) ? blobsList[i + 1].Key : DateTime.MaxValue;
+                        if (upperBound < progress)
+                            continue;
+
+                        MessageSet set = GetMessageSet(new Blob<MessageSet>(blobsList[i].Value));
+                        set.ExceptWith(other.GetMessagesBetween(blobsList[i].Key, upperBound));
                         progress = upperBound;
                     }
                 }

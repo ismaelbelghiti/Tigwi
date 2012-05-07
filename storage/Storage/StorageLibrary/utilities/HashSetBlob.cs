@@ -63,5 +63,19 @@ namespace StorageLibrary.Utilities
 
             return true;
         }
+
+        public bool AddIfNotInWithRetry(T item, Exception e)
+        {
+            HashSet<T> set;
+            do
+            {
+                set = base.GetIfExists(e);
+                if (set.Contains(item))
+                    return false;
+                set.Add(item);
+            } while (!base.TrySet(set));
+
+            return true;
+        }
     }
 }

@@ -124,32 +124,29 @@ namespace StorageLibrary
 
         public void Add(Guid listId, Guid accountId)
         {
-            HashSetBlob<Guid> bLFollowedByAll = blobFactory.LFollowedByAll(accountId);
+            // Set WIP to true
+            HashSetBlob<Guid> bAddRmvMsgs = blobFactory.LAddRmvMsgs(listId);
+            if (!bAddRmvMsgs.AddIfNotInWithRetry(accountId, new ListNotFound()))
+                return;
 
-            // we do this even if we're not sure the list exists
-            // if it doesn't, we will remove it by the end of this function
-            HashSet<Guid> set;
-            do
+            // Add list and accounts to the sets
+            if (!blobFactory.LFollowedByAll(accountId).AddWithRetry(listId))
             {
-                set = bLFollowedByAll.GetIfExists(new AccountNotFound());
-                if (set.Contains(listId))
-                    return;
-                set.Add(listId);
-            } while (!bLFollowedByAll.TrySet(set));
-
-            // The account now can't be removed until the request is completed
-
-            Guid PersonnalListId = blobFactory.LPersonnalList(accountId).GetIfExists(new AccountNotFound());
-            if (!blobFactory.MListMessages(listId).UnionWith(blobFactory.MListMessages(PersonnalListId))
-                || !blobFactory.LFollowedAccounts(listId).AddWithRetry(accountId))
-            {
-                bLFollowedByAll.RemoveWithRetry(listId);
-                throw new ListNotFound();
+                bAddRmvMsgs.RemoveWithRetry(accountId);
+                throw new AccountNotFound();
             }
 
-            // we don't need to check the account or list existence since the request needs to be ended bedore
+            blobFactory.LFollowedAccounts(listId).AddWithRetry(accountId);
+
             if (!blobFactory.LInfo(listId).Get().IsPrivate)
                 blobFactory.LFollowedByPublic(accountId).AddWithRetry(listId);
+
+            // add msgs
+            Guid PersonnalListId = blobFactory.LPersonnalList(accountId).Get();
+            blobFactory.MListMessages(listId).UnionWith(blobFactory.MListMessages(PersonnalListId));
+
+            // set WIP to false
+            bAddRmvMsgs.RemoveWithRetry(accountId);
         }
 
         // TODO : remove messages
@@ -157,48 +154,22 @@ namespace StorageLibrary
         {
             try
             {
-                // Do the job if the list is public
-                if (!blobFactory.LInfo(listId).GetIfExists(new ListNotFound()).IsPrivate)
+                HashSetBlob<Guid> bAddRmvMsgs = blobFactory.LAddRmvMsgs(listId);
+                if(!bAddRmvMsgs.AddIfNotInWithRetry(accountId, new ListNotFound()))
+                    return;
+
+                if (!blobFactory.LFollowedByPublic(accountId).RemoveWithRetry(listId))
                 {
-                    HashSet<Guid> LFollowedByPublic;
-                    Blob<HashSet<Guid>> bLFollowedByPublic = blobFactory.LFollowedByPublic(accountId);
-                    do
-                    {
-                        LFollowedByPublic = bLFollowedByPublic.GetIfExists(new AccountNotFound());
-
-                        // check that we are not already working on this list
-                        if (!LFollowedByPublic.Contains(listId))
-                            return;
-
-                        LFollowedByPublic.Remove(listId);
-                    } while (!bLFollowedByPublic.TrySet(LFollowedByPublic));
+                    bAddRmvMsgs.RemoveWithRetry(accountId);
+                    throw new AccountNotFound();
                 }
 
-                // Remove from following accounts
-                HashSet<Guid> LFollowedAccounts;
-                Blob<HashSet<Guid>> bLFollowedAccounts = blobFactory.LFollowedAccounts(listId);
-                do
-                {
-                    LFollowedAccounts = bLFollowedAccounts.GetIfExists(new ListNotFound());
-
-                    // check that we are not already working on this list
-                    if (!LFollowedAccounts.Contains(accountId))
-                        return;
-
-                    LFollowedAccounts.Remove(accountId);
-                } while (!bLFollowedAccounts.TrySet(LFollowedAccounts));
-
-
-                // TODO :
-                // - remove from msgs
-                // PROBLEM : we migh add msgs to the list while we try to remove them
-                // SOLUTIONS : 
-                // - hide them and remove them only after
-                // - it would allow an add to cancel a remove
-                // - problem : when do we remove them ?
-                //      
-
                 blobFactory.LFollowedByAll(accountId).RemoveWithRetry(listId);
+                blobFactory.LFollowedAccounts(listId).RemoveWithRetry(listId);
+
+                blobFactory.MListMessages(listId).ExceptWith(blobFactory.MListMessages(blobFactory.LPersonnalList(accountId).Get()));
+
+                bAddRmvMsgs.RemoveWithRetry(accountId);
             }
             catch { }
         }

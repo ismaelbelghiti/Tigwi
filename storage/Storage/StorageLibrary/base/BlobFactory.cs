@@ -190,6 +190,11 @@ namespace StorageLibrary
             return new HashSetBlob<Guid>(listContainer, L_FOLLOWEDACCOUNTS + listId);
         }
 
+        public HashSetBlob<Guid> LAddRmvMsgs(Guid listId)
+        {
+            return new HashSetBlob<Guid>(listContainer, L_ADDRMVMSG + listId);
+        }
+
         // msg blobs
         public MsgSetBlobPack MListMessages(Guid listId)
         {
@@ -233,6 +238,7 @@ namespace StorageLibrary
         const string L_FOLLOWINGACCOUNTS = "followingaccounts/";
         const string L_FOLLOWEDBY = "followedby/";
         const string L_FOLLOWEDACCOUNTS = "followedaccounts/";
+        const string L_ADDRMVMSG = "addrmvmsg/";
 
         const string M_LISTMESSAGES = "listmessages/";
         const string M_MESSAGE = "message/";
