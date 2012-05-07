@@ -68,9 +68,9 @@ namespace StorageLibrary
             return new Blob<Guid>(userContainer, U_IDBYOPENIDURI + openIdUriHash);
         }
 
-        public Blob<IUserInfo> UInfo(Guid userId)
+        public Blob<UserInfo> UInfo(Guid userId)
         {
-            return new Blob<IUserInfo>(userContainer, U_INFO + userId);
+            return new Blob<UserInfo>(userContainer, U_INFO + userId);
         }
 
         public HashSetBlob<string> UOpenIdsData(Guid userId)
@@ -88,9 +88,9 @@ namespace StorageLibrary
             Mutex.Init(userContainer, U_OPENIDS + userId + LOCK);
         }
 
-        public Blob<Byte[]> UPassword(Guid userId)
+        public Blob<ByteArray> UPassword(Guid userId)
         {
-            return new Blob<Byte[]>(userContainer, U_PASSWORD + userId);
+            return new Blob<ByteArray>(userContainer, U_PASSWORD + userId);
         }
 
         public Mutex UAccountsLock(Guid userId)
@@ -114,9 +114,9 @@ namespace StorageLibrary
             return new Blob<Guid>(accountContainer, A_IDBYNAME + Hasher.Hash(name));
         }
 
-        public Blob<IAccountInfo> AInfo(Guid accountId)
+        public Blob<AccountInfo> AInfo(Guid accountId)
         {
-            return new Blob<IAccountInfo>(accountContainer, A_INFO + accountId);
+            return new Blob<AccountInfo>(accountContainer, A_INFO + accountId);
         }
 
         public HashSetBlob<Guid> AUsers(Guid accountId)
@@ -130,9 +130,9 @@ namespace StorageLibrary
         }
 
         // list blobs
-        public Blob<IListInfo> LInfo(Guid listId)
+        public Blob<ListInfo> LInfo(Guid listId)
         {
-            return new Blob<IListInfo>(listContainer, L_INFO + listId);
+            return new Blob<ListInfo>(listContainer, L_INFO + listId);
         }
 
         public Blob<Guid> LPersonnalList(Guid accountId)
@@ -185,19 +185,14 @@ namespace StorageLibrary
             return new HashSetBlob<Guid>(listContainer, L_FOLLOWEDBY + accountId + ALL);
         }
 
-        public Mutex LFollowedAccountLock(Guid listId)
+        public HashSetBlob<Guid> LFollowedAccounts(Guid listId)
         {
-            return new Mutex(listContainer, L_FOLLOWEDACCOUNTS + listId + LOCK, new ListNotFound());
+            return new HashSetBlob<Guid>(listContainer, L_FOLLOWEDACCOUNTS + listId);
         }
 
-        public void LFollowedAccountLockInit(Guid listId)
+        public HashSetBlob<Guid> LAddRmvMsgs(Guid listId)
         {
-            Mutex.Init(listContainer, L_FOLLOWEDACCOUNTS + listId + LOCK);
-        }
-
-        public HashSetBlob<Guid> LFollowedAccountsData(Guid listId)
-        {
-            return new HashSetBlob<Guid>(listContainer, L_FOLLOWEDACCOUNTS + listId + DATA);
+            return new HashSetBlob<Guid>(listContainer, L_ADDRMVMSG + listId);
         }
 
         // msg blobs
@@ -206,9 +201,9 @@ namespace StorageLibrary
             return new MsgSetBlobPack(msgContainer, M_LISTMESSAGES + listId);
         }
 
-        public Blob<IMessage> MMessage(Guid messageId)
+        public Blob<Message> MMessage(Guid messageId)
         {
-            return new Blob<IMessage>(msgContainer, M_MESSAGE + messageId);
+            return new Blob<Message>(msgContainer, M_MESSAGE + messageId);
         }
 
         public MsgSetBlobPack MTaggedMessages(Guid AccountId)
@@ -243,6 +238,7 @@ namespace StorageLibrary
         const string L_FOLLOWINGACCOUNTS = "followingaccounts/";
         const string L_FOLLOWEDBY = "followedby/";
         const string L_FOLLOWEDACCOUNTS = "followedaccounts/";
+        const string L_ADDRMVMSG = "addrmvmsg/";
 
         const string M_LISTMESSAGES = "listmessages/";
         const string M_MESSAGE = "message/";

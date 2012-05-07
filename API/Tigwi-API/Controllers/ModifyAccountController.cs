@@ -277,6 +277,7 @@ namespace Tigwi_API.Controllers
 
         // WARNING : are the following methods really necessary in an API ?
 
+        /*
         //
         // POST : /modifyaccount/removeuser
 
@@ -309,7 +310,9 @@ namespace Tigwi_API.Controllers
 
             return Serialize(new Answer(error));
         }
-
+        */
+         
+        /*
         //
         // POST : /modifyaccount/adduser
 
@@ -342,8 +345,9 @@ namespace Tigwi_API.Controllers
 
             return Serialize(new Answer(error));
         }
+        */
 
-
+        /*
         //
         // POST : /modifyaccount/changeadmin
 
@@ -376,5 +380,6 @@ namespace Tigwi_API.Controllers
 
             return Serialize(new Answer(error));
         }
+        */
     }
 }

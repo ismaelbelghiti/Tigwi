@@ -51,11 +51,11 @@ namespace StorageLibrary
             followingAccounts.Add(ownerId);
 
             // Creation of blobs in list container
-            Blob<IListInfo> bInfo = blobFactory.LInfo(listId);
+            Blob<ListInfo> bInfo = blobFactory.LInfo(listId);
             Blob<Guid> bOwner = blobFactory.LOwner(listId);
             HashSetBlob<Guid> bOwned = isPrivate ? blobFactory.LOwnedListsPrivate(ownerId) : blobFactory.LOwnedListsPublic(ownerId);
             Blob<HashSet<Guid>> bFollowingAccounts = blobFactory.LFollowingAccounts(listId);
-            Blob<HashSet<Guid>> bFollowedAccounts = blobFactory.LFollowedAccountsData(listId);
+            Blob<HashSet<Guid>> bFollowedAccounts = blobFactory.LFollowedAccounts(listId);
             MsgSetBlobPack bMessages = blobFactory.MListMessages(listId);
 
             // store the data
@@ -63,7 +63,6 @@ namespace StorageLibrary
             bOwner.Set(ownerId);
             bFollowingAccounts.Set(followingAccounts);
             bFollowedAccounts.Set(new HashSet<Guid>());
-            blobFactory.LFollowedAccountLockInit(listId);
 
             bMessages.Init();
 
@@ -74,7 +73,6 @@ namespace StorageLibrary
                 bOwner.Delete();
                 bFollowingAccounts.Delete();
                 bFollowedAccounts.Delete();
-                blobFactory.LFollowedAccountLock(listId).Delete();
                 bMessages.Delete();
 
                 throw new AccountNotFound();
@@ -116,7 +114,7 @@ namespace StorageLibrary
 
         public HashSet<Guid> GetAccounts(Guid listId)
         {
-            return blobFactory.LFollowedAccountsData(listId).GetIfExists(new ListNotFound());
+            return blobFactory.LFollowedAccounts(listId).GetIfExists(new ListNotFound());
         }
 
         public HashSet<Guid> GetFollowingLists(Guid accountId)
@@ -126,40 +124,54 @@ namespace StorageLibrary
 
         public void Add(Guid listId, Guid accountId)
         {
-            using (blobFactory.LFollowedAccountLock(listId))
+            // Set WIP to true
+            HashSetBlob<Guid> bAddRmvMsgs = blobFactory.LAddRmvMsgs(listId);
+            if (!bAddRmvMsgs.AddIfNotInWithRetry(accountId, new ListNotFound()))
+                return;
+
+            // Add list and accounts to the sets
+            if (!blobFactory.LFollowedByAll(accountId).AddWithRetry(listId))
             {
-                if (!blobFactory.LFollowedByAll(accountId).AddWithRetry(listId))
-                    throw new AccountNotFound();
-
-                // check if the list is private or not
-                // the account exists because it would need to take the mutex to be deleted
-                if (!blobFactory.LInfo(listId).Get().IsPrivate)
-                    blobFactory.LFollowedByPublic(accountId).AddWithRetry(listId);
-
-                blobFactory.LFollowedAccountsData(listId).Add(accountId);
+                bAddRmvMsgs.RemoveWithRetry(accountId);
+                throw new AccountNotFound();
             }
 
-            // TODO : synchronisation with remove/delete
-            Guid PersonnalListId = blobFactory.LPersonnalList(accountId).GetIfExists(new AccountNotFound());
-            if (!blobFactory.MListMessages(listId).UnionWith(blobFactory.MListMessages(PersonnalListId)))
-                throw new ListNotFound();
+            blobFactory.LFollowedAccounts(listId).AddWithRetry(accountId);
+
+            if (!blobFactory.LInfo(listId).Get().IsPrivate)
+                blobFactory.LFollowedByPublic(accountId).AddWithRetry(listId);
+
+            // add msgs
+            Guid PersonnalListId = blobFactory.LPersonnalList(accountId).Get();
+            blobFactory.MListMessages(listId).UnionWith(blobFactory.MListMessages(PersonnalListId));
+
+            // set WIP to false
+            bAddRmvMsgs.RemoveWithRetry(accountId);
         }
 
+        // TODO : remove messages
         public void Remove(Guid listId, Guid accountId)
         {
-            // We don't check wether the list is private or not because it would be much more complicated and slower
-            // it is much easier to remove the list form FollowingLists even if she doesn't belong to this set
-
             try
             {
-                using (blobFactory.LFollowedAccountLock(listId))
+                HashSetBlob<Guid> bAddRmvMsgs = blobFactory.LAddRmvMsgs(listId);
+                if(!bAddRmvMsgs.AddIfNotInWithRetry(accountId, new ListNotFound()))
+                    return;
+
+                if (!blobFactory.LFollowedByPublic(accountId).RemoveWithRetry(listId))
                 {
-                    blobFactory.LFollowedByPublic(accountId).RemoveWithRetry(listId);
-                    blobFactory.LFollowedByAll(accountId).RemoveWithRetry(listId);
-                    blobFactory.LFollowedAccountsData(listId).Remove(accountId);
+                    bAddRmvMsgs.RemoveWithRetry(accountId);
+                    throw new AccountNotFound();
                 }
+
+                blobFactory.LFollowedByAll(accountId).RemoveWithRetry(listId);
+                blobFactory.LFollowedAccounts(listId).RemoveWithRetry(listId);
+
+                blobFactory.MListMessages(listId).ExceptWith(blobFactory.MListMessages(blobFactory.LPersonnalList(accountId).Get()));
+
+                bAddRmvMsgs.RemoveWithRetry(accountId);
             }
-            catch (AccountNotFound) { }
+            catch { }
         }
 
         public HashSet<Guid> GetAccountOwnedLists(Guid accountId, bool withPrivate)

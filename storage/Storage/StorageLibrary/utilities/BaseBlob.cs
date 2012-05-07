@@ -3,31 +3,28 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using Microsoft.WindowsAzure.StorageClient;
 using StorageLibrary.exception;
 using System.Collections.Specialized;
+using ProtoBuf;
 
 namespace StorageLibrary.Utilities
 {
     /// <summary>
     /// Base class for class used to manipulate objects in the cloud
     /// </summary>
-    public class Blob<T>
+    public class Blob<T> where T : new()
     {
-        protected BinaryFormatter formatter;
         protected CloudBlob blob;
 
         public Blob(CloudBlobContainer container, string blobName)
         {
-            formatter = new BinaryFormatter();
             blob = container.GetBlobReference(blobName);
         }
 
         public Blob(CloudBlob blob)
         {
-            formatter = new BinaryFormatter();
             this.blob = blob;
         }
 
@@ -66,7 +63,7 @@ namespace StorageLibrary.Utilities
             try
             {
                 stream = blob.OpenWrite(reqOpt);
-                formatter.Serialize(stream, obj);
+                Serializer.Serialize(stream, obj);
                 stream.Close();
                 return true;
             }
@@ -79,7 +76,7 @@ namespace StorageLibrary.Utilities
         public T Get()
         {
             BlobStream stream = blob.OpenRead();
-            T t = (T)formatter.Deserialize(stream);
+            T t = Deserialize(stream);
             stream.Close();
             return t;
         }
@@ -87,7 +84,7 @@ namespace StorageLibrary.Utilities
         public void Set(T obj)
         {
             BlobStream stream = blob.OpenWrite();
-            formatter.Serialize(stream, obj);
+            Serializer.Serialize(stream, obj);
             stream.Close();
         }
 
@@ -96,7 +93,7 @@ namespace StorageLibrary.Utilities
             try
             {
                 BlobStream stream = blob.OpenRead();
-                T t = (T)formatter.Deserialize(stream);
+                T t = Deserialize(stream);
                 stream.Close();
                 return t;
             }
@@ -113,7 +110,7 @@ namespace StorageLibrary.Utilities
             try
             {
                 BlobStream stream = blob.OpenWrite(reqOpt);
-                formatter.Serialize(stream, obj);
+                Serializer.Serialize(stream, obj);
                 stream.Close();
                 return true;
             }
@@ -141,7 +138,7 @@ namespace StorageLibrary.Utilities
                     try
                     {
                         BlobStream stream = blob.OpenWrite(reqOpt);
-                        formatter.Serialize(stream, obj);
+                        Serializer.Serialize(stream, obj);
                         stream.Close();
                         return true;
                     }
@@ -220,6 +217,14 @@ namespace StorageLibrary.Utilities
             {
                 return blob.Metadata;
             }
+        }
+
+        T Deserialize(Stream stream)
+        {
+            T t = Serializer.Deserialize<T>(stream);
+            if (t == null)
+                t = new T();
+            return t;
         }
     }
 }

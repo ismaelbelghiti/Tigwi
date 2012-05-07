@@ -20,7 +20,7 @@ namespace Tigwi_API.Controllers
             return new Answer(listMsgsOutput);
         }
         
-
+        /*
         protected Answer AnswerTaggedMessages(Guid accountId, int number)
         {
             // get lasts messages from user name
@@ -30,6 +30,7 @@ namespace Tigwi_API.Controllers
             var listMsgsOutput = new Messages(listMsgs, Storage);
             return new Answer(listMsgsOutput);
         }
+        */
         
 
         protected Answer AnswerSubscriberAccounts(Guid accountId, int number)
@@ -115,6 +116,7 @@ namespace Tigwi_API.Controllers
             return new Answer(accountToReturn);
         }
 
+        /*
         // WARNING : The following methods may be a little too complicated and not necessary in an API
         protected Answer AnswerUsersAllowed(Guid accountId, int number)
         {
@@ -127,8 +129,9 @@ namespace Tigwi_API.Controllers
 
             return new Answer(userListToReturn);
         }
-
+        */
         
+        /*
         protected Answer AnswerAdministrator(Guid accountId)
         {
             // get account's administrator
@@ -138,6 +141,7 @@ namespace Tigwi_API.Controllers
 
             return new Answer(admin);
         }
+        */
 
     }
 }

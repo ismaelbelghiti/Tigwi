@@ -5,7 +5,6 @@ using System.Text;
 using StorageLibrary.Utilities;
 using Microsoft.WindowsAzure.StorageClient;
 using System.Globalization;
-using System.Runtime.Serialization.Formatters.Binary;
 using StorageLibrary.exception;
 
 namespace StorageLibrary.Utilities
@@ -33,7 +32,7 @@ namespace StorageLibrary.Utilities
         }
 
         // TODO : change list to set for a better merge
-        public List<IMessage> GetMessagesFrom(DateTime date, int msgCount, Exception e)
+        public List<Message> GetMessagesFrom(DateTime date, int msgCount, Exception e)
         {
             MessageSet msgSet = null;
             // if their is a change in te architecture of packs while we retreive messages, then we try again
@@ -63,7 +62,7 @@ namespace StorageLibrary.Utilities
 
             } while (false);
 
-            List<IMessage> msgList = msgSet.ToList();
+            List<Message> msgList = msgSet.ToList();
             if (msgList.Count > msgCount)
                 msgList = msgList.GetRange(0, msgCount);
 
@@ -71,7 +70,7 @@ namespace StorageLibrary.Utilities
         }
 
         // TODO : change list to set for a better merge
-        public List<IMessage> GetMessagesTo(DateTime date, int msgCount, Exception e)
+        public List<Message> GetMessagesTo(DateTime date, int msgCount, Exception e)
         {
             MessageSet msgSet = null;
 
@@ -102,7 +101,7 @@ namespace StorageLibrary.Utilities
                
             } while (false);
 
-            List<IMessage> msgList = msgSet.ToList();
+            List<Message> msgList = msgSet.ToList();
             if (msgList.Count > msgCount)
                 msgList = msgList.GetRange(msgList.Count - msgCount, msgCount);
 
@@ -142,7 +141,7 @@ namespace StorageLibrary.Utilities
         }
 
         // return false to warn that the message was not added
-        public bool AddMessage(IMessage message)
+        public bool AddMessage(Message message)
         {
             while (true)
             {
@@ -196,7 +195,7 @@ namespace StorageLibrary.Utilities
             }
         }
 
-        public void RemoveMessage(IMessage message)
+        public void RemoveMessage(Message message)
         {
             while (true)
             {
@@ -257,6 +256,7 @@ namespace StorageLibrary.Utilities
                 b.Delete();
         }
 
+        // TODO : begin by the lasts msgs
         public bool UnionWith(MsgSetBlobPack other)
         {
             DateTime progress = DateTime.MinValue;
@@ -270,12 +270,41 @@ namespace StorageLibrary.Utilities
                 {
                     for (int i = 0; i < blobsList.Count; i++)
                     {
-                        DateTime upperBound = i == blobsList.Count ? DateTime.MaxValue : blobsList[i + 1].Key;
+                        DateTime upperBound = (i + 1 < blobsList.Count) ? blobsList[i + 1].Key : DateTime.MaxValue;
                         if (upperBound < progress)
                             continue;
 
                         MessageSet set = GetMessageSet(new Blob<MessageSet>(blobsList[i].Value));
                         set.UnionWith(other.GetMessagesBetween(blobsList[i].Key, upperBound));
+                        progress = upperBound;
+                    }
+                }
+                catch (VersionHasChanged) { continue; }
+            }
+
+            return true;
+        }
+
+        // TODO : begin by the lasts msgs
+        public bool ExceptWith(MsgSetBlobPack other)
+        {
+            DateTime progress = DateTime.MinValue;
+
+            while (progress != DateTime.MaxValue)
+            {
+                List<KeyValuePair<DateTime, CloudBlob>> blobsList = GetBlobs();
+                if (!blobsList.Any())
+                    return false;
+                try
+                {
+                    for (int i = 0; i < blobsList.Count; i++)
+                    {
+                        DateTime upperBound = (i + 1 < blobsList.Count) ? blobsList[i + 1].Key : DateTime.MaxValue;
+                        if (upperBound < progress)
+                            continue;
+
+                        MessageSet set = GetMessageSet(new Blob<MessageSet>(blobsList[i].Value));
+                        set.ExceptWith(other.GetMessagesBetween(blobsList[i].Key, upperBound));
                         progress = upperBound;
                     }
                 }

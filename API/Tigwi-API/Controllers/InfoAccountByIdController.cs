@@ -34,7 +34,7 @@ namespace Tigwi_API.Controllers
             return Serialize(output);
         }
 
-
+        /*
         //
         // GET: /infoaccountbyid/taggedmessages/{accountId}/{number}
         public ActionResult TaggedMessages(Guid accountId, int number)
@@ -54,8 +54,8 @@ namespace Tigwi_API.Controllers
 
             return Serialize(output);
         }
+        */
 
-        
         //
         // GET : /infoaccountbyid/subscriberaccounts/{accountId}/{number}
         public ActionResult SubscriberAccounts(Guid accountId, int number)
@@ -228,7 +228,7 @@ namespace Tigwi_API.Controllers
             return Serialize(output);
         }
 
-
+        /*
         //
         // GET : /infoaccountbyid/usersallowed/{accountId}/{number}
         //[Authorize] (?)
@@ -249,8 +249,9 @@ namespace Tigwi_API.Controllers
 
             return Serialize(output);
         }
+        */
 
-
+        /*
         //
         // GET : infoaccountbyid/administrator/{accountId}
         //[Authorize]
@@ -271,6 +272,7 @@ namespace Tigwi_API.Controllers
 
             return Serialize(output);
         }
+        */
 
     }
 }

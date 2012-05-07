@@ -10,6 +10,7 @@
 namespace Tigwi.UI.Models
 {
     using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// The interface specification for a list repository.
@@ -54,6 +55,13 @@ namespace Tigwi.UI.Models
         /// <returns>
         /// </returns>
         IListModel Find(Guid listId);
+
+        /// <summary>
+        /// Finds the <see cref="IListModelCollection"/> corresponding to the given set of IDs.
+        /// </summary>
+        /// <param name="listsId">The set of IDs to find</param>
+        /// <returns></returns>
+        IListModelCollection Find(ICollection<Guid> listsId);
 
         #endregion
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.WindowsAzure.StorageClient;
-using System.Runtime.Serialization.Formatters.Binary;
+using ProtoBuf;
 
 namespace StorageLibrary.Utilities
 {
@@ -19,38 +19,8 @@ namespace StorageLibrary.Utilities
         public void Init()
         {
             BlobStream stream = blob.OpenWrite();
-            formatter.Serialize(stream, new MessageSet());
+            Serializer.Serialize(stream, new MessageSet());
             stream.Close();
-        }
-
-        /// <summary>
-        /// Add a message to the set and delete the older message if count > maxMessage
-        /// </summary>
-        /// <returns>return false if no message was added</returns>
-        public bool AddAndDelete(IMessage message, int maxMsg)
-        {
-            MessageSet set;
-            BlobStream stream;
-
-            do
-            {
-                try
-                {
-                    stream = blob.OpenRead();
-                    set = (MessageSet)formatter.Deserialize(stream);
-                    stream.Close();
-                }
-                catch { return false; }
-
-                // update the set
-                set.Add(message);
-                // we can do this this way because we usualy remove only one
-                while (set.Count > maxMsg)
-                    set.Remove(set.Min);
-
-            } while (!base.TrySet(set));
-
-            return true;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace StorageLibrary
     {
         // We differ messages post to be sure they have been inserted were they should be in time
         // This is also necessary because of the bad time synchronisation in azure
-        TimeSpan limitDateDiff = TimeSpan.FromSeconds(20);
+        TimeSpan limitDateDiff = TimeSpan.FromSeconds(10);
 
         BlobFactory blobFactory;
 
@@ -29,7 +29,7 @@ namespace StorageLibrary
             foreach (Guid listId in listsId)
                 messages.UnionWith(blobFactory.MListMessages(listId).GetMessagesFrom(firstMsgTime, msgNumber, new ListNotFound()));
 
-            List<IMessage> msgList = messages.ToList();
+            List<IMessage> msgList = new List<IMessage>(messages);
             if (msgList.Count > msgNumber)
                 msgList.GetRange(0, msgNumber);
 
@@ -44,7 +44,7 @@ namespace StorageLibrary
             foreach (Guid listId in listsId)
                 messages.UnionWith(blobFactory.MListMessages(listId).GetMessagesTo( lastMsgTime, msgNumber, new ListNotFound()));
 
-            List<IMessage> msgList = messages.ToList();
+            List<IMessage> msgList = new List<IMessage>(messages);
             if (msgList.Count > msgNumber)
                 msgList.GetRange(0, msgNumber);
 
@@ -54,7 +54,7 @@ namespace StorageLibrary
         public void Tag(Guid accountId, Guid msgId)
         {
             // retrive the message
-            IMessage message = blobFactory.MMessage(msgId).GetIfExists(new MessageNotFound());
+            Message message = blobFactory.MMessage(msgId).GetIfExists(new MessageNotFound());
 
             // Tag it
             if (!blobFactory.MTaggedMessages(accountId).AddMessage(message))
@@ -64,7 +64,7 @@ namespace StorageLibrary
         public void Untag(Guid accountId, Guid msgId)
         {
             // retrive the message to get its date
-            IMessage message;
+            Message message;
             try
             {
                 message = blobFactory.MMessage(msgId).GetIfExists(new MessageNotFound());
@@ -77,18 +77,19 @@ namespace StorageLibrary
 
         public List<IMessage> GetTaggedFrom(Guid accoundId, DateTime firstMsgDate, int msgNumber)
         {
-            return TruncateMessages(blobFactory.MTaggedMessages(accoundId).GetMessagesFrom(firstMsgDate, msgNumber, new AccountNotFound()));
+            List<IMessage> msgs = new List<IMessage>(blobFactory.MTaggedMessages(accoundId).GetMessagesFrom(firstMsgDate, msgNumber, new AccountNotFound()));
+            return TruncateMessages(msgs);
         }
 
         public List<IMessage> GetTaggedTo(Guid accountId, DateTime lastMsgDate, int msgNumber)
         {
-            return blobFactory.MTaggedMessages(accountId).GetMessagesTo(TruncateDate(lastMsgDate), msgNumber, new AccountNotFound());
+            return new List<IMessage>(blobFactory.MTaggedMessages(accountId).GetMessagesTo(TruncateDate(lastMsgDate), msgNumber, new AccountNotFound()));
         }
 
         public Guid Post(Guid accountId, string content)
         {
             Guid messageId = Guid.NewGuid();
-            Blob<IMessage> bMessage = blobFactory.MMessage(messageId);
+            Blob<Message> bMessage = blobFactory.MMessage(messageId);
 
             try
             {

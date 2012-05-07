@@ -107,7 +107,7 @@ namespace Tigwi.UI.Controllers
                 {
                     if (this.Session["Storage"] == null)
                     {
-                        this.Session["Storage"] = new StorageTmp();
+                        this.Session["Storage"] = new MockStorage();
                     }
 
                     this.storage = new StorageContext(this.Session["Storage"] as IStorage);
@@ -123,14 +123,7 @@ namespace Tigwi.UI.Controllers
 
         public ActionResult Index()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                return this.View(this.Storage.Accounts.Find(CurrentAccount.Name));
-            }
-            else
-            {
-                return this.View();
-            }
+            return this.User.Identity.IsAuthenticated ? this.View(this.Storage.Accounts.Find(this.CurrentAccount.Name)) : this.View();
         }
 
         #endregion
@@ -139,6 +132,7 @@ namespace Tigwi.UI.Controllers
 
         protected void SaveIdentity(bool isPersistent)
         {
+            // TODO: refactor everything, no BinaryFormatter, etc.
             var existingCookie = this.Request.Cookies[FormsAuthentication.FormsCookieName];
             var version = 1;
             var userData = new CookieData { UserId = this.CurrentUser.Id, AccountId = this.CurrentAccount.Id };

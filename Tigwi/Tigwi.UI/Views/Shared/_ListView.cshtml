@@ -1,21 +1,87 @@
 ﻿@using Tigwi.UI.Models
 
-@model IEnumerable<IListModel>
+@model ICollection<IListModel>
 
-@*
 <section class="listView">
     <ul>
-    @foreach (var element in Model)
+    @foreach (var list in Model)
     {
-        <li><input type="checkbox"/> <i class="icon-folder-open">@element.Name <br />
+        <li class="accordion-group">
+            <div class="accordion-heading">
+                <input type="checkbox"/>
+                <a class="accordion-toggle" data-toggle="collapse" href="#list-@list.Id">
+                    <i class="icon-folder-close"></i> @list.Name
+                </a>
+            </div>
+        <div id="list-@list.Id" class="accordion-body collapse"><div class="accordion-inner">
         <ul class="list-user">
-        @foreach (var membre in element.Members)
-        {
-            <li><i class="icon-user"></i>@membre.Name</li>
-        }
+            @foreach (var member in list.Members)
+            {
+                <li><i class="icon-user"></i>@member.Name</li>
+            }
         </ul>
+        </div></div>
         </li>
     }
     </ul>
 </section>
-*@
+
+@*
+<section class="listView">
+    <ul>
+        <li class="accordion-group">
+            <div class="accordion-heading">
+                <input type="checkbox"/>
+                <a class="accordion-toggle" data-toggle="collapse" href="#list-Liste1">
+                    <i class="icon-folder-close"></i> Liste1
+                </a>
+            </div>
+        <div id="list-Liste1" class="accordion-body collapse"><div class="accordion-inner">
+        <ul class="list-user">
+            <li><i class="icon-user"></i>Quihteh</li>
+            <li><i class="icon-user"></i>Gjnfyk</li>
+            <li><i class="icon-user"></i>Loph</li>
+            <li><i class="icon-user"></i>Freanlih</li>
+            <li><i class="icon-user"></i>Koiup</li>
+            <li><i class="icon-user"></i>Vutylopm</li>
+            <li><i class="icon-user"></i>Cerdoind</li>
+        </ul>
+        </div></div>
+        </li>
+
+        <li class="accordion-group">
+            <div class="accordion-heading">
+                <input type="checkbox"/>
+                <a class="accordion-toggle" data-toggle="collapse" href="#list-Liste2">
+                    <i class="icon-folder-close"></i> Liste2
+                </a>
+            </div>
+        <div id="list-Liste2" class="accordion-body collapse"><div class="accordion-inner">
+        <ul class="list-user">
+            <li><i class="icon-user"></i>Quihteh</li>
+            <li><i class="icon-user"></i>Gjnfyk</li>
+            <li><i class="icon-user"></i>Loph</li>
+            <li><i class="icon-user"></i>Hytit</li>
+            <li><i class="icon-user"></i>Dongu</li>
+            <li><i class="icon-user"></i>Cerdoind</li>
+        </ul>
+        </div></div>
+        </li>
+
+        <li class="accordion-group">
+            <div class="accordion-heading">
+                <input type="checkbox"/>
+                <a class="accordion-toggle" data-toggle="collapse" href="#list-Liste3">
+                    <i class="icon-folder-close"></i> Liste3
+                </a>
+            </div>
+        <div id="list-Liste3" class="accordion-body collapse"><div class="accordion-inner">
+        <ul class="list-user">
+            <li><i class="icon-user"></i>Ssrhdth</li>
+            <li><i class="icon-user"></i>Tjpmo</li>
+            <li><i class="icon-user"></i>Pkgosrgrs</li>
+        </ul>
+        </div></div>
+        </li>
+    </ul>
+</section>*@

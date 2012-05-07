@@ -27,12 +27,12 @@ namespace Tigwi.UI.Models
         /// <summary>
         /// Gets a collection of all the lists followed by the account.
         /// </summary>
-        ICollection<IListModel> AllFollowedLists { get; }
+        IListModelCollection AllFollowedLists { get; }
 
         /// <summary>
         /// Gets a collection of all the lists owned by the account.
         /// </summary>
-        ICollection<IListModel> AllOwnedLists { get; }
+        IListModelCollection AllOwnedLists { get; }
 
         /// <summary>
         /// Gets or sets the account's description.
@@ -47,7 +47,7 @@ namespace Tigwi.UI.Models
         /// <summary>
         /// Gets the lists of whose the account is a member.
         /// </summary>
-        ICollection<IListModel> MemberOfLists { get; }
+        IListModelCollection MemberOfLists { get; }
 
         /// <summary>
         /// Gets the account's name.
@@ -62,12 +62,12 @@ namespace Tigwi.UI.Models
         /// <summary>
         /// Gets the public lists followed by the account.
         /// </summary>
-        ICollection<IListModel> PublicFollowedLists { get; }
+        IListModelCollection PublicFollowedLists { get; }
 
         /// <summary>
         /// Gets the public lists owned by the account.
         /// </summary>
-        ICollection<IListModel> PublicOwnedLists { get; }
+        IListModelCollection PublicOwnedLists { get; }
 
         /// <summary>
         /// Gets all the users which can post to the account's timeline.

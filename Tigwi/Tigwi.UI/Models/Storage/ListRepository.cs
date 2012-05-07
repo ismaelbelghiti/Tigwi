@@ -10,6 +10,7 @@
 namespace Tigwi.UI.Models.Storage
 {
     using System;
+    using System.Collections.Generic;
 
     using StorageLibrary;
 
@@ -96,6 +97,11 @@ namespace Tigwi.UI.Models.Storage
         {
             // Simply a type cast
             return this.InternalFind(listId);
+        }
+
+        public IListModelCollection Find(ICollection<Guid> listsId)
+        {
+            return new StorageListModelCollection(this.StorageContext, listsId);
         }
 
         #endregion

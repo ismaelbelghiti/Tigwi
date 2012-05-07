@@ -39,8 +39,8 @@ namespace StorageLibrary
 
         public void SetInfo(Guid userId, string email)
         {
-            Blob<IUserInfo> bInfo = blobFactory.UInfo(userId);
-            IUserInfo info = bInfo.GetIfExists(new UserNotFound());
+            Blob<UserInfo> bInfo = blobFactory.UInfo(userId);
+            UserInfo info = bInfo.GetIfExists(new UserNotFound());
             info.Email = email;
             if (!bInfo.SetIfExists(info))
                 throw new UserNotFound();
@@ -68,15 +68,15 @@ namespace StorageLibrary
             HashSet<Guid> accounts = new HashSet<Guid>();
 
             // init blobs
-            Blob<IUserInfo> bInfo = blobFactory.UInfo(userId);
+            Blob<UserInfo> bInfo = blobFactory.UInfo(userId);
             Blob<HashSet<Guid>> bAccounts = blobFactory.UAccountsData(userId);
-            Blob<Byte[]> bPassword = blobFactory.UPassword(userId);
+            Blob<ByteArray> bPassword = blobFactory.UPassword(userId);
             blobFactory.UAccountsLockInit(userId);
 
             // store the data
             bInfo.Set(info);
             bAccounts.Set(accounts);
-            bPassword.Set(password);
+            bPassword.Set(new ByteArray(password));
 
             // we finish by unlocking the name
             bLoginById.Set(userId);
@@ -132,12 +132,12 @@ namespace StorageLibrary
 
         public Byte[] GetPassword(Guid userId)
         {
-            return blobFactory.UPassword(userId).GetIfExists(new UserNotFound());
+            return blobFactory.UPassword(userId).GetIfExists(new UserNotFound()).Bytes;
         }
 
         public void SetPassword(Guid userId, Byte[] pass)
         {
-            if (!blobFactory.UPassword(userId).SetIfExists(pass))
+            if (!blobFactory.UPassword(userId).SetIfExists(new ByteArray(pass)))
                 throw new UserNotFound();
         }
     }
