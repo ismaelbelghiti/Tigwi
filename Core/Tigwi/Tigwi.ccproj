@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
+  <Import Project="..\..\ConnectionInfo.xml" Condition="Exists('..\..\ConnectionInfo.xml')" />
+  <!-- Global/Default configuration -->
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <AzureDeployment Condition=" '$(AzureDeployment)' == '' ">false</AzureDeployment>
+    <ProductVersion>1.6</ProductVersion>
+    <ProjectGuid>{a2cdf8c9-aff3-4abd-80a4-b6d27d791929}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Tigwi</RootNamespace>
+    <AssemblyName>Tigwi</AssemblyName>
+    <StartDevelopmentStorage>True</StartDevelopmentStorage>
+    <Name>Tigwi</Name>
+  </PropertyGroup>
+  <!-- Configurations properties -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AzureDeployment>false</AzureDeployment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AzureDeployment>false</AzureDeployment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Cloud-Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\tmp\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AzureDeployment>true</AzureDeployment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Cloud-Release' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\tmp\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AzureDeployment>true</AzureDeployment>
+  </PropertyGroup>
+  <!-- Azure Deployment properties -->
+  <PropertyGroup Condition=" '$(AzureDesployment)' == 'true' ">
+    <PackageName>$(AssemblyName).cspkg</PackageName>
+    <ServiceConfigName>ServiceConfiguration.Cloud.cscfg</ServiceConfigName>
+    <PackageForComputeEmulator>true</PackageForComputeEmulator>
+  </PropertyGroup>
+  <!-- Items for the project -->
+  <ItemGroup>
+    <ServiceDefinition Include="ServiceDefinition.csdef" />
+    <ServiceConfiguration Include="ServiceConfiguration.Local.cscfg" />
+    <ServiceConfiguration Include="ServiceConfiguration.Cloud.cscfg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Profiles" />
+  </ItemGroup>
+  <ItemGroup>
+    <PublishProfile Include="Profiles\seferoProduction.azurePubxml" />
+    <PublishProfile Include="Profiles\seferoProduction1.azurePubxml" />
+    <PublishProfile Include="Profiles\seferoProduction3.azurePubxml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Tigwi.API\Tigwi.API.csproj">
+      <Name>Tigwi.API</Name>
+      <Project>{64e04b2a-8fd4-4833-b12a-6fcc521c22bb}</Project>
+      <Private>True</Private>
+      <RoleType>Web</RoleType>
+      <RoleName>Tigwi.API</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
+    </ProjectReference>
+    <ProjectReference Include="..\Tigwi.UI\Tigwi.UI.csproj">
+      <Name>Tigwi.UI</Name>
+      <Project>{46428462-db30-44d8-a6bb-7b83f3f211ec}</Project>
+      <Private>True</Private>
+      <RoleType>Web</RoleType>
+      <RoleName>Tigwi.UI</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
+    </ProjectReference>
+  </ItemGroup>
+  <!-- Import the target files for this project template -->
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+    <CloudExtensionsDir Condition=" '$(CloudExtensionsDir)' == '' ">$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Windows Azure Tools\1.6\</CloudExtensionsDir>
+  </PropertyGroup>
+  <Import Project="$(CloudExtensionsDir)\Microsoft.WindowsAzure.targets" />
+  <!-- Azure Deployment code -->
+  <Target Name="BeforeBuild" Condition=" '$(AzureStorageAccountKey)' != '' And '$(AzureStorageAccountName)' != '' And Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets')">
+    <FileUpdate Files="@(ServiceConfigurationFiles)" Regex="UseDevelopmentStorage=true" ReplacementText="DefaultEndpointsProtocol=https;AccountName=$(AzureStorageAccountName);AccountKey=$(AzureStorageAccountKey)" />
+    <FileUpdate Files="@(ConnectionFiles)" Regex="__AZURE_STORAGE_ACCOUNT_NAME" ReplacementText="$(AzureStorageAccountName)" />
+    <FileUpdate Files="@(ConnectionFiles)" Regex="__AZURE_STORAGE_ACCOUNT_KEY" ReplacementText="$(AzureStorageAccountKey)" />
+  </Target>
+  <!--
+  <Target Name="AzureDeploy" AfterTargets="Build" DependsOnTargets="CorePublish" Condition=" '$(AzureDeployment)' == 'true' ">
+    <Exec WorkingDirectory="$(MSBuildProjectDirectory)" Command=" $(windir)\system32\WindowsPowerShell\v1.0\powershell.exe -f \build\AzureDeploy.ps1 $(AzureSubscriptionID) $(AzureCertificateThumbprint) $(PublishDir) $(PackageName) $(ServiceConfigName) $(AzureHostedServiceName) $(AzureStorageAccountName)" />
+  </Target>
+  -->
+  <Target Name="AfterBuild" Condition=" '$(AzureStorageAccountKey)' != '' And '$(AzureStorageAccountName)' != '' And Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets')">
+    <FileUpdate Files="@(ServiceConfiguration)" Regex="DefaultEndpointsProtocol=https;AccountName=$(AzureStorageAccountName);AccountKey=$(AzureStorageAccountKey.Replace('+','\+'))" ReplacementText="UseDevelopmentStorage=true" />
+    <FileUpdate Files="@(ConnectionFiles)" Regex="$(AzureStorageAccountName)" ReplacementText="__AZURE_STORAGE_ACCOUNT_NAME" />
+    <FileUpdate Files="@(ConnectionFiles)" Regex="$(AzureStorageAccountKey.Replace('+','\+'))" ReplacementText="__AZURE_STORAGE_ACCOUNT_KEY" />
+  </Target>
+</Project>
