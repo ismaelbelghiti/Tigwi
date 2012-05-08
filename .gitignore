@@ -16,7 +16,7 @@ ConnectionInfo.xml
 
 # Resharper folder #
 ####################
-_ReSharper*/
+_ReSharper*
 
 # OS genrated files #
 #####################
@@ -27,13 +27,12 @@ Thumbs.db
 ######################################
 *.suo
 *.user
+*cache
 
 # NuGet packages. Automatically installed on build. #
 #####################################################
-Tigwi/packages/
+packages/
 
-# UI specific stuff. #
-######################
-Tigwi/Tigwi.UI/App_Data
-
+# Azure keys #
+##############
 *.azurePubXml
