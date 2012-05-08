@@ -29,8 +29,18 @@ namespace Tigwi.UI.Controllers
 
         #region Constructors and Destructors
 
+        private static IStorage MakeStorage(string accountName, string accountKey)
+        {
+            if (accountName == "__" + "AZURE_STORAGE_ACCOUNT_NAME")
+            {
+                return new MockStorage();
+            }
+
+            return new Storage(accountName, accountKey);
+        }
+
         public HomeController()
-           // : this(new StorageContext(new Storage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY")))
+           : this(new StorageContext(MakeStorage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY")))
         {
         }
 
