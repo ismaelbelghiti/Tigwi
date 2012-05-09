@@ -24,20 +24,6 @@ namespace Tigwi.UI
     /// </typeparam>
     public abstract class ViewPage<TModel> : WebViewPage<TModel>
     {
-        #region Constants and Fields
-
-        /// <summary>
-        /// The current account.
-        /// </summary>
-        private IAccountModel currentAccount;
-
-        /// <summary>
-        /// The current user.
-        /// </summary>
-        private IUserModel currentUser;
-
-        #endregion
-
         #region Public Properties
 
         /// <summary>
@@ -47,17 +33,8 @@ namespace Tigwi.UI
         {
             get
             {
-                if (this.currentAccount == null)
-                {
-                    var controller = this.ViewContext.Controller as HomeController;
-
-                    if (controller != null)
-                    {
-                        this.currentAccount = controller.CurrentAccount;
-                    }
-                }
-
-                return this.currentAccount;
+                var controller = this.ViewContext.Controller as HomeController;
+                return controller != null ? controller.CurrentAccount : null;
             }
         }
 
@@ -68,17 +45,8 @@ namespace Tigwi.UI
         {
             get
             {
-                if (this.currentUser == null)
-                {
-                    var controller = this.ViewContext.Controller as HomeController;
-
-                    if (controller != null)
-                    {
-                        this.currentUser = controller.CurrentUser;
-                    }
-                }
-
-                return this.currentUser;
+                var controller = this.ViewContext.Controller as HomeController;
+                return controller != null ? controller.CurrentUser : null;
             }
         }
 
@@ -90,20 +58,6 @@ namespace Tigwi.UI
     /// </summary>
     public abstract class ViewPage : WebViewPage
     {
-        #region Constants and Fields
-
-        /// <summary>
-        /// The current account.
-        /// </summary>
-        private IAccountModel currentAccount;
-
-        /// <summary>
-        /// The current user.
-        /// </summary>
-        private IUserModel currentUser;
-
-        #endregion
-
         #region Public Properties
 
         /// <summary>
@@ -113,17 +67,8 @@ namespace Tigwi.UI
         {
             get
             {
-                if (this.currentAccount == null)
-                {
-                    var controller = this.ViewContext.Controller as HomeController;
-
-                    if (controller != null)
-                    {
-                        this.currentAccount = controller.CurrentAccount;
-                    }
-                }
-
-                return this.currentAccount;
+                var controller = this.ViewContext.Controller as HomeController;
+                return controller != null ? controller.CurrentAccount : null;
             }
         }
 
@@ -134,17 +79,8 @@ namespace Tigwi.UI
         {
             get
             {
-                if (this.currentUser == null)
-                {
-                    var controller = this.ViewContext.Controller as HomeController;
-
-                    if (controller != null)
-                    {
-                        this.currentUser = controller.CurrentUser;
-                    }
-                }
-
-                return this.currentUser;
+                var controller = this.ViewContext.Controller as HomeController;
+                return controller != null ? controller.CurrentUser : null;
             }
         }
 

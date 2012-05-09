@@ -29,18 +29,8 @@ namespace Tigwi.UI.Controllers
 
         #region Constructors and Destructors
 
-        private static IStorage MakeStorage(string accountName, string accountKey)
-        {
-            if (accountName == "__" + "AZURE_STORAGE_ACCOUNT_NAME")
-            {
-                return new MockStorage();
-            }
-
-            return new Storage(accountName, accountKey);
-        }
-
         public HomeController()
-           : this(new StorageContext(MakeStorage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY")))
+           : this(MakeStorage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY"))
         {
         }
 
@@ -51,26 +41,54 @@ namespace Tigwi.UI.Controllers
 
         #endregion
 
+        private static IStorageContext MakeStorage(string accountName, string accountKey)
+        {
+            return accountName != "__" + "AZURE_STORAGE_ACCOUNT_NAME" ? new StorageContext(new Storage(accountName, accountKey)) : null;
+        }
+
         #region Properties
+
+        private const string AccountCookie = "CURACCOUNT";
 
         public IAccountModel CurrentAccount
         {
             get
             {
+                var user = this.CurrentUser;
+
+                if (user == null)
+                {
+                    this.currentAccount = null;
+                    return null;
+                }
+
                 if (this.currentAccount == null)
                 {
-                    var identity = this.User.Identity;
-                    if (this.User != null && identity is CustomIdentity)
+                    var cookie = this.HttpContext.Request.Cookies[AccountCookie];
+                    if (cookie == null)
                     {
-                        this.currentAccount = this.Storage.Accounts.Find((identity as CustomIdentity).AccountId);
+                        return null;
+                    }
+
+                    Guid accountId;
+
+                    if (Guid.TryParse(cookie.Value, out accountId))
+                    {
+                        this.currentAccount = this.Storage.Accounts.Find(accountId);
+                        if (!user.Accounts.Contains(this.currentAccount))
+                        {
+                            // TODO: log
+                            Elmah.ErrorSignal.FromCurrentContext().Raise(new Exception("Bad account."));
+                            cookie.Expires = DateTime.MinValue;
+                            this.Response.SetCookie(cookie);
+
+                            // TODO: this *must* be something that CAN'T fail.
+                            this.currentAccount = this.Storage.Accounts.Find(user.Login);
+                        }
                     }
                     else
                     {
-                        var user = this.CurrentUser;
-                        if (user != null)
-                        {
-                            this.currentAccount = this.Storage.Accounts.Find(user.Login);
-                        }
+                        this.currentAccount = this.Storage.Accounts.Find(user.Login);
                     }
                 }
 
@@ -79,10 +97,13 @@ namespace Tigwi.UI.Controllers
 
             protected set
             {
-                /*if (!this.CurrentUser.Accounts.Contains(value))
+                if (!this.CurrentUser.Accounts.Contains(value))
                 {
                     throw new NotImplementedException("User not a member of account");
-                }*/
+                }
+
+                var cookie = new HttpCookie(AccountCookie, value.Id.ToString());
+                this.HttpContext.Response.SetCookie(cookie);
 
                 this.currentAccount = value;
             }
@@ -92,20 +113,62 @@ namespace Tigwi.UI.Controllers
         {
             get
             {
-                var identity = this.User.Identity;
-                if (this.currentUser == null && identity is CustomIdentity) 
+                if (this.currentUser == null)
                 {
-                    this.currentUser = this.Storage.Users.Find((identity as CustomIdentity).UserId);
+                    // TODO: store ID.
+                    var identity = this.User.Identity;
+                    this.currentUser = this.Storage.Users.Find(identity.Name);
                 }
 
                 return this.currentUser;
             }
+        }
 
-            protected set
+        protected IUserModel AuthenticateUser(IUserModel value, bool rememberMe)
+        {
+            // Update authentication cookie
+            var existingCookie = this.Request.Cookies[FormsAuthentication.FormsCookieName];
+            var version = 1;
+
+            if (existingCookie != null)
             {
-                this.currentUser = value;
-                this.currentAccount = null;
+                try
+                {
+                    var existingTicket = FormsAuthentication.Decrypt(existingCookie.Value);
+                    version = existingTicket.Version + 1;
+                }
+                catch (ArgumentException)
+                {
+                }
             }
+
+            // Reset account cookie
+            var cookie = new HttpCookie(AccountCookie, value.Id.ToString());
+            this.HttpContext.Response.SetCookie(cookie);
+
+            var ticket = new FormsAuthenticationTicket(
+                version, value.Login, DateTime.Now, DateTime.Now + FormsAuthentication.Timeout, rememberMe, value.Id.ToString());
+            var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(ticket))
+                {
+                    HttpOnly = true,
+                    Expires = DateTime.Now + FormsAuthentication.Timeout,
+                    Path = FormsAuthentication.FormsCookiePath,
+                    Domain = FormsAuthentication.CookieDomain,
+                    Secure = FormsAuthentication.RequireSSL
+                };
+            this.HttpContext.Response.SetCookie(authCookie);
+
+            this.currentUser = value;
+            this.currentAccount = null;
+
+            return value;
+        }
+
+        protected void Deauthenticate()
+        {
+            FormsAuthentication.SignOut();
+            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName) { Expires = DateTime.MinValue };
+            this.Response.AppendCookie(cookie);
         }
 
         protected IStorageContext Storage
@@ -140,42 +203,9 @@ namespace Tigwi.UI.Controllers
 
         #region Methods
 
+        [Obsolete]
         protected void SaveIdentity(bool isPersistent)
         {
-            // TODO: refactor everything, no BinaryFormatter, etc.
-            var existingCookie = this.Request.Cookies[FormsAuthentication.FormsCookieName];
-            var version = 1;
-            var userData = new CookieData { UserId = this.CurrentUser.Id, AccountId = this.CurrentAccount.Id };
-
-            if (existingCookie != null)
-            {
-                try
-                {
-                    version = FormsAuthentication.Decrypt(existingCookie.Value).Version + 1;
-                }
-                catch (ArgumentException)
-                {
-                }
-            }
-
-            // Serialize data
-            var stream = new MemoryStream();
-            (new BinaryFormatter()).Serialize(stream, userData);
-            var serializedUserData = Convert.ToBase64String(stream.ToArray());
-
-            // Create ticket
-            var ticket = new FormsAuthenticationTicket(
-                version, 
-                this.CurrentUser.Login, 
-                DateTime.Now, 
-                DateTime.Now + FormsAuthentication.Timeout, 
-                isPersistent, 
-                serializedUserData);
-            var encrypted = FormsAuthentication.Encrypt(ticket);
-
-            // Send cookie
-            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encrypted);
-            this.Response.Cookies.Add(cookie);
         }
 
         #endregion

@@ -92,62 +92,7 @@ namespace Tigwi.UI
         /// Roles are currently not implemented.
         protected void Application_AuthenticateRequest(object sender, EventArgs ev)
         {
-            // TODO: remove these ugly {currentUser = null, SignOut()} workarounds.
-            // For information, it's to make the user truly authenticated when the cookie is not valid.
-            HttpCookie cookie = this.Request.Cookies[FormsAuthentication.FormsCookieName];
-
-            if (cookie == null || string.IsNullOrEmpty(cookie.Value))
-            {
-                this.Context.User = null;
-                FormsAuthentication.SignOut();
-                return;
-            }
-
-            try
-            {
-                FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(cookie.Value);
-                byte[] serialized = Convert.FromBase64String(ticket.UserData);
-                var userData = (new BinaryFormatter()).Deserialize(new MemoryStream(serialized)) as CookieData;
-
-                if (userData == null || userData.UserId == Guid.Empty)
-                {
-                    this.Context.User = null;
-                    FormsAuthentication.SignOut();
-                    return;
-                }
-
-                this.Context.User =
-                    new GenericPrincipal(
-                        new CustomIdentity(userData.UserId, userData.AccountId, cookie.Name, "Forms"), new string[0]);
-
-                // I think this is useless for our case and it would make the serialization of the CustomIdentity a bit simpler of removing it.
-                // Keeping it just in doubt, you can remove it if you know what you're doing.
-                Thread.CurrentPrincipal = this.Context.User;
-            }
-            catch (ArgumentException)
-            {
-                // TODO: log
-                this.Context.User = null;
-                FormsAuthentication.SignOut();
-            }
-            catch (FormatException)
-            {
-                // TODO: log
-                this.Context.User = null;
-                FormsAuthentication.SignOut();
-            }
-            catch (SecurityException)
-            {
-                // TODO: log
-                this.Context.User = null;
-                FormsAuthentication.SignOut();
-            }
-            catch (SerializationException)
-            {
-                // TODO: log
-                this.Context.User = null;
-                FormsAuthentication.SignOut();
-            }
+            // TODO: parse ticket.UserData as user GUID.
         }
 
         /// <summary>

@@ -7,11 +7,8 @@ using NUnit.Framework;
 
 namespace Tigwi.UI.Tests.Models
 {
-    using Moq;
+    using Tigwi.Storage.Library;
 
-    using StorageLibrary;
-
-    using Tigwi.UI.Models;
     using Tigwi.UI.Models.Storage;
 
     [TestFixture]

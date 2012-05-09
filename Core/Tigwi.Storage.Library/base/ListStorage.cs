@@ -179,7 +179,7 @@ namespace Tigwi.Storage.Library
             HashSet<Guid> lists = blobFactory.LOwnedListsPublic(accountId).GetIfExists(new AccountNotFound());
 
             if(withPrivate)
-                lists = (HashSet<Guid>) lists.Concat(blobFactory.LOwnedListsPrivate(accountId).GetIfExists(new AccountNotFound()));
+                lists.UnionWith(blobFactory.LOwnedListsPrivate(accountId).GetIfExists(new AccountNotFound()));
 
             return lists;
         }
@@ -190,7 +190,7 @@ namespace Tigwi.Storage.Library
             lists.UnionWith(blobFactory.LFollowedListsData(accountId).GetIfExists(new AccountNotFound()));
 
             if (withPrivate)
-                lists = (HashSet<Guid>)lists.Concat(blobFactory.LOwnedListsPrivate(accountId).GetIfExists(new AccountNotFound()));
+                lists.UnionWith(blobFactory.LOwnedListsPrivate(accountId).GetIfExists(new AccountNotFound()));
 
             return lists;
         }

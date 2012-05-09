@@ -11,9 +11,7 @@ namespace Tigwi.UI.Tests.Models
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
 
-    using Moq;
-
-    using StorageLibrary;
+    using Tigwi.Storage.Library;
 
     using Tigwi.UI.Models;
     using Tigwi.UI.Models.Storage;
