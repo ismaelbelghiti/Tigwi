@@ -36,21 +36,6 @@ message ->	listmessages/<list ID>/<date>			: MessageSet
 			message/<messageID>						: IMessage
 
 100 messages in a MsgPack = 10 Ko
-
-For florian :
-- Authentification 
-- Serializer -> Protobuf.Net
-
-----
-Apprendre a utiliser des worker
-Apprendre a mesurer le temps d'execution des fonctions
-Benchmark OpenWrite/UploadByteArray
--> faire un tableau selon la taille de blob (jusqua 1M, echelle log)
-Repercuter les changement bnecessaires dans Blob
-
-- Test to Nunit
-- password/Auth tests
-- Cleanup
 			
 TODO :		
 	- Should the personnal list have the same ID than the account ?
@@ -64,10 +49,7 @@ TODO :
 		Remove them from messages
 		Make them accessible from a public container
 		Be able to upload new avatars
-	- Parralelisation
-	- clean the storage only if necessary
 	- implement constraints on personal list
-	- when we add messages, we should start by the first ones
 
 CHECKS :	
 	- check that we dont write on a deleted blob while using retry
@@ -79,16 +61,26 @@ BUG :
 	- remove the messages from the listmessage when we add removing an account from the list
 			
 PRIORITIES :
-- we could maybe remove a lot of mutex :
-	- A += b if b   isnt already in a
-	- B += a
-
-	- B -= a if a is in B
-	- A -= b
-
-	- be carefull on deletion !!!! -> we can check that all operations have ended be we must be carefull
-
 - export msg post function to a worker role
 
 
+FOR THIS WEEK :
+	- multithreads	or merge	F
+	- openwrite					F
+	- upload perfs				F
+	- solve bugs in auth		I
+	- tests for privates lists	I
+	- set list info				U private->public but not public->private
+	- tests for messages		I
+	- in auth, remove 
+		exception a desassoc	I
+	- invert except with/union
+		with in msgsetblobpack	U
+	- autocompletion			
+		double metaphone +		
+		prefix tree				?
 
+- main account in user info		?
+- main lists lfollowedlist		
+	 hashmap Guid->bool			U
+- suppress strg tmp				I
