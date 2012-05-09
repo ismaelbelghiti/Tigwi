@@ -16,21 +16,5 @@ namespace Tigwi.API.Controllers
             return new Answer(userToReturn);
         }
 
-        // WARNING : maybe a little too complicated and useless in an API
-        protected Answer AnswerAuthorizedAccounts(Guid userId, int number)
-        {
-            var authorizedAccounts = Storage.User.GetAccounts(userId);
-            var authorizedAccountsInList = new HashSet<Guid>();
-            foreach (var followedList in authorizedAccounts)
-            {
-                authorizedAccountsInList.UnionWith(Storage.List.GetAccounts(followedList));
-            }
-
-            // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
-            var size = Math.Min(authorizedAccountsInList.Count, number);
-            var authorizedAccountsToReturn = BuildAccountListFromGuidCollection(authorizedAccountsInList, size, Storage);
-
-            return new Answer(authorizedAccountsToReturn);
-        }
     }
 }
