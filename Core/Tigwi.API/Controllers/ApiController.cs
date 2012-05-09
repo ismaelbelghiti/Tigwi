@@ -9,11 +9,11 @@ using Tigwi.API.Models;
 
 namespace Tigwi.API.Controllers
 {
-    public class ApiController : Controller
+    public abstract class ApiController : Controller
     {
 
         // Initialize storage when instanciating a controller
-        public ApiController ()
+        protected ApiController ()
         {
             Storage = new Storage.Library.Storage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY");
         }
@@ -29,6 +29,7 @@ namespace Tigwi.API.Controllers
         }
 
         // Methods to build lists used in any controller
+        // TODO : modify to use foreach or LINQ
         protected static Accounts BuildAccountListFromGuidCollection(ICollection<Guid> hashAccounts, int size, IStorage storage)
         {
             var accountList = new List<Account>();
