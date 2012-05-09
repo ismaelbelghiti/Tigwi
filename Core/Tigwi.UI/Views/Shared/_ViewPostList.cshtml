@@ -1,8 +1,6 @@
 ﻿@using Tigwi.UI.Models
 @model ICollection<IPostModel>
       
-<div id="testIsma">         
-     
 @foreach( var post in Model)
 {
     var poster = post.Poster;
@@ -12,7 +10,7 @@
                   {
             $('#checkBox-' + topList).change(
               function () {
-              var mustShow = false;
+                  var mustShow = false;
                   for (var list in lists[@poster.Id])
                   {
                     if ($('#checkBox-' + list).checked)
@@ -21,6 +19,14 @@
                         break;
                     }
                   }
+                  if (mustShow)
+                  {
+                      $('.poster-@poster.Id').show();
+                  }
+                  else
+                  {
+                      $('.poster-@poster.Id').hide();
+                  }
               }
         );
         }
@@ -28,4 +34,3 @@
     </script>
     @Html.Partial("_ViewPost", post)    
 }
-</div>
