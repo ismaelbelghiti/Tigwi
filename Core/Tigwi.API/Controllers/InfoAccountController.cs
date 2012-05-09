@@ -21,6 +21,7 @@ namespace Tigwi.API.Controllers
         }
         
         /*
+         * WARNING The following method isn't documented.
         protected Answer AnswerTaggedMessages(Guid accountId, int number)
         {
             // get lasts messages from user name
