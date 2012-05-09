@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageLocalTest", "..\Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageTest", "..\Tests\Tigwi.Storage.Test\StorageTest.csproj", "{927D51B8-5DED-4241-81F9-A9347DC58031}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI_test", "..\Tests\Tigwi.UI.Tests\UI_test.csproj", "{5D2BF629-E4C9-4BCF-928F-AD605E9E5684}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tigwi.Tests.UI", "..\Tests\Tigwi.UI.Tests\Tigwi.Tests.UI.csproj", "{5D2BF629-E4C9-4BCF-928F-AD605E9E5684}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
