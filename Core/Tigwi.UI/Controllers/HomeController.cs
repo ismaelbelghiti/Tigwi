@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-
-namespace Tigwi.UI.Controllers
+﻿namespace Tigwi.UI.Controllers
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.IO;
-    using System.Runtime.Serialization.Formatters.Binary;
+    using System.Net.NetworkInformation;
+    using System.Security.Authentication;
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Security;
@@ -30,7 +30,7 @@ namespace Tigwi.UI.Controllers
         #region Constructors and Destructors
 
         public HomeController()
-            : this(MakeStorage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY"))
+            : this(MakeStorage("sefero", "GU0GjvcPoXKzDFgBSPFbWmCPQrIRHAT6fholbMnxtteY5vQVgYTcWKk/25i/F4m9MFoGHXNf4oYgeAKo+mFO5Q=="))
         {
         }
 
@@ -58,82 +58,58 @@ namespace Tigwi.UI.Controllers
 
         private const string AccountCookie = "CURACCOUNT";
 
+        protected void ResetCurrentAccount()
+        {
+            var cookie = new HttpCookie(AccountCookie, null) { Expires = new System.DateTime(1999, 10, 12) };
+            this.Response.SetCookie(cookie);
+            this.currentAccount = null;
+        }
+
+        /// <summary>
+        /// Gets or sets the current account
+        /// </summary>
         public IAccountModel CurrentAccount
         {
             get
             {
-                var user = this.CurrentUser;
-
-                if (user == null)
-                {
-                    this.currentAccount = null;
-                    return null;
-                }
-
-                if (this.currentAccount == null)
-                {
-                    var cookie = this.HttpContext.Request.Cookies[AccountCookie];
-                    if (cookie == null)
-                    {
-                        return null;
-                    }
-
-                    Guid accountId;
-
-                    if (Guid.TryParse(cookie.Value, out accountId))
-                    {
-                        this.currentAccount = this.Storage.Accounts.Find(accountId);
-                        if (!user.Accounts.Contains(this.currentAccount))
-                        {
-                            // TODO: log
-                            Elmah.ErrorSignal.FromCurrentContext().Raise(new Exception("Bad account."));
-                            cookie.Expires = DateTime.MinValue;
-                            this.Response.SetCookie(cookie);
-
-                            // TODO: this *must* be something that CAN'T fail.
-                            this.currentAccount = this.Storage.Accounts.Find(user.Login);
-                        }
-                    }
-                    else
-                    {
-                        this.currentAccount = this.Storage.Accounts.Find(user.Login);
-                    }
-                }
-
                 return this.currentAccount;
             }
 
             protected set
             {
-                if (!this.CurrentUser.Accounts.Contains(value))
+                var cookie = new HttpCookie(AccountCookie, null) { Expires = DateTime.MaxValue, HttpOnly = true };
+                if (value != null)
                 {
-                    throw new NotImplementedException("User not a member of account");
+                    if (this.CurrentUser.Accounts.Contains(value))
+                    {
+                        cookie.Value = value.Id.ToString();
+                        this.currentAccount = value;
+                    }
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
                 }
 
-                var cookie = new HttpCookie(AccountCookie, value.Id.ToString());
                 this.HttpContext.Response.SetCookie(cookie);
-
-                this.currentAccount = value;
             }
         }
 
+        /// <summary>
+        /// Gets the current (logged in) user.
+        /// </summary>
         public IUserModel CurrentUser
         {
             get
             {
-                if (this.currentUser == null)
-                {
-                    // TODO: store ID.
-                    var identity = this.User.Identity;
-                    this.currentUser = this.Storage.Users.Find(identity.Name);
-                }
-
                 return this.currentUser;
             }
         }
 
         protected IUserModel AuthenticateUser(IUserModel value, bool rememberMe)
         {
+            Contract.Assert(value != null);
+
             // Update authentication cookie
             var existingCookie = this.Request.Cookies[FormsAuthentication.FormsCookieName];
             var version = 1;
@@ -175,8 +151,11 @@ namespace Tigwi.UI.Controllers
         protected void Deauthenticate()
         {
             FormsAuthentication.SignOut();
-            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName) { Expires = DateTime.MinValue };
-            this.Response.AppendCookie(cookie);
+            var cookie = new HttpCookie(AccountCookie) { Expires = new DateTime(1999, 10, 12) };
+            this.Response.Cookies.Remove(AccountCookie);
+            this.Response.Cookies.Add(cookie);
+            this.currentUser = null;
+            this.currentAccount = null;
         }
 
         protected IStorageContext Storage
@@ -217,5 +196,70 @@ namespace Tigwi.UI.Controllers
         }
 
         #endregion
+
+        protected override void OnAuthorization(AuthorizationContext filterContext)
+        {
+            base.OnAuthorization(filterContext);
+
+            var identity = this.User.Identity;
+            if (!identity.IsAuthenticated)
+            {
+                return;
+            }
+            try
+            {
+                var user = this.Storage.Users.Find(identity.Name);
+                IAccountModel account = null;
+
+                var cookie = this.Request.Cookies[AccountCookie];
+                if (cookie != null)
+                {
+                    Guid accountId;
+                    if (Guid.TryParse(cookie.Value, out accountId))
+                    {
+                        try
+                        {
+                            account = this.Storage.Accounts.Find(accountId);
+                        }
+                        catch (AccountNotFoundException)
+                        {
+                            cookie.Expires = new System.DateTime(1999, 10, 12);
+                            this.Response.SetCookie(cookie);
+                        }
+                    }
+                    else
+                    {
+                        // Reset account cookie
+                        cookie.Expires = new System.DateTime(1999, 10, 12);
+                        this.Response.SetCookie(cookie);
+                    }
+                }
+
+                if (account == null)
+                {
+                    try
+                    {
+                        account = this.Storage.Accounts.Find(identity.Name);
+                    }
+                    catch (AccountNotFoundException)
+                    {
+                    }
+                }
+
+                this.currentUser = user;
+                this.currentAccount = account;
+            }
+            catch (UserNotFoundException)
+            {
+                this.Deauthenticate();
+                filterContext.Result = new RedirectToRouteResult(filterContext.RouteData.Values);
+            }
+
+            if (this.currentUser == null || this.currentAccount == null)
+            {
+                this.Deauthenticate();
+                filterContext.Result = new RedirectToRouteResult(filterContext.RouteData.Values);
+            }
+        }
     }
 }

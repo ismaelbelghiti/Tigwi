@@ -74,19 +74,22 @@ namespace Tigwi.UI.Controllers
         [Authorize]
         public ActionResult MakeActive(string accountName)
         {
-            var account = this.Storage.Accounts.Find(accountName);
-
             try
             {
-                // Set current account with automatic validation
-                this.CurrentAccount = account;
-                // Tell the user everything went OK
+                var account = this.Storage.Accounts.Find(accountName);
 
-                return this.RedirectToAction("Index", "Home");
+                try
+                {
+                    this.CurrentAccount = account;
+                    return this.RedirectToAction("Index", "Home");
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
             }
-            catch (Exception)
+            catch (AccountNotFoundException)
             {
-                // Tell the user he must be connected
                 throw new NotImplementedException();
             }
         }

@@ -114,7 +114,6 @@
     <Compile Include="Models\InfoUserModel.cs" />
     <Compile Include="Models\ModifyListModel.cs" />
     <Compile Include="Models\ModifyAccountModel.cs" />
-    <Compile Include="Models\ModifyUserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

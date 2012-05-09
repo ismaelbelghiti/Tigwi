@@ -67,7 +67,6 @@ namespace Tigwi.Storage.Library
         /// Deassociate an openid uri from an user
         /// </summary>
         /// <exception cref="UserNotFound"> if no user has this id</exception>
-        /// <exception cref="OpenIdUriNotAssociated"> if the given uri is not associated to the given user</exception>
         void DeassociateOpenIdUri(Guid userId, string openIdUri);
 
         // TODO : implement this
