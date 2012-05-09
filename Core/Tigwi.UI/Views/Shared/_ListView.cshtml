@@ -6,21 +6,19 @@
     <ul>
     @foreach (var list in Model)
     {
-        <li class="accordion-group">
-            <div class="accordion-heading">
-                <input type="checkbox"/>
-                <a class="accordion-toggle" data-toggle="collapse" href="#list-@list.Id">
-                    <i class="icon-folder-close"></i> @list.Name
-                </a>
+        <li>
+            <input type="checkbox"/>
+            <a class="accordion-toggle" data-toggle="collapse" href="#list-@list.Id">
+                <i class="icon-folder-close"></i> @list.Name
+            </a>
+            <div id="list-@list.Id" class="accordion-body collapse">
+                <ul class="list-user">
+                    @foreach (var member in list.Members)
+                    {
+                        <li><i class="icon-user"></i>@member.Name</li>
+                    }
+                </ul>
             </div>
-        <div id="list-@list.Id" class="accordion-body collapse"><div class="accordion-inner">
-        <ul class="list-user">
-            @foreach (var member in list.Members)
-            {
-                <li><i class="icon-user"></i>@member.Name</li>
-            }
-        </ul>
-        </div></div>
         </li>
     }
     </ul>
