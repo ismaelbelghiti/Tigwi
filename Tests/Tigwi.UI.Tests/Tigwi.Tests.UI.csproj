@@ -101,6 +101,10 @@
       <Project>{46428462-DB30-44D8-A6BB-7B83F3F211EC}</Project>
       <Name>Tigwi.UI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Tigwi.Storage.Test\StorageTest.csproj">
+      <Project>{927D51B8-5DED-4241-81F9-A9347DC58031}</Project>
+      <Name>StorageTest</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
