@@ -5,8 +5,6 @@ Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "Tigwi", "Tigwi\Tigwi.ccproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tigwi.UI", "Tigwi.UI\Tigwi.UI.csproj", "{46428462-DB30-44D8-A6BB-7B83F3F211EC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{43FEE8D7-EE97-40E7-9F64-3B916C949038}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tigwi.API", "Tigwi.API\Tigwi.API.csproj", "{64E04B2A-8FD4-4833-B12A-6FCC521C22BB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tigwi.Storage.Library", "Tigwi.Storage.Library\Tigwi.Storage.Library.csproj", "{2C5E15F5-0DF9-4D0A-AB8F-FB8FEC5B25E8}"
@@ -23,7 +21,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageLocalTest", "..\Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StorageTest", "..\Tests\Tigwi.Storage.Test\StorageTest.csproj", "{927D51B8-5DED-4241-81F9-A9347DC58031}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI_test", "..\Tests\Tigwi.UI.Tests\UI_test.csproj", "{5D2BF629-E4C9-4BCF-928F-AD605E9E5684}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tigwi.Tests.UI", "..\Tests\Tigwi.UI.Tests\Tigwi.Tests.UI.csproj", "{5D2BF629-E4C9-4BCF-928F-AD605E9E5684}"
+EndProject
+Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "Tigwi.Deploy.API", "Tigwi.Deploy.API\Tigwi.Deploy.API.ccproj", "{38818485-59E0-4439-AE06-8D6709704619}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -241,6 +241,26 @@ Global
 		{5D2BF629-E4C9-4BCF-928F-AD605E9E5684}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{5D2BF629-E4C9-4BCF-928F-AD605E9E5684}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5D2BF629-E4C9-4BCF-928F-AD605E9E5684}.Release|x86.ActiveCfg = Release|Any CPU
+		{38818485-59E0-4439-AE06-8D6709704619}.Cloud-Debug|Any CPU.ActiveCfg = Cloud-Debug|Any CPU
+		{38818485-59E0-4439-AE06-8D6709704619}.Cloud-Debug|Any CPU.Build.0 = Cloud-Debug|Any CPU
+		{38818485-59E0-4439-AE06-8D6709704619}.Cloud-Debug|Mixed Platforms.ActiveCfg = Cloud-Debug|Any CPU
+		{38818485-59E0-4439-AE06-8D6709704619}.Cloud-Debug|Mixed Platforms.Build.0 = Cloud-Debug|Any CPU
+		{38818485-59E0-4439-AE06-8D6709704619}.Cloud-Debug|x86.ActiveCfg = Cloud-Debug|Any CPU
+		{38818485-59E0-4439-AE06-8D6709704619}.Cloud-Release|Any CPU.ActiveCfg = Cloud-Release|Any CPU
+		{38818485-59E0-4439-AE06-8D6709704619}.Cloud-Release|Any CPU.Build.0 = Cloud-Release|Any CPU
+		{38818485-59E0-4439-AE06-8D6709704619}.Cloud-Release|Mixed Platforms.ActiveCfg = Cloud-Release|Any CPU
+		{38818485-59E0-4439-AE06-8D6709704619}.Cloud-Release|Mixed Platforms.Build.0 = Cloud-Release|Any CPU
+		{38818485-59E0-4439-AE06-8D6709704619}.Cloud-Release|x86.ActiveCfg = Cloud-Release|Any CPU
+		{38818485-59E0-4439-AE06-8D6709704619}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38818485-59E0-4439-AE06-8D6709704619}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38818485-59E0-4439-AE06-8D6709704619}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{38818485-59E0-4439-AE06-8D6709704619}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{38818485-59E0-4439-AE06-8D6709704619}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{38818485-59E0-4439-AE06-8D6709704619}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38818485-59E0-4439-AE06-8D6709704619}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38818485-59E0-4439-AE06-8D6709704619}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{38818485-59E0-4439-AE06-8D6709704619}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{38818485-59E0-4439-AE06-8D6709704619}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

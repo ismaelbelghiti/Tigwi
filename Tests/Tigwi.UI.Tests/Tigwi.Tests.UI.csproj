@@ -82,6 +82,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MockStorageTests.cs" />
     <Compile Include="Models\AccountRepositoryTest.cs" />
     <Compile Include="Models\StorageContextTest.cs" />
     <Compile Include="Models\StorageUserModelTest.cs" />
@@ -100,6 +101,10 @@
     <ProjectReference Include="..\..\Core\Tigwi.UI\Tigwi.UI.csproj">
       <Project>{46428462-DB30-44D8-A6BB-7B83F3F211EC}</Project>
       <Name>Tigwi.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tigwi.Storage.Test\StorageTest.csproj">
+      <Project>{927D51B8-5DED-4241-81F9-A9347DC58031}</Project>
+      <Name>StorageTest</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
