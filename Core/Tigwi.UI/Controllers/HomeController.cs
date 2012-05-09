@@ -43,7 +43,15 @@ namespace Tigwi.UI.Controllers
 
         private static IStorageContext MakeStorage(string accountName, string accountKey)
         {
-            return accountName != "__" + "AZURE_STORAGE_ACCOUNT_NAME" ? new StorageContext(new Storage(accountName, accountKey)) : null;
+            try
+            {
+                return new StorageContext(new Storage(accountName, accountKey));
+            }
+            catch (FormatException)
+            {
+            }
+
+            return null;
         }
 
         #region Properties
