@@ -2,12 +2,65 @@
 
 @model ICollection<IListModel>
 
+
 <section class="listView">
     <ul>
+    @{
+        var listsOfMember = new Dictionary<Guid, HashSet<Guid>>();
+        foreach (var list in Model)
+        {
+            foreach (var member in list.Members)
+            {
+                HashSet<Guid> lists;
+                if (!listsOfMember.TryGetValue(member.Id, out lists))
+                {
+                    lists = new HashSet<Guid>();
+                    listsOfMember.Add(member.Id, lists);
+                }
+
+                lists.Add(list.Id);
+            }
+        }
+    }
+    <script type="text/javascript">
+        var lists = {
+        @foreach (var pair in listsOfMember)
+        {
+            @Html.Raw("'" + pair.Key.ToString() + "': [");
+            foreach(var listId in pair.Value)
+            {
+                @Html.Raw("'" + listId.ToString() + "', ");
+            }
+            @Html.Raw("], ");
+        }
+        };
+    </script>
+
     @foreach (var list in Model)
     {
+        
+        foreach (var member in list.Members)
+                    {
+        <script>
+            $(document).ready(function () {
+                $('#checkBox-@list.Id').change(
+              function () {
+
+                  if (this.checked) {
+                      $('.poster-@member.Name').show();
+
+                  } else {
+                      $('.poster-@member.Name').hide();
+                  }
+              }
+        );
+            });
+
+        </script>
+            }
+                
         <li>
-            <input type="checkbox"/>
+            <input type="checkbox" checked="true" id="checkBox-@list.Id" />
             <a class="accordion-toggle" data-toggle="collapse" href="#list-@list.Id">
                 <i class="icon-folder-close"></i> @list.Name
             </a>
