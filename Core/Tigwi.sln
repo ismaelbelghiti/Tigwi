@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tigwi.Tests.UI", "..\Tests\
 EndProject
 Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "Tigwi.Deploy.API", "Tigwi.Deploy.API\Tigwi.Deploy.API.ccproj", "{38818485-59E0-4439-AE06-8D6709704619}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tigwi.Auth", "Tigwi.Auth\Tigwi.Auth.csproj", "{BFB5FCE1-E4A1-4527-8345-77C0A32BFD60}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Cloud-Debug|Any CPU = Cloud-Debug|Any CPU
@@ -261,6 +263,26 @@ Global
 		{38818485-59E0-4439-AE06-8D6709704619}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{38818485-59E0-4439-AE06-8D6709704619}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{38818485-59E0-4439-AE06-8D6709704619}.Release|x86.ActiveCfg = Release|Any CPU
+		{BFB5FCE1-E4A1-4527-8345-77C0A32BFD60}.Cloud-Debug|Any CPU.ActiveCfg = Debug|x86
+		{BFB5FCE1-E4A1-4527-8345-77C0A32BFD60}.Cloud-Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{BFB5FCE1-E4A1-4527-8345-77C0A32BFD60}.Cloud-Debug|Mixed Platforms.Build.0 = Debug|x86
+		{BFB5FCE1-E4A1-4527-8345-77C0A32BFD60}.Cloud-Debug|x86.ActiveCfg = Debug|x86
+		{BFB5FCE1-E4A1-4527-8345-77C0A32BFD60}.Cloud-Debug|x86.Build.0 = Debug|x86
+		{BFB5FCE1-E4A1-4527-8345-77C0A32BFD60}.Cloud-Release|Any CPU.ActiveCfg = Release|x86
+		{BFB5FCE1-E4A1-4527-8345-77C0A32BFD60}.Cloud-Release|Mixed Platforms.ActiveCfg = Release|x86
+		{BFB5FCE1-E4A1-4527-8345-77C0A32BFD60}.Cloud-Release|Mixed Platforms.Build.0 = Release|x86
+		{BFB5FCE1-E4A1-4527-8345-77C0A32BFD60}.Cloud-Release|x86.ActiveCfg = Release|x86
+		{BFB5FCE1-E4A1-4527-8345-77C0A32BFD60}.Cloud-Release|x86.Build.0 = Release|x86
+		{BFB5FCE1-E4A1-4527-8345-77C0A32BFD60}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{BFB5FCE1-E4A1-4527-8345-77C0A32BFD60}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{BFB5FCE1-E4A1-4527-8345-77C0A32BFD60}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{BFB5FCE1-E4A1-4527-8345-77C0A32BFD60}.Debug|x86.ActiveCfg = Debug|x86
+		{BFB5FCE1-E4A1-4527-8345-77C0A32BFD60}.Debug|x86.Build.0 = Debug|x86
+		{BFB5FCE1-E4A1-4527-8345-77C0A32BFD60}.Release|Any CPU.ActiveCfg = Release|x86
+		{BFB5FCE1-E4A1-4527-8345-77C0A32BFD60}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{BFB5FCE1-E4A1-4527-8345-77C0A32BFD60}.Release|Mixed Platforms.Build.0 = Release|x86
+		{BFB5FCE1-E4A1-4527-8345-77C0A32BFD60}.Release|x86.ActiveCfg = Release|x86
+		{BFB5FCE1-E4A1-4527-8345-77C0A32BFD60}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
