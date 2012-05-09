@@ -19,7 +19,7 @@ namespace StorageTest
         [SetUp]
         public void InitStorage()
         {
-            bool UseStorageTmp = true;
+            bool UseStorageTmp = false;
             if (UseStorageTmp)
                 storage = new StorageTmp();
             else

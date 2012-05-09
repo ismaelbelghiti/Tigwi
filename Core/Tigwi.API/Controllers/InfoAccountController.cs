@@ -117,32 +117,5 @@ namespace Tigwi.API.Controllers
             return new Answer(accountToReturn);
         }
 
-        /*
-        // WARNING : The following methods may be a little too complicated and not necessary in an API
-        protected Answer AnswerUsersAllowed(Guid accountId, int number)
-        {
-            // get users posting on this account
-            var users = Storage.Account.GetUsers(accountId);
-
-            // Get as many users as possible (maximum: number)
-            var size = Math.Min(users.Count, number);
-            var userListToReturn = BuilUserListFormGuidCollection(users, size, Storage);
-
-            return new Answer(userListToReturn);
-        }
-        */
-        
-        /*
-        protected Answer AnswerAdministrator(Guid accountId)
-        {
-            // get account's administrator
-            var adminId = Storage.Account.GetAdminId(accountId);
-            var adminInfo = Storage.User.GetInfo(adminId);
-            var admin = new User(adminInfo, Storage.User.GetId(adminInfo.Login));
-
-            return new Answer(admin);
-        }
-        */
-
     }
 }

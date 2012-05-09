@@ -8,9 +8,9 @@ Obtain a number _n_ of the account _accountName_ 's last posted messages
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/messages/accountName/numberOfMessages  
+http://api.tigwi.com/account/messages/accountName/numberOfMessages  
 or  
-http://api.tigwi.com/infoaccountbyid/messages/accountId/numberOfMessages
+http://api.tigwi.com/accountbyid/messages/accountId/numberOfMessages
 ###Request
 _left empty_
 ###Response
@@ -65,9 +65,9 @@ No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/publiclysubscribedsaccounts/accountName/numberOfSubscriptions  
+http://api.tigwi.com/account/publiclysubscribedsaccounts/accountName/numberOfSubscriptions  
 or  
-http://api.tigwi.com/infoaccountbyid/publiclysubscribedaccounts/accountId/numberOfSubscriptions
+http://api.tigwi.com/accountbyid/publiclysubscribedaccounts/accountId/numberOfSubscriptions
 ###Request
 _left empty_
 ###Response
@@ -122,9 +122,9 @@ Authentication required.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/subscribedaccounts/accountName/numberOfSubscriptions  
+http://api.tigwi.com/account/subscribedaccounts/accountName/numberOfSubscriptions  
 or  
-http://api.tigwi.com/infoaccountbyid/subscribedaccounts/accountId/numberOfSubscriptions
+http://api.tigwi.com/accountbyid/subscribedaccounts/accountId/numberOfSubscriptions
 ###Request
 _left empty_
 ###Response
@@ -178,9 +178,9 @@ No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/subscribersaccounts/accountName/numberOfSubscribers  
+http://api.tigwi.com/account/subscribersaccounts/accountName/numberOfSubscribers  
 or  
-http://api.tigwi.com/infoaccountbyid/subscribersaccounts/accountId/numberOfSubscribers
+http://api.tigwi.com/accountbyid/subscribersaccounts/accountId/numberOfSubscribers
 ###Request
 _left empty_
 ###Response
@@ -232,9 +232,9 @@ No particular order provided.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/subscribedpubliclists/accountName/numberOfLists  
+http://api.tigwi.com/account/subscribedpubliclists/accountName/numberOfLists  
 or  
-http://api.tigwi.com/infoaccountbyid/subscribedpubliclists/accountId/numberOfLists
+http://api.tigwi.com/accountbyid/subscribedpubliclists/accountId/numberOfLists
 ###Request
 _left empty_
 ###Response
@@ -288,9 +288,9 @@ Authentication required.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/subscribedlists/accountName/numberOfLists  
+http://api.tigwi.com/account/subscribedlists/accountName/numberOfLists  
 or  
-http://api.tigwi.com/infoaccountbyid/subscribedlists/accountId/numberOfLists
+http://api.tigwi.com/accountbyid/subscribedlists/accountId/numberOfLists
 ###Request
 _left empty_
 ###Response
@@ -342,9 +342,9 @@ No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/subscriberlists/accountName/numberOfSubscribers  
+http://api.tigwi.com/account/subscriberlists/accountName/numberOfSubscribers  
 or  
-http://api.tigwi.com/infoaccountbyid/subscriberlists/accountId/numberOfSubscribers
+http://api.tigwi.com/accountbyid/subscriberlists/accountId/numberOfSubscribers
 ###Request
 _left empty_
 ###Response
@@ -396,9 +396,9 @@ No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/ownedpubliclists/accountName/numberOfLists  
+http://api.tigwi.com/account/ownedpubliclists/accountName/numberOfLists  
 or  
-http://api.tigwi.com/infoaccountbyid/ownedpubliclists/accountId/numberOfLists
+http://api.tigwi.com/accountbyid/ownedpubliclists/accountId/numberOfLists
 ###Request
 _left empty_
 ###Response
@@ -452,9 +452,9 @@ Authentication required.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/ownedlists/accountName/numberOfLists  
+http://api.tigwi.com/account/ownedlists/accountName/numberOfLists  
 or  
-http://api.tigwi.com/infoaccountbyid/ownedlists/accountId/numberOfLists
+http://api.tigwi.com/accountbyid/ownedlists/accountId/numberOfLists
 ###Request
 _left empty_
 ###Response
@@ -507,9 +507,9 @@ Authentication required.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infoaccount/maininfo/accountName  
+http://api.tigwi.com/account/maininfo/accountName  
 or  
-http://api.tigwi.com/infoaccountbyid/maininfo/accountId
+http://api.tigwi.com/accountbyid/maininfo/accountId
 ###Request
 _left empty_
 ###Response
@@ -555,7 +555,7 @@ Authentication required.
 ###HTTP method
 *POST*
 ###URL
-http://api.tigwi.com/modifyaccount/write
+http://api.tigwi.com/account/write
 ###Request
 
     <Write>
@@ -603,7 +603,7 @@ For someone to copy a message on an authorized account. Authentication required.
 ###HTTP method
 *POST*
 ###URL
-http://api.tigwi.com/modifyaccount/copy
+http://api.tigwi.com/account/copy
 ###Request
 
     <Copy>
@@ -652,7 +652,7 @@ For someone to remove a previously posted message on an authorized account. Auth
 ###HTTP method
 *POST*
 ###URL
-http://api.tigwi.com/modifyaccount/delete
+http://api.tigwi.com/account/delete
 ###Request
 
     <Delete>
@@ -698,7 +698,7 @@ To tag a message as one of _accountName_'s favorites. Authentication required.
 ###HTTP method
 *POST*
 ###URL
-http://api.tigwi.com/modifyaccount/tag
+http://api.tigwi.com/account/tag
 ###Request
 
     <Tag>
@@ -744,7 +744,7 @@ To untag a message from _accountName_'s favorites. Authentication required.
 ###HTTP method
 *POST*
 ###URL
-http://api.tigwi.com/modifyaccount/untag
+http://api.tigwi.com/account/untag
 ###Request
 
     <Untag>
@@ -793,7 +793,7 @@ Authentication required.
 *POST*
 
 ###URL
-http://api.tigwi.com/modifyaccount/createlist/
+http://api.tigwi.com/account/createlist/
 
 ###Request
 	<CreateList>
@@ -845,7 +845,7 @@ For someone to distantly subscribe to a list. Authentication required.
 ###HTTP method
 *POST*
 ###URL
-http://api.tigwi.com/modifyaccount/subscribelist/
+http://api.tigwi.com/account/subscribelist/
 ###Request
     
     <SubscribeList>
@@ -890,7 +890,7 @@ If you're authenticated as the administrator of the account _accountName_, you c
 ###HTTP method
 *POST*
 ###URL
-http://api.tigwi.com/modifyaccount/changedescription/
+http://api.tigwi.com/account/changedescription/
 ###Request
     
     <ChangeDescription>
@@ -938,7 +938,7 @@ No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infolist/subscriptions/idOfList/numberOfSubscriptions
+http://api.tigwi.com/list/subscriptions/idOfList/numberOfSubscriptions
 ###Request
 _left empty_
 ###Response
@@ -989,7 +989,7 @@ No particular order provided
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infolist/subscribers/idOfList/numberOfFollowers
+http://api.tigwi.com/list/subscribers/idOfList/numberOfFollowers
 ###Request
 _left empty_
 ###Response
@@ -1039,7 +1039,7 @@ Obtain the name and id of list with id _idOfList_ 's owner.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infolist/owner/idOfList
+http://api.tigwi.com/list/owner/idOfList
 ###Request
 _left empty_
 ###Response
@@ -1078,7 +1078,7 @@ Obtain a number _n_ of last messages sent to the list with id _idOfList_.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infolist/messages/idOfList/numberOfMessages
+http://api.tigwi.com/list/messages/idOfList/numberOfMessages
 ###Request
 _left empty_
 ###Response
@@ -1135,7 +1135,7 @@ For a list to add a suscription to a given account. Authentication required.
 ###HTTP method
 *POST*
 ###URL
-http://api.tigwi.com/modifylist/subscribeaccount/
+http://api.tigwi.com/list/subscribeaccount/
 ###Request
     
     <SubscribeAccount>
@@ -1164,7 +1164,7 @@ Delete the suscription of the given account to the list. Authentication required
 ###HTTP method
 *POST*
 ###URL
-http://api.tigwi.com/modifylist/unsubscribeaccount/
+http://api.tigwi.com/list/unsubscribeaccount/
 ###Request
     
     <UnubscribeAccount>
@@ -1189,9 +1189,9 @@ Obtain main informations of user _userLogin_.
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/infouser/maininfo/userLogin  
+http://api.tigwi.com/user/maininfo/userLogin  
 or  
-http://api.tigwi.com/infouserbyid/maininfo/userId
+http://api.tigwi.com/userbyid/maininfo/userId
 ###Request
 _left empty_
 ###Response
