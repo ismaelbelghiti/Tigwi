@@ -79,7 +79,6 @@ namespace Tigwi.UI.Controllers
             {
                 // Set current account with automatic validation
                 this.CurrentAccount = account;
-                this.SaveIdentity(false);
                 // Tell the user everything went OK
 
                 return this.RedirectToAction("Index", "Home");
@@ -114,7 +113,6 @@ namespace Tigwi.UI.Controllers
                 var newAccount = this.Storage.Accounts.Create(CurrentUser, accountCreation.Name, accountCreation.Description);
                 this.CurrentAccount = newAccount;
                 //TODO
-                this.SaveIdentity(false);
                 this.Storage.SaveChanges();
                 return this.RedirectToAction("Create",accountCreation);
             }

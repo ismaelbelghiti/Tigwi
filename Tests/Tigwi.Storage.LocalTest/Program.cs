@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using StorageLibrary;
+using Tigwi.Storage.Library;
 using Microsoft.WindowsAzure.StorageClient;
 
 namespace StorageLocalTest

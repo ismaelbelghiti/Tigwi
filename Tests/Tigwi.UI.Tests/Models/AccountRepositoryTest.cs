@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 namespace Tigwi.UI.Tests.Models
 {
-    using StorageLibrary;
+    using Tigwi.Storage.Library;
 
     using Tigwi.UI.Models;
     using Tigwi.UI.Models.Storage;

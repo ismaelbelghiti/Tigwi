@@ -47,9 +47,7 @@ namespace Tigwi.UI.Controllers
                 {
                     // TODO: real authentication
                     var loggingUser = this.Storage.Users.Find(userLogOnViewModel.Login);
-                    this.CurrentUser = loggingUser;
-
-                    this.SaveIdentity(userLogOnViewModel.RememberMe);
+                    this.AuthenticateUser(loggingUser, userLogOnViewModel.RememberMe);
 
                     return this.RedirectToAction("Index", "Home");
                     // return this.RedirectToAction("Timeline", "Account");
@@ -65,9 +63,7 @@ namespace Tigwi.UI.Controllers
 
         public ActionResult LogOut()
         {
-            this.CurrentUser = null;
-            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName) { Expires = DateTime.MinValue };
-            this.Response.AppendCookie(cookie);
+            this.Deauthenticate();
 
             return this.RedirectToAction("Index", "Home");
         }
@@ -99,11 +95,10 @@ namespace Tigwi.UI.Controllers
                     try
                     {
                         var newAccount = this.Storage.Accounts.Create(newUser, registerViewModel.Login, string.Empty);
-              
-                        this.CurrentUser = newUser;
+
+                        this.AuthenticateUser(newUser, registerViewModel.RememberMe);
                         this.CurrentAccount = newAccount;
                         this.Storage.SaveChanges();
-                        this.SaveIdentity(registerViewModel.RememberMe);
                         return this.RedirectToAction("Index", "Home");
                     }
                     catch (DuplicateAccountException ex)
