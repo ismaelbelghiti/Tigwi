@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,9 +19,12 @@ namespace Tigwi.Storage.Library.Utilities
 
         public void Init()
         {
-            BlobStream stream = blob.OpenWrite();
-            Serializer.Serialize(stream, new MessageSet());
-            stream.Close();
+            using (MemoryStream stream = new MemoryStream())
+            {
+                Serializer.Serialize(stream, new MessageSet());
+                byte[] data = stream.ToArray();
+                blob.UploadByteArray(data);
+            }
         }
     }
 }
