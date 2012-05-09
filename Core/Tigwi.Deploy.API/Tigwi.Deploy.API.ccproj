@@ -9,13 +9,13 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <AzureDeployment Condition=" '$(AzureDeployment)' == '' ">false</AzureDeployment>
     <ProductVersion>1.6</ProductVersion>
-    <ProjectGuid>{a2cdf8c9-aff3-4abd-80a4-b6d27d791929}</ProjectGuid>
+    <ProjectGuid>{38818485-59e0-4439-ae06-8d6709704619}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Tigwi</RootNamespace>
     <AssemblyName>Tigwi</AssemblyName>
     <StartDevelopmentStorage>True</StartDevelopmentStorage>
-    <Name>Tigwi</Name>
+    <Name>Tigwi.Deploy.API</Name>
   </PropertyGroup>
   <!-- Configurations properties -->
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -78,12 +78,12 @@
     <PublishProfile Include="Profiles\seferoProduction4.azurePubxml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Tigwi.UI\Tigwi.UI.csproj">
-      <Name>Tigwi.UI</Name>
-      <Project>{46428462-db30-44d8-a6bb-7b83f3f211ec}</Project>
+    <ProjectReference Include="..\Tigwi.API\Tigwi.API.csproj">
+      <Name>Tigwi.API</Name>
+      <Project>{64e04b2a-8fd4-4833-b12a-6fcc521c22bb}</Project>
       <Private>True</Private>
       <RoleType>Web</RoleType>
-      <RoleName>Tigwi.UI</RoleName>
+      <RoleName>Tigwi.API</RoleName>
       <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
     </ProjectReference>
   </ItemGroup>

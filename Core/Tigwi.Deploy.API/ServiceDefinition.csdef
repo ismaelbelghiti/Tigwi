@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ServiceDefinition name="Tigwi" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition">
-  <WebRole name="Tigwi.UI" vmsize="Small">
+  <WebRole name="Tigwi.API" vmsize="Small">
     <Sites>
       <Site name="Web">
         <Bindings>
@@ -9,7 +9,7 @@
       </Site>
     </Sites>
     <Endpoints>
-      <InputEndpoint name="Endpoint1" protocol="http" port="80" />
+      <InputEndpoint name="Endpoint1" protocol="http" port="8080" />
     </Endpoints>
     <Imports>
       <Import moduleName="Diagnostics" />
