@@ -214,14 +214,6 @@ namespace StorageTest
         }
 
         [Test]
-        [ExpectedException(typeof(OpenIdUriNotAssociated))]
-        public void DeassociateOpenIdUriOpenIdUriNotAssociated()
-        {
-            Guid userId = storage.User.GetId("userThatExists");
-            storage.User.DeassociateOpenIdUri(userId, "notAss");
-        }
-
-        [Test]
         public void DeassociateOpenIdUriNormalBehaviour()
         {
             Guid userId = storage.User.GetId("userThatExists");
