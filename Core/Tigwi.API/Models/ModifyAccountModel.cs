@@ -67,27 +67,4 @@ namespace Tigwi.API.Models
 
         public ListInfo ListInfo { get; set; }
     }
-
-    [Serializable]
-    public class ChangeDescription:BaseRequest
-    {
-        public string Description { get; set; }
-    }
-
-    [Serializable]
-    public class AccountUser:BaseRequest
-    {
-        public string UserLogin { get; set; }
-        public Guid? UserId { get; set; }
-    }
-
-    [Serializable]
-    public class AddUser : AccountUser{}
-
-    [Serializable]
-    public class RemoveUser : AccountUser{}
-
-    [Serializable]
-    public class ChangeAdministrator : AccountUser { }
-
 }
