@@ -13,7 +13,7 @@ namespace Tigwi.Storage.Library
     {
         // We differ messages post to be sure they have been inserted were they should be in time
         // This is also necessary because of the bad time synchronisation in azure
-        TimeSpan limitDateDiff = TimeSpan.FromSeconds(10);
+        TimeSpan limitDateDiff = TimeSpan.FromSeconds(0);
 
         BlobFactory blobFactory;
 
