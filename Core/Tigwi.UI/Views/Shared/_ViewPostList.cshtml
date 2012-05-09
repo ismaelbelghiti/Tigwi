@@ -1,7 +1,31 @@
 ﻿@using Tigwi.UI.Models
 @model ICollection<IPostModel>
-           
+      
+<div id="testIsma">         
+     
 @foreach( var post in Model)
 {
-    @Html.Partial("_ViewPost", post)
+    var poster = post.Poster;
+    <script>
+        $(document).ready(function () {
+        for (var topList in lists[@poster.Id])
+                  {
+            $('#checkBox-' + topList).change(
+              function () {
+              var mustShow = false;
+                  for (var list in lists[@poster.Id])
+                  {
+                    if ($('#checkBox-' + list).checked)
+                    {
+                        mustShow = true;
+                        break;
+                    }
+                  }
+              }
+        );
+        }
+        });
+    </script>
+    @Html.Partial("_ViewPost", post)    
 }
+</div>

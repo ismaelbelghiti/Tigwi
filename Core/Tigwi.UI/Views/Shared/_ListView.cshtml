@@ -2,12 +2,65 @@
 
 @model ICollection<IListModel>
 
+
 <section class="listView">
     <ul>
+    @{
+        var listsOfMember = new Dictionary<Guid, HashSet<Guid>>();
+        foreach (var list in Model)
+        {
+            foreach (var member in list.Members)
+            {
+                HashSet<Guid> lists;
+                if (!listsOfMember.TryGetValue(member.Id, out lists))
+                {
+                    lists = new HashSet<Guid>();
+                    listsOfMember.Add(member.Id, lists);
+                }
+
+                lists.Add(list.Id);
+            }
+        }
+    }
+    <script type="text/javascript">
+        var lists = {
+        @foreach (var pair in listsOfMember)
+        {
+            @Html.Raw("'" + pair.Key.ToString() + "': [");
+            foreach(var listId in pair.Value)
+            {
+                @Html.Raw("'" + listId.ToString() + "', ");
+            }
+            @Html.Raw("], ");
+        }
+        };
+    </script>
+
     @foreach (var list in Model)
     {
+        
+        foreach (var member in list.Members)
+                    {
+        <script>
+            $(document).ready(function () {
+                $('#checkBox-@list.Id').change(
+              function () {
+
+                  if (this.checked) {
+                      $('.poster-@member.Name').show();
+
+                  } else {
+                      $('.poster-@member.Name').hide();
+                  }
+              }
+        );
+            });
+
+        </script>
+            }
+                
         <li>
-            <input type="checkbox"/>
+            <input type="checkbox" checked="true" id="checkBox-@list.Id" />
             <a class="accordion-toggle" data-toggle="collapse" href="#list-@list.Id">
                 <i class="icon-folder-close"></i> @list.Name
             </a>
@@ -23,63 +76,3 @@
     }
     </ul>
 </section>
-
-@*
-<section class="listView">
-    <ul>
-        <li class="accordion-group">
-            <div class="accordion-heading">
-                <input type="checkbox"/>
-                <a class="accordion-toggle" data-toggle="collapse" href="#list-Liste1">
-                    <i class="icon-folder-close"></i> Liste1
-                </a>
-            </div>
-        <div id="list-Liste1" class="accordion-body collapse"><div class="accordion-inner">
-        <ul class="list-user">
-            <li><i class="icon-user"></i>Quihteh</li>
-            <li><i class="icon-user"></i>Gjnfyk</li>
-            <li><i class="icon-user"></i>Loph</li>
-            <li><i class="icon-user"></i>Freanlih</li>
-            <li><i class="icon-user"></i>Koiup</li>
-            <li><i class="icon-user"></i>Vutylopm</li>
-            <li><i class="icon-user"></i>Cerdoind</li>
-        </ul>
-        </div></div>
-        </li>
-
-        <li class="accordion-group">
-            <div class="accordion-heading">
-                <input type="checkbox"/>
-                <a class="accordion-toggle" data-toggle="collapse" href="#list-Liste2">
-                    <i class="icon-folder-close"></i> Liste2
-                </a>
-            </div>
-        <div id="list-Liste2" class="accordion-body collapse"><div class="accordion-inner">
-        <ul class="list-user">
-            <li><i class="icon-user"></i>Quihteh</li>
-            <li><i class="icon-user"></i>Gjnfyk</li>
-            <li><i class="icon-user"></i>Loph</li>
-            <li><i class="icon-user"></i>Hytit</li>
-            <li><i class="icon-user"></i>Dongu</li>
-            <li><i class="icon-user"></i>Cerdoind</li>
-        </ul>
-        </div></div>
-        </li>
-
-        <li class="accordion-group">
-            <div class="accordion-heading">
-                <input type="checkbox"/>
-                <a class="accordion-toggle" data-toggle="collapse" href="#list-Liste3">
-                    <i class="icon-folder-close"></i> Liste3
-                </a>
-            </div>
-        <div id="list-Liste3" class="accordion-body collapse"><div class="accordion-inner">
-        <ul class="list-user">
-            <li><i class="icon-user"></i>Ssrhdth</li>
-            <li><i class="icon-user"></i>Tjpmo</li>
-            <li><i class="icon-user"></i>Pkgosrgrs</li>
-        </ul>
-        </div></div>
-        </li>
-    </ul>
-</section>*@
