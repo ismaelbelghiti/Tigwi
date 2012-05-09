@@ -5,12 +5,18 @@ namespace Tigwi.API.Models
 {
     // Models for request bodies
 
-    [Serializable]
-    [XmlRootAttribute("Write")]
-    public class MsgToWrite
+    public class BaseRequest
     {
         public string AccountName { get; set; }
         public Guid? AccountId { get; set; }
+        public string Key { get; set; }
+    }
+
+
+    [Serializable]
+    [XmlRootAttribute("Write")]
+    public class MsgToWrite:BaseRequest
+    {
         public MsgToPost Message { get; set; }
     }
 
@@ -22,10 +28,8 @@ namespace Tigwi.API.Models
     }
 
     [Serializable]
-    public class ActionOnMessage
+    public class ActionOnMessage:BaseRequest
     {
-        public string AccountName { get; set; }
-        public Guid? AccountId { get; set; }
         public Guid? MessageId { get; set; }
     }
 
@@ -44,10 +48,8 @@ namespace Tigwi.API.Models
     public class Untag : ActionOnMessage { }
 
     [Serializable]
-    public class SubscribeList
+    public class SubscribeList:BaseRequest
     {
-        public string AccountName { get; set; }
-        public Guid? AccountId { get; set; }
         public Guid? Subscription { get; set; }
     }
 
@@ -60,26 +62,21 @@ namespace Tigwi.API.Models
     }
 
     [Serializable]
-    public class CreateList
+    public class CreateList:BaseRequest
     {
-        public string AccountName { get; set; }
-        public Guid? AccountId { get; set; }
+
         public ListInfo ListInfo { get; set; }
     }
 
     [Serializable]
-    public class ChangeDescription
+    public class ChangeDescription:BaseRequest
     {
-        public string AccountName { get; set; }
-        public Guid? AccountId { get; set; }
         public string Description { get; set; }
     }
 
     [Serializable]
-    public class AccountUser
+    public class AccountUser:BaseRequest
     {
-        public string AccountName { get; set; }
-        public Guid? AccountId { get; set; }
         public string UserLogin { get; set; }
         public Guid? UserId { get; set; }
     }
