@@ -9,13 +9,18 @@ using Tigwi.API.Models;
 
 namespace Tigwi.API.Controllers
 {
-    public class ApiController : Controller
+    public abstract class ApiController : Controller
     {
 
         // Initialize storage when instanciating a controller
-        public ApiController ()
+        protected ApiController ()
         {
-            Storage = new Storage.Library.Storage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY");
+            Storage = new Storage.Library.Storage("sefero", "GU0GjvcPoXKzDFgBSPFbWmCPQrIRHAT6fholbMnxtteY5vQVgYTcWKk/25i/F4m9MFoGHXNf4oYgeAKo+mFO5Q==");
+        }
+
+        protected bool CheckAuthentification (string key)
+        {
+            return true;
         }
 
         protected ContentResult Serialize(Answer output)
@@ -29,47 +34,30 @@ namespace Tigwi.API.Controllers
         }
 
         // Methods to build lists used in any controller
+        // TODO : modify to use foreach or LINQ
         protected static Accounts BuildAccountListFromGuidCollection(ICollection<Guid> hashAccounts, int size, IStorage storage)
         {
-            var accountList = new List<Account>();
-            for (var k = 0; k < size; k++)
-            {
-                var accountId = hashAccounts.First();
-                var accountInfo = storage.Account.GetInfo(accountId);
-                var account = new Account(accountId, accountInfo.Name, accountInfo.Description);
-                accountList.Add(account);
-                hashAccounts.Remove(accountId);
-            }
+            var accounts = from accountId in hashAccounts.Take(size)
+                              let accountInfo = storage.Account.GetInfo(accountId)
+                              select new Account(accountId, accountInfo.Name, accountInfo.Description);
 
-            return new Accounts(accountList);  
+            return new Accounts(accounts.ToList());  
         }
 
         protected static Lists BuildListsFromGuidCollection(ICollection<Guid> hashLists, int size, IStorage storage )
         {
-            var lists = new List<ListApi>();
-            for (var k = 0; k < size; k++)
-            {
-                var listId = hashLists.First();
-                var list = new ListApi(listId, storage.List.GetInfo(listId).Name);
-                lists.Add(list);
-                hashLists.Remove(listId);
-            }
+            var lists = from listId in hashLists.Take(size)
+                        select new ListApi(listId, storage.List.GetInfo(listId).Name);
 
-            return new Lists(lists);  
+            return new Lists(lists.ToList());
         }
 
         protected static Users BuilUserListFormGuidCollection(ICollection<Guid> hashUsers, int size, IStorage storage)
         {
-            var users = new List<User>();
-            for (var k = 0; k < size; k++)
-            {
-                var userId = hashUsers.First();
-                var user = new User(storage.User.GetInfo(userId), userId);
-                users.Add(user);
-                hashUsers.Remove(userId);
-            }
+            var users = from userId in hashUsers.Take(size)
+                        select new User(storage.User.GetInfo(userId), userId);
 
-            return new Users(users); 
+            return new Users(users.ToList()); 
         }
         
         protected IStorage Storage;

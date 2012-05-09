@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("StorageWorker")]
+[assembly: AssemblyTitle("Tigwi.Auth")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("StorageWorker")]
+[assembly: AssemblyProduct("Tigwi.Auth")]
 [assembly: AssemblyCopyright("Copyright ©  2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("cde9c186-81e7-4626-b31c-c282c8e95b7d")]
+[assembly: Guid("b327894b-b7fe-4b66-8ed0-edb8460deb48")]
 
 // Version information for an assembly consists of the following four values:
 //

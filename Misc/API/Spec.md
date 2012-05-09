@@ -884,51 +884,6 @@ Error type:
 * In **Request**, _nameOfSubscriber_ is the name of the account who wants to follow the list _idOfSubscription_.
 * In **Request**, _idOfSubscriber_ is the unique identifier of the account who wants to follow the list _idOfSubscription_.
 
-##Change an account's description
-###Purpose
-If you're authenticated as the administrator of the account _accountName_, you can change its description.
-###HTTP method
-*POST*
-###URL
-http://api.tigwi.com/account/changedescription/
-###Request
-    
-    <ChangeDescription>
-        <AccountName> accountName </AccountName>
-        // or you can use
-        <AccountId> accountId </AccountId>
-        
-        <Descritpion> <!-- New description --> </Description>
-    </ChangeDescription>
-
-###Response
-General structure of the response :
-
-
-    <Answer>
-        <!-- Error Type -->
-        <Content xsi:type="ObjectCreated" 
-           Id="UniqueIdentifierOfCreatedObject" />
-    </Answer>    
-
-
-Error type:  
-*In case an error occurs:
-
-
-    <Error Code="codeOfError"/>
-
-
-*Otherwise:
-   
-    <Error/>
-
-###Informations
-* You **must** be authenticated as the administrator of the account _accountName_ to use this method.
-* In **Request**, _accountName_ is the name of the account where you intend to untag a message.
-* In **Request**, _accountId_ is the unique identifier of the account where you intend to untag a message.
-* In **Request**, if you use both `<AccountName>` and `<AccountId>`, only the `<AccountId>` will be used (in particular when they don't refer to the same account).
-
 #Get informations about a _List_
 
 ##Get accounts followed by the list

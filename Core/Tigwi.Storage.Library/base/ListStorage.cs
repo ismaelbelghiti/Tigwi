@@ -56,6 +56,7 @@ namespace Tigwi.Storage.Library
             HashSetBlob<Guid> bOwned = isPrivate ? blobFactory.LOwnedListsPrivate(ownerId) : blobFactory.LOwnedListsPublic(ownerId);
             Blob<HashSet<Guid>> bFollowingAccounts = blobFactory.LFollowingAccounts(listId);
             Blob<HashSet<Guid>> bFollowedAccounts = blobFactory.LFollowedAccounts(listId);
+            HashSetBlob<Guid> bAddRmvMsgs = blobFactory.LAddRmvMsgs(listId);
             MsgSetBlobPack bMessages = blobFactory.MListMessages(listId);
 
             // store the data
@@ -63,6 +64,7 @@ namespace Tigwi.Storage.Library
             bOwner.Set(ownerId);
             bFollowingAccounts.Set(followingAccounts);
             bFollowedAccounts.Set(new HashSet<Guid>());
+            bAddRmvMsgs.Set(new HashSet<Guid>());
 
             bMessages.Init();
 
@@ -74,6 +76,7 @@ namespace Tigwi.Storage.Library
                 bFollowingAccounts.Delete();
                 bFollowedAccounts.Delete();
                 bMessages.Delete();
+                bAddRmvMsgs.Delete();
 
                 throw new AccountNotFound();
             }

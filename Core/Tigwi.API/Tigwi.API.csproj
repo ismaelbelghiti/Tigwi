@@ -104,7 +104,6 @@
     <Compile Include="Controllers\InfoAccountController.cs" />
     <Compile Include="Controllers\InfoListController.cs" />
     <Compile Include="Controllers\ModifyAccountController.cs" />
-    <Compile Include="Controllers\ModifyUserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -115,7 +114,6 @@
     <Compile Include="Models\InfoUserModel.cs" />
     <Compile Include="Models\ModifyListModel.cs" />
     <Compile Include="Models\ModifyAccountModel.cs" />
-    <Compile Include="Models\ModifyUserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
