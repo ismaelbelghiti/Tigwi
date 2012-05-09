@@ -167,7 +167,7 @@ namespace Tigwi.UI
                             Email = email,
                             Login = login,
                             Id = id,
-                            Password = new byte[0],
+                            Password = password,
                             OpenIdUri = new HashSet<string>()
                         });
 
@@ -460,7 +460,13 @@ namespace Tigwi.UI
 
                     foreach (var listId in account.AllFollowedLists)
                     {
-                        this.Storage.ListStorage.Unfollow(listId, accountId);
+                        try
+                        {
+                            this.Storage.ListStorage.Unfollow(listId, accountId);
+                        }
+                        catch (AccountIsOwner)
+                        {
+                        }
                     }
                     
                     // Choosing the easy way
@@ -538,6 +544,11 @@ namespace Tigwi.UI
             public void SetInfo(Guid listId, string name, string description, bool isPrivate)
             {
                 var list = this.GetMock(listId);
+                if (list.IsPersonnal)
+                {
+                    throw new IsPersonnalList();
+                }
+
                 list.Name = name;
                 list.Description = description;
                 if (isPrivate == list.IsPrivate)
@@ -625,6 +636,11 @@ namespace Tigwi.UI
                 if (!this.ListFromId.TryGetValue(id, out list))
                 {
                     return;
+                }
+
+                if (list.IsPersonnal)
+                {
+                    throw new IsPersonnalList();
                 }
 
                 foreach (var follower in list.Followers.Select(followerId => this.Storage.AccountStorage.GetMock(followerId)))
