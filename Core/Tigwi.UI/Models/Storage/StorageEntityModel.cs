@@ -40,6 +40,7 @@ namespace Tigwi.UI.Models.Storage
             }
 
             this.Repopulate();
+            this.Populated = true;
         }
 
         internal abstract void Repopulate();
