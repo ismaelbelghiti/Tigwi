@@ -1035,9 +1035,9 @@ namespace StorageLocalTest
 
             Console.WriteLine("Init ok");
 
-            //TestUser(storage);
-            //TestAccounts(storage);
-            //TestList(storage, listId);
+            TestUser(storage);
+            TestAccounts(storage);
+            TestList(storage, listId);
 
             TestMessages(storage);
 
