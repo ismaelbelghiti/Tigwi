@@ -228,51 +228,5 @@ namespace Tigwi.API.Controllers
             return Serialize(output);
         }
 
-        /*
-        //
-        // GET : /infoaccountbyid/usersallowed/{accountId}/{number}
-        //[Authorize] (?)
-        public ActionResult UsersAllowed(Guid accountId, int number)
-        {
-            Answer output;
-
-            try
-            {
-                output = AnswerUsersAllowed(accountId, number);
-            }
-
-            catch (StorageLibException exception)
-            {
-                // Result is an non-empty error XML element
-                output = new Answer(new Error(exception.Code.ToString()));
-            }
-
-            return Serialize(output);
-        }
-        */
-
-        /*
-        //
-        // GET : infoaccountbyid/administrator/{accountId}
-        //[Authorize]
-        public ActionResult Administrator(Guid accountId)
-        {
-            Answer output;
-
-            try
-            {
-                output = AnswerAdministrator(accountId);
-            }
-
-            catch (StorageLibException exception)
-            {
-                // Result is an non-empty error XML element
-                output = new Answer(new Error(exception.Code.ToString()));
-            }
-
-            return Serialize(output);
-        }
-        */
-
     }
 }

@@ -20,8 +20,5 @@
 		<ConnectionFiles Include="..\Tigwi.UI\Controllers\HomeController.cs" />
 	</ItemGroup>
 	<ItemGroup>
-		<AllFiles Include="..\..\API\\**\*.*" />
-		<AllFiles Include="..\..\storage\\**\*.*" />
-		<AllFiles Include="..\..\Tigwi\\**\*.*" />
 	</ItemGroup>
 </Project>

@@ -54,7 +54,7 @@ namespace Tigwi.Storage.Library.Utilities
         public bool TrySet(T obj)
         {
             BlobRequestOptions reqOpt = new BlobRequestOptions();
-            BlobStream stream;
+            MemoryStream stream;
 
             if (blob.Attributes.Properties.ETag == null)
                 throw new EtagNotSet();
@@ -62,9 +62,12 @@ namespace Tigwi.Storage.Library.Utilities
 
             try
             {
-                stream = blob.OpenWrite(reqOpt);
-                Serializer.Serialize(stream, obj);
-                stream.Close();
+                using (stream = new MemoryStream())
+                {
+                    Serializer.Serialize(stream, obj);
+                    byte[] data = stream.ToArray();
+                    blob.UploadByteArray(data);
+                }
                 return true;
             }
             catch
@@ -83,9 +86,12 @@ namespace Tigwi.Storage.Library.Utilities
 
         public void Set(T obj)
         {
-            BlobStream stream = blob.OpenWrite();
-            Serializer.Serialize(stream, obj);
-            stream.Close();
+            using (MemoryStream stream = new MemoryStream())
+            {   
+                Serializer.Serialize(stream, obj);
+                byte[] data = stream.ToArray();
+                blob.UploadByteArray(data);
+            }
         }
 
         public T GetIfExists(Exception e)
@@ -109,9 +115,12 @@ namespace Tigwi.Storage.Library.Utilities
             reqOpt.AccessCondition = AccessCondition.IfNoneMatch("*");
             try
             {
-                BlobStream stream = blob.OpenWrite(reqOpt);
-                Serializer.Serialize(stream, obj);
-                stream.Close();
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    Serializer.Serialize(stream, obj);
+                    byte[] data = stream.ToArray();
+                    blob.UploadByteArray(data, reqOpt);
+                }
                 return true;
             }
             catch (StorageClientException e)
@@ -137,9 +146,12 @@ namespace Tigwi.Storage.Library.Utilities
                     reqOpt.AccessCondition = AccessCondition.IfMatch(etag);
                     try
                     {
-                        BlobStream stream = blob.OpenWrite(reqOpt);
-                        Serializer.Serialize(stream, obj);
-                        stream.Close();
+                        using (MemoryStream stream = new MemoryStream())
+                        {
+                            Serializer.Serialize(stream, obj);
+                            byte[] data = stream.ToArray();
+                            blob.UploadByteArray(data, reqOpt);
+                        }
                         return true;
                     }
                     catch (StorageClientException e)

@@ -15,7 +15,7 @@ namespace Tigwi.API.Controllers
         // Initialize storage when instanciating a controller
         public ApiController ()
         {
-            Storage = new Tigwi.Storage.Library.Storage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY");
+            Storage = new Storage.Library.Storage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY");
         }
 
         protected ContentResult Serialize(Answer output)
@@ -71,53 +71,7 @@ namespace Tigwi.API.Controllers
 
             return new Users(users); 
         }
-
-        // WARNING : maybe this method is not good in an API
-        // General methods
-
-        //
-        // POST : /createuser
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult CreateUser()
-        {
-            Answer output;
-
-            try
-            {
-                var user = (NewUser) (new XmlSerializer(typeof (NewUser))).Deserialize(Request.InputStream);
-                
-                if (user.Login == null)
-                    output = new Answer(new Error("Login missing"));
-                else if (user.Email == null) // TODO ? More checkings on email
-                    output = new Answer(new Error("Email missing"));
-                else if (user.Password == null) // TODO ? More checkings on password
-                    output = new Answer(new Error("Password missing"));
-                else
-                {
-                    try
-                    {
-                        // TODO : use new version 
-                        //var userId = Storage.User.Create(user.Login, user.Email, user.Password);
-                        var userId = new Guid(); 
-
-                        // Result is an empty error XML element
-                        output = new Answer(new ObjectCreated(userId));
-                    }
-                    catch (StorageLibException exception)
-                    {
-                        // Result is an non-empty error XML element
-                        output = new Answer(new Error(exception.Code.ToString()));
-                    }
-                }
-            }
-            catch(InvalidOperationException exception)
-            {
-                output = new Answer(new Error(exception.Message + " " + exception.InnerException.Message));
-            }
-
-            return Serialize(output);
-        }
-
+        
         protected IStorage Storage;
 
     }
