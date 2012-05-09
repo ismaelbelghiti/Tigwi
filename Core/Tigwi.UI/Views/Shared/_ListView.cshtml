@@ -38,27 +38,6 @@
 
     @foreach (var list in Model)
     {
-        
-        foreach (var member in list.Members)
-                    {
-        <script>
-            $(document).ready(function () {
-                $('#checkBox-@list.Id').change(
-              function () {
-
-                  if (this.checked) {
-                      $('.poster-@member.Name').show();
-
-                  } else {
-                      $('.poster-@member.Name').hide();
-                  }
-              }
-        );
-            });
-
-        </script>
-            }
-                
         <li>
             <input type="checkbox" checked="true" id="checkBox-@list.Id" />
             <a class="accordion-toggle" data-toggle="collapse" href="#list-@list.Id">
