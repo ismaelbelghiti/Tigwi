@@ -20,8 +20,7 @@ namespace Tigwi.API.Controllers
             return new Answer(listMsgsOutput);
         }
         
-        /*
-         * WARNING The following method isn't documented.
+        // WARNING The following method isn't documented.
         protected Answer AnswerTaggedMessages(Guid accountId, int number)
         {
             // get lasts messages from user name
@@ -31,8 +30,7 @@ namespace Tigwi.API.Controllers
             var listMsgsOutput = new Messages(listMsgs, Storage);
             return new Answer(listMsgsOutput);
         }
-        */
-        
+       
 
         protected Answer AnswerSubscriberAccounts(Guid accountId, int number)
         {
@@ -51,7 +49,8 @@ namespace Tigwi.API.Controllers
             return new Answer(accountListToReturn);
         }
 
-        
+
+        // TODO : need authentication when withPrivate = true
         protected Answer AnswerSubscriptionsEitherPublicOrAll(Guid accountId, int numberOfSubscriptions, bool withPrivate)
         {
             // get the public lists followed by the given account
@@ -70,6 +69,7 @@ namespace Tigwi.API.Controllers
         }
 
 
+        // TODO : need authentication when withPrivate = true
         protected Answer AnswerSubscribedListsEitherPublicOrAll(Guid accountId, int numberofLists, bool withPrivate)
         {
             // get the public lists followed by the given account
@@ -96,6 +96,7 @@ namespace Tigwi.API.Controllers
         }
 
 
+        // TODO : need authentication when withPrivate = true
         protected Answer AnswerOwnedListsEitherPublicOrAll(Guid accountId, int numberOfLists, bool withPrivate)
         {
             // get the public lists owned by the given account

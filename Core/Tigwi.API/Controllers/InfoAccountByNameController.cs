@@ -7,12 +7,6 @@ namespace Tigwi.API.Controllers
 {
     public class InfoAccountByNameController : InfoAccountController
     {
-        // TEST
-        // GET: /infoaccount/test/{accountName}/{number}
-        public string Test(string accountName, int number)
-        {
-            return accountName + " " + number;
-        }
         
         //
         // GET: /infoaccount/messages/{accountName}/{number}
@@ -34,7 +28,6 @@ namespace Tigwi.API.Controllers
             return Serialize(output);
         }
 
-        /*
         //
         // GET: /infoaccount/taggedmessages/{accountName}/{number}
         public ActionResult TaggedMessages(string accountName, int number)
@@ -54,8 +47,7 @@ namespace Tigwi.API.Controllers
 
             return Serialize(output);
         }
-        */
-
+        
         
         //
         // GET : /infoaccount/subscriberaccounts/{accountName}/{number}
@@ -108,7 +100,6 @@ namespace Tigwi.API.Controllers
 
         //
         // GET : /infoaccount/subscribedaccounts/{accountName}/{number}
-        // [Authorize]
         public ActionResult SubscribedAccounts(string accountName, int number)
         {
             return SubscriptionsEitherPublicOrAll(accountName, number, true);
@@ -145,7 +136,6 @@ namespace Tigwi.API.Controllers
         
         //
         // GET : /infoaccount/subscribedlists/{accountName}/{number}
-        //[Authorize]
         public ActionResult SubscribedLists(string accountName, int number)
         {
             return SubscribedListsEitherPublicOrAll(accountName, number, true);
@@ -204,7 +194,6 @@ namespace Tigwi.API.Controllers
 
         //
         // GET : /infoaccount/ownedlists/{accountName}/{number}
-        //[Authorize]
         public ActionResult OwnedLists(string accountName, int number)
         {
             return OwnedListsEitherPublicOrAll(accountName, number, true);
@@ -213,7 +202,6 @@ namespace Tigwi.API.Controllers
 
         //
         // GET : /infoaccount/maininfo/{accountName}
-        //[Authorize]
         public ActionResult MainInfo(string accountName)
         {
             Answer output;

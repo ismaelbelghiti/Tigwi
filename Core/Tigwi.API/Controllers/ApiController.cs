@@ -4,6 +4,7 @@ using System.IO;
 using System.Web.Mvc;
 using System.Linq;
 using System.Xml.Serialization;
+using Tigwi.Auth;
 using Tigwi.Storage.Library;
 using Tigwi.API.Models;
 
@@ -15,12 +16,24 @@ namespace Tigwi.API.Controllers
         // Initialize storage when instanciating a controller
         protected ApiController ()
         {
-            Storage = new Storage.Library.Storage("sefero", "GU0GjvcPoXKzDFgBSPFbWmCPQrIRHAT6fholbMnxtteY5vQVgYTcWKk/25i/F4m9MFoGHXNf4oYgeAKo+mFO5Q==");
+            Storage = new Storage.Library.Storage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY");
         }
 
-        protected bool CheckAuthentification (string key)
+
+        // General methods used in any controller
+
+        protected bool CheckAuthentication(string key, Guid account)
         {
-            return true;
+            try
+            {
+                var user = (new ApiKeyAuth(Storage, key)).Authenticate();
+                var users = Storage.Account.GetUsers(account);
+                return users.Contains(user);
+            }
+            catch (AuthFailedException)
+            {
+                return false;
+            }
         }
 
         protected ContentResult Serialize(Answer output)
@@ -33,13 +46,12 @@ namespace Tigwi.API.Controllers
             return Content((new StreamReader(stream)).ReadToEnd());
         }
 
-        // Methods to build lists used in any controller
-        // TODO : modify to use foreach or LINQ
+        // Methods to build the lists to return
         protected static Accounts BuildAccountListFromGuidCollection(ICollection<Guid> hashAccounts, int size, IStorage storage)
         {
             var accounts = from accountId in hashAccounts.Take(size)
-                              let accountInfo = storage.Account.GetInfo(accountId)
-                              select new Account(accountId, accountInfo.Name, accountInfo.Description);
+                           let accountInfo = storage.Account.GetInfo(accountId)
+                           select new Account(accountId, accountInfo.Name, accountInfo.Description);
 
             return new Accounts(accounts.ToList());  
         }
