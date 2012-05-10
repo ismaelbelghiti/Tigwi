@@ -6,15 +6,6 @@ using System.Xml.Serialization;
 
 namespace Tigwi.API.Models
 {
-    // class useful for general request /createuser
-    [Serializable]
-    [XmlRootAttribute("User")]
-    public class NewUser
-    {
-        public string Login { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-    }
 
     // models to answer to requests
     [Serializable]
@@ -122,23 +113,43 @@ namespace Tigwi.API.Models
         public string Login { get; set; }
         public string Avatar { get; set; }
         public string Email { get; set; }
-        public string Id { get; set; } 
+        public string Id { get; set; }
     }
 
     [Serializable]
-    public class Users : Content
+    [XmlType("List")]
+    public class ListApi
     {
-        public Users() {}
-        public Users(List<User> listUsers)
+        public ListApi() { }
+        public ListApi(Guid id, string name)
         {
-            Size = listUsers.Count();
-            User = listUsers;
+            Id = id.ToString();
+            Name = name;
+        }
+
+        public string Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    [Serializable]
+    public class Lists : Content
+    {
+        public Lists()
+        {
+            List = new List<ListApi>();
+            Size = 0;
+        }
+        public Lists(List<ListApi> list)
+        {
+            List = list;
+            Size = list.Count();
         }
 
         [XmlAttribute]
-        public int Size;
+        public int Size { get; set; }
+
         [XmlElement]
-        public List<User> User;
+        public List<ListApi> List;
     }
 
     [Serializable]
@@ -178,7 +189,6 @@ namespace Tigwi.API.Models
     [XmlInclude(typeof(Accounts))]
     [XmlInclude(typeof(Lists))]
     [XmlInclude(typeof(User))]
-    [XmlInclude(typeof(Users))]
     [XmlInclude(typeof(ObjectCreated))]
     public class Answer
     {
