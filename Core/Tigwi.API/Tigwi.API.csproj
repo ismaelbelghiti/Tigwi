@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
+  <Import Project="..\..\ConnectionInfo.xml" Condition="Exists('..\..\ConnectionInfo.xml')" />
   <!-- Global/Default Configuration -->
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -165,8 +167,14 @@
   <Target Name="BeforeBuild">
   </Target> 
   -->
+  <Target Name="BeforeBuild" Condition=" '$(AzureStorageAccountKey)' != '' And '$(AzureStorageAccountName)' != '' And Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets')">
+    <FileUpdate Files="@(ConnectionFiles)" Regex="__AZURE_STORAGE_ACCOUNT_NAME" ReplacementText="$(AzureStorageAccountName)" />
+    <FileUpdate Files="@(ConnectionFiles)" Regex="__AZURE_STORAGE_ACCOUNT_KEY" ReplacementText="$(AzureStorageAccountKey)" />
+  </Target>
   <Target Name="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(ProjectDir)" />
+    <FileUpdate Files="@(ConnectionFiles)" Regex="$(AzureStorageAccountName)" ReplacementText="__AZURE_STORAGE_ACCOUNT_NAME" />
+    <FileUpdate Files="@(ConnectionFiles)" Regex="$(AzureStorageAccountKey.Replace('+','\+'))" ReplacementText="__AZURE_STORAGE_ACCOUNT_KEY" />
   </Target>
   <ProjectExtensions>
     <VisualStudio>
