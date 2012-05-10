@@ -1,5 +1,10 @@
 Tigwi - API Specification by L. de HARO, A. de MYTTENAERE and T. ZIMMERMANN 
 
+Notes :
+* Add short description of essential ressources.
+* Why should we need authentication to access accounts main infos ?
+* Currently, it is possible to subscribe a private list just knowing its Guid.
+
 #Get informations about an _account_
 
 ##Get someone's recently sent messages
@@ -42,13 +47,13 @@ Message format:
      </Message>
 
 Error type:  
-*In case an error occurs:
 
+* In case an error occurs:
 
     <Error Code="codeOfError"/>
 
 
-*Otherwise:
+* Otherwise:
    
     <Error/>
 

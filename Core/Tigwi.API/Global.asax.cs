@@ -13,12 +13,13 @@ namespace Tigwi.API
 			routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             // routes to InfoAccount and ModifyAccount
+            // TODO : add a manner to get the key
 
             routes.MapRoute("InfoAccountByName",
                             "account/{action}/name={accountName}/{number}",
                             new
                             {
-                                controller = "InfoAccountByName",
+                                controller = "InfoAccount",
                                 number = "20" // Par défaut le nombre de messages est 20
                             }
                 );
@@ -27,7 +28,7 @@ namespace Tigwi.API
                             "account/{action}/id={accountId}/{number}",
                             new
                             {
-                                controller = "InfoAccountById",
+                                controller = "InfoAccount",
                                 number = "20" // Par défaut le nombre de messages est 20
                             }
                 );
@@ -36,7 +37,7 @@ namespace Tigwi.API
                             "account/{action}/{accountName}/{number}",
                             new
                                 {
-                                    controller = "InfoAccountByName",
+                                    controller = "InfoAccount",
                                     number = "20" // Par défaut le nombre de messages est 20
                                 }
                 );
@@ -83,7 +84,7 @@ namespace Tigwi.API
                             "user/{action}/login={userLogin}/{number}",
                             new
                                 {
-                                    controller = "InfoUserByLogin",
+                                    controller = "InfoUser",
                                     number = "20"
                                 }
                 );
@@ -92,7 +93,7 @@ namespace Tigwi.API
                             "user/{action}/id={userId}/{number}",
                             new
                             {
-                                controller = "InfoUserById",
+                                controller = "InfoUser",
                                 number = "20"
                             }
                 );
@@ -101,7 +102,7 @@ namespace Tigwi.API
                             "user/{action}/{userLogin}/{number}",
                             new
                             {
-                                controller = "InfoUserByLogin",
+                                controller = "InfoUser",
                                 number = "20"
                             }
                 );
