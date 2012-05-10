@@ -36,6 +36,7 @@ namespace Tigwi.API.Controllers
             }
         }
 
+        // TODO : look at IDisposable
         protected ContentResult Serialize(Answer output)
         {
             // a stream is needed for serialization

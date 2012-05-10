@@ -135,6 +135,8 @@ namespace Tigwi.API.Controllers
         // POST : /account/tag
 
         // TODO : Authorize
+        // TODO : Rethink this method
+        /*
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Tag()
         {
@@ -170,11 +172,14 @@ namespace Tigwi.API.Controllers
 
             return Serialize(new Answer(error));
         }
-
+        */
+        
         //
         // POST : /account/untag
 
         // TODO : Authorize
+        // TODO : Rethink this method
+        /*
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Untag()
         {
@@ -210,7 +215,8 @@ namespace Tigwi.API.Controllers
 
             return Serialize(new Answer(error));
         }
-
+        */
+        
         //
         // POST : /account/subscribelist
 
