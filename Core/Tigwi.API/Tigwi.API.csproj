@@ -92,7 +92,6 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\InfoAccountByIdController.cs" />
     <Compile Include="Controllers\InfoAccountByNameController.cs" />
@@ -100,14 +99,12 @@
     <Compile Include="Controllers\InfoUserByLoginController.cs" />
     <Compile Include="Controllers\InfoUserController.cs" />
     <Compile Include="Controllers\ModifyListController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InfoAccountController.cs" />
     <Compile Include="Controllers\InfoListController.cs" />
     <Compile Include="Controllers\ModifyAccountController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\ConvertObjects.cs" />
     <Compile Include="Models\InfoAccountModel.cs" />
     <Compile Include="Models\InfoListModel.cs" />
@@ -126,33 +123,15 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Content\Site.css" />
-    <Content Include="Scripts\jquery-1.4.1.js" />
-    <Content Include="Scripts\jquery-1.4.1.min.js" />
-    <Content Include="Scripts\jquery-1.4.1-vsdoc.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\MicrosoftAjax.js" />
-    <Content Include="Scripts\MicrosoftAjax.debug.js" />
-    <Content Include="Scripts\MicrosoftMvcAjax.js" />
-    <Content Include="Scripts\MicrosoftMvcAjax.debug.js" />
-    <Content Include="Scripts\MicrosoftMvcValidation.js" />
-    <Content Include="Scripts\MicrosoftMvcValidation.debug.js" />
-    <Content Include="Views\Account\ChangePassword.aspx" />
-    <Content Include="Views\Account\ChangePasswordSuccess.aspx" />
-    <Content Include="Views\Account\LogOn.aspx" />
-    <Content Include="Views\Account\Register.aspx" />
-    <Content Include="Views\Home\About.aspx" />
-    <Content Include="Views\Home\Index.aspx" />
-    <Content Include="Views\Shared\Error.aspx" />
-    <Content Include="Views\Shared\LogOnUserControl.ascx" />
-    <Content Include="Views\Shared\Site.Master" />
-    <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Tigwi.Auth\Tigwi.Auth.csproj">
+      <Project>{BFB5FCE1-E4A1-4527-8345-77C0A32BFD60}</Project>
+      <Name>Tigwi.Auth</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Tigwi.Storage.Library\Tigwi.Storage.Library.csproj">
       <Project>{2C5E15F5-0DF9-4D0A-AB8F-FB8FEC5B25E8}</Project>
       <Name>Tigwi.Storage.Library</Name>
