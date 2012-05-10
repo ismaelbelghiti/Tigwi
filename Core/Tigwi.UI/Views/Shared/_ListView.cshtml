@@ -34,12 +34,38 @@
             @Html.Raw("], ");
         }
         };
+
+        $(document).ready(function () {
+            $('.checkboxfilter').change(
+			function () {
+			    for (var user in lists)
+                {
+                    var mustShow = false;
+                    for (var list in lists[user])
+                    {
+                        if ($('#checkBox-' + lists[user][list])[0].checked)
+                        {
+						mustShow = true;
+                        }
+                    }
+                    if (mustShow)
+                    {
+                        $('.poster-' + user).show();
+                    }
+                    else
+                    {
+                        $('.poster-' + user).hide();
+                    }
+				}
+            }
+            );
+        });
     </script>
 
     @foreach (var list in Model)
     {
         <li>
-            <input type="checkbox" checked="true" id="checkBox-@list.Id" />
+            <input type="checkbox" checked="true" id="checkBox-@list.Id" class="checkboxfilter"/>
             <a class="accordion-toggle" data-toggle="collapse" href="#list-@list.Id">
                 <i class="icon-folder-close"></i> @list.Name
             </a>
