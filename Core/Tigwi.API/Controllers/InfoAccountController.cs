@@ -10,9 +10,9 @@ namespace Tigwi.API.Controllers
     {
 
         //
-        // GET: /infoaccount/messages/{accountName}/{number}
-        // GET: /infoaccount/messages/name={accountName}/{number}
-        // GET: /infoaccount/messages/id={accountId}/{number}
+        // GET: /account/messages/{accountName}/{number}
+        // GET: /account/messages/name={accountName}/{number}
+        // GET: /account/messages/id={accountId}/{number}
         public ActionResult Messages(string accountName, Guid? accountId, int number)
         {
             Answer output;
@@ -42,9 +42,9 @@ namespace Tigwi.API.Controllers
         // TODO : The following method isn't documented.
         
         //
-        // GET: /infoaccount/taggedmessages/{accountName}/{number}
-        // GET: /infoaccount/taggedmessages/name={accountName}/{number}
-        // GET: /infoaccount/taggedmessages/id={accountId}/{number}
+        // GET: /account/taggedmessages/{accountName}/{number}
+        // GET: /account/taggedmessages/name={accountName}/{number}
+        // GET: /account/taggedmessages/id={accountId}/{number}
         public ActionResult TaggedMessages(string accountName, Guid? accountId, int number)
         {
             Answer output;
@@ -72,9 +72,9 @@ namespace Tigwi.API.Controllers
 
 
         //
-        // GET : /infoaccount/subscriberaccounts/{accountName}/{number}
-        // GET: /infoaccount/subscriberaccounts/name={accountName}/{number}
-        // GET: /infoaccount/subscriberaccounts/id={accountId}/{number}
+        // GET : /account/subscriberaccounts/{accountName}/{number}
+        // GET: /account/subscriberaccounts/name={accountName}/{number}
+        // GET: /account/subscriberaccounts/id={accountId}/{number}
         public ActionResult SubscribersAccounts(string accountName, Guid? accountId, int number)
         {
             Answer output;
@@ -93,7 +93,7 @@ namespace Tigwi.API.Controllers
 
                 // Get as many subscribers as possible (maximum: number)
                 var size = Math.Min(hashFollowers.Count, number);
-                var accountListToReturn = BuildAccountListFromGuidCollection(hashFollowers, size, Storage);
+                var accountListToReturn = AccountsFromGuidCollection(hashFollowers, size, Storage);
 
                 output = new Answer(accountListToReturn);
             }
@@ -109,9 +109,9 @@ namespace Tigwi.API.Controllers
 
         
         //
-        // GET : /infoaccount/subscribedaccounts/{accountName}/{number}
-        // GET: /infoaccount/subscribedaccounts/name={accountName}/{number}
-        // GET: /infoaccount/subscribedaccounts/id={accountId}/{number}
+        // GET : /account/subscribedaccounts/{accountName}/{number}
+        // GET: /account/subscribedaccounts/name={accountName}/{number}
+        // GET: /account/subscribedaccounts/id={accountId}/{number}
         public ActionResult SubscribedAccounts(string accountName, Guid? accountId, int number, string key)
         {
             Answer output;
@@ -133,7 +133,7 @@ namespace Tigwi.API.Controllers
 
                 // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
                 var size = Math.Min(accountsInLists.Count, number);
-                var accountListToReturn = BuildAccountListFromGuidCollection(accountsInLists, size, Storage);
+                var accountListToReturn = AccountsFromGuidCollection(accountsInLists, size, Storage);
 
                 output = new Answer(accountListToReturn);
             }
@@ -149,9 +149,9 @@ namespace Tigwi.API.Controllers
 
 
         //
-        // GET : /infoaccount/subscribedlists/{accountName}/{number}
-        // GET: /infoaccount/subscribedlists/name={accountName}/{number}
-        // GET: /infoaccount/subscribedlists/id={accountId}/{number}
+        // GET : /account/subscribedlists/{accountName}/{number}
+        // GET: /account/subscribedlists/name={accountName}/{number}
+        // GET: /account/subscribedlists/id={accountId}/{number}
         public ActionResult SubscribedListsEitherPublicOrAll(string accountName, Guid? accountId, int number, string key)
         {
             Answer output;
@@ -168,7 +168,7 @@ namespace Tigwi.API.Controllers
 
                 // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
                 var size = Math.Min(followedLists.Count, number);
-                var listsToReturn = BuildListsFromGuidCollection(followedLists, size, Storage);
+                var listsToReturn = ListsFromGuidCollection(followedLists, size, Storage);
 
                 output = new Answer(listsToReturn);
             }
@@ -184,9 +184,9 @@ namespace Tigwi.API.Controllers
 
 
         //
-        // GET : /infoaccount/subscriberlists/{accountName}/{number}
-        // GET: /infoaccount/subscriberlists/name={accountName}/{number}
-        // GET: /infoaccount/subscriberlists/id={accountId}/{number}
+        // GET : /account/subscriberlists/{accountName}/{number}
+        // GET: /account/subscriberlists/name={accountName}/{number}
+        // GET: /account/subscriberlists/id={accountId}/{number}
         public ActionResult SubscriberLists(string accountName, Guid? accountId, int number)
         {
             Answer output;
@@ -200,7 +200,7 @@ namespace Tigwi.API.Controllers
 
                 // Get as many subscribers as possible (maximum: number)
                 var size = Math.Min(followingLists.Count, number);
-                var accountListToReturn = BuildAccountListFromGuidCollection(followingLists, size, Storage);
+                var accountListToReturn = AccountsFromGuidCollection(followingLists, size, Storage);
 
                 output = new Answer(accountListToReturn);
             }
@@ -216,9 +216,9 @@ namespace Tigwi.API.Controllers
 
 
         //
-        // GET : /infoaccount/ownedlists/{accountName}/{number}
-        // GET: /infoaccount/ownedlists/name={accountName}/{number}
-        // GET: /infoaccount/ownedlists/id={accountId}/{number}
+        // GET : /account/ownedlists/{accountName}/{number}
+        // GET: /account/ownedlists/name={accountName}/{number}
+        // GET: /account/ownedlists/id={accountId}/{number}
         public ActionResult OwnedListsEitherPublicOrAll(string accountName, Guid? accountId, int number, string key)
         {
             Answer output;
@@ -235,7 +235,7 @@ namespace Tigwi.API.Controllers
 
                 // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
                 var size = Math.Min(ownedLists.Count, number);
-                var listsToReturn = BuildListsFromGuidCollection(ownedLists, size, Storage);
+                var listsToReturn = ListsFromGuidCollection(ownedLists, size, Storage);
 
                 output = new Answer(listsToReturn);
             }
@@ -251,9 +251,9 @@ namespace Tigwi.API.Controllers
 
 
         //
-        // GET : /infoaccount/maininfo/{accountName}
-        // GET: /infoaccount/maininfo/name={accountName}/{number}
-        // GET: /infoaccount/maininfo/id={accountId}/{number}
+        // GET : /account/maininfo/{accountName}
+        // GET: /account/maininfo/name={accountName}/{number}
+        // GET: /account/maininfo/id={accountId}/{number}
         public ActionResult MainInfo(string accountName, Guid? accountId)
         {
             Answer output;

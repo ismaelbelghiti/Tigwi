@@ -9,7 +9,7 @@ namespace Tigwi.API.Controllers
     public class ModifyListController : ApiController
     {
         //
-        // POST : /modifylist/subscribeaccount/
+        // POST : /list/subscribeaccount/
 
         // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
@@ -49,7 +49,7 @@ namespace Tigwi.API.Controllers
         }
 
         //
-        // POST : /modifylist/unsubscribeaccount/
+        // POST : /list/unsubscribeaccount/
 
         // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]

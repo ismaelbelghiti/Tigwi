@@ -36,6 +36,7 @@ namespace Tigwi.API.Controllers
             }
         }
 
+        // TODO : look at IDisposable
         protected ContentResult Serialize(Answer output)
         {
             // a stream is needed for serialization
@@ -47,7 +48,7 @@ namespace Tigwi.API.Controllers
         }
 
         // Methods to build the lists to return
-        protected static Accounts BuildAccountListFromGuidCollection(ICollection<Guid> hashAccounts, int size, IStorage storage)
+        protected static Accounts AccountsFromGuidCollection(ICollection<Guid> hashAccounts, int size, IStorage storage)
         {
             var accounts = from accountId in hashAccounts.Take(size)
                            let accountInfo = storage.Account.GetInfo(accountId)
@@ -56,7 +57,7 @@ namespace Tigwi.API.Controllers
             return new Accounts(accounts.ToList());  
         }
 
-        protected static Lists BuildListsFromGuidCollection(ICollection<Guid> hashLists, int size, IStorage storage )
+        protected static Lists ListsFromGuidCollection(ICollection<Guid> hashLists, int size, IStorage storage )
         {
             var lists = from listId in hashLists.Take(size)
                         select new ListApi(listId, storage.List.GetInfo(listId).Name);
