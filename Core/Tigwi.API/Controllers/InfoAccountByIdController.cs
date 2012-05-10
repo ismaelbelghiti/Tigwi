@@ -7,22 +7,16 @@ namespace Tigwi.API.Controllers
 {
     public class InfoAccountByIdController : InfoAccountController
     {
-        // TEST
-        // GET: /infoaccountbyid/test/{accountId}
-        public string Test(Guid accountId)
-        {
-            return accountId + " accessed test successfully !";
-        }
 
         //
         // GET: /infoaccount/messages/{accountId}/{number}
-        public ActionResult Messages(Guid accountId, int number)
+        public ActionResult Messages(Guid? accountId, int number)
         {
             Answer output;
 
             try
             {
-                output = AnswerMessages(accountId, number);
+                output = accountId == null ? new Answer(new Error("Not a valid Guid")) : AnswerMessages(accountId.GetValueOrDefault(), number);
             }
 
             catch (StorageLibException exception)
