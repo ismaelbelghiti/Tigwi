@@ -34,6 +34,17 @@
         {
         }
 
+        public HomeController(IStorage storage)
+        {
+            if (storage == null)
+            {
+                return;
+            }
+
+            this.rawStorage = storage;
+            this.storage = new StorageContext(storage);
+        }
+
         public HomeController(IStorageContext storageContext)
         {
             this.storage = storageContext;
@@ -41,11 +52,11 @@
 
         #endregion
 
-        private static IStorageContext MakeStorage(string accountName, string accountKey)
+        private static IStorage MakeStorage(string accountName, string accountKey)
         {
             try
             {
-                return new StorageContext(new Storage(accountName, accountKey));
+                return new Storage(accountName, accountKey);
             }
             catch (FormatException)
             {
@@ -170,10 +181,35 @@
                         this.Session["Storage"] = new MockStorage();
                     }
 
-                    this.storage = new StorageContext(this.Session["Storage"] as IStorage);
+                    var storageContext = new StorageContext(this.Session["Storage"] as IStorage);
+                    this.rawStorage = storageContext.StorageObj;
+                    this.storage = storageContext;
                 }
 
                 return this.storage;
+            }
+        }
+
+        private IStorage rawStorage;
+
+        protected IStorage RawStorage
+        {
+            get
+            {
+                // Berk
+                if (this.rawStorage == null)
+                {
+                    if (this.Session["Storage"] == null)
+                    {
+                        this.Session["Storage"] = new MockStorage();
+                    }
+
+                    var storageContext = new StorageContext(this.Session["Storage"] as IStorage);
+                    this.rawStorage = storageContext.StorageObj;
+                    this.storage = storageContext;
+                }
+
+                return this.rawStorage;
             }
         }
 
