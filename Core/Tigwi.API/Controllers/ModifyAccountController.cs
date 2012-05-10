@@ -9,7 +9,7 @@ namespace Tigwi.API.Controllers
     public class ModifyAccountController : ApiController
     {
         //
-        // POST : /modifyaccount/write
+        // POST : /account/write
 
         // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
@@ -49,7 +49,7 @@ namespace Tigwi.API.Controllers
         }
 
         // TODO : explain is specs : Is copying like retweeting ?
-        // POST : /modifyaccount/copy
+        // POST : /account/copy
 
         // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
@@ -88,40 +88,51 @@ namespace Tigwi.API.Controllers
             return Serialize(output);
         }
 
-        // TODO : continue adding checkings beyond this point
-
         //
-        // POST : /modifyaccount/delete
-
+        // POST : /account/delete
+        
         // TODO : Authorize
+        // TODO : Rethink this method
+        /*
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Delete()
         {
             Error error;
 
-            var msg = (MsgToDelete)(new XmlSerializer(typeof(MsgToDelete))).Deserialize(Request.InputStream);
-
             try
             {
-                //TODO: find out how to use this information, if necessary (?)
-                //var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
+                var msg = (MsgToDelete) (new XmlSerializer(typeof (MsgToDelete))).Deserialize(Request.InputStream);
 
-                Storage.Msg.Remove(msg.MessageId.GetValueOrDefault());
+                if (msg.AccountId == null && msg.AccountName == null)
+                    error = new Error("AccountId or AccountName missing");
+                else if (msg.MessageId == null)
+                    error = new Error("MessageId missing");
+                else
+                {
+                    var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
 
-                // Result is an empty error XML element
-                error = new Error();
+                    Storage.Msg.Remove(msg.MessageId.GetValueOrDefault());
+
+                    // Result is an empty error XML element
+                    error = new Error();
+                }
             }
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
                 error = new Error(exception.Code.ToString());
             }
+            catch (InvalidOperationException exception)
+            {
+                error = new Error(exception.Message + " " + exception.InnerException.Message);
+            }
 
             return Serialize(new Answer(error));
         }
+        */
 
         //
-        // POST : /modifyaccount/tag
+        // POST : /account/tag
 
         // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
@@ -129,28 +140,39 @@ namespace Tigwi.API.Controllers
         {
             Error error;
 
-            var msg = (Tag)(new XmlSerializer(typeof(Tag))).Deserialize(Request.InputStream);
-
             try
             {
-                var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
+                var msg = (Tag) (new XmlSerializer(typeof (Tag))).Deserialize(Request.InputStream);
 
-                Storage.Msg.Tag(accountId, msg.MessageId.GetValueOrDefault());
+                if (msg.AccountId == null && msg.AccountName == null)
+                    error = new Error("AccountId or AccountName missing");
+                else if (msg.MessageId == null)
+                    error = new Error("MessageId missing");
+                else
+                {
+                    var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
 
-                //Result is an empty error
-                error = new Error();
+                    Storage.Msg.Tag(accountId, msg.MessageId.GetValueOrDefault());
+
+                    //Result is an empty error
+                    error = new Error();
+                }
             }
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
                 error = new Error(exception.Code.ToString());
             }
+            catch (InvalidOperationException exception)
+            {
+                error = new Error(exception.Message + " " + exception.InnerException.Message);
+            }
 
             return Serialize(new Answer(error));
         }
 
         //
-        // POST : /modifyaccount/untag
+        // POST : /account/untag
 
         // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
@@ -158,28 +180,39 @@ namespace Tigwi.API.Controllers
         {
             Error error;
 
-            var msg = (Untag)(new XmlSerializer(typeof(Untag))).Deserialize(Request.InputStream);
-
             try
             {
-                var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
+                var msg = (Untag) (new XmlSerializer(typeof (Untag))).Deserialize(Request.InputStream);
 
-                Storage.Msg.Untag(accountId, msg.MessageId.GetValueOrDefault());
+                if (msg.AccountId == null && msg.AccountName == null)
+                    error = new Error("AccountId or AccountName missing");
+                else if (msg.MessageId == null)
+                    error = new Error("MessageId missing");
+                else
+                {
+                    var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
 
-                //Result is an empty error
-                error = new Error();
+                    Storage.Msg.Untag(accountId, msg.MessageId.GetValueOrDefault());
+
+                    //Result is an empty error
+                    error = new Error();
+                }
             }
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
                 error = new Error(exception.Code.ToString());
             }
+            catch (InvalidOperationException exception)
+            {
+                error = new Error(exception.Message + " " + exception.InnerException.Message);
+            }
 
             return Serialize(new Answer(error));
         }
 
         //
-        // POST : /modifyaccount/subscribelist
+        // POST : /account/subscribelist
 
         // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
@@ -187,28 +220,40 @@ namespace Tigwi.API.Controllers
         {
             Error error;
 
-            var subscribe = (SubscribeList)(new XmlSerializer(typeof(SubscribeList))).Deserialize(Request.InputStream);
-
             try
             {
-                var accountId = subscribe.AccountId ?? Storage.Account.GetId(subscribe.AccountName);
+                var subscribe =
+                    (SubscribeList) (new XmlSerializer(typeof (SubscribeList))).Deserialize(Request.InputStream);
 
-                Storage.List.Follow(subscribe.Subscription.GetValueOrDefault(), accountId);
+                if (subscribe.AccountId == null && subscribe.AccountName == null)
+                    error = new Error("AccountId or AccountName missing");
+                else if (subscribe.Subscription == null)
+                    error = new Error("Subscription missing");
+                else
+                {
+                    var accountId = subscribe.AccountId ?? Storage.Account.GetId(subscribe.AccountName);
 
-                // Result is an empty error XML element
-                error = new Error();
+                    Storage.List.Follow(subscribe.Subscription.GetValueOrDefault(), accountId);
+
+                    // Result is an empty error XML element
+                    error = new Error();
+                }
             }
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
                 error = new Error(exception.Code.ToString());
             }
+            catch (InvalidOperationException exception)
+            {
+                error = new Error(exception.Message + " " + exception.InnerException.Message);
+            }
 
             return Serialize(new Answer(error));
         }
 
         //
-        // POST /modifyaccount/createlist
+        // POST /account/createlist
 
         // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
@@ -216,23 +261,39 @@ namespace Tigwi.API.Controllers
         {
             Answer output;
 
-            var listCreation = (CreateList)(new XmlSerializer(typeof(CreateList))).Deserialize(Request.InputStream);
-
             try
             {
-                var accountId = listCreation.AccountId ?? Storage.Account.GetId(listCreation.AccountName);
-                var listToCreate = listCreation.ListInfo;
+                var listCreation =
+                    (CreateList) (new XmlSerializer(typeof (CreateList))).Deserialize(Request.InputStream);
 
-                var listId = Storage.List.Create(accountId, listToCreate.Name, listToCreate.Description,
-                                    listToCreate.IsPrivate);
+                if (listCreation.AccountId == null && listCreation.AccountName == null)
+                    output = new Answer(new Error("AccountId or AccountName missing"));
+                else if (listCreation.ListInfo == null)
+                    output = new Answer(new Error("ListInfo missing"));
+                else if (listCreation.ListInfo.Name == null) // TODO : More checks on Name
+                    output = new Answer(new Error("Name missing"));
+                else if (listCreation.ListInfo.Description == null) // TODO : More checks on Description
+                    output = new Answer(new Error("Description missing"));
+                else
+                {
+                    var accountId = listCreation.AccountId ?? Storage.Account.GetId(listCreation.AccountName);
+                    var listToCreate = listCreation.ListInfo;
 
-                // Result is an empty error XML element
-                output = new Answer(new ObjectCreated(listId));
+                    var listId = Storage.List.Create(accountId, listToCreate.Name, listToCreate.Description,
+                                                     listToCreate.IsPrivate);
+
+                    // Result is an empty error XML element
+                    output = new Answer(new ObjectCreated(listId));
+                }
             }
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
                 output = new Answer(new Error(exception.Code.ToString()));
+            }
+            catch (InvalidOperationException exception)
+            {
+                output = new Answer(new Error(exception.Message + " " + exception.InnerException.Message));
             }
 
             return Serialize(output);
