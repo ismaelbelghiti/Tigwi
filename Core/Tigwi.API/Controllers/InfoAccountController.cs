@@ -107,20 +107,21 @@ namespace Tigwi.API.Controllers
             return Serialize(output);
         }
 
-
-        // TODO : need authentication when withPrivate = true
         
         //
         // GET : /infoaccount/subscribedaccounts/{accountName}/{number}
         // GET: /infoaccount/subscribedaccounts/name={accountName}/{number}
         // GET: /infoaccount/subscribedaccounts/id={accountId}/{number}
-        public ActionResult SubscribedAccounts(string accountName, Guid? accountId, int number, bool withPrivate)
+        public ActionResult SubscribedAccounts(string accountName, Guid? accountId, int number, string key)
         {
             Answer output;
 
             try
             {
                 var realId = accountId ?? Storage.Account.GetId(accountName);
+
+                // we check if the user is authenticated and authorized to know whether to show private lists
+                var withPrivate = CheckAuthentication(key, realId);
 
                 // get the public lists followed by the given account
                 var followedLists = Storage.List.GetAccountFollowedLists(realId, withPrivate);
@@ -147,19 +148,20 @@ namespace Tigwi.API.Controllers
         }
 
 
-        // TODO : need authentication when withPrivate = true
-
         //
         // GET : /infoaccount/subscribedlists/{accountName}/{number}
         // GET: /infoaccount/subscribedlists/name={accountName}/{number}
         // GET: /infoaccount/subscribedlists/id={accountId}/{number}
-        public ActionResult SubscribedListsEitherPublicOrAll(string accountName, Guid? accountId, int number, bool withPrivate)
+        public ActionResult SubscribedListsEitherPublicOrAll(string accountName, Guid? accountId, int number, string key)
         {
             Answer output;
 
             try
             {
                 var realId = accountId ?? Storage.Account.GetId(accountName);
+
+                // we check if the user is authenticated and authorized to know whether to show private lists
+                var withPrivate = CheckAuthentication(key, realId);
 
                 // get the public lists followed by the given account
                 var followedLists = Storage.List.GetAccountFollowedLists(realId, withPrivate);
@@ -213,19 +215,20 @@ namespace Tigwi.API.Controllers
         }
 
 
-        // TODO : need authentication when withPrivate = true
-
         //
         // GET : /infoaccount/ownedlists/{accountName}/{number}
         // GET: /infoaccount/ownedlists/name={accountName}/{number}
         // GET: /infoaccount/ownedlists/id={accountId}/{number}
-        public ActionResult OwnedListsEitherPublicOrAll(string accountName, Guid? accountId, int number, bool withPrivate)
+        public ActionResult OwnedListsEitherPublicOrAll(string accountName, Guid? accountId, int number, string key)
         {
             Answer output;
 
             try
             {
                 var realId = accountId ?? Storage.Account.GetId(accountName);
+
+                // we check if the user is authenticated and authorized to know whether to show private lists
+                var withPrivate = CheckAuthentication(key, realId);
 
                 // get the public lists owned by the given account
                 var ownedLists = Storage.List.GetAccountOwnedLists(realId, withPrivate);
