@@ -47,14 +47,21 @@ namespace Tigwi.UI.Models.Storage
             this.users = new UserCollectionAdapter(this.Storage, this.StorageContext, this);
 
             // Bunch of list adapters
+            Action<StorageListModel> add = list => this.Storage.List.Add(list.Id, this.Id);
+            Action<StorageListModel> remove = list => this.Storage.List.Remove(list.Id, this.Id);
+            Action<StorageListModel> follow = list => this.Storage.List.Follow(list.Id, this.Id);
+            Action<StorageListModel> unfollow = list => this.Storage.List.Unfollow(list.Id, this.Id);
             this.allFollowedLists =
-                this.MakeListCollection(() => this.Storage.List.GetAccountFollowedLists(this.Id, true));
-            this.allOwnedLists = this.MakeListCollection(() => this.Storage.List.GetAccountOwnedLists(this.Id, true));
-            this.memberLists = this.MakeListCollection(() => this.Storage.List.GetFollowingLists(this.Id));
+                this.MakeListCollection(() => this.Storage.List.GetAccountFollowedLists(this.Id, true), follow, unfollow);
+            this.allOwnedLists = this.MakeListCollection(
+                () => this.Storage.List.GetAccountOwnedLists(this.Id, true),
+                list => { throw new NotImplementedException(); },
+                list => { throw new NotImplementedException(); });
+            this.memberLists = this.MakeListCollection(() => this.Storage.List.GetFollowingLists(this.Id), add, remove);
             this.publicFollowedLists =
-                this.MakeListCollection(() => this.Storage.List.GetAccountFollowedLists(this.Id, false));
+                this.MakeListCollection(() => this.Storage.List.GetAccountFollowedLists(this.Id, false), follow, unfollow);
             this.publicOwnedLists = this.MakeListCollection(
-                () => this.Storage.List.GetAccountOwnedLists(this.Id, false));
+                () => this.Storage.List.GetAccountOwnedLists(this.Id, false), add, remove);
         }
 
         #endregion
@@ -326,9 +333,9 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        private ListCollectionAdapter MakeListCollection(Func<ICollection<Guid>> func)
+        private ListCollectionAdapter MakeListCollection(Func<ICollection<Guid>> func, Action<StorageListModel> add, Action<StorageListModel> remove)
         {
-            return new ListCollectionAdapter(this.Storage, this.StorageContext, this, func);
+            return new ListCollectionAdapter(this.Storage, this.StorageContext, this, func, add, remove);
         }
 
         #endregion
@@ -342,13 +349,21 @@ namespace Tigwi.UI.Models.Storage
                 IStorage storage, 
                 StorageContext storageContext, 
                 StorageAccountModel account, 
-                Func<ICollection<Guid>> idCollectionFetcher)
+                Func<ICollection<Guid>> idCollectionFetcher,
+                Action<StorageListModel> realAdd,
+                Action<StorageListModel> realRemove)
                 : base(storage, storageContext, account, idCollectionFetcher, list => list.Id)
             {
                 this.GetModel = storageContext.InternalLists.InternalFind;
+                this.SaveAdd = realAdd;
+                this.SaveRemove = realRemove;
             }
 
             #endregion
+
+            protected Action<StorageListModel> SaveAdd { get; set; }
+
+            protected Action<StorageListModel> SaveRemove { get; set; }
 
             #region Methods
 
@@ -361,7 +376,8 @@ namespace Tigwi.UI.Models.Storage
                             this.CollectionAdded.Where(item => item.Value && !item.Key.Deleted).Select(item => item.Key)
                         )
                     {
-                        this.Storage.List.Add(list.Id, this.Parent.Id);
+                        this.SaveAdd(list);
+                        // this.Storage.List.Add(list.Id, this.Parent.Id);
                     }
 
                     foreach (
@@ -370,7 +386,8 @@ namespace Tigwi.UI.Models.Storage
                                 item => item.Key))
                     {
                         // TODO: check we are not removing the personal list ?
-                        this.Storage.List.Remove(list.Id, this.Parent.Id);
+                        this.SaveRemove(list);
+                        // this.Storage.List.Remove(list.Id, this.Parent.Id);
                     }
                 }
 

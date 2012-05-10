@@ -64,14 +64,6 @@ namespace Tigwi.API.Controllers
             return new Lists(lists.ToList());
         }
 
-        protected static Users BuilUserListFormGuidCollection(ICollection<Guid> hashUsers, int size, IStorage storage)
-        {
-            var users = from userId in hashUsers.Take(size)
-                        select new User(storage.User.GetInfo(userId), userId);
-
-            return new Users(users.ToList()); 
-        }
-        
         protected IStorage Storage;
 
     }

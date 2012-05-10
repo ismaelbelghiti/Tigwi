@@ -69,8 +69,10 @@
                             this.Storage, 
                             this.StorageContext, 
                             this, 
-                            () => this.Storage.List.GetFollowingAccounts(this.Id), 
-                            account =>
+                            () => this.Storage.List.GetFollowingAccounts(this.Id),
+                            realAdd: account => this.Storage.List.Follow(this.Id, account.Id),
+                            realRemove: account => this.Storage.List.Unfollow(this.Id, account.Id),
+                            reverseAdd: account =>
                                 {
                                     account.InternalAllFollowedLists.CacheAdd(this);
                                     if (!this.IsPrivate)
@@ -78,7 +80,7 @@
                                         account.InternalPublicFollowedLists.CacheAdd(this);
                                     }
                                 },
-                            account =>
+                            reverseRemove: account =>
                                 {
                                     account.InternalAllFollowedLists.CacheRemove(this);
                                     if (!this.IsPrivate)
@@ -129,8 +131,10 @@
                             this.StorageContext, 
                             this, 
                             () => this.Storage.List.GetAccounts(this.Id), 
-                            account => account.InternalMemberOfLists.CacheAdd(this), 
-                            account => account.InternalMemberOfLists.CacheRemove(this)));
+                            realAdd: account => this.Storage.List.Add(this.Id, account.Id),
+                            realRemove: account => this.Storage.List.Remove(this.Id, account.Id),
+                            reverseAdd: account => account.InternalMemberOfLists.CacheAdd(this), 
+                            reverseRemove: account => account.InternalMemberOfLists.CacheRemove(this)));
             }
         }
 
@@ -253,12 +257,16 @@
                 IStorage storage, 
                 StorageContext storageContext, 
                 StorageListModel parent, 
-                Func<ICollection<Guid>> fetchIdCollection, 
+                Func<ICollection<Guid>> fetchIdCollection,
+                Action<StorageAccountModel> realAdd,
+                Action<StorageAccountModel> realRemove,
                 Action<StorageAccountModel> reverseAdd, 
                 Action<StorageAccountModel> reverseRemove)
                 : base(storage, storageContext, parent, fetchIdCollection, account => account.Id)
             {
                 this.GetModel = storageContext.InternalAccounts.InternalFind;
+                this.SaveAdd = realAdd;
+                this.SaveRemove = realRemove;
                 this.DoReverseAdd = reverseAdd;
                 this.DoReverseRemove = reverseRemove;
             }
@@ -266,6 +274,10 @@
             #endregion
 
             #region Properties
+
+            protected Action<StorageAccountModel> SaveAdd { get; set; }
+
+            protected Action<StorageAccountModel> SaveRemove { get; set; }
 
             protected Action<StorageAccountModel> DoReverseAdd { get; set; }
 
@@ -281,12 +293,14 @@
                 {
                     foreach (var accountAdded in this.CollectionAdded.Where(item => item.Value && !item.Key.Deleted).Select(item => item.Key))
                     {
-                        this.Storage.List.Add(this.Parent.Id, accountAdded.Id);
+                        this.SaveAdd(accountAdded);
+                        // this.Storage.List.Add(this.Parent.Id, accountAdded.Id);
                     }
 
                     foreach (var accountRemoved in this.CollectionRemoved.Where(item => item.Value && !item.Key.Deleted).Select(item => item.Key))
                     {
-                        this.Storage.List.Remove(this.Parent.Id, accountRemoved.Id);
+                        this.SaveRemove(accountRemoved);
+                        // this.Storage.List.Remove(this.Parent.Id, accountRemoved.Id);
                     }
                 }
 
