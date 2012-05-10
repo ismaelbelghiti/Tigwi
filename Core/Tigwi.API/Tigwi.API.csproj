@@ -102,9 +102,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ConvertObjects.cs" />
-    <Compile Include="Models\InfoAccountModel.cs" />
-    <Compile Include="Models\InfoListModel.cs" />
-    <Compile Include="Models\InfoUserModel.cs" />
     <Compile Include="Models\ModifyListModel.cs" />
     <Compile Include="Models\ModifyAccountModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -118,7 +115,6 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Content\Site.css" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

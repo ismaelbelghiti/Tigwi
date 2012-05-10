@@ -11,7 +11,7 @@ namespace Tigwi.API.Controllers
         //
         // POST : /modifylist/subscribeaccount/
 
-        //[Authorize]
+        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult SubscribeAccount()
         {
@@ -20,7 +20,7 @@ namespace Tigwi.API.Controllers
             try
             {
                 var subscribeAccount =
-                    (ListAndAccount) (new XmlSerializer(typeof (ListAndAccount))).Deserialize(Request.InputStream);
+                    (ListAndAccount)(new XmlSerializer(typeof(ListAndAccount))).Deserialize(Request.InputStream);
 
                 if (subscribeAccount.Account == null)
                     error = new Error("Account missing");
@@ -28,20 +28,17 @@ namespace Tigwi.API.Controllers
                     error = new Error("List missing");
                 else
                 {
-                    try
-                    {
-                        var accountId = Storage.Account.GetId(subscribeAccount.Account);
-                        Storage.List.Add(subscribeAccount.List.GetValueOrDefault(), accountId);
+                    var accountId = Storage.Account.GetId(subscribeAccount.Account);
+                    Storage.List.Add(subscribeAccount.List.GetValueOrDefault(), accountId);
 
-                        // Result is an empty error XML element
-                        error = new Error();
-                    }
-                    catch (StorageLibException exception)
-                    {
-                        // Result is an non-empty error XML element
-                        error = new Error(exception.Code.ToString());
-                    }
+                    // Result is an empty error XML element
+                    error = new Error();
                 }
+            }
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                error = new Error(exception.Code.ToString());
             }
             catch (InvalidOperationException exception)
             {
@@ -54,7 +51,7 @@ namespace Tigwi.API.Controllers
         //
         // POST : /modifylist/unsubscribeaccount/
 
-        //[Authorize]
+        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult UnsubscribeAccount()
         {
@@ -71,20 +68,17 @@ namespace Tigwi.API.Controllers
                     error = new Error("List missing");
                 else
                 {
-                    try
-                    {
-                        var accountId = Storage.Account.GetId(unsubscribeAccount.Account);
-                        Storage.List.Remove(unsubscribeAccount.List.GetValueOrDefault(), accountId);
+                    var accountId = Storage.Account.GetId(unsubscribeAccount.Account);
+                    Storage.List.Remove(unsubscribeAccount.List.GetValueOrDefault(), accountId);
 
-                        // Result is an empty error XML element
-                        error = new Error();
-                    }
-                    catch (StorageLibException exception)
-                    {
-                        // Result is an non-empty error XML element
-                        error = new Error(exception.Code.ToString());
-                    }
+                    // Result is an empty error XML element
+                    error = new Error();
                 }
+            }
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                error = new Error(exception.Code.ToString());
             }
             catch (InvalidOperationException exception)
             {

@@ -11,7 +11,7 @@ namespace Tigwi.API.Controllers
         //
         // POST : /modifyaccount/write
 
-        //[Authorize]
+        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Write()
         {
@@ -27,21 +27,18 @@ namespace Tigwi.API.Controllers
                     output = new Answer(new Error("Message missing"));
                 else
                 {
-                    try
-                    {
-                        var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
+                    var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
 
-                        var msgId = Storage.Msg.Post(accountId, msg.Message.Content);
+                    var msgId = Storage.Msg.Post(accountId, msg.Message.Content);
 
-                        //Result
-                        output = new Answer(new ObjectCreated(msgId));
-                    }
-                    catch (StorageLibException exception)
-                    {
-                        // Result is an non-empty error XML element
-                        output = new Answer(new Error(exception.Code.ToString()));
-                    }
+                    // Result
+                    output = new Answer(new ObjectCreated(msgId));
                 }
+            }
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
             }
             catch (InvalidOperationException exception)
             {
@@ -51,10 +48,10 @@ namespace Tigwi.API.Controllers
             return Serialize(output);
         }
 
-        // Is copying like retweeting ?
+        // TODO : explain is specs : Is copying like retweeting ?
         // POST : /modifyaccount/copy
 
-        //[Authorize]
+        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Copy()
         {
@@ -70,21 +67,18 @@ namespace Tigwi.API.Controllers
                     output = new Answer(new Error("MessageId missing"));
                 else
                 {
-                    try
-                    {
-                        var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
+                    var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
 
-                        var msgId = Storage.Msg.Copy(accountId, msg.MessageId.GetValueOrDefault());
+                    var msgId = Storage.Msg.Copy(accountId, msg.MessageId.GetValueOrDefault());
 
-                        //Result
-                        output = new Answer(new ObjectCreated(msgId));
-                    }
-                    catch (StorageLibException exception)
-                    {
-                        // Result is an non-empty error XML element
-                        output = new Answer(new Error(exception.Code.ToString()));
-                    }
+                    //Result
+                    output = new Answer(new ObjectCreated(msgId));
                 }
+            }
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
             }
             catch (InvalidOperationException exception)
             {
@@ -99,7 +93,7 @@ namespace Tigwi.API.Controllers
         //
         // POST : /modifyaccount/delete
 
-        //[Authorize]
+        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Delete()
         {
@@ -129,7 +123,7 @@ namespace Tigwi.API.Controllers
         //
         // POST : /modifyaccount/tag
 
-        //[Authorize]
+        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Tag()
         {
@@ -158,7 +152,7 @@ namespace Tigwi.API.Controllers
         //
         // POST : /modifyaccount/untag
 
-        //[Authorize]
+        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Untag()
         {
@@ -187,7 +181,7 @@ namespace Tigwi.API.Controllers
         //
         // POST : /modifyaccount/subscribelist
 
-        //[Authorize]
+        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult SubscribeList()
         {
@@ -216,7 +210,7 @@ namespace Tigwi.API.Controllers
         //
         // POST /modifyaccount/createlist
 
-        //[Authorize]
+        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CreateList()
         {
