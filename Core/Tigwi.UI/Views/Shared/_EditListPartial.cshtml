@@ -1,0 +1,58 @@
+﻿@model Tigwi.UI.Models.EditListViewModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var nextId = 0;
+        $('#addAccountButton').click(function () {
+            $.ajax({
+                url: $(this).data("url"),
+                type: "POST",
+                dataType: 'json',
+                data: { 'account': $('#addAccount').val() },
+                cache: false,
+                success: function (data) {
+
+                    if (data.exists) {
+                        var toAppend = "<div class=\"alert alert-info span2\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>" + $('#addAccount').val() +
+                            '<input type="hidden" value="' + $('#addAccount').val() + '" name="UserIds"/></div>';
+                        $("#accountAdded").append(toAppend);
+                    }
+                    else {
+                        alert("fuck you I won't do what you tell me !");
+                    }
+                }
+            });
+            return false;
+        });
+
+    });  
+ </script>
+
+<div class="modal-header">
+    <button class="close" data-dismiss="modal">×</button>
+    <h3>Register</h3>
+</div>
+
+@using (Html.BeginForm("Create", "List", FormMethod.Post,null))
+{    
+    <div class="modal-body">
+        @Html.ValidationSummary()
+
+        @Html.LabelFor(m => m.Name)
+        @Html.EditorFor(m => m.Name)
+        
+        <label for="addUser">Add another account</label>
+        <input type="text" class="text-box single-line" id="addAccount"/>
+        <button type="button" class="btn" data-url="@Url.Action("AccountExists","Account")" id="addAccountButton"> add account</button>
+        <h5>Current accounts in list</h5>
+        <div id="accountAdded"></div>
+    </div>
+    
+    
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <button class="btn btn-primary" type="submit">Create and follow list !</button>
+        
+    </div>
+}
+
