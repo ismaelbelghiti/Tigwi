@@ -50,6 +50,18 @@ namespace Tigwi.UI.Controllers
         }
 
         /// <summary>
+        ///  Checks Whether the account <paramref name="account"/> exists
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult AccountExists(string account)
+        {
+            //TODO check whether account exists or not <3
+            return Json(new { exists = true });
+        }
+
+        /// <summary>
         /// Shows a page listing all the posts of the user.
         /// </summary>
         /// <returns></returns>

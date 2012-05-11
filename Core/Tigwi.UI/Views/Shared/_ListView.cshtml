@@ -50,10 +50,12 @@
                     }
                     if (mustShow)
                     {
+                        $('.poster-' + user).addClass('messageShown');
                         $('.poster-' + user).show();
                     }
                     else
                     {
+                        $('.poster-' + user).removeClass('messageShown');
                         $('.poster-' + user).hide();
                     }
 				}
@@ -80,4 +82,8 @@
         </li>
     }
     </ul>
+    <ul><i class="icon-plus"></i> 
+        <a data-toggle="modal" href="#editListModal" >Add List</a>
+    </ul>
+
 </section>

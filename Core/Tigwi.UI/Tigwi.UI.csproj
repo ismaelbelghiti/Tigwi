@@ -118,6 +118,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="MockStorage.cs" />
+    <Compile Include="Models\EditListViewModel.cs" />
     <Compile Include="Models\IAccountRepository.cs" />
     <Compile Include="Models\IListModelCollection.cs" />
     <Compile Include="Models\IListRepository.cs" />
@@ -297,6 +298,9 @@
       <Project>{2C5E15F5-0DF9-4D0A-AB8F-FB8FEC5B25E8}</Project>
       <Name>Tigwi.Storage.Library</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_EditListPartial.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
