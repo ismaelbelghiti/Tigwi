@@ -11,7 +11,6 @@ namespace Tigwi.API.Controllers
         //
         // POST : /account/write
 
-        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Write()
         {
@@ -29,10 +28,17 @@ namespace Tigwi.API.Controllers
                 {
                     var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
 
-                    var msgId = Storage.Msg.Post(accountId, msg.Message.Content);
+                    // Check if the user is authenticated and has rights
+                    var authentication = Authorized(accountId);
+                    if (authentication.HasRights)
+                    {
+                        var msgId = Storage.Msg.Post(accountId, msg.Message.Content);
 
-                    // Result
-                    output = new Answer(new ObjectCreated(msgId));
+                        // Result
+                        output = new Answer(new ObjectCreated(msgId));
+                    }
+                    else
+                        output = new Answer(new Error(authentication.ErrorMessage()));
                 }
             }
             catch (StorageLibException exception)

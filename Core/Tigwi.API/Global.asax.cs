@@ -13,7 +13,6 @@ namespace Tigwi.API
 			routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             // routes to InfoAccount and ModifyAccount
-            // TODO : add a manner to get the key
 
             routes.MapRoute("InfoAccountByName",
                             "account/{action}/name={accountName}/{number}",
