@@ -112,7 +112,7 @@ namespace Tigwi.API.Controllers
         // GET : /account/subscribedaccounts/{accountName}/{number}
         // GET: /account/subscribedaccounts/name={accountName}/{number}
         // GET: /account/subscribedaccounts/id={accountId}/{number}
-        public ActionResult SubscribedAccounts(string accountName, Guid? accountId, int number, string key)
+        public ActionResult SubscribedAccounts(string accountName, Guid? accountId, int number)
         {
             Answer output;
 
@@ -121,7 +121,12 @@ namespace Tigwi.API.Controllers
                 var realId = accountId ?? Storage.Account.GetId(accountName);
 
                 // we check if the user is authenticated and authorized to know whether to show private lists
-                var withPrivate = CheckAuthentication(key, realId);
+                var keyCookie = Request.Cookies.Get("key");
+                var withPrivate = false;
+                if (keyCookie != null)
+                {
+                    withPrivate = CheckAuthentication(keyCookie.Value, realId);
+                }
 
                 // get the public lists followed by the given account
                 var followedLists = Storage.List.GetAccountFollowedLists(realId, withPrivate);
