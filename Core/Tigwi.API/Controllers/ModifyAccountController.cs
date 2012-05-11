@@ -9,49 +9,40 @@ namespace Tigwi.API.Controllers
     public class ModifyAccountController : ApiController
     {
         //
-        // POST : /account/write/id={accountIdForAuthentification}/key={key}
+        // POST : /account/write
 
         // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Write(Guid accountIdForAuthentification, string key)
+        public ActionResult Write()
         {
             Answer output;
 
             try
             {
-                CheckAuthentication(key, accountIdForAuthentification);
+                var msg = (MsgToWrite) (new XmlSerializer(typeof (MsgToWrite))).Deserialize(Request.InputStream);
 
-                try
+                if (msg.AccountId == null && msg.AccountName == null)
+                    output = new Answer(new Error("AccountId or AccountName missing"));
+                else if (msg.Message == null) // TODO ? check more on message (size for example)
+                    output = new Answer(new Error("Message missing"));
+                else
                 {
-                    var msg = (MsgToWrite)(new XmlSerializer(typeof(MsgToWrite))).Deserialize(Request.InputStream);
+                    var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
 
-                    if (msg.AccountId == null && msg.AccountName == null)
-                        output = new Answer(new Error("AccountId or AccountName missing"));
-                    else if (msg.Message == null) // TODO ? check more on message (size for example)
-                        output = new Answer(new Error("Message missing"));
-                    else
-                    {
-                        var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
+                    var msgId = Storage.Msg.Post(accountId, msg.Message.Content);
 
-                        var msgId = Storage.Msg.Post(accountId, msg.Message.Content);
-
-                        // Result
-                        output = new Answer(new ObjectCreated(msgId));
-                    }
-                }
-                catch (StorageLibException exception)
-                {
-                    // Result is an non-empty error XML element
-                    output = new Answer(new Error(exception.Code.ToString()));
-                }
-                catch (InvalidOperationException exception)
-                {
-                    output = new Answer(new Error(exception.Message + " " + exception.InnerException.Message));
+                    // Result
+                    output = new Answer(new ObjectCreated(msgId));
                 }
             }
-            catch (Exception)
+            catch (StorageLibException exception)
             {
-                output = new Answer(new Error("Key is not valid or you do not have right on this account"));
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
+            catch (InvalidOperationException exception)
+            {
+                output = new Answer(new Error(exception.Message + " " + exception.InnerException.Message));
             }
 
             return Serialize(output);
