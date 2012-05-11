@@ -59,15 +59,14 @@ namespace Tigwi.UI.Models.Storage
         /// </exception>
         public IListModel Create(IAccountModel account, string name, string description, bool isPrivate)
         {
-            // TODO: place in IAccountModel.CreateList()
             try
             {
-                Guid id = this.Storage.List.Create(account.Id, name, description, isPrivate);
+                var id = this.Storage.List.Create(account.Id, name, description, isPrivate);
                 return this.Find(id);
             }
             catch (AccountNotFound ex)
             {
-                throw new AccountNotFoundException(account.Name, ex);
+                throw new AccountNotFoundException(name, ex);
             }
         }
 

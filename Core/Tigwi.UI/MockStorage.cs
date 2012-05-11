@@ -814,7 +814,7 @@ namespace Tigwi.UI
 
                 messages.Sort((msg1, msg2) => DateTime.Compare(msg1.Date, msg2.Date));
 
-                return messages.Take(msgNumber).ToList();
+                return messages.Distinct().Take(msgNumber).ToList();
             }
 
             public List<IMessage> GetListsMsgTo(HashSet<Guid> listsId, DateTime lastMsgDate, int msgNumber)
@@ -830,7 +830,7 @@ namespace Tigwi.UI
                 // Note the reversing of the parameters because we supposedly want the *lasts* messages first
                 messages.Sort((msg1, msg2) => DateTime.Compare(msg2.Date, msg1.Date));
 
-                return messages.Take(msgNumber).ToList();
+                return messages.Distinct().Take(msgNumber).ToList();
             }
 
             public void Tag(Guid accountId, Guid msgId)
