@@ -10,6 +10,7 @@ namespace Tigwi.UI.Controllers
 
     public class ListController : HomeController
     {
+
         /// <summary>
         /// Shows the messages posted in the list.
         /// </summary>
@@ -44,12 +45,18 @@ namespace Tigwi.UI.Controllers
         /// <summary>
         /// Actually creates the list.
         /// </summary>
-        /// <param name="listCreateViewModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Create(/*ListCreateViewModel*/object listCreateViewModel)
+        public ActionResult Create(EditListViewModel editList)
         {
-            throw new NotImplementedException("ListController.Create[POST]");
+            IListModel list = this.Storage.Lists.Create(CurrentAccount, editList.Name, "", true);
+            foreach (var member in editList.UserIds)
+            {
+                IAccountModel account = this.Storage.Accounts.Find(member);
+                list.Members.Add(account);
+            }
+            this.Storage.SaveChanges();
+            return this.RedirectToAction("Index", "Home");
         }
 
         public ActionResult AddAccount()

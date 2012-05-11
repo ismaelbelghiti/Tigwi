@@ -25,7 +25,8 @@
     margin-left: 15px;
 }
 
-.message:nth-child(odd) {
+
+.messageVisible:nth-of-type(odd) {
     border-radius: 15px;
     margin: 10px;
     padding: 10px;
@@ -33,7 +34,7 @@
     border-style: none none none solid;
     border-color: lightgray;
 }
-.message:nth-child(even) {
+.messageVisible:nth-of-type(even) {
     border-radius: 15px;
     margin: 10px;
     padding: 10px;
