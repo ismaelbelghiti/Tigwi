@@ -2,7 +2,6 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        var nextId = 0;
         $('#addAccountButton').click(function () {
             $.ajax({
                 url: $(this).data("url"),
@@ -18,6 +17,7 @@
                         $("#accountAdded").append(toAppend);
                     }
                     else {
+                        // TODO
                         alert("fuck you I won't do what you tell me !");
                     }
                 }
@@ -40,6 +40,7 @@
 
         @Html.LabelFor(m => m.Name)
         @Html.EditorFor(m => m.Name)
+        @Html.ValidationMessageFor(m => m.Name)
         
         <label for="addUser">Add another account</label>
         <input type="text" class="text-box single-line" id="addAccount"/>

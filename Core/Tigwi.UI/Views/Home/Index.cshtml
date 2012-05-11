@@ -21,7 +21,7 @@
 @if(User.Identity.IsAuthenticated)
 {
     <div>@Html.Partial("_WriteMessage", new WritePostViewModel())</div>
-    <div>@Html.Partial("_ViewPostList", Model.PersonalList.PostsBefore(DateTime.MaxValue, 10))</div>
+    <div>@Html.Partial("_ViewPostList", Model.AllFollowedLists.PostsBefore(DateTime.MaxValue, 10))</div>
 }
 else
 {
