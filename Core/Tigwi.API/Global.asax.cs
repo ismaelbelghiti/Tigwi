@@ -43,7 +43,7 @@ namespace Tigwi.API
                 );
 
             routes.MapRoute("ModifyAccount",
-                            "account/{action}/id={accountId}/key={key}",
+                            "account/{action}",
                             new
                             {
                                 controller = "ModifyAccount"
