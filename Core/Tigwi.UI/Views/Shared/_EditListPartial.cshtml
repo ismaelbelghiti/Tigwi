@@ -14,7 +14,7 @@
 
                     if (data.exists) {
                         var toAppend = "<div class=\"alert alert-info span2\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>" + $('#addAccount').val() +
-                            '<input type="hidden" value="' + $('#addAccount').val() + '" name="UserIds"/></div>';
+                            '<input type="hidden" value="' + $('#addAccount').val() + '" name="AccountIds"/></div>';
                         $("#accountAdded").append(toAppend);
                     }
                     else {
@@ -41,7 +41,7 @@
         @Html.LabelFor(m => m.Name)
         @Html.EditorFor(m => m.Name)
         
-        <label for="addUser">Add another account</label>
+        <label for="addAnAccount">Add another account</label>
         <input type="text" class="text-box single-line" id="addAccount"/>
         <button type="button" class="btn" data-url="@Url.Action("AccountExists","Account")" id="addAccountButton"> add account</button>
         <h5>Current accounts in list</h5>
