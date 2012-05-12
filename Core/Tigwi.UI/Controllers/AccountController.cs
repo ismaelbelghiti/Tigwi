@@ -171,9 +171,15 @@ namespace Tigwi.UI.Controllers
         /// Idempotent.
         /// </summary>
         /// <returns>The resulting view.</returns>
-        public ActionResult Follow()
+        [HttpPost]
+        public ActionResult Follow(Guid id)
         {
-            throw new NotImplementedException("AccountController.Follow");
+            IAccountModel account = this.Storage.Accounts.Find(id);
+            account.PersonalList.Followers.Add(CurrentAccount);
+            this.Storage.SaveChanges();
+            ViewBag.AccountName = account.Name;
+            return this.View();
+            //Todo redirect to a dedicated view
         }
 
         /// <summary>

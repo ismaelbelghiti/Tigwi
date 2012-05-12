@@ -76,6 +76,8 @@ namespace Tigwi.UI.Models
         /// </exception>
         IAccountModel Find(string name);
 
+        bool TryFind(string name, out IAccountModel account);
+
         #endregion
     }
 }

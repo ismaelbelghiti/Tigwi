@@ -12,7 +12,7 @@ namespace Tigwi.UI.Models
         public string Name { get; set; }
 
         [Required]
-        public IEnumerable<string> UserIds { get; set; }
+        public IEnumerable<string> AccountIds { get; set; }
 
     }
 }
