@@ -45,7 +45,7 @@ namespace StorageTest
         #region Guid Post(Guid accountId, string content)
 
         [Test]
-        public void PostNormalBehavior()
+        public void PostNormalBehaviour()
         {
             storage.Msg.Post(_accountId, Hw);
         }
@@ -84,7 +84,7 @@ namespace StorageTest
         #region Guid Copy(Guid accountId, Guid msgId);
 
         [Test]
-        public void CopyNormalBehavior()
+        public void CopyNormalBehaviour()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             storage.Msg.Copy(_otherAccountId, messageId);
@@ -110,14 +110,14 @@ namespace StorageTest
         #region void Remove(Guid id);
 
         [Test]
-        public void RemoveNormalBehavior()
+        public void RemoveNormalBehaviour()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             storage.Msg.Remove(messageId);
         }
 
         [Test]
-        public void RemoveNormalBehaviorWithUnexistantMessage()
+        public void RemoveNormalBehaviourWithUnexistantMessage()
         {
             storage.Msg.Remove(new Guid());
         }
@@ -127,7 +127,7 @@ namespace StorageTest
         #region List<IMessage> GetListsMsgFrom(HashSet<Guid> listsId, DateTime firstMsgDate, int msgNumber)
 
         [Test]
-        public void GetListsMsgFromNormalBehavior()
+        public void GetListsMsgFromNormalBehaviour()
         {
             var lists = new HashSet<Guid> { _listId };
             var messages = storage.Msg.GetListsMsgFrom(lists, _date, 333);
@@ -135,7 +135,7 @@ namespace StorageTest
         }
 
         [Test]    
-        public void GetListsMsgFromNormalBehaviorIncludingPrivate()
+        public void GetListsMsgFromNormalBehaviourIncludingPrivate()
         {
             var lists = new HashSet<Guid> { _listId, _listIdPrivate };
             var messages = storage.Msg.GetListsMsgFrom(lists, _date, 333);
@@ -143,7 +143,7 @@ namespace StorageTest
         }
 
         [Test]
-        public void GetListsMsgFromNormalBehaviorPrivate()
+        public void GetListsMsgFromNormalBehaviourPrivate()
         {
             var lists = new HashSet<Guid> { _listIdPrivate };
             var messages = storage.Msg.GetListsMsgFrom(lists, _date, 333);
@@ -171,7 +171,7 @@ namespace StorageTest
 
         [Test]
         //Checks that GetListsMsg and Post work well altogether
-        public void GetListsMsgFromNormalBehaviorTestPost()
+        public void GetListsMsgFromNormalBehaviourTestPost()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
 
@@ -187,7 +187,7 @@ namespace StorageTest
 
         [Test]
         //Checks that GetListsMsg and Copy work well altogether
-        public void GetListsMsgFromNormalBehaviorTestCopy()
+        public void GetListsMsgFromNormalBehaviourTestCopy()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             storage.Msg.Copy(_otherAccountId, messageId);
@@ -204,7 +204,7 @@ namespace StorageTest
         }
 
         [Test]
-        public void GetListsMsgFromNormalBehaviorOnDates()
+        public void GetListsMsgFromNormalBehaviourOnDates()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             _date = DateTime.Now;
@@ -218,7 +218,7 @@ namespace StorageTest
         }
 
         [Test]
-        public void GetListsMsgFromNormalBehaviorOnNumbers()
+        public void GetListsMsgFromNormalBehaviourOnNumbers()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             storage.Msg.Copy(_otherAccountId, messageId);
@@ -230,7 +230,7 @@ namespace StorageTest
 
         [Test]
         //Checks that Remove and GetListsMsg work well altogether
-        public void GetListsMsgFromNormalBehaviorTestRemove()
+        public void GetListsMsgFromNormalBehaviourTestRemove()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             storage.Msg.Remove(messageId);
@@ -243,7 +243,7 @@ namespace StorageTest
 
         [Test]
         //Copied message shouldn't be deleted
-        public void GetListsMsgFromNormalBehaviorTestCopyDelete()
+        public void GetListsMsgFromNormalBehaviourTestCopyDelete()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             var copiedMessageId = storage.Msg.Copy(_otherAccountId, messageId);
@@ -257,7 +257,7 @@ namespace StorageTest
 
         [Test]
         //Big test on numbers
-        public void GetListsMsgFromNormalBehaviorOnBigNumbers()
+        public void GetListsMsgFromNormalBehaviourOnBigNumbers()
         {
             int k;
             for (k = 0; k < 600; k++)
@@ -279,7 +279,7 @@ namespace StorageTest
         #region List<IMessage> GetListsMsgTo(HashSet<Guid> listsId, DateTime firstMsgDate, int msgNumber)
 
         [Test]
-        public void GetListsMsgToNormalBehavior()
+        public void GetListsMsgToNormalBehaviour()
         {
             var lists = new HashSet<Guid> { _listId };
             var messages = storage.Msg.GetListsMsgTo(lists, _date, 333);
@@ -287,7 +287,7 @@ namespace StorageTest
         }
 
         [Test]
-        public void GetListsMsgToNormalBehaviorIncludingPrivate()
+        public void GetListsMsgToNormalBehaviourIncludingPrivate()
         {
             var lists = new HashSet<Guid> { _listId, _listIdPrivate };
             var messages = storage.Msg.GetListsMsgTo(lists, _date, 333);
@@ -295,7 +295,7 @@ namespace StorageTest
         }
 
         [Test]
-        public void GetListsMsgToNormalBehaviorPrivate()
+        public void GetListsMsgToNormalBehaviourPrivate()
         {
             var lists = new HashSet<Guid> { _listIdPrivate };
             var messages = storage.Msg.GetListsMsgTo(lists, _date, 333);
@@ -323,7 +323,7 @@ namespace StorageTest
 
         [Test]
         //Checks that GetListsMsg and Post work well altogether
-        public void GetListsMsgToNormalBehaviorTest1()
+        public void GetListsMsgToNormalBehaviourTest1()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             _date = DateTime.Now;
@@ -340,7 +340,7 @@ namespace StorageTest
 
         [Test]
         //Checks that GetListsMsg and copy work well altogether
-        public void GetListsMsgToNormalBehaviorTest2()
+        public void GetListsMsgToNormalBehaviourTest2()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             storage.Msg.Copy(_otherAccountId, messageId);
@@ -358,7 +358,7 @@ namespace StorageTest
         }
 
         [Test]
-        public void GetListsMsgToNormalBehaviorOnDates()
+        public void GetListsMsgToNormalBehaviourOnDates()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             _date = DateTime.Now;
@@ -372,7 +372,7 @@ namespace StorageTest
         }
 
         [Test]
-        public void GetListsMsgToNormalBehaviorOnNumbers()
+        public void GetListsMsgToNormalBehaviourOnNumbers()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             storage.Msg.Copy(_otherAccountId, messageId);
@@ -385,7 +385,7 @@ namespace StorageTest
 
         [Test]
         //Checks that remove and GetListsMsg work well altogether
-        public void GetListsMsgToNormalBehaviorTest3()
+        public void GetListsMsgToNormalBehaviourTest3()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             storage.Msg.Remove(messageId);
@@ -399,7 +399,7 @@ namespace StorageTest
 
         [Test]
         //Copied message shouldn't be deleted
-        public void GetListsMsgToNormalBehaviorTest4()
+        public void GetListsMsgToNormalBehaviourTest4()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             var copiedMessageId = storage.Msg.Copy(_otherAccountId, messageId);
@@ -414,7 +414,7 @@ namespace StorageTest
 
         [Test]
         //Big test on numbers
-        public void GetListsMsgToNormalBehaviorOnBigNumbers()
+        public void GetListsMsgToNormalBehaviourOnBigNumbers()
         {
             int k;
             for (k = 0; k < 600; k++)
@@ -437,21 +437,21 @@ namespace StorageTest
         #region void Tag(Guid accountId, Guid msgId);
 
         [Test]
-        public void TagNormalBehavior()
+        public void TagNormalBehaviour()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             storage.Msg.Tag(_accountId, messageId);
         }
 
         [Test]
-        public void TagNormalBehavior2()
+        public void TagNormalBehaviour2()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             storage.Msg.Tag(_otherAccountId, messageId);
         }
 
         [Test]
-        public void TagNormalBehaviorAlreadyTagged()
+        public void TagNormalBehaviourAlreadyTagged()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             storage.Msg.Tag(_accountId,messageId);
@@ -479,7 +479,7 @@ namespace StorageTest
         #region void Untag(Guid accountId, Guid msgId);
 
         [Test]
-        public void UntagNormalBehavior()
+        public void UntagNormalBehaviour()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             storage.Msg.Tag(_accountId, messageId);
@@ -488,7 +488,7 @@ namespace StorageTest
         }
 
         [Test]
-        public void UntagNormalBehavior2()
+        public void UntagNormalBehaviour2()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             storage.Msg.Tag(_otherAccountId, messageId);
@@ -497,7 +497,7 @@ namespace StorageTest
         }
 
         [Test]
-        public void UntagNormalBehaviorNotTagged()
+        public void UntagNormalBehaviourNotTagged()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             storage.Msg.Untag(_accountId, messageId);
@@ -523,14 +523,14 @@ namespace StorageTest
         #region List<IMessage> GetTaggedFrom(Guid accoundId, DateTime firstMsgDate, int msgNumber);
 
         [Test]
-        public void GetTaggedFromNormalBehavior()
+        public void GetTaggedFromNormalBehaviour()
         {
             var messages = storage.Msg.GetTaggedFrom(_accountId, _date, 444);
             Assert.AreEqual(messages.Count(), 0);
         }
 
         [Test]
-        public void GetTaggedFromNormalBehavior2()
+        public void GetTaggedFromNormalBehaviour2()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             storage.Msg.Tag(_accountId,messageId);
@@ -541,7 +541,7 @@ namespace StorageTest
         }
 
         [Test]
-        public void GetTaggedFromNormalBehavior3()
+        public void GetTaggedFromNormalBehaviour3()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             storage.Msg.Tag(_accountId, messageId);
@@ -552,7 +552,7 @@ namespace StorageTest
         }
 
         [Test]
-        public void GetTaggedFromNormalBehavior4()
+        public void GetTaggedFromNormalBehaviour4()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             storage.Msg.Tag(_otherAccountId, messageId);
@@ -563,7 +563,7 @@ namespace StorageTest
         }
 
         [Test]
-        public void GetTaggedFromNormalBehavior45()
+        public void GetTaggedFromNormalBehaviour45()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             var messageId2 = storage.Msg.Post(_otherAccountId, Hw);
@@ -582,7 +582,7 @@ namespace StorageTest
         }
 
         [Test]
-        public void GetTaggedFromNormalBehaviorOnDate()
+        public void GetTaggedFromNormalBehaviourOnDate()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             _date = DateTime.Now;
@@ -600,14 +600,14 @@ namespace StorageTest
         #region List<IMessage> GetTaggedTo(Guid accoundId, DateTime firstMsgDate, int msgNumber);
 
         [Test]
-        public void GetTaggedToNormalBehavior()
+        public void GetTaggedToNormalBehaviour()
         {
             var messages = storage.Msg.GetTaggedTo(_accountId, _date, 444);
             Assert.AreEqual(messages.Count(), 0);
         }
 
         [Test]
-        public void GetTaggedToNormalBehavior2()
+        public void GetTaggedToNormalBehaviour2()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             storage.Msg.Tag(_accountId, messageId);
@@ -619,7 +619,7 @@ namespace StorageTest
         }
 
         [Test]
-        public void GetTaggedToNormalBehavior3()
+        public void GetTaggedToNormalBehaviour3()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             storage.Msg.Tag(_accountId, messageId);
@@ -631,7 +631,7 @@ namespace StorageTest
         }
 
         [Test]
-        public void GetTaggedToNormalBehavior4()
+        public void GetTaggedToNormalBehaviour4()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             storage.Msg.Tag(_otherAccountId, messageId);
@@ -643,7 +643,7 @@ namespace StorageTest
         }
 
         [Test]
-        public void GetTaggedToNormalBehavior45()
+        public void GetTaggedToNormalBehaviour45()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             var messageId2 = storage.Msg.Post(_otherAccountId, Hw);
@@ -663,7 +663,7 @@ namespace StorageTest
         }
 
         [Test]
-        public void GetTaggedToNormalBehaviorOnDate()
+        public void GetTaggedToNormalBehaviourOnDate()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
             _date = DateTime.Now;
