@@ -50,7 +50,7 @@ namespace Tigwi.UI.Controllers
         public ActionResult Create(EditListViewModel editList)
         {
             IListModel list = this.Storage.Lists.Create(CurrentAccount, editList.Name, "", true);
-            foreach (var member in editList.UserIds)
+            foreach (var member in editList.AccountIds)
             {
                 IAccountModel account = this.Storage.Accounts.Find(member);
                 list.Members.Add(account);
