@@ -59,6 +59,20 @@ namespace Tigwi.UI.Controllers
             return this.RedirectToAction("Index", "Home");
         }
 
+        /// <summary>
+        /// Makes the active account follow the given list.
+        /// Idempotent.
+        /// </summary>
+        /// <returns>The resulting view.</returns>
+        [HttpPost]
+        public ActionResult FollowList(Guid id)
+        {
+            CurrentAccount.AllFollowedLists.Add(this.Storage.Lists.Find(id));
+            this.Storage.SaveChanges();
+            return this.RedirectToAction("Index", "Home");
+            //Todo redirect to a dedicated view
+        }
+
         public ActionResult AddAccount()
         {
             throw new NotImplementedException("ListController.AddAccounts");

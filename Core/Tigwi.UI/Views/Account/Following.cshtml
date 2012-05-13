@@ -8,10 +8,10 @@
 
 @foreach(var followedList in Model.PublicFollowedLists)
 {
-    <h3>@followedList.Name</h3>
+    <h3>@followedList.Name </h3>
     <p> 
     Description : @followedList.Description
     </p>
-    
+    @Html.Partial("_FollowList", followedList)
     
 }
