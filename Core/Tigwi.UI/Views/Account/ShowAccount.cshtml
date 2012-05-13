@@ -8,6 +8,7 @@
 {
         <p>Oh Hai @Model.Name</p>
         @Html.Partial("_FollowPerson", Model)
+        @Html.Partial("_AccountFollowedPublicLists", Model)
 }
 
 @Html.Partial("_ViewPostList", Model.PersonalList.PostsAfter(DateTime.MinValue, 10))
