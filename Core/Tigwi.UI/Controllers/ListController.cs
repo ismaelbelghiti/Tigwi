@@ -28,6 +28,7 @@ namespace Tigwi.UI.Controllers
         /// </summary>
         /// <param name="listName"></param>
         /// <returns></returns>
+        [ValidateInput(false)]
         public ActionResult Members(string listName)
         {
             throw new NotImplementedException("ListController.Members");
@@ -47,6 +48,7 @@ namespace Tigwi.UI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult Create(EditListViewModel editList)
         {
             IListModel list = this.Storage.Lists.Create(CurrentAccount, editList.Name, editList.Description, true);
@@ -112,6 +114,7 @@ namespace Tigwi.UI.Controllers
         /// <param name="listEditViewModel"></param>
         /// <returns></returns>
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult Edit(/*ListEditViewModel*/object listEditViewModel)
         {
             throw new NotImplementedException("ListController.Edit[POST]");

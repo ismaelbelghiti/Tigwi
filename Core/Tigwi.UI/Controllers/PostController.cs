@@ -57,12 +57,12 @@ namespace Tigwi.UI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult Write(WritePostViewModel post)
         {
             if (ModelState.IsValid)
             {
                 this.Storage.Posts.Create(CurrentAccount, post.Content);
-                //throw new NotImplementedException(post.Poster.Name + "  " + post.Content);
                 this.Storage.SaveChanges();
                 return this.RedirectToAction("Index","Home");
 

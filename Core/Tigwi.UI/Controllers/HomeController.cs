@@ -126,6 +126,7 @@
 
         #region Public Methods and Operators
 
+        [ValidateInput(false)]
         public ActionResult Index(string error)
         {
             ViewBag.error = error;
