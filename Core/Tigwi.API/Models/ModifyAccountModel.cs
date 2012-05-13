@@ -9,7 +9,6 @@ namespace Tigwi.API.Models
     {
         public string AccountName { get; set; }
         public Guid? AccountId { get; set; }
-        public string Key { get; set; }
     }
 
 

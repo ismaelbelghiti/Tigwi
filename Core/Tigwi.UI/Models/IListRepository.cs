@@ -12,6 +12,8 @@ namespace Tigwi.UI.Models
     using System;
     using System.Collections.Generic;
 
+    using Tigwi.UI.Models.Storage;
+
     /// <summary>
     /// The interface specification for a list repository.
     /// </summary>
@@ -34,6 +36,7 @@ namespace Tigwi.UI.Models
         /// <param name="isPrivate">
         /// Whether the new list shall be private or not.
         /// </param>
+        /// <exception cref="AccountNotFoundException">When the account no longer exists.</exception>
         /// <returns>
         /// </returns>
         IListModel Create(IAccountModel account, string name, string description, bool isPrivate);

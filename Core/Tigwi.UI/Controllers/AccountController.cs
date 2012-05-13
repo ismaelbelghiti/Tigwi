@@ -50,19 +50,30 @@ namespace Tigwi.UI.Controllers
         }
 
         /// <summary>
+        ///  Checks Whether the account <paramref name="account"/> exists
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult AccountExists(string account)
+        {
+            //TODO check whether account exists or not <3
+            return Json(new { exists = true });
+        }
+
+        /// <summary>
         /// Shows a page listing all the posts of the user.
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
         public ActionResult ShowAccount(SearchViewModel search)
         {
             try
             {
                 return this.View(this.Storage.Accounts.Find(search.searchString));
             }
-            catch(AccountNotFoundException error)
+            catch(AccountNotFoundException ex)
             {
-                return this.View("Error", new HandleErrorInfo(error,"Account","ShowAccount"));
+                return this.RedirectToAction("Index", "Home", new { error = ex.Message});
             }
         }
 
@@ -149,9 +160,11 @@ namespace Tigwi.UI.Controllers
         /// Show all the people an account is following.
         /// </summary>
         /// <returns>The resulting view.</returns>
-        public ActionResult Following()
+        public ActionResult Following(Guid id)
         {
-            throw new NotImplementedException("AccountController.Following");
+            IAccountModel account = this.Storage.Accounts.Find(id);
+            account.PersonalList.Followers.Add(CurrentAccount);
+            return this.View(account);
         }
 
         /// <summary>
@@ -159,9 +172,15 @@ namespace Tigwi.UI.Controllers
         /// Idempotent.
         /// </summary>
         /// <returns>The resulting view.</returns>
-        public ActionResult Follow()
+        [HttpPost]
+        public ActionResult Follow(Guid id)
         {
-            throw new NotImplementedException("AccountController.Follow");
+            IAccountModel account = this.Storage.Accounts.Find(id);
+            account.PersonalList.Followers.Add(CurrentAccount);
+            this.Storage.SaveChanges();
+            ViewBag.AccountName = account.Name;
+            return this.View();
+            //Todo redirect to a dedicated view
         }
 
         /// <summary>

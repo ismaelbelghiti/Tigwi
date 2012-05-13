@@ -10,6 +10,7 @@ namespace Tigwi.UI.Controllers
 
     public class ListController : HomeController
     {
+
         /// <summary>
         /// Shows the messages posted in the list.
         /// </summary>
@@ -44,12 +45,46 @@ namespace Tigwi.UI.Controllers
         /// <summary>
         /// Actually creates the list.
         /// </summary>
-        /// <param name="listCreateViewModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Create(/*ListCreateViewModel*/object listCreateViewModel)
+        public ActionResult Create(EditListViewModel editList)
         {
-            throw new NotImplementedException("ListController.Create[POST]");
+            IListModel list = this.Storage.Lists.Create(CurrentAccount, editList.Name, editList.Description, true);
+            try
+            {
+                list.Members.Clear();
+                foreach (var member in editList.AccountIds)
+                {
+                    IAccountModel account = this.Storage.Accounts.Find(member);
+                    list.Members.Add(account);
+                }
+                this.Storage.SaveChanges();
+                return this.RedirectToAction("Index", "Home");
+            }
+            catch (Tigwi.UI.Models.Storage.AccountNotFoundException ex)
+            {
+                this.Storage.Lists.Delete(list);
+                return this.RedirectToAction("Index", "Home", new { error = ex.Message });
+            }
+            catch (System.NullReferenceException)
+            {
+                this.Storage.Lists.Delete(list);
+                return this.RedirectToAction("Index", "Home", new { error = "The list is empty" });
+            }
+        }
+
+        /// <summary>
+        /// Makes the active account follow the given list.
+        /// Idempotent.
+        /// </summary>
+        /// <returns>The resulting view.</returns>
+        [HttpPost]
+        public ActionResult FollowList(Guid id)
+        {
+            CurrentAccount.AllFollowedLists.Add(this.Storage.Lists.Find(id));
+            this.Storage.SaveChanges();
+            return this.RedirectToAction("Index", "Home");
+            //Todo redirect to a dedicated view
         }
 
         public ActionResult AddAccount()

@@ -26,37 +26,37 @@
         var lists = {
         @foreach (var pair in listsOfMember)
         {
-            @Html.Raw("'" + pair.Key.ToString() + "': [");
+            @Html.Raw("'" + pair.Key + "': [")
             foreach(var listId in pair.Value)
             {
-                @Html.Raw("'" + listId.ToString() + "', ");
+                @Html.Raw("'" + listId + "', ")
             }
-            @Html.Raw("], ");
+            @Html.Raw("], ")
         }
         };
 
         $(document).ready(function () {
             $('.checkboxfilter').change(
-			function () {
-			    for (var user in lists)
+            function () {
+                for (var user in lists)
                 {
                     var mustShow = false;
                     for (var list in lists[user])
                     {
                         if ($('#checkBox-' + lists[user][list])[0].checked)
                         {
-						mustShow = true;
+                            mustShow = true;
                         }
                     }
                     if (mustShow)
                     {
-                        $('.poster-' + user).show();
+                        $('.poster-' + user).addClass('shown').show();
                     }
                     else
                     {
-                        $('.poster-' + user).hide();
+                        $('.poster-' + user).removeClass('shown').hide();
                     }
-				}
+                }
             }
             );
         });
@@ -65,7 +65,7 @@
     @foreach (var list in Model)
     {
         <li>
-            <input type="checkbox" checked="true" id="checkBox-@list.Id" class="checkboxfilter"/>
+            <input type="checkbox" checked="checked" id="checkBox-@list.Id" class="checkboxfilter"/>
             <a class="accordion-toggle" data-toggle="collapse" href="#list-@list.Id">
                 <i class="icon-folder-close"></i> @list.Name
             </a>
@@ -80,4 +80,8 @@
         </li>
     }
     </ul>
+    <ul><i class="icon-plus"></i> 
+        <a data-toggle="modal" href="#editListModal" >Add List</a>
+    </ul>
+
 </section>

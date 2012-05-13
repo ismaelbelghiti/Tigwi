@@ -12,7 +12,7 @@ namespace Tigwi.Storage.Library
     {
         /// <summary>
         /// Return the firsts msgNumber messages posted after firstMsgId contained into lists listsId.
-        /// Does not include firstMasgDate
+        /// Does not include firstMsgDate
         /// </summary>
         /// <exception cref="ListNotFound">A list in listID doesn't exists</exception>
         List<IMessage> GetListsMsgFrom(HashSet<Guid> listsId, DateTime firstMsgDate, int msgNumber);

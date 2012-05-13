@@ -33,7 +33,7 @@
     <div class="row-fluid">
         @using (Html.BeginForm("Write", "Post",FormMethod.Post,new { id = "writeMessageForm"}))
         {
-            @Html.TextAreaFor(m => m.Content,new { @class="input-xlarge span11",id="inputMessage", placeholder="Write a new Tweet !"})
+            @Html.TextAreaFor(m => m.Content,new { @class="input-xlarge span11",id="inputMessage", placeholder="Write a new message !"})
             @Html.ValidationMessageFor(m => m.Content)
             <button type="submit" class="btn btn-primary" id="inputButton">Post !</button>
         }

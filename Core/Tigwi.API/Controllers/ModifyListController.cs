@@ -11,7 +11,6 @@ namespace Tigwi.API.Controllers
         //
         // POST : /list/subscribeaccount/
 
-        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult SubscribeAccount()
         {
@@ -29,10 +28,19 @@ namespace Tigwi.API.Controllers
                 else
                 {
                     var accountId = Storage.Account.GetId(subscribeAccount.Account);
-                    Storage.List.Add(subscribeAccount.List.GetValueOrDefault(), accountId);
 
-                    // Result is an empty error XML element
-                    error = new Error();
+                    // Check if the user is authenticated and has rights
+                    var authentication = Authorized(accountId);
+
+                    if (authentication.HasRights)
+                    {
+                        Storage.List.Add(subscribeAccount.List.GetValueOrDefault(), accountId);
+
+                        // Result is an empty error XML element
+                        error = new Error();
+                    }
+                    else
+                        error = new Error(authentication.ErrorMessage());
                 }
             }
             catch (StorageLibException exception)
@@ -51,7 +59,6 @@ namespace Tigwi.API.Controllers
         //
         // POST : /list/unsubscribeaccount/
 
-        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult UnsubscribeAccount()
         {
@@ -69,10 +76,19 @@ namespace Tigwi.API.Controllers
                 else
                 {
                     var accountId = Storage.Account.GetId(unsubscribeAccount.Account);
-                    Storage.List.Remove(unsubscribeAccount.List.GetValueOrDefault(), accountId);
 
-                    // Result is an empty error XML element
-                    error = new Error();
+                    // Check if the user is authenticated and has rights
+                    var authentication = Authorized(accountId);
+
+                    if (authentication.HasRights)
+                    {
+                        Storage.List.Remove(unsubscribeAccount.List.GetValueOrDefault(), accountId);
+
+                        // Result is an empty error XML element
+                        error = new Error();
+                    }
+                    else
+                        error = new Error(authentication.ErrorMessage());
                 }
             }
             catch (StorageLibException exception)

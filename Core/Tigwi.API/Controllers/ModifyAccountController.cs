@@ -11,7 +11,6 @@ namespace Tigwi.API.Controllers
         //
         // POST : /account/write
 
-        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Write()
         {
@@ -29,10 +28,17 @@ namespace Tigwi.API.Controllers
                 {
                     var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
 
-                    var msgId = Storage.Msg.Post(accountId, msg.Message.Content);
+                    // Check if the user is authenticated and has rights
+                    var authentication = Authorized(accountId);
+                    if (authentication.HasRights)
+                    {
+                        var msgId = Storage.Msg.Post(accountId, msg.Message.Content);
 
-                    // Result
-                    output = new Answer(new ObjectCreated(msgId));
+                        // Result
+                        output = new Answer(new ObjectCreated(msgId));
+                    }
+                    else
+                        output = new Answer(new Error(authentication.ErrorMessage()));
                 }
             }
             catch (StorageLibException exception)
@@ -51,7 +57,6 @@ namespace Tigwi.API.Controllers
         // TODO : explain is specs : Is copying like retweeting ?
         // POST : /account/copy
 
-        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Copy()
         {
@@ -69,10 +74,17 @@ namespace Tigwi.API.Controllers
                 {
                     var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
 
-                    var msgId = Storage.Msg.Copy(accountId, msg.MessageId.GetValueOrDefault());
+                    // Check if the user is authenticated and has rights
+                    var authentication = Authorized(accountId);
+                    if (authentication.HasRights)
+                    {
+                        var msgId = Storage.Msg.Copy(accountId, msg.MessageId.GetValueOrDefault());
 
-                    //Result
-                    output = new Answer(new ObjectCreated(msgId));
+                        //Result
+                        output = new Answer(new ObjectCreated(msgId));
+                    }
+                    else
+                        output = new Answer(new Error(authentication.ErrorMessage()));
                 }
             }
             catch (StorageLibException exception)
@@ -220,7 +232,6 @@ namespace Tigwi.API.Controllers
         //
         // POST : /account/subscribelist
 
-        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult SubscribeList()
         {
@@ -239,10 +250,18 @@ namespace Tigwi.API.Controllers
                 {
                     var accountId = subscribe.AccountId ?? Storage.Account.GetId(subscribe.AccountName);
 
-                    Storage.List.Follow(subscribe.Subscription.GetValueOrDefault(), accountId);
+                    // Check if the user is authenticated and has rights
+                    var authentication = Authorized(accountId);
 
-                    // Result is an empty error XML element
-                    error = new Error();
+                    if (authentication.HasRights)
+                    {
+                        Storage.List.Follow(subscribe.Subscription.GetValueOrDefault(), accountId);
+
+                        // Result is an empty error XML element
+                        error = new Error();
+                    }
+                    else
+                        error = new Error(authentication.ErrorMessage());
                 }
             }
             catch (StorageLibException exception)
@@ -261,7 +280,6 @@ namespace Tigwi.API.Controllers
         //
         // POST /account/createlist
 
-        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CreateList()
         {
@@ -283,13 +301,22 @@ namespace Tigwi.API.Controllers
                 else
                 {
                     var accountId = listCreation.AccountId ?? Storage.Account.GetId(listCreation.AccountName);
-                    var listToCreate = listCreation.ListInfo;
 
-                    var listId = Storage.List.Create(accountId, listToCreate.Name, listToCreate.Description,
-                                                     listToCreate.IsPrivate);
+                    // Check if the user is authenticated and has rights
+                    var authentication = Authorized(accountId);
 
-                    // Result is an empty error XML element
-                    output = new Answer(new ObjectCreated(listId));
+                    if (authentication.HasRights)
+                    {
+                        var listToCreate = listCreation.ListInfo;
+
+                        var listId = Storage.List.Create(accountId, listToCreate.Name, listToCreate.Description,
+                                                         listToCreate.IsPrivate);
+
+                        // Result is an empty error XML element
+                        output = new Answer(new ObjectCreated(listId));
+                    }
+                    else
+                        output = new Answer(new Error(authentication.ErrorMessage()));
                 }
             }
             catch (StorageLibException exception)

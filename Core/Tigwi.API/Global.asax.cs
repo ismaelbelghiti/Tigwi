@@ -1,7 +1,4 @@
-﻿
-// Les routes pour transmettre les informations aux controllers ;
-
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
 
 namespace Tigwi.API
@@ -13,14 +10,13 @@ namespace Tigwi.API
 			routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             // routes to InfoAccount and ModifyAccount
-            // TODO : add a manner to get the key
 
             routes.MapRoute("InfoAccountByName",
                             "account/{action}/name={accountName}/{number}",
                             new
                             {
                                 controller = "InfoAccount",
-                                number = "20" // Par défaut le nombre de messages est 20
+                                number = "20" // By default the number is 20. 
                             }
                 );
 
@@ -29,17 +25,17 @@ namespace Tigwi.API
                             new
                             {
                                 controller = "InfoAccount",
-                                number = "20" // Par défaut le nombre de messages est 20
+                                number = "20" 
                             }
                 );
 
             routes.MapRoute("InfoAccountDefault",
                             "account/{action}/{accountName}/{number}",
                             new
-                                {
-                                    controller = "InfoAccount",
-                                    number = "20" // Par défaut le nombre de messages est 20
-                                }
+                            {
+                                controller = "InfoAccount",
+                                number = "20" 
+                            }
                 );
 
             routes.MapRoute("ModifyAccount",
@@ -55,10 +51,10 @@ namespace Tigwi.API
             routes.MapRoute("InfoListById",
                             "list/{action}/id={idOfList}/{number}",
                             new
-                                {
-                                    controller = "InfoList",
-                                    number = "20"
-                                }
+                            {
+                                controller = "InfoList",
+                                number = "20"
+                            }
                 );
 
             routes.MapRoute("InfoListDefault",
@@ -83,10 +79,10 @@ namespace Tigwi.API
             routes.MapRoute("InfoUserByLogin", 
                             "user/{action}/login={userLogin}/{number}",
                             new
-                                {
-                                    controller = "InfoUser",
-                                    number = "20"
-                                }
+                            {
+                                controller = "InfoUser",
+                                number = "20"
+                            }
                 );
 
             routes.MapRoute("InfoUserById",

@@ -33,6 +33,10 @@ Thumbs.db
 #####################################################
 packages/
 
+# MVC Application Data #
+########################
+App_Data
+
 # Azure keys #
 ##############
 *.azurePubXml

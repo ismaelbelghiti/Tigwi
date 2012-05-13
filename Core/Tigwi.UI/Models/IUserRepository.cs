@@ -48,16 +48,13 @@ namespace Tigwi.UI.Models
         /// <summary>
         /// Finds a user with the given Id.
         /// </summary>
-        /// <param name="user">
+        /// <param name="userId">
         /// The Id of the user to retrieve.
         /// </param>
         /// <returns>
         /// A <see cref="IUserModel"/> representing the user with the given Id.
         /// </returns>
-        /// <exception cref="UserNotFoundException">
-        /// When there is no user with the given Id.
-        /// </exception>
-        IUserModel Find(Guid user);
+        IUserModel Find(Guid userId);
 
         /// <summary>
         /// Finds a user with the given login.
@@ -72,6 +69,8 @@ namespace Tigwi.UI.Models
         /// When there is no user with the given login.
         /// </exception>
         IUserModel Find(string login);
+
+        bool TryFind(string login, out IUserModel user);
 
         #endregion
     }
