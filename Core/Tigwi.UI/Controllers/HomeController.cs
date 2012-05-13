@@ -126,8 +126,9 @@
 
         #region Public Methods and Operators
 
-        public ActionResult Index()
+        public ActionResult Index(string error)
         {
+            ViewBag.error = error;
             return this.User.Identity.IsAuthenticated
                        ? this.View(this.Storage.Accounts.Find(this.CurrentAccount.Name))
                        : this.View();
