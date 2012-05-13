@@ -72,9 +72,9 @@ namespace Tigwi.UI.Controllers
             {
                 return this.View(this.Storage.Accounts.Find(search.searchString));
             }
-            catch(AccountNotFoundException error)
+            catch(AccountNotFoundException ex)
             {
-                return this.View("Error", new HandleErrorInfo(error,"Account","ShowAccount"));
+                return this.RedirectToAction("Index", "Home", new { error = ex.Message});
             }
         }
 
