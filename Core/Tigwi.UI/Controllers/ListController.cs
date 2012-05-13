@@ -50,13 +50,27 @@ namespace Tigwi.UI.Controllers
         public ActionResult Create(EditListViewModel editList)
         {
             IListModel list = this.Storage.Lists.Create(CurrentAccount, editList.Name, "", true);
-            foreach (var member in editList.AccountIds)
+            try
             {
-                IAccountModel account = this.Storage.Accounts.Find(member);
-                list.Members.Add(account);
+                list.Members.Clear();
+                foreach (var member in editList.AccountIds)
+                {
+                    IAccountModel account = this.Storage.Accounts.Find(member);
+                    list.Members.Add(account);
+                }
+                this.Storage.SaveChanges();
+                return this.RedirectToAction("Index", "Home");
             }
-            this.Storage.SaveChanges();
-            return this.RedirectToAction("Index", "Home");
+            catch (Tigwi.UI.Models.Storage.AccountNotFoundException ex)
+            {
+                this.Storage.Lists.Delete(list);
+                return this.RedirectToAction("Index", "Home", new { error = ex.Message });
+            }
+            catch (System.NullReferenceException)
+            {
+                this.Storage.Lists.Delete(list);
+                return this.RedirectToAction("Index", "Home", new { error = "The list is empty" });
+            }
         }
 
         /// <summary>
