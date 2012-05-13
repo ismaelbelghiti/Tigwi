@@ -175,11 +175,24 @@ namespace Tigwi.UI.Controllers
         [HttpPost]
         public ActionResult Follow(Guid id)
         {
-            IAccountModel account = this.Storage.Accounts.Find(id);
-            account.PersonalList.Followers.Add(CurrentAccount);
-            this.Storage.SaveChanges();
-            ViewBag.AccountName = account.Name;
-            return this.View();
+            IListModel list = CurrentAccount.PersonalList;
+            try
+            {
+                IAccountModel account = this.Storage.Accounts.Find(id);
+                list.Members.Add(account);
+                this.Storage.SaveChanges();
+                return this.RedirectToAction("Index", "Home");
+            }
+            catch (Tigwi.UI.Models.Storage.AccountNotFoundException ex)
+            {
+                this.Storage.Lists.Delete(list);
+                return this.RedirectToAction("Index", "Home", new { error = ex.Message });
+            }
+            catch (System.NullReferenceException)
+            {
+                this.Storage.Lists.Delete(list);
+                return this.RedirectToAction("Index", "Home", new { error = "The list is empty" });
+            }
             //Todo redirect to a dedicated view
         }
 

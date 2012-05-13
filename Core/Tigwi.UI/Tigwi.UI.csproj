@@ -303,11 +303,6 @@
     <Content Include="Views\Shared\_FollowAccount.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Account\Follow.cshtml">
-      <SubType>Code</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Shared\_AccountFollowedPublicLists.cshtml" />
   </ItemGroup>
   <ItemGroup>
