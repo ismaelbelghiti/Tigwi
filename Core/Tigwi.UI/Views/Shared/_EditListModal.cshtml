@@ -41,6 +41,10 @@
         @Html.LabelFor(m => m.Name)
         @Html.EditorFor(m => m.Name)
         @Html.ValidationMessageFor(m => m.Name)
+
+        @Html.LabelFor(m => m.Description)
+        @Html.EditorFor(m => m.Description)
+        @Html.ValidationMessageFor(m => m.Description)
         
         <label for="addAnAccount">Add another account</label>
         <input type="text" class="text-box single-line" id="addAccount"/>

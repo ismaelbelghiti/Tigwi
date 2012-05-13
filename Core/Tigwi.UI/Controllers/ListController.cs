@@ -49,7 +49,7 @@ namespace Tigwi.UI.Controllers
         [HttpPost]
         public ActionResult Create(EditListViewModel editList)
         {
-            IListModel list = this.Storage.Lists.Create(CurrentAccount, editList.Name, "", true);
+            IListModel list = this.Storage.Lists.Create(CurrentAccount, editList.Name, editList.Description, true);
             try
             {
                 list.Members.Clear();
