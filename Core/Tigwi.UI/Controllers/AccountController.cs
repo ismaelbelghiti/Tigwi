@@ -161,9 +161,11 @@ namespace Tigwi.UI.Controllers
         /// Show all the people an account is following.
         /// </summary>
         /// <returns>The resulting view.</returns>
-        public ActionResult Following()
+        public ActionResult Following(Guid id)
         {
-            throw new NotImplementedException("AccountController.Following");
+            IAccountModel account = this.Storage.Accounts.Find(id);
+            account.PersonalList.Followers.Add(CurrentAccount);
+            return this.View(account);
         }
 
         /// <summary>

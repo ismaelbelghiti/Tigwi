@@ -1,0 +1,17 @@
+﻿@model Tigwi.UI.Models.IAccountModel
+
+@{
+    ViewBag.Title = "Following";
+}
+
+<h2>@Model.Name 's Followed Lists</h2>
+
+@foreach(var followedList in Model.PublicFollowedLists)
+{
+    <h3>@followedList.Name</h3>
+    <p> 
+    Description : @followedList.Description
+    </p>
+    
+    
+}
