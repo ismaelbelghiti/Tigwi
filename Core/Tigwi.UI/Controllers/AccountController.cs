@@ -65,7 +65,6 @@ namespace Tigwi.UI.Controllers
         /// Shows a page listing all the posts of the user.
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
         public ActionResult ShowAccount(SearchViewModel search)
         {
             try

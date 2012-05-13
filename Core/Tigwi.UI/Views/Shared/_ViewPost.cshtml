@@ -7,7 +7,7 @@
              src="@Url.Content("~/Content/images/default_profile_1_bigger.png")"
              style="border-radius: 20px;" />
         <section class="span10">
-            <h5>@Model.Poster.Name</h5>
+            <h5>@Html.ActionLink(Model.Poster.Name, "ShowAccount", "Account", new { searchString = Model.Poster.Name }, null)</h5>
             <p>@Model.Content</p>
         </section>
             
