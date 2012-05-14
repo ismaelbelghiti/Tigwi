@@ -321,6 +321,7 @@
   <ItemGroup>
     <Content Include="Views\Shared\_ConfirmDeleteModal.cshtml" />
   </ItemGroup>
+  <ItemGroup>
     <Content Include="Views\Shared\_FollowPerson.cshtml" />
   </ItemGroup>
   <ItemGroup>
