@@ -104,6 +104,10 @@
         <section class="modal hide" id="editListModal">
             @Html.Partial("_EditListModal", new EditListViewModel()))
         </section>
+        
+        <section class="modal hide" id="deleteListModal">
+            @Html.Partial("_ConfirmDeleteModal", null)
+        </section>
        
         <div class="container-fluid">
             <section id="main"> 

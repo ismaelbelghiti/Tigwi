@@ -44,14 +44,19 @@ namespace Tigwi.UI.Controllers
         }
 
         /// <summary>
-        /// Actually creates the list.
+        /// Actually creates or edit the list.
         /// </summary>
         /// <returns></returns>
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Create(EditListViewModel editList)
+        public ActionResult Edit(EditListViewModel editList,int edit)
         {
-            IListModel list = this.Storage.Lists.Create(CurrentAccount, editList.Name, editList.Description, true);
+            IListModel list = null;
+            if (edit == 0)
+                list = this.Storage.Lists.Create(CurrentAccount, editList.ListName, editList.ListDescription,
+                                                        true);
+            else
+                list = this.Storage.Lists.Find(editList.ListId);
             try
             {
                 list.Members.Clear();
@@ -71,7 +76,7 @@ namespace Tigwi.UI.Controllers
             catch (System.NullReferenceException)
             {
                 this.Storage.Lists.Delete(list);
-                return this.RedirectToAction("Index", "Home", new { error = "The list is empty" });
+                return this.RedirectToAction("Index", "Home", new { error = "The list is empty, it has been deleted" });
             }
         }
 
@@ -88,6 +93,25 @@ namespace Tigwi.UI.Controllers
             return this.RedirectToAction("Index", "Home");
             //Todo redirect to a dedicated view
         }
+        /// <summary>
+        /// delete a list
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult DeleteList(Guid id)
+        {
+            //TODO check whether or not it all went according to plan ...
+            this.Storage.Lists.Delete(this.Storage.Lists.Find(id));
+            return this.RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        public ActionResult GetList(Guid listId)
+        {
+            IListModel list = CurrentAccount.AllFollowedLists.Where(l => l.Id == listId).First();
+            return Json(new { Name = list.Name,Descr = list.Description, Members=list.Members.Select(account=>account.Name)});
+            
+        }
 
         public ActionResult AddAccount()
         {
@@ -97,27 +121,6 @@ namespace Tigwi.UI.Controllers
         public ActionResult RemoveAccount()
         {
             throw new NotImplementedException("ListController.RemoveAccounts");
-        }
-
-        /// <summary>
-        /// Show an interface for modification of the name/description of the given list, if the active account is its owner.
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult Edit()
-        {
-            throw new NotImplementedException("ListController.Edit");
-        }
-
-        /// <summary>
-        /// Actually updates the given list.
-        /// </summary>
-        /// <param name="listEditViewModel"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [ValidateInput(false)]
-        public ActionResult Edit(/*ListEditViewModel*/object listEditViewModel)
-        {
-            throw new NotImplementedException("ListController.Edit[POST]");
         }
     }
 }
