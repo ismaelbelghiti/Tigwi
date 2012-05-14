@@ -197,13 +197,7 @@ namespace Tigwi.UI.Controllers
             }
             catch (Tigwi.UI.Models.Storage.AccountNotFoundException ex)
             {
-                this.Storage.Lists.Delete(list);
                 return this.RedirectToAction("Index", "Home", new { error = ex.Message });
-            }
-            catch (System.NullReferenceException)
-            {
-                this.Storage.Lists.Delete(list);
-                return this.RedirectToAction("Index", "Home", new { error = "The list is empty" });
             }
             //Todo redirect to a dedicated view
         }
