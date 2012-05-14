@@ -312,10 +312,9 @@
     <Content Include="Views\Shared\_FollowList.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Shared\_FollowPerson.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Shared\_ConfirmDeleteModal.cshtml" />
+  </ItemGroup>
+    <Content Include="Views\Shared\_FollowPerson.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\_ProfileView.cshtml" />
