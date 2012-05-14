@@ -55,6 +55,7 @@ namespace Tigwi.UI.Controllers
         /// <param name="account"></param>
         /// <returns></returns>
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult AccountExists(string account)
         {
             //TODO check whether account exists or not <3
@@ -65,6 +66,7 @@ namespace Tigwi.UI.Controllers
         /// Shows a page listing all the posts of the user.
         /// </summary>
         /// <returns></returns>
+        [ValidateInput(false)]
         public ActionResult ShowAccount(SearchViewModel search)
         {
             try
@@ -83,6 +85,7 @@ namespace Tigwi.UI.Controllers
         /// </summary>
         /// <returns></returns>
         [Authorize]
+        [ValidateInput(false)]
         public ActionResult MakeActive(string accountName)
         {
             try
@@ -121,6 +124,7 @@ namespace Tigwi.UI.Controllers
         /// <param name="accountCreation"></param>
         /// <returns></returns>
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult Create(AccountCreationViewModel accountCreation)
         {
             if (ModelState.IsValid)
@@ -151,6 +155,7 @@ namespace Tigwi.UI.Controllers
         /// <param name="accountEdit"></param>
         /// <returns></returns>
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult Edit(/*AccountEditModel*/object accountEdit)
         {
             throw new NotImplementedException("AccountController.Edit");
@@ -175,11 +180,24 @@ namespace Tigwi.UI.Controllers
         [HttpPost]
         public ActionResult Follow(Guid id)
         {
-            IAccountModel account = this.Storage.Accounts.Find(id);
-            account.PersonalList.Followers.Add(CurrentAccount);
-            this.Storage.SaveChanges();
-            ViewBag.AccountName = account.Name;
-            return this.View();
+            IListModel list = CurrentAccount.PersonalList;
+            try
+            {
+                IAccountModel account = this.Storage.Accounts.Find(id);
+                list.Members.Add(account);
+                this.Storage.SaveChanges();
+                return this.RedirectToAction("Index", "Home");
+            }
+            catch (Tigwi.UI.Models.Storage.AccountNotFoundException ex)
+            {
+                this.Storage.Lists.Delete(list);
+                return this.RedirectToAction("Index", "Home", new { error = ex.Message });
+            }
+            catch (System.NullReferenceException)
+            {
+                this.Storage.Lists.Delete(list);
+                return this.RedirectToAction("Index", "Home", new { error = "The list is empty" });
+            }
             //Todo redirect to a dedicated view
         }
 
