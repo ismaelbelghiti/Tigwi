@@ -79,7 +79,7 @@
                     dataType: 'json',
                     data: { 'listId': listId },
                     success: function(data) {
-                        $('#ListName').val(data.Name);
+                            $('#ListName').val(data.Name);
                         $('#ListDescription').val(data.Descr);
                         $('#ListId').val(listId);
                         for (var i = 0; i < data.Members.length; i++) {
@@ -89,8 +89,13 @@
                         }
                     }
                 });   
-        });
-
+            });
+            $('#addList').click(function(){
+                $('#ListName').val('');
+                $('#ListDescription').val('');
+                $('#ListId').val('');
+                $("#accountAdded").html('');
+            });
             $('.delete').click(function (event) {
                 event.stopPropagation();
                 $('#deleteListModal').modal('show');

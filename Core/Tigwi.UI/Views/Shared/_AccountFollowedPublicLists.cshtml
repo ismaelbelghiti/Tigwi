@@ -1,9 +1,97 @@
 ﻿@model Tigwi.UI.Models.IAccountModel
 
+@*
 <div class="row-fluid">
 
 @using (Html.BeginForm("Following", "Account", new { id = Model.Id }))
 {
     <button type="submit" class="btn btn-primary" id="followedListsButton">Followed Lists !</button>
 }
-</div>
+</div>*@
+
+<h5>Public followed lists :</h5>
+<section class="listView">
+    <ul>
+    @{
+        var listsOfMember = new Dictionary<Guid, HashSet<Guid>>();
+        foreach (var list in Model.PublicFollowedLists)
+        {
+            foreach (var member in list.Members)
+            {
+                HashSet<Guid> lists;
+                if (!listsOfMember.TryGetValue(member.Id, out lists))
+                {
+                    lists = new HashSet<Guid>();
+                    listsOfMember.Add(member.Id, lists);
+                }
+
+                lists.Add(list.Id);
+            }
+        }
+    }
+    <script type="text/javascript">
+        var lists = {
+            @foreach (var pair in listsOfMember)
+            {
+                @Html.Raw("'" + pair.Key + "': [")
+                foreach(var listId in pair.Value)
+                {
+                    @Html.Raw("'" + listId + "', ")
+                }
+                @Html.Raw("], " )
+            }
+        };
+    </script>
+        
+    <script type="text/javascript">    
+        $('.star').click(function (event) {
+            event.stopPropagation();
+
+            $('#isEdit').val(1);
+            $('.modal-header > h3').html('Edit a List');
+            $('#submitEditModalButton').html('Edit list');
+
+            var name=$(this).next('div').attr('id');
+            var listId=name.substring(5,name.length);
+            $.ajax({
+                url: "@Url.Action("getList","List")",
+                type: "POST",
+                dataType: 'json',
+                data: { 'listId': listId },
+                success: function(data) {
+                    $('#ListName').val(data.Name);
+                    $('#ListDescription').val(data.Descr);
+                    $('#ListId').val(listId);
+                    for (var i = 0; i < data.Members.length; i++) {
+                        var toAppend = "<div class=\"alert alert-info span2\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>" + data.Members[i] +
+                        '<input type="hidden" value="' + data.Members[i] + '" name="AccountIds"/></div>';
+                        $("#accountAdded").append(toAppend);
+                    }
+                }
+            });   
+        });
+    </script>
+
+    @foreach (var list in Model.PublicFollowedLists)
+    {
+        <li>
+            <div class="listName accordion-toggle" data-toggle="collapse" href="#list-@list.Id">
+                <i class="icon-folder-close"></i> @list.Name <i class="star pull-right"></i>
+                <div id="list-@list.Id" class="accordion-body collapse">
+                    <ul class="list-user">
+                        @foreach (var member in list.Members)
+                        {
+                            <li><i class="icon-user"></i>@member.Name</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+        </li>
+    }
+    </ul>
+    <ul><i class="icon-plus"></i> 
+        <a data-toggle="modal" href="#editListModal" id="addList" >Add List</a>
+    </ul>
+
+</section>
