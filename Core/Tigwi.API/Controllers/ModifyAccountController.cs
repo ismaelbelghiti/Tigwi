@@ -54,7 +54,7 @@ namespace Tigwi.API.Controllers
             return Serialize(output);
         }
 
-        // TODO : explain is specs : Is copying like retweeting ?
+
         // POST : /account/copy
 
         [AcceptVerbs(HttpVerbs.Post)]
@@ -100,12 +100,11 @@ namespace Tigwi.API.Controllers
             return Serialize(output);
         }
 
+
         //
         // POST : /account/delete
         
-        // TODO : Authorize
-        // TODO : Rethink this method
-        /*
+        // TODO : Authentication when a method to get the owner is provided
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Delete()
         {
@@ -115,13 +114,11 @@ namespace Tigwi.API.Controllers
             {
                 var msg = (MsgToDelete) (new XmlSerializer(typeof (MsgToDelete))).Deserialize(Request.InputStream);
 
-                if (msg.AccountId == null && msg.AccountName == null)
-                    error = new Error("AccountId or AccountName missing");
-                else if (msg.MessageId == null)
+                if (msg.MessageId == null)
                     error = new Error("MessageId missing");
                 else
                 {
-                    var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
+                    //var ownerId = Storage.Msg.
 
                     Storage.Msg.Remove(msg.MessageId.GetValueOrDefault());
 
@@ -141,14 +138,12 @@ namespace Tigwi.API.Controllers
 
             return Serialize(new Answer(error));
         }
-        */
+        
 
         //
         // POST : /account/tag
 
         // TODO : Authorize
-        // TODO : Rethink this method
-        /*
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Tag()
         {
@@ -184,14 +179,12 @@ namespace Tigwi.API.Controllers
 
             return Serialize(new Answer(error));
         }
-        */
+
         
         //
         // POST : /account/untag
 
         // TODO : Authorize
-        // TODO : Rethink this method
-        /*
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Untag()
         {
@@ -227,7 +220,7 @@ namespace Tigwi.API.Controllers
 
             return Serialize(new Answer(error));
         }
-        */
+
         
         //
         // POST : /account/subscribelist

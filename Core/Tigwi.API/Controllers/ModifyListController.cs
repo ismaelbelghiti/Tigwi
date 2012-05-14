@@ -27,13 +27,13 @@ namespace Tigwi.API.Controllers
                     error = new Error("List missing");
                 else
                 {
-                    var accountId = Storage.Account.GetId(subscribeAccount.Account);
-
+                    var ownerId = Storage.List.GetOwner(subscribeAccount.List.GetValueOrDefault());
                     // Check if the user is authenticated and has rights
-                    var authentication = Authorized(accountId);
+                    var authentication = Authorized(ownerId);
 
                     if (authentication.HasRights)
                     {
+                        var accountId = Storage.Account.GetId(subscribeAccount.Account);
                         Storage.List.Add(subscribeAccount.List.GetValueOrDefault(), accountId);
 
                         // Result is an empty error XML element
@@ -75,13 +75,13 @@ namespace Tigwi.API.Controllers
                     error = new Error("List missing");
                 else
                 {
-                    var accountId = Storage.Account.GetId(unsubscribeAccount.Account);
-
+                    var ownerId = Storage.List.GetOwner(unsubscribeAccount.List.GetValueOrDefault());
                     // Check if the user is authenticated and has rights
-                    var authentication = Authorized(accountId);
+                    var authentication = Authorized(ownerId);
 
                     if (authentication.HasRights)
                     {
+                        var accountId = Storage.Account.GetId(unsubscribeAccount.Account);
                         Storage.List.Remove(unsubscribeAccount.List.GetValueOrDefault(), accountId);
 
                         // Result is an empty error XML element

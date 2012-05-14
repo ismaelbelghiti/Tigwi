@@ -94,15 +94,19 @@
         </div>
       
         <section class="modal hide" id="registerModal">
-            @Html.Partial("_RegisterPartial", new RegisterViewModel()))
+            @Html.Partial("_RegisterPartial", new RegisterViewModel())
         </section>
 
         <section class="modal hide" id="addAccountModal">
-            @Html.Partial("_CreateAccountPartial", new AccountCreationViewModel()))
+            @Html.Partial("_CreateAccountPartial", new AccountCreationViewModel())
         </section>
         
         <section class="modal hide" id="editListModal">
-            @Html.Partial("_EditListModal", new EditListViewModel()))
+            @Html.Partial("_EditListModal", new EditListViewModel())
+        </section>
+        
+        <section class="modal hide" id="deleteListModal">
+            @Html.Partial("_ConfirmDeleteModal", null)
         </section>
        
         <div class="container-fluid">
