@@ -129,11 +129,18 @@ namespace Tigwi.UI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var newAccount = this.Storage.Accounts.Create(CurrentUser, accountCreation.Name, accountCreation.Description);
-                this.CurrentAccount = newAccount;
-                //TODO
-                this.Storage.SaveChanges();
-                return this.RedirectToAction("Create",accountCreation);
+                try
+                {
+                    var newAccount = this.Storage.Accounts.Create(CurrentUser, accountCreation.Name, accountCreation.Description);
+                    this.CurrentAccount = newAccount;
+                    //TODO
+                    this.Storage.SaveChanges();
+                    return this.RedirectToAction("Create", accountCreation);
+                }
+                catch (DuplicateAccountException ex)
+                {
+                    return this.RedirectToAction("Index", "Home", new { error = ex.Message });
+                }
             }
             throw new NotImplementedException("model not valid");
             return this.View(accountCreation);
@@ -190,13 +197,7 @@ namespace Tigwi.UI.Controllers
             }
             catch (Tigwi.UI.Models.Storage.AccountNotFoundException ex)
             {
-                this.Storage.Lists.Delete(list);
                 return this.RedirectToAction("Index", "Home", new { error = ex.Message });
-            }
-            catch (System.NullReferenceException)
-            {
-                this.Storage.Lists.Delete(list);
-                return this.RedirectToAction("Index", "Home", new { error = "The list is empty" });
             }
             //Todo redirect to a dedicated view
         }
