@@ -21,7 +21,7 @@ namespace Tigwi.API.Controllers
 
 
         // General methods used in any controller
-
+        // TODO : test if it works
         protected Authentication Authorized(Guid account)
         {
             // Key must be sent in a cookie

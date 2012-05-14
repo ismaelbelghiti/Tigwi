@@ -68,7 +68,7 @@
                 event.stopPropagation();
                 $('#editListModal').modal('show');
                 $('#isEdit').val(1);
-                $('.modal-header > h3').html('Edit a List');
+                $('.modal-header-edit-list > h3').html('Edit a List');
                 $('#submitEditModalButton').html('Edit list');
 
                 var name=$(this).next('div').attr('id');
@@ -116,8 +116,8 @@
             $('#addList').click(function ()
             {
                 $('#isEdit').val(0);
-                $('.modal-header > h3').html('Create a List');
-                $('#submitEditModalButton').html('Edit list');
+                $('.modal-header-edit-list > h3').html('Create a List');
+                $('#submitEditModalButton').html('Create list');
             });
 
             $('.checkboxfilter').click(function(event)

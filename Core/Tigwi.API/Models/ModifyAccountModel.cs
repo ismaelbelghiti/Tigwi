@@ -11,13 +11,7 @@ namespace Tigwi.API.Models
         public Guid? AccountId { get; set; }
     }
 
-
-    [Serializable]
-    [XmlRootAttribute("Write")]
-    public class MsgToWrite:BaseRequest
-    {
-        public MsgToPost Message { get; set; }
-    }
+    // Add a message
 
     [Serializable]
     [XmlTypeAttribute("Message")]
@@ -27,14 +21,28 @@ namespace Tigwi.API.Models
     }
 
     [Serializable]
-    public class ActionOnMessage:BaseRequest
+    [XmlRootAttribute("Write")]
+    public class MsgToWrite:BaseRequest
+    {
+        public MsgToPost Message { get; set; }
+    }
+
+    // Remove a message
+
+    [Serializable]
+    [XmlRootAttribute("Delete")]
+    public class MsgToDelete
     {
         public Guid? MessageId { get; set; }
     }
 
+    // Other actions on messages
+
     [Serializable]
-    [XmlRootAttribute("Delete")]
-    public class MsgToDelete : ActionOnMessage{}
+    public class ActionOnMessage:BaseRequest
+    {
+        public Guid? MessageId { get; set; }
+    }
 
     [Serializable]
     [XmlRootAttribute("Copy")]
@@ -44,7 +52,9 @@ namespace Tigwi.API.Models
     public class Tag : ActionOnMessage{}
 
     [Serializable]
-    public class Untag : ActionOnMessage { }
+    public class Untag : ActionOnMessage{}
+
+    // Subscribe/Create list
 
     [Serializable]
     public class SubscribeList:BaseRequest
@@ -63,7 +73,6 @@ namespace Tigwi.API.Models
     [Serializable]
     public class CreateList:BaseRequest
     {
-
         public ListInfo ListInfo { get; set; }
     }
 }
