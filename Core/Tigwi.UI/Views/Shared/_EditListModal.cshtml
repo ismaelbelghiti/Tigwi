@@ -45,6 +45,10 @@
         @Html.EditorFor(m => m.ListDescription)
         @Html.ValidationMessageFor(m => m.ListDescription)
         
+        @Html.LabelFor(m => m.ListPublic)
+        @Html.EditorFor(m => m.ListPublic)
+        @Html.ValidationMessageFor(m => m.ListPublic)
+        
         @Html.HiddenFor(m => m.ListId)
 
         <label for="addAnAccount">Add another account</label>

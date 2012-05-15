@@ -69,6 +69,8 @@
                         $('#ListName').val(data.Name);
                         $('#ListDescription').val(data.Descr);
                         $('#ListId').val(listId);
+                        $('#ListPublic').attr('checked',data.Public);
+                        $("#accountAdded").html('');
                         for (var i = 0; i < data.Members.length; i++) {
                             var toAppend = "<div class=\"alert alert-info span2\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>" + data.Members[i] +
                             '<input type="hidden" value="' + data.Members[i] + '" name="AccountIds"/></div>';
