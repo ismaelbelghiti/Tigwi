@@ -29,48 +29,71 @@
             }
         }
     }
-    <script type="text/javascript">
-        var lists = {
-            @foreach (var pair in listsOfMember)
-            {
-                @Html.Raw("'" + pair.Key + "': [")
-                foreach(var listId in pair.Value)
-                {
-                    @Html.Raw("'" + listId + "', ")
-                }
-                @Html.Raw("], " )
-            }
-        };
-    </script>
-        
-    <script type="text/javascript">    
-        $('.star').click(function (event) {
-            event.stopPropagation();
-
-            $('#isEdit').val(1);
-            $('.modal-header > h3').html('Edit a List');
-            $('#submitEditModalButton').html('Edit list');
-
-            var name=$(this).next('div').attr('id');
-            var listId=name.substring(5,name.length);
+    <script type="text/javascript"> 
+        function isFollowed(listId,icon) {
             $.ajax({
-                url: "@Url.Action("getList","List")",
+                url: "@Url.Action("IsFollowed","Account")",
                 type: "POST",
                 dataType: 'json',
                 data: { 'listId': listId },
                 success: function(data) {
-                    $('#ListName').val(data.Name);
-                    $('#ListDescription').val(data.Descr);
-                    $('#ListId').val(listId);
-                    for (var i = 0; i < data.Members.length; i++) {
-                        var toAppend = "<div class=\"alert alert-info span2\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>" + data.Members[i] +
-                        '<input type="hidden" value="' + data.Members[i] + '" name="AccountIds"/></div>';
-                        $("#accountAdded").append(toAppend);
+                    icon.removeClass('icon-star');
+                    icon.removeClass('icon-star-empty');
+                    if(data.Followed) {
+                        icon.addClass('icon-star');
+                    }
+                    else {
+                        icon.addClass('icon-star-empty');
                     }
                 }
-            });   
-        });
+            });
+        }
     </script>
+
+    <script type="text/javascript">
+            $(document).ready(function () {
+                $('.star').each(function () {
+                    var name = $(this).next('div').attr('id');
+                    var listId = name.substring(5, name.length);
+                    isFollowed(listId, $(this));
+                });
+
+
+                $('.star').click(function (event) {
+                    event.stopPropagation();
+
+                    var name=$(this).next('div').attr('id');
+                    var listId=name.substring(5,name.length);
+                    var icon = $(this);
+                    if ($(this).hasClass('icon-star-empty')) {
+                        $.ajax({
+                            url: "@Url.Action("FollowList","List")",
+                            type: "POST",
+                            dataType: 'json',
+                            data: { 'id': listId },
+                            success: function(data) {
+                                alert("You are now following the public list :" + data.Name);
+                                isFollowed(listId, icon);
+                            }
+                        });
+                    }
+                    else {
+                       $.ajax({
+                            url: "@Url.Action("UnfollowList","List")",
+                            type: "POST",
+                            dataType: 'json',
+                            data: { 'id': listId },
+                            success: function(data) {
+                                alert("You are not following the public list :" + data.Name + " anymore.");
+                                isFollowed(listId, icon);
+                            }
+                        }); 
+                    }
+                });
+            });     
+    </script>
+
+
 
     @foreach (var list in Model.PublicFollowedLists)
     {
@@ -89,9 +112,6 @@
 
         </li>
     }
-    </ul>
-    <ul><i class="icon-plus"></i> 
-        <a data-toggle="modal" href="#editListModal" id="addList" >Add List</a>
     </ul>
 
 </section>
