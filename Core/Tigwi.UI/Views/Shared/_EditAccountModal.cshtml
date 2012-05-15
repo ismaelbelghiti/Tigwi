@@ -1,48 +1,26 @@
 ﻿@model Tigwi.UI.Models.Account.AccountEditViewModel
 
-   <script type="text/javascript">
-   $(document).ready(function () {
-
-    $('.edit').click(function (event) {
-                event.stopPropagation();
-                $('#editAccountModal').modal('show');
-                $('#isEdit').val(1);
-                $('.modal-header-edit-account > h3').html('Edit Account');
-                $('#submitEditAccountModalButton').html('Edit Account');
-
-                var name=$(this).next('div').attr('id');
-              
-                $.ajax({
-                    url: "@Url.Action("getAccount","Account")",
-                    type: "POST",
-                    dataType: 'json',
-                    data: { },
-                    success: function(data) {
-                        $('#AccountDescription').val(data.Descr);
-                    }
-                });   
-            });
-   </script>
-
-<div class="modal-header modal-header-edit-account">
+<div class="modal-header modal-header-edit-list">
     <button class="close" data-dismiss="modal">×</button>
-    <h3>Edit your Account</h3>
+    <h3>Edit a list</h3>
 </div>
 
-@using (Html.BeginForm("Edit", "Account", FormMethod.Post, null))
+@using (Html.BeginForm("Edit", "Account", FormMethod.Post,null))
 {    
     <div class="modal-body">
 
         @Html.LabelFor(m => m.Description)
         @Html.EditorFor(m => m.Description)
         @Html.ValidationMessageFor(m => m.Description)
-
-
+        
+        @Html.HiddenFor(m => m.AccountId)
     </div>
-
+    
+    
     <div class="modal-footer">
         <a href="#" class="btn" data-dismiss="modal">Close</a>
-        <button class="btn btn-primary" type="submit" id="submitEditAccountModalButton">Save Changes !</button>    
+        <button class="btn btn-primary" type="submit" id="submitEditAccountModalButton">Save your Changes !</button>
+        
     </div>
-
 }
+

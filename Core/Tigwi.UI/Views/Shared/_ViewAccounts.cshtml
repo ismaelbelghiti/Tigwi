@@ -1,0 +1,42 @@
+﻿@using Tigwi.UI.Models
+
+<section class="accountsView">
+<ul>
+
+<script type="text/javascript">
+       $(document).ready(function () {
+            $('.editAcc').click(function (event) {
+                event.stopPropagation();
+                $('#editAccountModal').modal('show');
+                $('#isEdit').val(1);
+                $('.modal-header-edit-account > h3').html('Edit Account');
+                $('#submitEditAccountModalButton').html('Edit Account');
+
+                var name=$(this).next('div').attr('id');
+                var accountId=name.substring(5,name.length);
+                $.ajax({
+                    url: "@Url.Action("getAccount","Account")",
+                    type: "POST",
+                    dataType: 'json',
+                    data: { 'accountId': accountId },
+                    success: function(data) {
+                            $('#Description').val(data.Descr);
+                            $('#AccountId').val(accountId);
+                    }
+                });   
+            });
+        });
+    </script>
+
+@foreach (var account in Model.Accounts)
+{
+    <li>
+         @account.Name <i class="editAcc icon-pencil"></i>
+        <div id="acct-@account.Id">
+        <p><b>Description : </b> @account.Description</p>
+        </div>
+    </li>
+}
+</ul>
+</section>
+

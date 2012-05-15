@@ -10,10 +10,10 @@
     @if(User.Identity.IsAuthenticated)
     {
         <ul>
-        <p><b>Description</b> : <br />
-        @CurrentAccount.Description </p>
-        <i class="icon-pencil"></i>
         <a data-toggle="modal" href="#editAccountModal" id="editAccount" >Edit Account</a>
+        <div id="accd-@CurrentAccount.Id">
+        <p><b>Description : </b> @CurrentAccount.Description</p>
+        </div>
         </ul>
         @Html.Partial("_ListView", CurrentAccount.AllFollowedLists)
     }

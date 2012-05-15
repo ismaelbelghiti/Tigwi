@@ -16,5 +16,7 @@ namespace Tigwi.UI.Models.Account
         [Display(Name = "Description")]
         public string Description { get; set; }
 
+        //Not required 
+        public Guid AccountId { get; set; }
     }
 }

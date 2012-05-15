@@ -42,7 +42,7 @@ namespace Tigwi.UI.Controllers
         {
             if (this.CurrentUser != null)
             {
-                return this.View(this.CurrentUser.Accounts);
+                return this.View(CurrentUser);
             }
 
             // User must be connected
@@ -226,10 +226,10 @@ namespace Tigwi.UI.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetAccount()
+        public ActionResult GetAccount(Guid accountId)
         {
-            IAccountModel account = CurrentAccount;
-            return Json(new { Name = account.Name, Descr = account.Description });
+            IAccountModel account = this.Storage.Accounts.Find(accountId);
+            return Json(new { Descr = account.Description });
         }
     }
 }
