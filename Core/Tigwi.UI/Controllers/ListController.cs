@@ -59,6 +59,8 @@ namespace Tigwi.UI.Controllers
                 list = this.Storage.Lists.Find(editList.ListId);
             try
             {
+                list.Name = editList.ListName;
+                list.Description = editList.ListDescription;
                 list.Members.Clear();
                 foreach (var member in editList.AccountIds)
                 {
