@@ -163,9 +163,13 @@ namespace Tigwi.UI.Controllers
         /// <returns></returns>
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Edit(/*AccountEditModel*/object accountEdit)
+        public ActionResult Edit(AccountEditViewModel editAccount)
         {
-            throw new NotImplementedException("AccountController.Edit");
+            IAccountModel account = this.Storage.Accounts.Find(CurrentAccount.Id);
+            account.Description = editAccount.Description;
+            this.Storage.SaveChanges();
+            return this.RedirectToAction("Index", "Home");
+            //TODO : Catch Errors
         }
 
         /// <summary>
@@ -219,6 +223,13 @@ namespace Tigwi.UI.Controllers
         public ActionResult Followers()
         {
             throw new NotImplementedException("AccountController.Followers");
+        }
+
+        [HttpPost]
+        public ActionResult GetAccount()
+        {
+            IAccountModel account = CurrentAccount;
+            return Json(new { Name = account.Name, Descr = account.Description });
         }
     }
 }

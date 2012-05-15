@@ -9,6 +9,12 @@
 {
     @if(User.Identity.IsAuthenticated)
     {
+        <ul>
+        <p><b>Description</b> : <br />
+        @CurrentAccount.Description </p>
+        <i class="icon-pencil"></i>
+        <a data-toggle="modal" href="#editAccountModal" id="editAccount" >Edit Account</a>
+        </ul>
         @Html.Partial("_ListView", CurrentAccount.AllFollowedLists)
     }
     else
@@ -26,7 +32,7 @@
     </div>
 }
 
-@if(User.Identity.IsAuthenticated)
+@if (User.Identity.IsAuthenticated)
 {
     <div>@Html.Partial("_WriteMessage", new WritePostViewModel())</div>
     <div>@Html.Partial("_ViewPostList", Model.AllFollowedLists.PostsBefore(DateTime.MaxValue, 10))</div>
