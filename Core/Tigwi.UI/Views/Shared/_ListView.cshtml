@@ -23,19 +23,6 @@
         }
     }
     <script type="text/javascript">
-        var lists = {
-            @foreach (var pair in listsOfMember)
-            {
-                @Html.Raw("'" + pair.Key + "': [")
-                foreach(var listId in pair.Value)
-                {
-                    @Html.Raw("'" + listId + "', ")
-                }
-                @Html.Raw("], " )
-            }
-        };
-
-
         $(document).ready(function () {
             $('.checkboxfilter').change(function (event) {
                 event.stopPropagation();
@@ -79,7 +66,7 @@
                     dataType: 'json',
                     data: { 'listId': listId },
                     success: function(data) {
-                            $('#ListName').val(data.Name);
+                        $('#ListName').val(data.Name);
                         $('#ListDescription').val(data.Descr);
                         $('#ListId').val(listId);
                         for (var i = 0; i < data.Members.length; i++) {

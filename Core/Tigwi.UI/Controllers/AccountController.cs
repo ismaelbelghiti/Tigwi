@@ -146,6 +146,12 @@ namespace Tigwi.UI.Controllers
             return this.View(accountCreation);
         }
 
+        [HttpPost]
+        public ActionResult IsFollowed(Guid listId)
+        {
+            return Json(new {Followed = CurrentAccount.PublicFollowedLists.Select(list => list.Id).Contains(listId)});
+        }
+
         /// <summary>
         /// Show a form to edit the given account.
         /// If no account is given, edit the active account instead.

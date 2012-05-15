@@ -90,11 +90,26 @@ namespace Tigwi.UI.Controllers
         [HttpPost]
         public ActionResult FollowList(Guid id)
         {
-            CurrentAccount.AllFollowedLists.Add(this.Storage.Lists.Find(id));
+            var list = this.Storage.Lists.Find(id);
+            CurrentAccount.AllFollowedLists.Add(list);
             this.Storage.SaveChanges();
-            return this.RedirectToAction("Index", "Home");
-            //Todo redirect to a dedicated view
+            return Json(new {Name=list.Name});
         }
+
+        /// <summary>
+        /// Stops the active account from following list id
+        /// Idempotent.
+        /// </summary>
+        /// <returns>The resulting view.</returns>
+        [HttpPost]
+        public ActionResult UnfollowList(Guid id)
+        {
+            var list = this.Storage.Lists.Find(id);
+            CurrentAccount.AllFollowedLists.Remove(list);
+            this.Storage.SaveChanges();
+            return Json(new { Name = list.Name });
+        }
+
         /// <summary>
         /// delete a list
         /// </summary>
