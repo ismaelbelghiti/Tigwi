@@ -53,14 +53,14 @@ namespace Tigwi.UI.Controllers
         {
             IListModel list = null;
             if (edit == 0)
-                list = this.Storage.Lists.Create(CurrentAccount, editList.ListName, editList.ListDescription,
-                                                        true);
+                list = this.Storage.Lists.Create(CurrentAccount, editList.ListName, editList.ListDescription,!editList.ListPublic);
             else
                 list = this.Storage.Lists.Find(editList.ListId);
             try
             {
                 list.Name = editList.ListName;
                 list.Description = editList.ListDescription;
+                list.IsPrivate = !editList.ListPublic;
                 list.Members.Clear();
                 foreach (var member in editList.AccountIds)
                 {
@@ -118,6 +118,7 @@ namespace Tigwi.UI.Controllers
         public ActionResult DeleteList(Guid id)
         {
             //TODO check whether or not it all went according to plan ...
+            //TODO prevent other accounts from deleting your public lists ...
             this.Storage.Lists.Delete(this.Storage.Lists.Find(id));
             return this.RedirectToAction("Index", "Home");
         }
@@ -126,7 +127,7 @@ namespace Tigwi.UI.Controllers
         public ActionResult GetList(Guid listId)
         {
             IListModel list = CurrentAccount.AllFollowedLists.Where(l => l.Id == listId).First();
-            return Json(new { Name = list.Name,Descr = list.Description, Members=list.Members.Select(account=>account.Name)});
+            return Json(new { Name = list.Name,Descr = list.Description,Public = !list.IsPrivate, Members=list.Members.Select(account=>account.Name)});
             
         }
 

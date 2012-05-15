@@ -17,6 +17,10 @@ namespace Tigwi.UI.Models
         public string ListDescription { get; set; }
 
         [Required]
+        [Display(Name = "Make list public :")]
+        public bool ListPublic { get; set; }
+
+        [Required]
         public IEnumerable<string> AccountIds { get; set; }
 
         //Not required (list creation)
