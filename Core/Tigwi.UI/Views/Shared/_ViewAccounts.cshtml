@@ -31,7 +31,13 @@
 @foreach (var account in Model.Accounts)
 {
     <li>
-         @account.Name <i class="editAcc icon-pencil"></i>
+        <h2> @account.Name 
+        <a data-toggle="modal" href="#editAccountModal" class="btn btn-primary" id="editAccount" ><b>Edit</b></a>
+        @if(@account.Admin.Id == CurrentUser.Id)
+        {
+           <a data-toggle="modal" href="todo" class="btn btn-primary" id="deleteAccount" ><b>Delete</b></a> 
+        }
+         </h2>
         <div id="acct-@account.Id">
         <p><b>Description : </b> @account.Description</p>
         </div>
