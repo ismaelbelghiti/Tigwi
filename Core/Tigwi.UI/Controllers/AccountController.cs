@@ -171,7 +171,7 @@ namespace Tigwi.UI.Controllers
         [ValidateInput(false)]
         public ActionResult Edit(AccountEditViewModel editAccount)
         {
-            IAccountModel account = this.Storage.Accounts.Find(CurrentAccount.Id);
+            IAccountModel account = this.Storage.Accounts.Find(editAccount.AccountId);
             account.Description = editAccount.Description;
             this.Storage.SaveChanges();
             return this.RedirectToAction("Index", "Home");

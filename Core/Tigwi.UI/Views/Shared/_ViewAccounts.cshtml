@@ -10,9 +10,9 @@
                 $('#editAccountModal').modal('show');
                 $('#isEdit').val(1);
                 $('.modal-header-edit-account > h3').html('Edit Account');
-                $('#submitEditAccountModalButton').html('Edit Account');
+                $('#submitEditAccountModalButton').html('Save Changes');
 
-                var name=$(this).next('div').attr('id');
+                var name=$(this).attr('id');
                 var accountId=name.substring(5,name.length);
                 $.ajax({
                     url: "@Url.Action("getAccount","Account")",
@@ -26,21 +26,15 @@
                 });   
             });
         });
-    </script>
+</script>
 
 @foreach (var account in Model.Accounts)
 {
     <li>
         <h2> @account.Name 
-        <a data-toggle="modal" href="#editAccountModal" class="btn btn-primary" id="editAccount" ><b>Edit</b></a>
-        @if(@account.Admin.Id == CurrentUser.Id)
-        {
-           <a data-toggle="modal" href="todo" class="btn btn-primary" id="deleteAccount" ><b>Delete</b></a> 
-        }
-         </h2>
-        <div id="acct-@account.Id">
+        <button class="btn btn-primary editAcc" id="acct-@account.Id" ><b>Edit</b></h2>
+       
         <p><b>Description : </b> @account.Description</p>
-        </div>
     </li>
 }
 </ul>
