@@ -44,6 +44,11 @@ namespace Tigwi.UI.Models
         /// </summary>
         string Login { get; }
 
+        /// <summary>
+        /// Sets the user's password
+        /// </summary>
+        string Password { set; }
+
         #endregion
     }
 }

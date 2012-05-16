@@ -8,6 +8,8 @@ namespace Tigwi.API.Controllers
     public class InfoUserController : ApiController
     {
 
+        // TODO : add "need authentication" in specs
+        // TODO : add authentication
         //
         // GET : /user/maininfo/{userLogin}
         // GET : /user/maininfo/login={userLogin}

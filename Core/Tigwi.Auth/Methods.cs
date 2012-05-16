@@ -79,7 +79,8 @@ namespace Tigwi.Auth
             {
                 Guid userId = this.storage.User.GetId(this.username);
                 byte[] hashedPassword = this.storage.User.GetPassword(userId);
-                if ( hashedPassword != PasswordAuth.HashPassword(this.password) )
+                byte[] otherHash = PasswordAuth.HashPassword(this.password);
+                if ( ! hashedPassword.SequenceEqual(otherHash) )
                     throw new AuthFailedException();
                 return userId;
             }
