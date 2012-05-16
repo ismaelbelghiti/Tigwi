@@ -300,6 +300,10 @@
     <Content Include="Views\Account\ShowAccount.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Tigwi.Auth\Tigwi.Auth.csproj">
+      <Project>{BFB5FCE1-E4A1-4527-8345-77C0A32BFD60}</Project>
+      <Name>Tigwi.Auth</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Tigwi.Storage.Library\Tigwi.Storage.Library.csproj">
       <Project>{2C5E15F5-0DF9-4D0A-AB8F-FB8FEC5B25E8}</Project>
       <Name>Tigwi.Storage.Library</Name>

@@ -11,6 +11,8 @@ namespace Tigwi.Storage.Library.Utilities
     {
         public HashSetBlob(CloudBlobContainer container, string blobName) : base(container, blobName) { }
 
+        public HashSetBlob(CloudBlob blob) : base(blob) { }
+
         public bool AddWithRetry(T item)
         {
             HashSet<T> set;

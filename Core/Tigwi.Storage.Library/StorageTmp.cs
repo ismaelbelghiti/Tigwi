@@ -181,6 +181,11 @@
 
         #region Public Methods and Operators
 
+        public bool ReserveAccountName(string accountName)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Add(Guid accountId, Guid userId)
         {
             var accountInfo = this.GetFullInfo(accountId);
@@ -190,7 +195,7 @@
             userInfo.Accounts.Add(accountId);
         }
 
-        public Guid Create(Guid adminId, string name, string description)
+        public Guid Create(Guid adminId, string name, string description, bool bypassNameReservation = false)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -328,6 +333,12 @@
 
             Console.WriteLine("Accounts printed.");
         }
+
+        public HashSet<string> Autocompletion(string nameBegining, int maxNameNumber)
+        {
+            throw new NotImplementedException();
+        }
+
 
         #endregion
         

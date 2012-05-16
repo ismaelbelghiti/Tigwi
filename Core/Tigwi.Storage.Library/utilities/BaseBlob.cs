@@ -172,7 +172,7 @@ namespace Tigwi.Storage.Library.Utilities
 
         public void Delete()
         {
-            blob.Delete();
+            blob.DeleteIfExists();
         }
 
         public bool TryDelete()

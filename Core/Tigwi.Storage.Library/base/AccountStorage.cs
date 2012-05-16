@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Tigwi.Storage.Library;
 using Tigwi.Storage.Library.Utilities;
+using Tigwi.Storage.Library.DoubleMetaphone;
 
 namespace Tigwi.Storage.Library
 {
@@ -104,12 +105,23 @@ namespace Tigwi.Storage.Library
             
         }
 
-        public Guid Create(Guid adminId, string name, string description)
+        public bool ReserveAccountName(string accountName)
         {
-            // lock the name
-            Blob<Guid> bIdByName = blobFactory.AIdByName(name);
+            Blob<Guid> bIdByName = blobFactory.AIdByName(accountName);
             if (!bIdByName.SetIfNotExists(Guid.Empty))
-                throw new AccountAlreadyExists();
+                return false;
+            return true;
+        }
+
+        public Guid Create(Guid adminId, string name, string description, bool bypassNameReservation = false)
+        {
+            Blob<Guid> bIdByName = blobFactory.AIdByName(name);
+            // lock the name
+            if (!bypassNameReservation)
+            {
+                if (!bIdByName.SetIfNotExists(Guid.Empty))
+                    throw new AccountAlreadyExists();
+            }
 
             Guid accountId = Guid.NewGuid();         
 
@@ -157,6 +169,11 @@ namespace Tigwi.Storage.Library
         {
             // TODO : implement
             throw new NotImplementedException();
+        }
+
+        public HashSet<string> Autocompletion(string name, int maxNameNumber)
+        {
+            return blobFactory.AAutocompletion().GetWithPrefix(name.GenerateDoubleMetaphone(), maxNameNumber);
         }
     }
 }
