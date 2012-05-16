@@ -217,9 +217,20 @@ namespace Tigwi.UI.Controllers
         /// <returns>The resulting view.</returns>
         public ActionResult Following(Guid id)
         {
-            IAccountModel account = this.Storage.Accounts.Find(id);
-            account.PersonalList.Followers.Add(CurrentAccount);
-            return this.View(account);
+            try
+            {
+                IAccountModel account = this.Storage.Accounts.Find(id);
+                account.PersonalList.Followers.Add(CurrentAccount);
+                return this.View(account);
+            }
+            catch(AccountNotFoundException)
+            {
+                return this.RedirectToAction("Index", "Home", new { error = "This account doesn't exist anymore!" });
+            }
+            catch
+            {
+                return this.RedirectToAction("Index", "Home", new { error = "Something went wrong!" });
+            }
         }
 
         /// <summary>
