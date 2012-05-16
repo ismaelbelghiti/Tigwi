@@ -47,11 +47,17 @@ namespace Tigwi.UI.Controllers
                 try
                 {
                     // TODO: real authentication
+                    var auth = new Tigwi.Auth.PasswordAuth(RawStorage, userLogOnViewModel.Login, userLogOnViewModel.Password);
+                    Guid userId = auth.Authenticate();
                     var loggingUser = this.Storage.Users.Find(userLogOnViewModel.Login);
                     this.AuthenticateUser(loggingUser, userLogOnViewModel.RememberMe);
 
                     return this.RedirectToAction("Index", "Home");
                     // return this.RedirectToAction("Timeline", "Account");
+                }
+                catch (Tigwi.Auth.AuthFailedException)
+                {
+                    ModelState.AddModelError("Login", "Bad login/password");
                 }
                 catch (UserNotFoundException ex)
                 {
@@ -93,7 +99,7 @@ namespace Tigwi.UI.Controllers
                 {
                     // TODO: real authentication
                     var newUser = this.Storage.Users.Create(registerViewModel.Login, registerViewModel.Email);
-
+                    newUser.Password = registerViewModel.Password;
                     try
                     {
                         var newAccount = this.Storage.Accounts.Create(newUser, registerViewModel.Login, string.Empty);

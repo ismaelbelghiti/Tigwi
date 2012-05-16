@@ -99,6 +99,14 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
+        public string Password
+        {
+            set
+            {
+                this.Storage.User.SetPassword(this.Id, Tigwi.Auth.PasswordAuth.HashPassword(value));
+            }
+        }
+
         internal StorageEntityCollection<StorageAccountModel, IAccountModel> InternalAccounts
         {
             get
