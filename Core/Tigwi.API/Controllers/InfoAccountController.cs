@@ -6,7 +6,7 @@ using Tigwi.Storage.Library;
 
 namespace Tigwi.API.Controllers
 {
-    public abstract class InfoAccountController : ApiController
+    public class InfoAccountController : ApiController
     {
 
         //
