@@ -77,6 +77,10 @@ namespace Tigwi.UI.Controllers
             {
                 return this.RedirectToAction("Index", "Home", new { error = ex.Message});
             }
+            catch (System.ArgumentNullException)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
         }
 
 

@@ -6,7 +6,8 @@
 
 @section LeftInfos
 {
-        <p>Oh Hai @Model.Name</p>
+        <h3>@Model.Name</h3>
+        <p>@Model.Description</p>
         @if(User.Identity.IsAuthenticated)
         {
             @Html.Partial("_FollowPerson", Model)
