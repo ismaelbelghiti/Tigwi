@@ -104,12 +104,23 @@ namespace Tigwi.Storage.Library
             
         }
 
-        public Guid Create(Guid adminId, string name, string description)
+        public bool ReserveAccountName(string accountName)
         {
-            // lock the name
-            Blob<Guid> bIdByName = blobFactory.AIdByName(name);
+            Blob<Guid> bIdByName = blobFactory.AIdByName(accountName);
             if (!bIdByName.SetIfNotExists(Guid.Empty))
-                throw new AccountAlreadyExists();
+                return false;
+            return true;
+        }
+
+        public Guid Create(Guid adminId, string name, string description, bool bypassNameReservation = false)
+        {
+            Blob<Guid> bIdByName = blobFactory.AIdByName(name);
+            // lock the name
+            if (!bypassNameReservation)
+            {
+                if (!bIdByName.SetIfNotExists(Guid.Empty))
+                    throw new AccountAlreadyExists();
+            }
 
             Guid accountId = Guid.NewGuid();         
 
