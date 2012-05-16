@@ -37,7 +37,7 @@ namespace Tigwi.API.Controllers
                         var msgId = Storage.Msg.Post(accountId, msg.Message);
 
                         // Result
-                        output = new Answer(new ObjectCreated(msgId));
+                        output = new Answer(new NewObject(msgId));
                     }
                     else
                         output = new Answer(new Error(authentication.ErrorMessage()));
@@ -83,7 +83,7 @@ namespace Tigwi.API.Controllers
                         var msgId = Storage.Msg.Copy(accountId, msg.MessageId.GetValueOrDefault());
 
                         //Result
-                        output = new Answer(new ObjectCreated(msgId));
+                        output = new Answer(new NewObject(msgId));
                     }
                     else
                         output = new Answer(new Error(authentication.ErrorMessage()));
@@ -309,7 +309,7 @@ namespace Tigwi.API.Controllers
                                                          listToCreate.IsPrivate);
 
                         // Result is an empty error XML element
-                        output = new Answer(new ObjectCreated(listId));
+                        output = new Answer(new NewObject(listId));
                     }
                     else
                         output = new Answer(new Error(authentication.ErrorMessage()));
