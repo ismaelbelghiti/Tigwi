@@ -18,5 +18,9 @@ namespace Tigwi.UI.Models.Account
 
         //Not required 
         public Guid AccountId { get; set; }
+
+        //Not required
+        public string ReturnController { get; set; }
+        public string ReturnAction { get; set; }
     }
 }

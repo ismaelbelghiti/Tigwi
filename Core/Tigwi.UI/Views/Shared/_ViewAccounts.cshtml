@@ -22,6 +22,8 @@
                     success: function(data) {
                             $('#Description').val(data.Descr);
                             $('#AccountId').val(accountId);
+                            $('#ReturnController').val("Account");
+                            $('#ReturnAction').val("List");
                     }
                 });   
             });
