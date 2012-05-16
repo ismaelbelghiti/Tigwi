@@ -14,17 +14,10 @@ namespace Tigwi.API.Models
     // Add a message
 
     [Serializable]
-    [XmlTypeAttribute("Message")]
-    public class MsgToPost
-    {
-        public string Content { get; set; }
-    }
-
-    [Serializable]
     [XmlRootAttribute("Write")]
     public class MsgToWrite:BaseRequest
     {
-        public MsgToPost Message { get; set; }
+        public string Message { get; set; }
     }
 
     // Remove a message

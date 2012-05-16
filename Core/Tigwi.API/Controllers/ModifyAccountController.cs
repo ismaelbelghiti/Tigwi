@@ -22,8 +22,10 @@ namespace Tigwi.API.Controllers
 
                 if (msg.AccountId == null && msg.AccountName == null)
                     output = new Answer(new Error("AccountId or AccountName missing"));
-                else if (msg.Message == null) // TODO ? check more on message (size for example)
+                else if (msg.Message == null)
                     output = new Answer(new Error("Message missing"));
+                else if (msg.Message.Length > 140) // TODO ? check more on message
+                    output = new Answer(new Error("Message must not exceed 140 characters"));
                 else
                 {
                     var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
@@ -32,7 +34,7 @@ namespace Tigwi.API.Controllers
                     var authentication = Authorized(accountId);
                     if (authentication.HasRights)
                     {
-                        var msgId = Storage.Msg.Post(accountId, msg.Message.Content);
+                        var msgId = Storage.Msg.Post(accountId, msg.Message);
 
                         // Result
                         output = new Answer(new ObjectCreated(msgId));
@@ -105,6 +107,7 @@ namespace Tigwi.API.Controllers
         // POST : /account/delete
         
         // TODO : Authentication when a method to get the owner is provided
+        // Note : This is not implemented by storage
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Delete()
         {
