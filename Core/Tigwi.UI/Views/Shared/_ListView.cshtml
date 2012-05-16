@@ -22,6 +22,19 @@
             }
         }
     }
+        <script type="text/javascript">
+            var lists = {
+	            @foreach (var pair in listsOfMember)
+                {
+                    @Html.Raw("'" + pair.Key + "': [")
+                    foreach(var listId in pair.Value)
+                    {
+                        @Html.Raw("'" + listId + "', ")
+                    }
+                @Html.Raw("], " )
+             }
+         };
+        </script>
     <script type="text/javascript">
         $(document).ready(function () {
             $('.checkboxfilter').change(function (event) {
@@ -73,7 +86,7 @@
                         $("#accountAdded").html('');
                         for (var i = 0; i < data.Members.length; i++) {
                             var toAppend = "<div class=\"alert alert-info span2\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>" + data.Members[i] +
-                            '<input type="hidden" value="' + data.Members[i] + '" name="AccountIds"/></div>';
+                                '<input type="hidden" value="' + data.Members[i] + '" name="AccountIds"/></div>';
                             $("#accountAdded").append(toAppend);
                         }
                     }
@@ -108,14 +121,14 @@
             });
 
             $('#addList').click(function ()
-            {
+                {
                 $('#isEdit').val(0);
                 $('.modal-header-edit-list > h3').html('Create a List');
                 $('#submitEditModalButton').html('Create list');
             });
 
             $('.checkboxfilter').click(function(event)
-            {
+                {
                 event.stopPropagation();
             });
         });

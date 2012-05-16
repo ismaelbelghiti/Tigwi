@@ -8,10 +8,6 @@
             $('.editAcc').click(function (event) {
                 event.stopPropagation();
                 $('#editAccountModal').modal('show');
-                $('#isEdit').val(1);
-                $('.modal-header-edit-account > h3').html('Edit Account');
-                $('#submitEditAccountModalButton').html('Save Changes');
-
                 var name=$(this).attr('id');
                 var accountId=name.substring(5,name.length);
                 $.ajax({
