@@ -23,15 +23,9 @@ namespace StorageTest
         [SetUp]
         public void InitStorage()
         {
-            bool UseStorageTmp = false;
-            if (UseStorageTmp)
-                storage = new StorageTmp();
-            else
-            {
-                var blobFactory = new BlobFactory(azureAccountName, azureAccountKey);
-                blobFactory.InitStorage();
-                storage = new Storage(azureAccountName, azureAccountKey);
-            }
+            var blobFactory = new BlobFactory(azureAccountName, azureAccountKey);
+            blobFactory.InitStorage();
+            storage = new Storage(azureAccountName, azureAccountKey);
 
             _userId = storage.User.Create("userThatExists", "userThatExists@gmail.com", new Byte[1]);
             _accountId = storage.Account.Create(_userId, "accountThatExists", "accountThatExistsDesc");

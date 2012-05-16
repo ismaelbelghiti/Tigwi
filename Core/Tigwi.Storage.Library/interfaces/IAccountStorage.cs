@@ -59,11 +59,18 @@ namespace Tigwi.Storage.Library
         /// </summary>
         /// <exception cref="UserNotFound">if no user has this ID</exception>
         /// <exception cref="AccountAlreadyExists">if the name is already used</exception>
-        Guid Create(Guid adminId, string name, string description);
+        Guid Create(Guid adminId, string name, string description, bool bypassNameReservation = false);
         /// <summary>
         /// Delete the given account
         /// Doesn't do anything if the account doesn't exists
         /// </summary>
         void Delete(Guid accountId);
+
+        /// <summary>
+        /// Allow you to reserve an account name for futur use
+        /// If you want to use this name, you will have to set bypassNameReservation to true in account.create
+        /// </summary>
+        /// <returns>false if the name was already reserved, true overwise</returns>
+        bool ReserveAccountName(string accountName);
     }
 }
