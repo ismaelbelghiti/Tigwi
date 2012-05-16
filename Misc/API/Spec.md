@@ -1,5 +1,11 @@
 Tigwi - API Specification by L. de HARO, A. de MYTTENAERE and T. ZIMMERMANN 
 
+Notes :
+* Add short description of essential ressources.
+* Why should we need authentication to access accounts main infos ?
+* Currently, it is possible to subscribe a private list just knowing its Guid.
+* How to check if you have the rights on a message ?
+
 #Get informations about an _account_
 
 ##Get someone's recently sent messages
@@ -8,13 +14,13 @@ Obtain a number _n_ of the account _accountName_ 's last posted messages
 ###HTTP method
 *GET*
 ###URL
-http://api.tigwi.com/account/messages/accountName/numberOfMessages  
-or  
-http://api.tigwi.com/accountbyid/messages/accountId/numberOfMessages
+http://api.tigwi.com/account/messages/_accountName_/_numberOfMessages_
+http://api.tigwi.com/account/messages/name=_accountName_/_numberOfMessages_
+http://api.tigwi.com/account/messages/id=_accountId_/_numberOfMessages_
 ###Request
 _left empty_
 ###Response
-General structure of the response :
+Example of a response :
 
     <Answer>
         <!-- Error Type -->
@@ -41,22 +47,16 @@ Message format:
 	     <Content> content </Content>
      </Message>
 
-Error type:  
-*In case an error occurs:
-
+In case of an error occurs:
 
     <Error Code="codeOfError"/>
 
-
-*Otherwise:
-   
-    <Error/>
 
 ###Informations
 * In **URL**, _accountName_ is the name of the account whose messages you want to get.
 * In **URL**, _accountId_ is the unique identifier of the account whose messages you want to get.
 * In **URL**, _numberOfMessages_ is the number of messages you want to get. It is optional and default is set to 20.
-* In **Response**, _sizeOfList_ is the number of messages returned (different from _numberOfMessages_ if there are not enough messages to provide).
+* In **Response**, _Size_ is the number of messages returned (different from _numberOfMessages_ if there are not enough messages to provide).
 
 ##Get someone's public subscriptions (accounts) list
 ###Purpose
@@ -110,7 +110,7 @@ Error Type:
 * In **URL**, _accountName_ is the name of the account whose subscriptions you want to get.
 * In **URL**, _accountId_ is the unique identifier of the account whose subscriptions you want to get.
 * In **URL**, _numberOfSubscriptions_ is the number of subscriptions you want to get. It is optional and default is set to 20.
-* In **Response**, _sizeOfList_ is the number of subscription returned (different from _numberOfSubscriptions_ if there are not enough subscriptions to provide).
+* In **Response**, _Size_ is the number of subscription returned (different from _numberOfSubscriptions_ if there are not enough subscriptions to provide).
 * You will only receive subscriptions from lists that the owner has declared public.
 
 
@@ -168,7 +168,7 @@ Error Type:
 * In **URL**, _accountName_ is the name of the account whose subscriptions you want to get.
 * In **URL**, _accountId_ is the unique identifier of the account whose subscriptions you want to get.
 * In **URL**, _numberOfSubscriptions_ is the number of subscriptions you want to get. It is optional and default is set to 20.
-* In **Response**, _sizeOfList_ is the number of subscription returned (different from _numberOfSubscriptions_ if there are not enough subscriptions to provide).
+* In **Response**, _Size_ is the number of subscription returned (different from _numberOfSubscriptions_ if there are not enough subscriptions to provide).
 
 
 ##Get someone's subscribers (accounts)
@@ -223,7 +223,7 @@ Error Type:
 * In **URL**, _accountName_ is the name of the account whose subscribers you want to get.
 * In **URL**, _accountId_ is the unique identifier of the account whose subscribers you want to get.
 * In **URL**, _numberOfSubscribers_ is the number of subscribers you want to get. It is optional and default is set to 20.
-* In **Response**, _sizeOfList_ is the number of subscribers returned (different from _numberOfSubscribers_ if there are not enough subscribers to provide).
+* In **Response**, _Size_ is the number of subscribers returned (different from _numberOfSubscribers_ if there are not enough subscribers to provide).
 
 ##Get an account's followed public lists
 ###Purpose
@@ -276,7 +276,7 @@ Error Type:
 * In **URL**, _accountName_ is the name of the account whose publicly followed lists you want to get.
 * In **URL**, _accountId_ is the unique identifier of the account whose publicly followed lists you want to get.
 * In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default is set to 20.
-* In **Response**, _sizeOfList_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
+* In **Response**, _Size_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
 * You will only receive lists that the owner has declared public.
 
 
@@ -333,7 +333,7 @@ Error Type:
 * In **URL**, _accountName_ is the name of the account whose followed lists you want to get.
 * In **URL**, _accountId_ is the unique Identifier of the account whose followed lists you want to get.
 * In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default is set to 20.
-* In **Response**, _sizeOfList_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
+* In **Response**, _Size_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
 
 ##Get someone's subscribers (lists)
 ###Purpose
@@ -386,7 +386,7 @@ Error Type:
 * In **URL**, _accountName_ is the name of the account whose subscribers you want to get.
 * In **URL**, _accountId_ is the unique identifier of the account whose subscribers you want to get.
 * In **URL**, _numberOfSubscribers_ is the number of subscribers you want to get. It is optional and default is set to 20.
-* In **Response**, _sizeOfList_ is the number of subscribers returned (different from _numberOfSubscribers_ if there are not enough subscribers to provide).
+* In **Response**, _Size_ is the number of subscribers returned (different from _numberOfSubscribers_ if there are not enough subscribers to provide).
 * There is no way to get private lists who subscribed to an account.
 
 ##Get an account's owned public lists
@@ -440,7 +440,7 @@ Error Type:
 * In **URL**, _accountName_ is the name of the account whose lists you want to get.
 * In **URL**, _accountId_ is the unique identifier of the account whose lists you want to get.
 * In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default is set to 20.
-* In **Response**, _sizeOfList_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
+* In **Response**, _Size_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
 * You will only receive lists that the owner has declared public.
 
 
@@ -497,7 +497,7 @@ Error Type:
 * In **URL**, _accountName_ is the name of the account whose lists you want to get.
 * In **URL**, _accountId_ is the unique identifier of the account whose lists you want to get.
 * In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default is set to 20.
-* In **Response**, _sizeOfList_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
+* In **Response**, _Size_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
 
 
 ##Get an account's main informations
@@ -883,51 +883,6 @@ Error type:
 * You **must** be authenticated as an authorized user of account _nameOfSubscriber_ to use this method.
 * In **Request**, _nameOfSubscriber_ is the name of the account who wants to follow the list _idOfSubscription_.
 * In **Request**, _idOfSubscriber_ is the unique identifier of the account who wants to follow the list _idOfSubscription_.
-
-##Change an account's description
-###Purpose
-If you're authenticated as the administrator of the account _accountName_, you can change its description.
-###HTTP method
-*POST*
-###URL
-http://api.tigwi.com/account/changedescription/
-###Request
-    
-    <ChangeDescription>
-        <AccountName> accountName </AccountName>
-        // or you can use
-        <AccountId> accountId </AccountId>
-        
-        <Descritpion> <!-- New description --> </Description>
-    </ChangeDescription>
-
-###Response
-General structure of the response :
-
-
-    <Answer>
-        <!-- Error Type -->
-        <Content xsi:type="ObjectCreated" 
-           Id="UniqueIdentifierOfCreatedObject" />
-    </Answer>    
-
-
-Error type:  
-*In case an error occurs:
-
-
-    <Error Code="codeOfError"/>
-
-
-*Otherwise:
-   
-    <Error/>
-
-###Informations
-* You **must** be authenticated as the administrator of the account _accountName_ to use this method.
-* In **Request**, _accountName_ is the name of the account where you intend to untag a message.
-* In **Request**, _accountId_ is the unique identifier of the account where you intend to untag a message.
-* In **Request**, if you use both `<AccountName>` and `<AccountId>`, only the `<AccountId>` will be used (in particular when they don't refer to the same account).
 
 #Get informations about a _List_
 

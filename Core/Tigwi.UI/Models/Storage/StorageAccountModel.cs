@@ -1,14 +1,11 @@
 namespace Tigwi.UI.Models.Storage
 {
-    #region
-
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.Linq;
 
     using Tigwi.Storage.Library;
-
-    #endregion
 
     public class StorageAccountModel : StorageEntityModel, IAccountModel
     {
@@ -18,13 +15,13 @@ namespace Tigwi.UI.Models.Storage
 
         private readonly ListCollectionAdapter allOwnedLists;
 
-        private readonly ListCollectionAdapter memberLists;
+        private readonly ListCollectionAdapter memberOfLists;
 
         private readonly ListCollectionAdapter publicFollowedLists;
 
         private readonly ListCollectionAdapter publicOwnedLists;
 
-        private readonly UserCollectionAdapter users;
+        private readonly StorageEntityCollection<StorageUserModel, IUserModel> users;
 
         private StorageUserModel admin;
 
@@ -43,18 +40,91 @@ namespace Tigwi.UI.Models.Storage
         public StorageAccountModel(IStorage storage, StorageContext storageContext, Guid accountId)
             : base(storage, storageContext, accountId)
         {
-            // Users
-            this.users = new UserCollectionAdapter(this.Storage, this.StorageContext, this);
+            this.users = new StorageEntityCollection<StorageUserModel, IUserModel>(this.StorageContext)
+                {
+                    FetchIdCollection = () => storage.Account.GetUsers(accountId),
+                    GetId = user => user.Id,
+                    GetModel = storageContext.InternalUsers.InternalFind,
+                    ReverseAdd = user => user.InternalAccounts.CacheAdd(this),
+                    ReverseRemove = user => user.InternalAccounts.CacheRemove(this),
+                    SaveAdd = user => storage.Account.Add(this.Id, user.Id),
+                    SaveRemove = user => storage.Account.Remove(this.Id, user.Id),
+                };
 
-            // Bunch of list adapters
+            this.memberOfLists = new ListCollectionAdapter(this.StorageContext)
+                {
+                    FetchIdCollection = () => storage.List.GetFollowingLists(accountId),
+                    GetId = list => list.Id,
+                    GetModel = storageContext.InternalLists.InternalFind,
+                    ReverseAdd = list => list.InternalMembers.CacheAdd(this),
+                    ReverseRemove = list => list.InternalMembers.CacheRemove(this),
+                    SaveAdd = list => storage.List.Add(list.Id, this.Id),
+                    SaveRemove = list => storage.List.Remove(list.Id, this.Id),
+                };
+
             this.allFollowedLists =
-                this.MakeListCollection(() => this.Storage.List.GetAccountFollowedLists(this.Id, true));
-            this.allOwnedLists = this.MakeListCollection(() => this.Storage.List.GetAccountOwnedLists(this.Id, true));
-            this.memberLists = this.MakeListCollection(() => this.Storage.List.GetFollowingLists(this.Id));
+                new ListCollectionAdapter(storageContext)
+                    {
+                        FetchIdCollection = () => storage.List.GetAccountFollowedLists(accountId, true),
+                        GetId = list => list.Id,
+                        GetModel = storageContext.InternalLists.InternalFind,
+                        ReverseAdd = list =>
+                            {
+                                // TODO: shouldn't call storage
+                                list.InternalFollowers.CacheAdd(this);
+                                if (!list.IsPrivate)
+                                {
+                                    this.InternalPublicFollowedLists.CacheAdd(list);
+                                }
+                            },
+                        ReverseRemove = list =>
+                            {
+                                // TODO: shouldn't call storage
+                                list.InternalFollowers.CacheRemove(this);
+                                if (!list.IsPrivate)
+                                {
+                                    this.InternalPublicFollowedLists.CacheRemove(list);
+                                }
+                            },
+                        SaveAdd = list => storage.List.Follow(list.Id, this.Id),
+                        SaveRemove = list => storage.List.Unfollow(list.Id, this.Id),
+                    };
+
             this.publicFollowedLists =
-                this.MakeListCollection(() => this.Storage.List.GetAccountFollowedLists(this.Id, false));
-            this.publicOwnedLists = this.MakeListCollection(
-                () => this.Storage.List.GetAccountOwnedLists(this.Id, false));
+                new ListCollectionAdapter(storageContext)
+                    {
+                        FetchIdCollection = () => storage.List.GetAccountFollowedLists(accountId, true),
+                        GetId = list => list.Id,
+                        GetModel = storageContext.InternalLists.InternalFind,
+                        ReverseAdd = list => Contract.Assert(false),
+                        ReverseRemove = list => Contract.Assert(false),
+                        SaveAdd = list => Contract.Assert(false),
+                        SaveRemove = list => Contract.Assert(false),
+                    };
+
+            this.allOwnedLists =
+                new ListCollectionAdapter(storageContext)
+                    {
+                        FetchIdCollection = () => storage.List.GetAccountOwnedLists(accountId, true),
+                        GetId = list => list.Id,
+                        GetModel = storageContext.InternalLists.InternalFind,
+                        ReverseAdd = list => Contract.Assert(false),
+                        ReverseRemove = list => Contract.Assert(false),
+                        SaveAdd = list => Contract.Assert(false),
+                        SaveRemove = list => Contract.Assert(false),
+                    };
+
+            this.publicOwnedLists =
+                new ListCollectionAdapter(storageContext)
+                {
+                    FetchIdCollection = () => storage.List.GetAccountOwnedLists(accountId, false),
+                    GetId = list => list.Id,
+                    GetModel = storageContext.InternalLists.InternalFind,
+                    ReverseAdd = list => Contract.Assert(false),
+                    ReverseRemove = list => Contract.Assert(false),
+                    SaveAdd = list => Contract.Assert(false),
+                    SaveRemove = list => Contract.Assert(false),
+                };
         }
 
         #endregion
@@ -87,7 +157,7 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public IListModelCollection AllOwnedLists
+        public IListModelEnumerable AllOwnedLists
         {
             get
             {
@@ -132,7 +202,7 @@ namespace Tigwi.UI.Models.Storage
         {
             get
             {
-                return this.memberLists;
+                return this.memberOfLists;
             }
         }
 
@@ -157,7 +227,7 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public IListModelCollection PublicFollowedLists
+        public IListModelEnumerable PublicFollowedLists
         {
             get
             {
@@ -165,7 +235,7 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public IListModelCollection PublicOwnedLists
+        public IListModelEnumerable PublicOwnedLists
         {
             get
             {
@@ -205,7 +275,7 @@ namespace Tigwi.UI.Models.Storage
         {
             get
             {
-                return this.memberLists;
+                return this.memberOfLists;
             }
         }
 
@@ -236,7 +306,7 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        internal UserCollectionAdapter InternalUsers
+        internal StorageEntityCollection<StorageUserModel, IUserModel> InternalUsers
         {
             get
             {
@@ -315,10 +385,7 @@ namespace Tigwi.UI.Models.Storage
 
                 this.users.Save();
                 this.allFollowedLists.Save();
-                this.allOwnedLists.Save();
-                this.memberLists.Save();
-                this.publicFollowedLists.Save();
-                this.publicOwnedLists.Save();
+                this.memberOfLists.Save();
                 if (this.personalList != null)
                 {
                     this.personalList.Save();
@@ -326,143 +393,42 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        private ListCollectionAdapter MakeListCollection(Func<ICollection<Guid>> func)
-        {
-            return new ListCollectionAdapter(this.Storage, this.StorageContext, this, func);
-        }
-
         #endregion
 
         internal class ListCollectionAdapter :
-            StorageEntityCollection<StorageAccountModel, StorageListModel, IListModel>, IListModelCollection
+            StorageEntityCollection<StorageListModel, IListModel>, IListModelCollection
         {
-            #region Constructors and Destructors
-
-            public ListCollectionAdapter(
-                IStorage storage, 
-                StorageContext storageContext, 
-                StorageAccountModel account, 
-                Func<ICollection<Guid>> idCollectionFetcher)
-                : base(storage, storageContext, account, idCollectionFetcher, list => list.Id)
+            public ListCollectionAdapter(StorageContext storageContext)
+                : base(storageContext)
             {
-                this.GetModel = storageContext.InternalLists.InternalFind;
             }
-
-            #endregion
-
-            #region Methods
-
-            internal override void Save()
-            {
-                if (!this.Parent.Deleted)
-                {
-                    foreach (
-                        var list in
-                            this.CollectionAdded.Where(item => item.Value && !item.Key.Deleted).Select(item => item.Key)
-                        )
-                    {
-                        this.Storage.List.Add(list.Id, this.Parent.Id);
-                    }
-
-                    foreach (
-                        var list in
-                            this.CollectionRemoved.Where(item => item.Value && !item.Key.Deleted).Select(
-                                item => item.Key))
-                    {
-                        // TODO: check we are not removing the personal list ?
-                        this.Storage.List.Remove(list.Id, this.Parent.Id);
-                    }
-                }
-
-                this.CollectionAdded.Clear();
-                this.CollectionRemoved.Clear();
-            }
-
-            protected override void ReverseAdd(StorageListModel item)
-            {
-                // TODO item.CachedMembers.CacheAdd(this.Parent);
-            }
-
-            protected override void ReverseRemove(StorageListModel item)
-            {
-                // TODO item.CachedMembers.CacheRemove(this.Parent);
-            }
-
-            #endregion
 
             #region Implementation of IListModelCollection
 
-            public ICollection<Guid> Ids
+            public IEnumerable<Guid> Ids
             {
                 get
                 {
-                    // TODO: berk berk berk
-                    var ids = new HashSet<Guid>(this.InternalCollection.Select(model => model.Id));
-                    return ids;
+                    return this.InternalCollection.Keys;
                 }
             }
 
-            public ICollection<IPostModel> PostsAfter(DateTime date, int maximum = 100)
+            public IEnumerable<IPostModel> PostsAfter(DateTime date, int maximum = 100)
             {
-                var msgCollection = this.Parent.StorageContext.StorageObj.Msg.GetListsMsgFrom(
+                var msgCollection = this.Storage.Msg.GetListsMsgFrom(
                 new HashSet<Guid>(this.Ids), date, maximum);
                 return
-                    new List<IPostModel>(msgCollection.Select(msg => new StoragePostModel(this.Parent.StorageContext, msg)))
+                    new List<IPostModel>(msgCollection.Select(msg => new StoragePostModel(this.StorageContext, msg)))
                         .AsReadOnly();
             }
 
-            public ICollection<IPostModel> PostsBefore(DateTime date, int maximum = 100)
+            public IEnumerable<IPostModel> PostsBefore(DateTime date, int maximum = 100)
             {
-                var msgCollection = this.Parent.StorageContext.StorageObj.Msg.GetListsMsgTo(
+                var msgCollection = this.Storage.Msg.GetListsMsgTo(
                 new HashSet<Guid>(this.Ids), date, maximum);
                 return
-                    new List<IPostModel>(msgCollection.Select(msg => new StoragePostModel(this.Parent.StorageContext, msg)))
+                    new List<IPostModel>(msgCollection.Select(msg => new StoragePostModel(this.StorageContext, msg)))
                         .AsReadOnly();
-            }
-
-            #endregion
-        }
-
-        internal class UserCollectionAdapter :
-            StorageEntityCollection<StorageAccountModel, StorageUserModel, IUserModel>
-        {
-            #region Constructors and Destructors
-
-            public UserCollectionAdapter(IStorage storage, StorageContext storageContext, StorageAccountModel account)
-                : base(storage, storageContext, account, () => storage.Account.GetUsers(account.Id), user => user.Id)
-            {
-                this.GetModel = storageContext.InternalUsers.InternalFind;
-            }
-
-            #endregion
-
-            #region Methods
-
-            internal override void Save()
-            {
-                foreach (var user in this.CollectionAdded.Where(item => item.Value).Select(item => item.Key))
-                {
-                    this.Storage.Account.Add(this.Parent.Id, user.Id);
-                }
-
-                foreach (var user in this.CollectionRemoved.Where(item => item.Value).Select(item => item.Key))
-                {
-                    // TODO: check we are not removing the admin (?)
-                    this.Storage.Account.Remove(this.Parent.Id, user.Id);
-                }
-
-                this.CollectionAdded.Clear();
-                this.CollectionRemoved.Clear();
-            }
-
-            protected override void ReverseAdd(StorageUserModel item)
-            {
-                item.InternalAccounts.CacheAdd(this.Parent);
-            }
-
-            protected override void ReverseRemove(StorageUserModel item)
-            {
-                item.InternalAccounts.CacheRemove(this.Parent);
             }
 
             #endregion

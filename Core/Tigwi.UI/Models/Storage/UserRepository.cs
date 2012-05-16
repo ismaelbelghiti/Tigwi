@@ -10,6 +10,7 @@
 namespace Tigwi.UI.Models.Storage
 {
     using System;
+    using System.Data;
 
     using Tigwi.Storage.Library;
 
@@ -56,12 +57,12 @@ namespace Tigwi.UI.Models.Storage
             {
                 // Create a new user via medium-level storage calls, then find it by its ID.
                 // TODO: prepopulate ?
-                Guid id = this.Storage.User.Create(login, email, new Byte[1]);
+                var id = this.Storage.User.Create(login, email, new byte[1]);
                 return this.Find(id);
             }
-            catch (UserAlreadyExists userAlreadyExists)
+            catch (UserAlreadyExists ex)
             {
-                throw new DuplicateUserException(login, userAlreadyExists);
+                throw new DuplicateUserException(login, ex);
             }
         }
 
@@ -84,16 +85,15 @@ namespace Tigwi.UI.Models.Storage
         /// <summary>
         /// Find a user given its ID.
         /// </summary>
-        /// <param name="user">
+        /// <param name="userId">
         /// The user ID to find.
         /// </param>
         /// <returns>
         /// A <see cref="IUserModel" /> representing the found user.
         /// </returns>
-        public IUserModel Find(Guid user)
+        public IUserModel Find(Guid userId)
         {
-            // We only need type conversion from the fully-typed model
-            return this.InternalFind(user);
+            return this.InternalFind(userId);
         }
 
         /// <summary>
@@ -110,15 +110,29 @@ namespace Tigwi.UI.Models.Storage
         /// </exception>
         public IUserModel Find(string login)
         {
+            IUserModel model;
+
+            if (!this.TryFind(login, out model))
+            {
+                throw new UserNotFoundException(login, null);
+            }
+
+            return model;
+        }
+
+        public bool TryFind(string login, out IUserModel user)
+        {
             try
             {
                 // Delegate the call to the API.
-                Guid id = this.Storage.User.GetId(login);
-                return this.Find(id);
+                var id = this.Storage.User.GetId(login);
+                user = this.Find(id);
+                return true;
             }
-            catch (UserNotFound userNotFound)
+            catch (UserNotFound)
             {
-                throw new UserNotFoundException(login, userNotFound);
+                user = null;
+                return false;
             }
         }
 
@@ -129,20 +143,20 @@ namespace Tigwi.UI.Models.Storage
         /// <summary>
         /// Find a user by its ID and returns it with its true type, <see cref="StorageUserModel" />.
         /// </summary>
-        /// <param name="user">
+        /// <param name="userId">
         /// The user.
         /// </param>
         /// <returns>
         /// </returns>
-        internal StorageUserModel InternalFind(Guid user)
+        internal StorageUserModel InternalFind(Guid userId)
         {
             StorageUserModel userModel;
 
             // First check the cache.
-            if (!this.EntitiesMap.TryGetValue(user, out userModel))
+            if (!this.EntitiesMap.TryGetValue(userId, out userModel))
             {
-                userModel = new StorageUserModel(this.Storage, this.StorageContext, user);
-                this.EntitiesMap.Add(user, userModel);
+                userModel = new StorageUserModel(this.Storage, this.StorageContext, userId);
+                this.EntitiesMap.Add(userId, userModel);
             }
 
             return userModel;

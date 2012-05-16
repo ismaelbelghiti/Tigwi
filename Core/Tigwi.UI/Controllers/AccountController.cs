@@ -42,7 +42,7 @@ namespace Tigwi.UI.Controllers
         {
             if (this.CurrentUser != null)
             {
-                return this.View(this.CurrentUser.Accounts);
+                return this.View(CurrentUser);
             }
 
             // User must be connected
@@ -50,42 +50,60 @@ namespace Tigwi.UI.Controllers
         }
 
         /// <summary>
+        ///  Checks Whether the account <paramref name="account"/> exists
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult AccountExists(string account)
+        {
+            //TODO check whether account exists or not <3
+            return Json(new { exists = true });
+        }
+
+        /// <summary>
         /// Shows a page listing all the posts of the user.
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
+        [ValidateInput(false)]
         public ActionResult ShowAccount(SearchViewModel search)
         {
             try
             {
                 return this.View(this.Storage.Accounts.Find(search.searchString));
             }
-            catch(AccountNotFoundException error)
+            catch(AccountNotFoundException ex)
             {
-                return this.View("Error", new HandleErrorInfo(error,"Account","ShowAccount"));
+                return this.RedirectToAction("Index", "Home", new { error = ex.Message});
             }
         }
+
 
         /// <summary>
         /// Makes the given account active (the one which will post things by default, etc.)
         /// </summary>
         /// <returns></returns>
         [Authorize]
+        [ValidateInput(false)]
         public ActionResult MakeActive(string accountName)
         {
-            var account = this.Storage.Accounts.Find(accountName);
-
             try
             {
-                // Set current account with automatic validation
-                this.CurrentAccount = account;
-                // Tell the user everything went OK
+                var account = this.Storage.Accounts.Find(accountName);
 
-                return this.RedirectToAction("Index", "Home");
+                try
+                {
+                    this.CurrentAccount = account;
+                    return this.RedirectToAction("Index", "Home");
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
             }
-            catch (Exception)
+            catch (AccountNotFoundException)
             {
-                // Tell the user he must be connected
                 throw new NotImplementedException();
             }
         }
@@ -106,18 +124,32 @@ namespace Tigwi.UI.Controllers
         /// <param name="accountCreation"></param>
         /// <returns></returns>
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult Create(AccountCreationViewModel accountCreation)
         {
             if (ModelState.IsValid)
             {
-                var newAccount = this.Storage.Accounts.Create(CurrentUser, accountCreation.Name, accountCreation.Description);
-                this.CurrentAccount = newAccount;
-                //TODO
-                this.Storage.SaveChanges();
-                return this.RedirectToAction("Create",accountCreation);
+                try
+                {
+                    var newAccount = this.Storage.Accounts.Create(CurrentUser, accountCreation.Name, accountCreation.Description);
+                    this.CurrentAccount = newAccount;
+                    //TODO
+                    this.Storage.SaveChanges();
+                    return this.RedirectToAction("Create", accountCreation);
+                }
+                catch (DuplicateAccountException ex)
+                {
+                    return this.RedirectToAction("Index", "Home", new { error = ex.Message });
+                }
             }
             throw new NotImplementedException("model not valid");
             return this.View(accountCreation);
+        }
+
+        [HttpPost]
+        public ActionResult IsFollowed(Guid listId)
+        {
+            return Json(new {Followed = CurrentAccount.PublicFollowedLists.Select(list => list.Id).Contains(listId)});
         }
 
         /// <summary>
@@ -136,18 +168,25 @@ namespace Tigwi.UI.Controllers
         /// <param name="accountEdit"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Edit(/*AccountEditModel*/object accountEdit)
+        [ValidateInput(false)]
+        public ActionResult Edit(AccountEditViewModel editAccount)
         {
-            throw new NotImplementedException("AccountController.Edit");
+            IAccountModel account = this.Storage.Accounts.Find(editAccount.AccountId);
+            account.Description = editAccount.Description;
+            this.Storage.SaveChanges();
+            return this.RedirectToAction(editAccount.ReturnAction, editAccount.ReturnController);
+            //TODO : Catch Errors
         }
 
         /// <summary>
         /// Show all the people an account is following.
         /// </summary>
         /// <returns>The resulting view.</returns>
-        public ActionResult Following()
+        public ActionResult Following(Guid id)
         {
-            throw new NotImplementedException("AccountController.Following");
+            IAccountModel account = this.Storage.Accounts.Find(id);
+            account.PersonalList.Followers.Add(CurrentAccount);
+            return this.View(account);
         }
 
         /// <summary>
@@ -155,9 +194,22 @@ namespace Tigwi.UI.Controllers
         /// Idempotent.
         /// </summary>
         /// <returns>The resulting view.</returns>
-        public ActionResult Follow()
+        [HttpPost]
+        public ActionResult Follow(Guid id)
         {
-            throw new NotImplementedException("AccountController.Follow");
+            IListModel list = CurrentAccount.PersonalList;
+            try
+            {
+                IAccountModel account = this.Storage.Accounts.Find(id);
+                list.Members.Add(account);
+                this.Storage.SaveChanges();
+                return this.RedirectToAction("Index", "Home");
+            }
+            catch (Tigwi.UI.Models.Storage.AccountNotFoundException ex)
+            {
+                return this.RedirectToAction("Index", "Home", new { error = ex.Message });
+            }
+            //Todo redirect to a dedicated view
         }
 
         /// <summary>
@@ -177,6 +229,13 @@ namespace Tigwi.UI.Controllers
         public ActionResult Followers()
         {
             throw new NotImplementedException("AccountController.Followers");
+        }
+
+        [HttpPost]
+        public ActionResult GetAccount(Guid accountId)
+        {
+            IAccountModel account = this.Storage.Accounts.Find(accountId);
+            return Json(new { Descr = account.Description });
         }
     }
 }

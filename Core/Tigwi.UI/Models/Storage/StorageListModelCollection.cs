@@ -100,7 +100,7 @@ namespace Tigwi.UI.Models.Storage
 
         #region Implementation of IListModelCollection
 
-        public ICollection<Guid> Ids
+        public IEnumerable<Guid> Ids
         {
             get
             {
@@ -108,22 +108,18 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public ICollection<IPostModel> PostsAfter(DateTime date, int maximum = 100)
+        public IEnumerable<IPostModel> PostsAfter(DateTime date, int maximum = 100)
         {
             var msgCollection = this.InternalStorage.StorageObj.Msg.GetListsMsgFrom(
                 new HashSet<Guid>(this.Ids), date, maximum);
-            return
-                new List<IPostModel>(msgCollection.Select(msg => new StoragePostModel(this.InternalStorage, msg)))
-                    .AsReadOnly();
+            return new List<IPostModel>(msgCollection.Select(msg => new StoragePostModel(this.InternalStorage, msg)));
         }
 
-        public ICollection<IPostModel> PostsBefore(DateTime date, int maximum = 100)
+        public IEnumerable<IPostModel> PostsBefore(DateTime date, int maximum = 100)
         {
             var msgCollection = this.InternalStorage.StorageObj.Msg.GetListsMsgTo(
                 new HashSet<Guid>(this.Ids), date, maximum);
-            return
-                new List<IPostModel>(msgCollection.Select(msg => new StoragePostModel(this.InternalStorage, msg)))
-                    .AsReadOnly();
+            return new List<IPostModel>(msgCollection.Select(msg => new StoragePostModel(this.InternalStorage, msg)));
         }
 
         #endregion

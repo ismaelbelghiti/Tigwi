@@ -1,17 +1,12 @@
-﻿using System.Collections.Generic;
-
-namespace Tigwi.UI.Controllers
+﻿namespace Tigwi.UI.Controllers
 {
     using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Runtime.Serialization.Formatters.Binary;
+    using System.Diagnostics.Contracts;
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Security;
 
     using Tigwi.Storage.Library;
-
     using Tigwi.UI.Models;
     using Tigwi.UI.Models.Storage;
 
@@ -19,9 +14,11 @@ namespace Tigwi.UI.Controllers
     {
         #region Constants and Fields
 
+        private const string AccountCookie = "CURACCOUNT";
+
         private IAccountModel currentAccount;
 
-        private IUserModel currentUser;
+        private IStorage rawStorage;
 
         private IStorageContext storage;
 
@@ -30,8 +27,19 @@ namespace Tigwi.UI.Controllers
         #region Constructors and Destructors
 
         public HomeController()
-           : this(MakeStorage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY"))
+            : this(MakeStorage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY"))
         {
+        }
+
+        public HomeController(IStorage storage)
+        {
+            if (storage == null)
+            {
+                return;
+            }
+
+            this.rawStorage = storage;
+            this.storage = new StorageContext(storage);
         }
 
         public HomeController(IStorageContext storageContext)
@@ -41,134 +49,56 @@ namespace Tigwi.UI.Controllers
 
         #endregion
 
-        private static IStorageContext MakeStorage(string accountName, string accountKey)
-        {
-            return accountName != "__" + "AZURE_STORAGE_ACCOUNT_NAME" ? new StorageContext(new Storage(accountName, accountKey)) : null;
-        }
+        #region Public Properties
 
-        #region Properties
-
-        private const string AccountCookie = "CURACCOUNT";
-
+        /// <summary>
+        /// Gets or sets the current account
+        /// </summary>
         public IAccountModel CurrentAccount
         {
             get
             {
-                var user = this.CurrentUser;
-
-                if (user == null)
-                {
-                    this.currentAccount = null;
-                    return null;
-                }
-
-                if (this.currentAccount == null)
-                {
-                    var cookie = this.HttpContext.Request.Cookies[AccountCookie];
-                    if (cookie == null)
-                    {
-                        return null;
-                    }
-
-                    Guid accountId;
-
-                    if (Guid.TryParse(cookie.Value, out accountId))
-                    {
-                        this.currentAccount = this.Storage.Accounts.Find(accountId);
-                        if (!user.Accounts.Contains(this.currentAccount))
-                        {
-                            // TODO: log
-                            Elmah.ErrorSignal.FromCurrentContext().Raise(new Exception("Bad account."));
-                            cookie.Expires = DateTime.MinValue;
-                            this.Response.SetCookie(cookie);
-
-                            // TODO: this *must* be something that CAN'T fail.
-                            this.currentAccount = this.Storage.Accounts.Find(user.Login);
-                        }
-                    }
-                    else
-                    {
-                        this.currentAccount = this.Storage.Accounts.Find(user.Login);
-                    }
-                }
-
                 return this.currentAccount;
             }
 
             protected set
             {
-                if (!this.CurrentUser.Accounts.Contains(value))
+                if (!this.TrySetCurrentAccount(value))
                 {
-                    throw new NotImplementedException("User not a member of account");
+                    // Account not valid
+                    throw new NotImplementedException("Account not valid.");
                 }
-
-                var cookie = new HttpCookie(AccountCookie, value.Id.ToString());
-                this.HttpContext.Response.SetCookie(cookie);
-
-                this.currentAccount = value;
             }
         }
 
-        public IUserModel CurrentUser
+        /// <summary>
+        /// Gets the current (logged in) user.
+        /// </summary>
+        public IUserModel CurrentUser { get; private set; }
+
+        #endregion
+
+        #region Properties
+
+        protected IStorage RawStorage
         {
             get
             {
-                if (this.currentUser == null)
+                // Berk
+                if (this.rawStorage == null)
                 {
-                    // TODO: store ID.
-                    var identity = this.User.Identity;
-                    this.currentUser = this.Storage.Users.Find(identity.Name);
+                    if (this.Session["Storage"] == null)
+                    {
+                        this.Session["Storage"] = new MockStorage();
+                    }
+
+                    var storageContext = new StorageContext(this.Session["Storage"] as IStorage);
+                    this.rawStorage = storageContext.StorageObj;
+                    this.storage = storageContext;
                 }
 
-                return this.currentUser;
+                return this.rawStorage;
             }
-        }
-
-        protected IUserModel AuthenticateUser(IUserModel value, bool rememberMe)
-        {
-            // Update authentication cookie
-            var existingCookie = this.Request.Cookies[FormsAuthentication.FormsCookieName];
-            var version = 1;
-
-            if (existingCookie != null)
-            {
-                try
-                {
-                    var existingTicket = FormsAuthentication.Decrypt(existingCookie.Value);
-                    version = existingTicket.Version + 1;
-                }
-                catch (ArgumentException)
-                {
-                }
-            }
-
-            // Reset account cookie
-            var cookie = new HttpCookie(AccountCookie, value.Id.ToString());
-            this.HttpContext.Response.SetCookie(cookie);
-
-            var ticket = new FormsAuthenticationTicket(
-                version, value.Login, DateTime.Now, DateTime.Now + FormsAuthentication.Timeout, rememberMe, value.Id.ToString());
-            var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(ticket))
-                {
-                    HttpOnly = true,
-                    Expires = DateTime.Now + FormsAuthentication.Timeout,
-                    Path = FormsAuthentication.FormsCookiePath,
-                    Domain = FormsAuthentication.CookieDomain,
-                    Secure = FormsAuthentication.RequireSSL
-                };
-            this.HttpContext.Response.SetCookie(authCookie);
-
-            this.currentUser = value;
-            this.currentAccount = null;
-
-            return value;
-        }
-
-        protected void Deauthenticate()
-        {
-            FormsAuthentication.SignOut();
-            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName) { Expires = DateTime.MinValue };
-            this.Response.AppendCookie(cookie);
         }
 
         protected IStorageContext Storage
@@ -183,7 +113,9 @@ namespace Tigwi.UI.Controllers
                         this.Session["Storage"] = new MockStorage();
                     }
 
-                    this.storage = new StorageContext(this.Session["Storage"] as IStorage);
+                    var storageContext = new StorageContext(this.Session["Storage"] as IStorage);
+                    this.rawStorage = storageContext.StorageObj;
+                    this.storage = storageContext;
                 }
 
                 return this.storage;
@@ -194,18 +126,150 @@ namespace Tigwi.UI.Controllers
 
         #region Public Methods and Operators
 
-        public ActionResult Index()
+        [ValidateInput(false)]
+        public ActionResult Index(string error)
         {
-            return this.User.Identity.IsAuthenticated ? this.View(this.Storage.Accounts.Find(this.CurrentAccount.Name)) : this.View();
+            ViewBag.error = error;
+            return this.User.Identity.IsAuthenticated
+                       ? this.View(this.Storage.Accounts.Find(this.CurrentAccount.Name))
+                       : this.View();
         }
 
         #endregion
 
         #region Methods
 
-        [Obsolete]
-        protected void SaveIdentity(bool isPersistent)
+        protected IUserModel AuthenticateUser(IUserModel value, bool rememberMe)
         {
+            Contract.Assert(value != null);
+
+            var ticket = new FormsAuthenticationTicket(
+                1, 
+                value.Login, 
+                DateTime.Now, 
+                DateTime.Now + FormsAuthentication.Timeout, 
+                rememberMe, 
+                value.Id.ToString());
+            var authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(ticket))
+                {
+                    HttpOnly = true, 
+                    Expires = DateTime.Now + FormsAuthentication.Timeout, 
+                    Path = FormsAuthentication.FormsCookiePath, 
+                    Domain = FormsAuthentication.CookieDomain, 
+                    Secure = FormsAuthentication.RequireSSL
+                };
+            this.HttpContext.Response.SetCookie(authCookie);
+
+            this.CurrentUser = value;
+            this.ResetCurrentAccount();
+
+            return value;
+        }
+
+        protected void Deauthenticate()
+        {
+            FormsAuthentication.SignOut();
+            this.CurrentUser = null;
+            this.ResetCurrentAccount();
+        }
+
+        protected override void OnAuthorization(AuthorizationContext filterContext)
+        {
+            base.OnAuthorization(filterContext);
+
+            var identity = this.User.Identity;
+            if (!identity.IsAuthenticated)
+            {
+                return;
+            }
+
+            try
+            {
+                var user = this.Storage.Users.Find(identity.Name);
+                IAccountModel account = null;
+
+                var cookie = this.Request.Cookies[AccountCookie];
+                if (cookie != null)
+                {
+                    Guid accountId;
+                    if (Guid.TryParse(cookie.Value, out accountId))
+                    {
+                        try
+                        {
+                            account = this.Storage.Accounts.Find(accountId);
+                        }
+                        catch (AccountNotFoundException)
+                        {
+                            this.ResetCurrentAccount();
+                        }
+                    }
+                    else
+                    {
+                        this.ResetCurrentAccount();
+                    }
+                }
+
+                if (account == null)
+                {
+                    try
+                    {
+                        account = this.Storage.Accounts.Find(identity.Name);
+                    }
+                    catch (AccountNotFoundException)
+                    {
+                    }
+                }
+
+                this.CurrentUser = user;
+                this.currentAccount = account;
+            }
+            catch (UserNotFoundException)
+            {
+                this.Deauthenticate();
+                filterContext.Result = new RedirectToRouteResult(filterContext.RouteData.Values);
+            }
+
+            if (this.CurrentUser != null && this.currentAccount != null)
+            {
+                return;
+            }
+
+            this.Deauthenticate();
+            filterContext.Result = new RedirectToRouteResult(filterContext.RouteData.Values);
+        }
+
+        protected void ResetCurrentAccount()
+        {
+            // Hack because DateTime.MinValue means "session cookie". Microsoft logic!
+            var cookie = new HttpCookie(AccountCookie, null) { Expires = DateTime.MinValue.AddMilliseconds(1) };
+            this.Response.SetCookie(cookie);
+            this.currentAccount = null;
+        }
+
+        protected bool TrySetCurrentAccount(IAccountModel value)
+        {
+            if (this.CurrentUser.Accounts.Contains(value))
+            {
+                var cookie = new HttpCookie(AccountCookie, value.Id.ToString()) { HttpOnly = true };
+                this.Response.SetCookie(cookie);
+                this.currentAccount = value;
+                return true;
+            }
+
+            return false;
+        }
+
+        private static IStorage MakeStorage(string accountName, string accountKey)
+        {
+            try
+            {
+                return new Storage(accountName, accountKey);
+            }
+            catch (FormatException)
+            {
+            }
+
+            return null;
         }
 
         #endregion

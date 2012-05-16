@@ -5,12 +5,7 @@ using System.Web;
 
 namespace Tigwi.UI.Models
 {
-    public interface IListModelCollection : ICollection<IListModel>
+    public interface IListModelCollection : ICollection<IListModel>, IListModelEnumerable
     {
-        ICollection<Guid> Ids { get; }
-
-        ICollection<IPostModel> PostsAfter(DateTime date, int maximum = 100);
-
-        ICollection<IPostModel> PostsBefore(DateTime date, int maximum = 100);
     }
 }

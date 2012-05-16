@@ -1,14 +1,10 @@
 namespace Tigwi.UI.Models.Storage
 {
-    #region
-
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
     using Tigwi.Storage.Library;
-
-    #endregion
 
     /// <summary>
     /// The user model adapter.
@@ -17,7 +13,7 @@ namespace Tigwi.UI.Models.Storage
     {
         #region Constants and Fields
 
-        private readonly AccountCollectionAdapter accounts;
+        private readonly StorageEntityCollection<StorageAccountModel, IAccountModel> accounts;
 
         private string avatar;
 
@@ -32,7 +28,16 @@ namespace Tigwi.UI.Models.Storage
         public StorageUserModel(IStorage storage, StorageContext storageContext, Guid id)
             : base(storage, storageContext, id)
         {
-            this.accounts = new AccountCollectionAdapter(storage, storageContext, this);
+            this.accounts = new StorageEntityCollection<StorageAccountModel, IAccountModel>(storageContext)
+                {
+                    FetchIdCollection = () => storage.User.GetAccounts(id),
+                    GetId = account => account.Id,
+                    GetModel = storageContext.InternalAccounts.InternalFind,
+                    ReverseAdd = account => account.InternalUsers.CacheAdd(this),
+                    ReverseRemove = account => account.InternalUsers.CacheRemove(this),
+                    SaveAdd = account => storage.Account.Add(account.Id, id),
+                    SaveRemove = account => storage.Account.Remove(account.Id, id),
+                };
         }
 
         #endregion
@@ -94,7 +99,7 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        internal AccountCollectionAdapter InternalAccounts
+        internal StorageEntityCollection<StorageAccountModel, IAccountModel> InternalAccounts
         {
             get
             {
@@ -169,52 +174,5 @@ namespace Tigwi.UI.Models.Storage
         }
 
         #endregion
-
-        internal class AccountCollectionAdapter : StorageEntityCollection<StorageUserModel, StorageAccountModel, IAccountModel>
-        {
-            #region Constructors and Destructors
-
-            public AccountCollectionAdapter(IStorage storage, StorageContext storageContext, StorageUserModel user)
-                : base(storage, storageContext, user, () => storage.User.GetAccounts(user.Id), account => account.Id)
-            {
-                this.GetModel = storageContext.InternalAccounts.InternalFind;
-            }
-
-            #endregion
-
-            #region Public Methods and Operators
-
-            internal override void Save()
-            {
-                if (!this.Parent.Deleted)
-                {
-                    // TODO: catch exceptions (?)
-                    foreach (var account in this.CollectionAdded.Where(item => item.Value && !item.Key.Deleted).Select(item => item.Key))
-                    {
-                        this.Storage.Account.Add(account.Id, this.Parent.Id);
-                    }
-
-                    foreach (var account in this.CollectionRemoved.Where(item => item.Value && !item.Key.Deleted).Select(item => item.Key))
-                    {
-                        this.Storage.Account.Remove(account.Id, this.Parent.Id);
-                    }
-                }
-
-                this.CollectionAdded.Clear();
-                this.CollectionRemoved.Clear();
-            }
-
-            protected override void ReverseAdd(StorageAccountModel item)
-            {
-                item.InternalUsers.CacheAdd(this.Parent);
-            }
-
-            protected override void ReverseRemove(StorageAccountModel item)
-            {
-                item.InternalUsers.CacheRemove(this.Parent);
-            }
-
-            #endregion
-        }
     }
 }

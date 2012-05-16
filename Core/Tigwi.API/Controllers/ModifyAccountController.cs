@@ -9,9 +9,8 @@ namespace Tigwi.API.Controllers
     public class ModifyAccountController : ApiController
     {
         //
-        // POST : /modifyaccount/write
+        // POST : /account/write
 
-        //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Write()
         {
@@ -27,21 +26,25 @@ namespace Tigwi.API.Controllers
                     output = new Answer(new Error("Message missing"));
                 else
                 {
-                    try
-                    {
-                        var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
+                    var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
 
+                    // Check if the user is authenticated and has rights
+                    var authentication = Authorized(accountId);
+                    if (authentication.HasRights)
+                    {
                         var msgId = Storage.Msg.Post(accountId, msg.Message.Content);
 
-                        //Result
+                        // Result
                         output = new Answer(new ObjectCreated(msgId));
                     }
-                    catch (StorageLibException exception)
-                    {
-                        // Result is an non-empty error XML element
-                        output = new Answer(new Error(exception.Code.ToString()));
-                    }
+                    else
+                        output = new Answer(new Error(authentication.ErrorMessage()));
                 }
+            }
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
             }
             catch (InvalidOperationException exception)
             {
@@ -51,10 +54,9 @@ namespace Tigwi.API.Controllers
             return Serialize(output);
         }
 
-        // Is copying like retweeting ?
-        // POST : /modifyaccount/copy
 
-        //[Authorize]
+        // POST : /account/copy
+
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Copy()
         {
@@ -70,21 +72,25 @@ namespace Tigwi.API.Controllers
                     output = new Answer(new Error("MessageId missing"));
                 else
                 {
-                    try
-                    {
-                        var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
+                    var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
 
+                    // Check if the user is authenticated and has rights
+                    var authentication = Authorized(accountId);
+                    if (authentication.HasRights)
+                    {
                         var msgId = Storage.Msg.Copy(accountId, msg.MessageId.GetValueOrDefault());
 
                         //Result
                         output = new Answer(new ObjectCreated(msgId));
                     }
-                    catch (StorageLibException exception)
-                    {
-                        // Result is an non-empty error XML element
-                        output = new Answer(new Error(exception.Code.ToString()));
-                    }
+                    else
+                        output = new Answer(new Error(authentication.ErrorMessage()));
                 }
+            }
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
             }
             catch (InvalidOperationException exception)
             {
@@ -94,151 +100,226 @@ namespace Tigwi.API.Controllers
             return Serialize(output);
         }
 
-        // TODO : continue adding checkings beyond this point
 
         //
-        // POST : /modifyaccount/delete
-
-        //[Authorize]
+        // POST : /account/delete
+        
+        // TODO : Authentication when a method to get the owner is provided
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Delete()
         {
             Error error;
 
-            var msg = (MsgToDelete)(new XmlSerializer(typeof(MsgToDelete))).Deserialize(Request.InputStream);
-
             try
             {
-                //TODO: find out how to use this information, if necessary (?)
-                //var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
+                var msg = (MsgToDelete) (new XmlSerializer(typeof (MsgToDelete))).Deserialize(Request.InputStream);
 
-                Storage.Msg.Remove(msg.MessageId.GetValueOrDefault());
+                if (msg.MessageId == null)
+                    error = new Error("MessageId missing");
+                else
+                {
+                    //var ownerId = Storage.Msg.
 
-                // Result is an empty error XML element
-                error = new Error();
+                    Storage.Msg.Remove(msg.MessageId.GetValueOrDefault());
+
+                    // Result is an empty error XML element
+                    error = new Error();
+                }
             }
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
                 error = new Error(exception.Code.ToString());
             }
+            catch (InvalidOperationException exception)
+            {
+                error = new Error(exception.Message + " " + exception.InnerException.Message);
+            }
 
             return Serialize(new Answer(error));
         }
+        
 
         //
-        // POST : /modifyaccount/tag
+        // POST : /account/tag
 
-        //[Authorize]
+        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Tag()
         {
             Error error;
 
-            var msg = (Tag)(new XmlSerializer(typeof(Tag))).Deserialize(Request.InputStream);
-
             try
             {
-                var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
+                var msg = (Tag) (new XmlSerializer(typeof (Tag))).Deserialize(Request.InputStream);
 
-                Storage.Msg.Tag(accountId, msg.MessageId.GetValueOrDefault());
+                if (msg.AccountId == null && msg.AccountName == null)
+                    error = new Error("AccountId or AccountName missing");
+                else if (msg.MessageId == null)
+                    error = new Error("MessageId missing");
+                else
+                {
+                    var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
 
-                //Result is an empty error
-                error = new Error();
+                    Storage.Msg.Tag(accountId, msg.MessageId.GetValueOrDefault());
+
+                    //Result is an empty error
+                    error = new Error();
+                }
             }
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
                 error = new Error(exception.Code.ToString());
             }
+            catch (InvalidOperationException exception)
+            {
+                error = new Error(exception.Message + " " + exception.InnerException.Message);
+            }
 
             return Serialize(new Answer(error));
         }
 
+        
         //
-        // POST : /modifyaccount/untag
+        // POST : /account/untag
 
-        //[Authorize]
+        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Untag()
         {
             Error error;
 
-            var msg = (Untag)(new XmlSerializer(typeof(Untag))).Deserialize(Request.InputStream);
-
             try
             {
-                var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
+                var msg = (Untag) (new XmlSerializer(typeof (Untag))).Deserialize(Request.InputStream);
 
-                Storage.Msg.Untag(accountId, msg.MessageId.GetValueOrDefault());
+                if (msg.AccountId == null && msg.AccountName == null)
+                    error = new Error("AccountId or AccountName missing");
+                else if (msg.MessageId == null)
+                    error = new Error("MessageId missing");
+                else
+                {
+                    var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
 
-                //Result is an empty error
-                error = new Error();
+                    Storage.Msg.Untag(accountId, msg.MessageId.GetValueOrDefault());
+
+                    //Result is an empty error
+                    error = new Error();
+                }
             }
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
                 error = new Error(exception.Code.ToString());
             }
+            catch (InvalidOperationException exception)
+            {
+                error = new Error(exception.Message + " " + exception.InnerException.Message);
+            }
 
             return Serialize(new Answer(error));
         }
 
+        
         //
-        // POST : /modifyaccount/subscribelist
+        // POST : /account/subscribelist
 
-        //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult SubscribeList()
         {
             Error error;
 
-            var subscribe = (SubscribeList)(new XmlSerializer(typeof(SubscribeList))).Deserialize(Request.InputStream);
-
             try
             {
-                var accountId = subscribe.AccountId ?? Storage.Account.GetId(subscribe.AccountName);
+                var subscribe =
+                    (SubscribeList) (new XmlSerializer(typeof (SubscribeList))).Deserialize(Request.InputStream);
 
-                Storage.List.Follow(subscribe.Subscription.GetValueOrDefault(), accountId);
+                if (subscribe.AccountId == null && subscribe.AccountName == null)
+                    error = new Error("AccountId or AccountName missing");
+                else if (subscribe.Subscription == null)
+                    error = new Error("Subscription missing");
+                else
+                {
+                    var accountId = subscribe.AccountId ?? Storage.Account.GetId(subscribe.AccountName);
 
-                // Result is an empty error XML element
-                error = new Error();
+                    // Check if the user is authenticated and has rights
+                    var authentication = Authorized(accountId);
+
+                    if (authentication.HasRights)
+                    {
+                        Storage.List.Follow(subscribe.Subscription.GetValueOrDefault(), accountId);
+
+                        // Result is an empty error XML element
+                        error = new Error();
+                    }
+                    else
+                        error = new Error(authentication.ErrorMessage());
+                }
             }
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
                 error = new Error(exception.Code.ToString());
             }
+            catch (InvalidOperationException exception)
+            {
+                error = new Error(exception.Message + " " + exception.InnerException.Message);
+            }
 
             return Serialize(new Answer(error));
         }
 
         //
-        // POST /modifyaccount/createlist
+        // POST /account/createlist
 
-        //[Authorize]
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CreateList()
         {
             Answer output;
 
-            var listCreation = (CreateList)(new XmlSerializer(typeof(CreateList))).Deserialize(Request.InputStream);
-
             try
             {
-                var accountId = listCreation.AccountId ?? Storage.Account.GetId(listCreation.AccountName);
-                var listToCreate = listCreation.ListInfo;
+                var listCreation =
+                    (CreateList) (new XmlSerializer(typeof (CreateList))).Deserialize(Request.InputStream);
 
-                var listId = Storage.List.Create(accountId, listToCreate.Name, listToCreate.Description,
-                                    listToCreate.IsPrivate);
+                if (listCreation.AccountId == null && listCreation.AccountName == null)
+                    output = new Answer(new Error("AccountId or AccountName missing"));
+                else if (listCreation.ListInfo == null)
+                    output = new Answer(new Error("ListInfo missing"));
+                else if (listCreation.ListInfo.Name == null) // TODO : More checks on Name
+                    output = new Answer(new Error("Name missing"));
+                else if (listCreation.ListInfo.Description == null) // TODO : More checks on Description
+                    output = new Answer(new Error("Description missing"));
+                else
+                {
+                    var accountId = listCreation.AccountId ?? Storage.Account.GetId(listCreation.AccountName);
 
-                // Result is an empty error XML element
-                output = new Answer(new ObjectCreated(listId));
+                    // Check if the user is authenticated and has rights
+                    var authentication = Authorized(accountId);
+
+                    if (authentication.HasRights)
+                    {
+                        var listToCreate = listCreation.ListInfo;
+
+                        var listId = Storage.List.Create(accountId, listToCreate.Name, listToCreate.Description,
+                                                         listToCreate.IsPrivate);
+
+                        // Result is an empty error XML element
+                        output = new Answer(new ObjectCreated(listId));
+                    }
+                    else
+                        output = new Answer(new Error(authentication.ErrorMessage()));
+                }
             }
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
                 output = new Answer(new Error(exception.Code.ToString()));
+            }
+            catch (InvalidOperationException exception)
+            {
+                output = new Answer(new Error(exception.Message + " " + exception.InnerException.Message));
             }
 
             return Serialize(output);

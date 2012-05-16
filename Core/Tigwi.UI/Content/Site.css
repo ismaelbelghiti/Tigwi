@@ -25,7 +25,7 @@
     margin-left: 15px;
 }
 
-.message:nth-child(odd) {
+.shown:nth-of-type(odd) {
     border-radius: 15px;
     margin: 10px;
     padding: 10px;
@@ -33,7 +33,8 @@
     border-style: none none none solid;
     border-color: lightgray;
 }
-.message:nth-child(even) {
+
+.shown:nth-of-type(even) {
     border-radius: 15px;
     margin: 10px;
     padding: 10px;
@@ -41,3 +42,25 @@
     border-style: none solid none none;
     border-color: darkgray;
 }
+
+a:link {text-decoration:none;color: MenuText;}
+a:visited {text-decoration:none;color: MenuText;}
+a:hover {text-decoration:none;color: MenuText;}
+a:active {text-decoration:none;color: MenuText;} 
+
+.listName {
+    padding: 5px;
+    border-radius: 2px;
+}
+.listName:hover {
+    background-color: lightgray;
+    cursor: pointer;
+}
+
+.edit , .delete {
+    display: none;
+}
+
+.listName:hover > .edit , .listName:hover > .delete {
+    display: inline-block;
+} 

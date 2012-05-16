@@ -14,15 +14,17 @@
     {
         #region Constants and Fields
 
-        private string description;
+        private readonly StorageEntityCollection<StorageAccountModel, IAccountModel> followers;
 
-        private AccountCollectionAdapter followers;
+        private readonly StorageEntityCollection<StorageAccountModel, IAccountModel> members;
+
+        private StorageAccountModel owner;
+
+        private string description;
 
         private bool isPersonal;
 
         private bool isPrivate;
-
-        private AccountCollectionAdapter members;
 
         private string name;
 
@@ -33,6 +35,43 @@
         public StorageListModel(IStorage storage, StorageContext storageContext, Guid listId)
             : base(storage, storageContext, listId)
         {
+            this.followers = new StorageEntityCollection<StorageAccountModel, IAccountModel>(storageContext)
+                {
+                    FetchIdCollection = () => storage.List.GetFollowingAccounts(listId), 
+                    GetId = account => account.Id, 
+                    GetModel = storageContext.InternalAccounts.InternalFind, 
+                    ReverseAdd = account =>
+                        {
+                            // TODO: this shouldn't involve storage calls
+                            account.InternalAllFollowedLists.CacheAdd(this);
+                            if (!this.IsPrivate)
+                            {
+                                account.InternalPublicFollowedLists.CacheAdd(this);
+                            }
+                        }, 
+                    ReverseRemove = account =>
+                        {
+                            // TODO: this shouldn't involve storage calls
+                            account.InternalAllFollowedLists.CacheRemove(this);
+                            if (!this.IsPrivate)
+                            {
+                                account.InternalPublicFollowedLists.CacheRemove(this);
+                            }
+                        }, 
+                    SaveAdd = account => storage.List.Follow(listId, account.Id), 
+                    SaveRemove = account => storage.List.Unfollow(listId, account.Id)
+                };
+
+            this.members = new StorageEntityCollection<StorageAccountModel, IAccountModel>(storageContext)
+                {
+                    FetchIdCollection = () => storage.List.GetAccounts(listId), 
+                    GetId = account => account.Id, 
+                    GetModel = storageContext.InternalAccounts.InternalFind, 
+                    ReverseAdd = account => account.InternalMemberOfLists.CacheAdd(this), 
+                    ReverseRemove = account => account.InternalMemberOfLists.CacheRemove(this), 
+                    SaveAdd = account => storage.List.Add(listId, account.Id), 
+                    SaveRemove = account => storage.List.Remove(listId, account.Id)
+                };
         }
 
         #endregion
@@ -62,30 +101,18 @@
         {
             get
             {
-                return this.followers
+                return this.followers;
+            }
+        }
+
+        public IAccountModel Owner
+        {
+            get
+            {
+                return this.owner
                        ??
-                       (this.followers =
-                        new AccountCollectionAdapter(
-                            this.Storage, 
-                            this.StorageContext, 
-                            this, 
-                            () => this.Storage.List.GetFollowingAccounts(this.Id), 
-                            account =>
-                                {
-                                    account.InternalAllFollowedLists.CacheAdd(this);
-                                    if (!this.IsPrivate)
-                                    {
-                                        account.InternalPublicFollowedLists.CacheAdd(this);
-                                    }
-                                },
-                            account =>
-                                {
-                                    account.InternalAllFollowedLists.CacheRemove(this);
-                                    if (!this.IsPrivate)
-                                    {
-                                        account.InternalPublicFollowedLists.CacheRemove(this);
-                                    }
-                                }));
+                       (this.owner =
+                        this.StorageContext.InternalAccounts.InternalFind(this.Storage.List.GetOwner(this.Id)));
             }
         }
 
@@ -121,16 +148,7 @@
         {
             get
             {
-                return this.members
-                       ??
-                       (this.members =
-                        new AccountCollectionAdapter(
-                            this.Storage, 
-                            this.StorageContext, 
-                            this, 
-                            () => this.Storage.List.GetAccounts(this.Id), 
-                            account => account.InternalMemberOfLists.CacheAdd(this), 
-                            account => account.InternalMemberOfLists.CacheRemove(this)));
+                return this.members;
             }
         }
 
@@ -157,6 +175,22 @@
 
         #region Properties
 
+        internal StorageEntityCollection<StorageAccountModel, IAccountModel> InternalFollowers
+        {
+            get
+            {
+                return this.followers;
+            }
+        }
+
+        internal StorageEntityCollection<StorageAccountModel, IAccountModel> InternalMembers
+        {
+            get
+            {
+                return this.members;
+            }
+        }
+
         protected override bool InfosUpdated
         {
             get
@@ -180,21 +214,21 @@
 
         #region Public Methods and Operators
 
-        public ICollection<IPostModel> PostsAfter(DateTime date, int maximum = 100)
+        public IEnumerable<IPostModel> PostsAfter(DateTime date, int maximum = 100)
         {
             var msgCollection = this.Storage.Msg.GetListsMsgFrom(new HashSet<Guid> { this.Id }, date, maximum);
-            return
-                new List<IPostModel>(msgCollection.Select(msg => new StoragePostModel(this.StorageContext, msg)))
-                    .AsReadOnly();
+            return new List<IPostModel>(msgCollection.Select(msg => new StoragePostModel(this.StorageContext, msg)));
         }
 
-        public ICollection<IPostModel> PostsBefore(DateTime date, int maximum = 100)
+        public IEnumerable<IPostModel> PostsBefore(DateTime date, int maximum = 100)
         {
             var msgCollection = this.Storage.Msg.GetListsMsgTo(new HashSet<Guid> { this.Id }, date, maximum);
-            return
-                new List<IPostModel>(msgCollection.Select(msg => new StoragePostModel(this.StorageContext, msg)))
-                    .AsReadOnly();
+            return new List<IPostModel>(msgCollection.Select(msg => new StoragePostModel(this.StorageContext, msg)));
         }
+
+        #endregion
+
+        #region Methods
 
         internal override void Repopulate()
         {
@@ -244,71 +278,5 @@
         }
 
         #endregion
-
-        internal class AccountCollectionAdapter : StorageEntityCollection<StorageListModel, StorageAccountModel, IAccountModel>
-        {
-            #region Constructors and Destructors
-
-            public AccountCollectionAdapter(
-                IStorage storage, 
-                StorageContext storageContext, 
-                StorageListModel parent, 
-                Func<ICollection<Guid>> fetchIdCollection, 
-                Action<StorageAccountModel> reverseAdd, 
-                Action<StorageAccountModel> reverseRemove)
-                : base(storage, storageContext, parent, fetchIdCollection, account => account.Id)
-            {
-                this.GetModel = storageContext.InternalAccounts.InternalFind;
-                this.DoReverseAdd = reverseAdd;
-                this.DoReverseRemove = reverseRemove;
-            }
-
-            #endregion
-
-            #region Properties
-
-            protected Action<StorageAccountModel> DoReverseAdd { get; set; }
-
-            protected Action<StorageAccountModel> DoReverseRemove { get; set; }
-
-            #endregion
-
-            #region Public Methods and Operators
-
-            internal override void Save()
-            {
-                if (!this.Parent.Deleted)
-                {
-                    foreach (var accountAdded in this.CollectionAdded.Where(item => item.Value && !item.Key.Deleted).Select(item => item.Key))
-                    {
-                        this.Storage.List.Add(this.Parent.Id, accountAdded.Id);
-                    }
-
-                    foreach (var accountRemoved in this.CollectionRemoved.Where(item => item.Value && !item.Key.Deleted).Select(item => item.Key))
-                    {
-                        this.Storage.List.Remove(this.Parent.Id, accountRemoved.Id);
-                    }
-                }
-
-                this.CollectionAdded.Clear();
-                this.CollectionRemoved.Clear();
-            }
-
-            #endregion
-
-            #region Methods
-
-            protected override void ReverseAdd(StorageAccountModel account)
-            {
-                this.DoReverseAdd(account);
-            }
-
-            protected override void ReverseRemove(StorageAccountModel account)
-            {
-                this.DoReverseRemove(account);
-            }
-
-            #endregion
-        }
     }
 }

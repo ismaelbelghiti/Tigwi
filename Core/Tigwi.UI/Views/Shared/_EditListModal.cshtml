@@ -1,0 +1,69 @@
+﻿@model Tigwi.UI.Models.EditListViewModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#addAccountButton').click(function () {
+            $.ajax({
+                url: $(this).data("url"),
+                type: "POST",
+                dataType: 'json',
+                data: { 'account': $('#addAccount').val() },
+                cache: false,
+                success: function (data) {
+
+                    if (data.exists) {
+                        var toAppend = "<div class=\"alert alert-info span2\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>" + $('#addAccount').val() +
+                            '<input type="hidden" value="' + $('#addAccount').val() + '" name="AccountIds"/></div>';
+                        $("#accountAdded").append(toAppend);
+                    }
+                    else {
+                        // TODO
+                        alert("fuck you I won't do what you tell me !");
+                    }
+                }
+            });
+            return false;
+        });
+
+    });  
+ </script>
+
+<div class="modal-header modal-header-edit-list">
+    <button class="close" data-dismiss="modal">×</button>
+    <h3>Edit a list</h3>
+</div>
+
+@using (Html.BeginForm("Edit", "List", FormMethod.Post,null))
+{    
+    <div class="modal-body">
+
+        @Html.LabelFor(m => m.ListName)
+        @Html.EditorFor(m => m.ListName)
+        @Html.ValidationMessageFor(m => m.ListName)
+
+        @Html.LabelFor(m => m.ListDescription)
+        @Html.EditorFor(m => m.ListDescription)
+        @Html.ValidationMessageFor(m => m.ListDescription)
+        
+        @Html.LabelFor(m => m.ListPublic)
+        @Html.EditorFor(m => m.ListPublic)
+        @Html.ValidationMessageFor(m => m.ListPublic)
+        
+        @Html.HiddenFor(m => m.ListId)
+
+        <label for="addAnAccount">Add another account</label>
+        <input type="text" class="text-box single-line" id="addAccount"/>
+        <input type="hidden" name="edit" id="isEdit"/>
+        <button type="button" class="btn" data-url="@Url.Action("AccountExists","Account")" id="addAccountButton"> add account</button>
+        <h5>Current accounts in list</h5>
+        <div id="accountAdded"></div>
+    </div>
+    
+    
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <button class="btn btn-primary" type="submit" id="submitEditModalButton">Create and follow list !</button>
+        
+    </div>
+}
+

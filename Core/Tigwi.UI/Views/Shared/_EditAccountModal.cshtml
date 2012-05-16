@@ -1,0 +1,28 @@
+﻿@model Tigwi.UI.Models.Account.AccountEditViewModel
+
+<div class="modal-header modal-header-edit-account">
+    <button class="close" data-dismiss="modal">×</button>
+    <h3>Edit your Account</h3>
+</div>
+
+@using (Html.BeginForm("Edit", "Account", FormMethod.Post,null))
+{    
+    <div class="modal-body">
+
+        @Html.LabelFor(m => m.Description)
+        @Html.EditorFor(m => m.Description)
+        @Html.ValidationMessageFor(m => m.Description)
+        
+        @Html.HiddenFor(m => m.AccountId)
+        @Html.HiddenFor(m => m.ReturnController)
+        @Html.HiddenFor(m => m.ReturnAction)
+
+    </div>
+    
+    
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <button class="btn btn-primary" type="submit" id="submitEditAccountModalButton">Save your Changes !</button>
+    </div>
+}
+

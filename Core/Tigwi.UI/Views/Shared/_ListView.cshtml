@@ -2,24 +2,146 @@
 
 @model ICollection<IListModel>
 
+
 <section class="listView">
     <ul>
+    @{
+        var listsOfMember = new Dictionary<Guid, HashSet<Guid>>();
+        foreach (var list in Model)
+        {
+            foreach (var member in list.Members)
+            {
+                HashSet<Guid> lists;
+                if (!listsOfMember.TryGetValue(member.Id, out lists))
+                {
+                    lists = new HashSet<Guid>();
+                    listsOfMember.Add(member.Id, lists);
+                }
+
+                lists.Add(list.Id);
+            }
+        }
+    }
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.checkboxfilter').change(function (event) {
+                event.stopPropagation();
+                var id=0;
+                for (var user in lists)
+                {
+                    var mustShow = false;
+                    for (var list in lists[user])
+                    {
+                        if ($('#checkBox-' + lists[user][list])[0].checked)
+                        {
+                            mustShow = true;
+                        }
+                    }
+                    if (mustShow)
+                    {
+                        $('.poster-' + user).addClass('shown').show();
+                        
+                    }
+                    else
+                    {
+                        $('.poster-' + user).removeClass('shown').hide();
+                    }
+                
+                }
+            }
+            );
+
+            $('.edit').click(function (event) {
+                event.stopPropagation();
+                $('#editListModal').modal('show');
+                $('#isEdit').val(1);
+                $('.modal-header-edit-list > h3').html('Edit a List');
+                $('#submitEditModalButton').html('Edit list');
+
+                var name=$(this).next('div').attr('id');
+                var listId=name.substring(5,name.length);
+                $.ajax({
+                    url: "@Url.Action("getList","List")",
+                    type: "POST",
+                    dataType: 'json',
+                    data: { 'listId': listId },
+                    success: function(data) {
+                        $('#ListName').val(data.Name);
+                        $('#ListDescription').val(data.Descr);
+                        $('#ListId').val(listId);
+                        $('#ListPublic').attr('checked',data.Public);
+                        $("#accountAdded").html('');
+                        for (var i = 0; i < data.Members.length; i++) {
+                            var toAppend = "<div class=\"alert alert-info span2\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>" + data.Members[i] +
+                            '<input type="hidden" value="' + data.Members[i] + '" name="AccountIds"/></div>';
+                            $("#accountAdded").append(toAppend);
+                        }
+                    }
+                });   
+            });
+            $('#addList').click(function(){
+                $('#ListName').val('');
+                $('#ListDescription').val('');
+                $('#ListId').val('');
+                $("#accountAdded").html('');
+            });
+            $('.delete').click(function (event) {
+                event.stopPropagation();
+                $('#deleteListModal').modal('show');
+
+                var name=$(this).next().next('div').attr('id');
+                var listId=name.substring(5,name.length);
+                $.ajax({
+                    url: "@Url.Action("getList","List")",
+                    type: "POST",
+                    dataType: 'json',
+                    data: { 'listId': listId },
+                    success: function(data) {
+                        $('#deleteListName').html(data.Name);
+                        $('#deleteListDescr').html(data.Descr);
+                        $('#deleteListId').val(listId);
+                        for (var i = 0; i < data.Members.length; i++) {
+                            $("#deleteListMembers").append("<li>"+data.Members[i]+"</li>");
+                        }
+                    }
+                });
+            });
+
+            $('#addList').click(function ()
+            {
+                $('#isEdit').val(0);
+                $('.modal-header-edit-list > h3').html('Create a List');
+                $('#submitEditModalButton').html('Create list');
+            });
+
+            $('.checkboxfilter').click(function(event)
+            {
+                event.stopPropagation();
+            });
+        });
+    </script>
+
     @foreach (var list in Model)
     {
         <li>
-            <input type="checkbox" checked="true"/>
-            <a class="accordion-toggle" data-toggle="collapse" href="#list-@list.Id">
-                <i class="icon-folder-close"></i> @list.Name
-            </a>
-            <div id="list-@list.Id" class="accordion-body collapse">
-                <ul class="list-user">
-                    @foreach (var member in list.Members)
-                    {
-                        <li><i class="icon-user"></i>@member.Name</li>
-                    }
-                </ul>
+            <div class="listName accordion-toggle" data-toggle="collapse" href="#list-@list.Id">
+                <input type="checkbox" checked="checked" id="checkBox-@list.Id" class="checkboxfilter"/>  
+                <i class="icon-folder-close"></i> @list.Name <i class="delete icon-trash pull-right"></i> <i class="edit icon-pencil pull-right"></i>
+                <div id="list-@list.Id" class="accordion-body collapse">
+                    <ul class="list-user">
+                        @foreach (var member in list.Members)
+                        {
+                            <li><i class="icon-user"></i>@member.Name</li>
+                        }
+                    </ul>
+                </div>
             </div>
+
         </li>
     }
     </ul>
+    <ul><i class="icon-plus"></i> 
+        <a data-toggle="modal" href="#editListModal" id="addList" >Add List</a>
+    </ul>
+
 </section>

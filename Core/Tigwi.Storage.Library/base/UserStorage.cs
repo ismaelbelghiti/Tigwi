@@ -72,6 +72,7 @@ namespace Tigwi.Storage.Library
             Blob<HashSet<Guid>> bAccounts = blobFactory.UAccountsData(userId);
             Blob<ByteArray> bPassword = blobFactory.UPassword(userId);
             blobFactory.UAccountsLockInit(userId);
+            blobFactory.UOpenIdsLockInit(userId);
 
             // store the data
             bInfo.Set(info);
@@ -103,31 +104,37 @@ namespace Tigwi.Storage.Library
         {
             using (blobFactory.UOpenIdsLock(userId))
             {
-                if (!blobFactory.UOpenIdsData(userId).AddWithRetry(openIdUri))
-                    throw new UserNotFound();
-
-                if (!blobFactory.UIdByOpenIdUri(openIdUri).SetIfNotExists(userId))
+                if (blobFactory.UIdByOpenIdUri(openIdUri).Exists)
                     throw new OpenIdUriDuplicated();
+
+                if (blobFactory.UOpenIdsData(userId).Exists)
+                    blobFactory.UOpenIdsData(userId).AddWithRetry(openIdUri);
+                else
+                {
+                    HashSet<string> newset = new HashSet<string>();
+                    newset.Add(openIdUri);
+                    blobFactory.UOpenIdsData(userId).Set(newset);
+                }
+
+                blobFactory.UIdByOpenIdUri(openIdUri).Set(userId);
             }
         }
 
         public HashSet<string> ListOpenIdUris(Guid userId)
         {
-            return blobFactory.UOpenIdsData(userId).GetIfExists(new UserNotFound());
+            if (!blobFactory.UOpenIdsData(userId).Exists)
+                throw new UserNotFound();
+
+            return blobFactory.UOpenIdsData(userId).Get();
         }
 
         public void DeassociateOpenIdUri(Guid userId, string openIdUri)
         {
-            try
-            {
                 using (blobFactory.UOpenIdsLock(userId))
                 {
                     blobFactory.UOpenIdsData(userId).RemoveWithRetry(openIdUri);
-                    if (!blobFactory.UIdByOpenIdUri(openIdUri).TryDelete())
-                        throw new OpenIdUriNotAssociated();
+                    blobFactory.UIdByOpenIdUri(openIdUri).Delete();
                 }
-            }
-            catch (UserNotFound) { ;}
         }
 
         public Byte[] GetPassword(Guid userId)

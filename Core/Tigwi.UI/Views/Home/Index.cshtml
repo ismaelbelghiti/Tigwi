@@ -5,10 +5,49 @@
     ViewBag.Title = "Home Page";
 }
 
+<script type="text/javascript">
+       $(document).ready(function () {
+            $('.editAcc2').click(function (event) {
+                event.stopPropagation();
+                $('#editAccountModal').modal('show');
+                $('#isEdit').val(1);
+                $('.modal-header-edit-account > h3').html('Edit Account');
+                $('#submitEditAccountModalButton').html('Save Changes');
+
+                var name=$(this).attr('id');
+                var accountId=name.substring(5,name.length);
+                $.ajax({
+                    url: "@Url.Action("getAccount","Account")",
+                    type: "POST",
+                    dataType: 'json',
+                    data: { 'accountId': accountId },
+                    success: function(data) {
+                            $('#Description').val(data.Descr);
+                            $('#AccountId').val(accountId);
+                            $('#ReturnController').val("Home");
+                            $('#ReturnAction').val("Index");
+                    }
+                });   
+            });
+        });
+</script>
+
 @section LeftInfos
 {
     @if(User.Identity.IsAuthenticated)
     {
+        <ul>
+        <p>
+           <button class="btn btn-primary editAcc2" id="acct-@CurrentAccount.Id" ><b>Edit</b></button>
+        </p>
+      
+        @if(!String.Equals(CurrentAccount.Description, ""))
+        {    
+           <p><b>Description : </b> @CurrentAccount.Description</p>
+        }
+      
+        </ul>
+        
         @Html.Partial("_ListView", CurrentAccount.AllFollowedLists)
     }
     else
@@ -18,10 +57,18 @@
     
 }
 
-@if(User.Identity.IsAuthenticated)
+@if (ViewBag.error != null)
+{
+    <div class="alert alert-error">
+        <button class="close" data-dismiss="alert">x</button>
+        @ViewBag.error
+    </div>
+}
+
+@if (User.Identity.IsAuthenticated)
 {
     <div>@Html.Partial("_WriteMessage", new WritePostViewModel())</div>
-    <div>@Html.Partial("_ViewPostList", Model.PersonalList.PostsBefore(DateTime.MaxValue, 10))</div>
+    <div>@Html.Partial("_ViewPostList", Model.AllFollowedLists.PostsBefore(DateTime.MaxValue, 10))</div>
 }
 else
 {

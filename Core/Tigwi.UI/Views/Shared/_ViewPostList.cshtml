@@ -1,7 +1,7 @@
 ﻿@using Tigwi.UI.Models
-@model ICollection<IPostModel>
-           
+@model IEnumerable<IPostModel>
+      
 @foreach( var post in Model)
 {
-    @Html.Partial("_ViewPost", post)
+    @Html.Partial("_ViewPost", post)    
 }

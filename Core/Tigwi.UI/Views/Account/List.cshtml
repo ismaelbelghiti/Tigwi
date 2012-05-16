@@ -1,0 +1,12 @@
+﻿@model Tigwi.UI.Models.IUserModel
+
+@{
+    ViewBag.Title = "List";
+}
+
+@section LeftInfos
+{
+        <p>User : @Model.Login</p>
+}
+
+@Html.Partial("_ViewAccounts", Model)

@@ -1,120 +1,292 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web.Mvc;
 using Tigwi.API.Models;
+using Tigwi.Storage.Library;
 
 namespace Tigwi.API.Controllers
 {
-    public abstract class InfoAccountController : ApiController
+    public class InfoAccountController : ApiController
     {
 
-        // parts of code that are common when accessing methods by name or by id
-
-        protected Answer AnswerMessages(Guid accountId, int number)
+        //
+        // GET: /account/messages/{accountName}/{number}
+        // GET: /account/messages/name={accountName}/{number}
+        // GET: /account/messages/id={accountId}/{number}
+        public ActionResult Messages(string accountName, Guid? accountId, int number)
         {
-            // get lasts messages from account accoutName
-            var personalListId = Storage.List.GetPersonalList(accountId);
-            var listMsgs = Storage.Msg.GetListsMsgTo(new HashSet<Guid> { personalListId }, DateTime.Now, number);
+            Answer output;
 
-            // convert, looking forward XML serialization
-            var listMsgsOutput = new Messages(listMsgs, Storage);
-            return new Answer(listMsgsOutput);
-        }
-        
-        /*
-         * WARNING The following method isn't documented.
-        protected Answer AnswerTaggedMessages(Guid accountId, int number)
-        {
-            // get lasts messages from user name
-            var listMsgs = Storage.Msg.GetTaggedTo(accountId, DateTime.Now, number);
-
-            // convert, looking forward XML serialization
-            var listMsgsOutput = new Messages(listMsgs, Storage);
-            return new Answer(listMsgsOutput);
-        }
-        */
-        
-
-        protected Answer AnswerSubscriberAccounts(Guid accountId, int number)
-        {
-            // get lasts followers of user name 's list
-            var followingLists = Storage.List.GetFollowingLists(accountId);
-            var hashFollowers = new HashSet<Guid>();
-            foreach (var followingList in followingLists)
+            try
             {
-                hashFollowers.UnionWith(Storage.List.GetFollowingAccounts(followingList));
+                var realId = accountId ?? Storage.Account.GetId(accountName);
+
+                // get lasts messages from account accoutName
+                var personalListId = Storage.List.GetPersonalList(realId);
+                var listMsgs = Storage.Msg.GetListsMsgTo(new HashSet<Guid> { personalListId }, DateTime.Now, number);
+
+                // convert, looking forward XML serialization
+                var listMsgsOutput = new Messages(listMsgs, Storage);
+                output = new Answer(listMsgsOutput);
             }
 
-            // Get as many subscribers as possible (maximum: number)
-            var size = Math.Min(hashFollowers.Count, number);
-            var accountListToReturn = BuildAccountListFromGuidCollection(hashFollowers, size, Storage);
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
 
-            return new Answer(accountListToReturn);
+            return Serialize(output);
+        }
+
+        // TODO : The following method isn't documented.
+        
+        //
+        // GET: /account/taggedmessages/{accountName}/{number}
+        // GET: /account/taggedmessages/name={accountName}/{number}
+        // GET: /account/taggedmessages/id={accountId}/{number}
+        public ActionResult TaggedMessages(string accountName, Guid? accountId, int number)
+        {
+            Answer output;
+
+            try
+            {
+                var realId = accountId ?? Storage.Account.GetId(accountName);
+
+                // get lasts messages from user name
+                var listMsgs = Storage.Msg.GetTaggedTo(realId, DateTime.Now, number);
+
+                // convert, looking forward XML serialization
+                var listMsgsOutput = new Messages(listMsgs, Storage);
+                output = new Answer(listMsgsOutput);
+            }
+
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            return Serialize(output);
+        }
+
+
+        //
+        // GET : /account/subscriberaccounts/{accountName}/{number}
+        // GET: /account/subscriberaccounts/name={accountName}/{number}
+        // GET: /account/subscriberaccounts/id={accountId}/{number}
+        public ActionResult SubscribersAccounts(string accountName, Guid? accountId, int number)
+        {
+            Answer output;
+
+            try
+            {
+                var realId = accountId ?? Storage.Account.GetId(accountName);
+
+                // get lasts followers of user name 's list
+                var followingLists = Storage.List.GetFollowingLists(realId);
+                var hashFollowers = new HashSet<Guid>();
+                foreach (var followingList in followingLists)
+                {
+                    hashFollowers.UnionWith(Storage.List.GetFollowingAccounts(followingList));
+                }
+
+                // Get as many subscribers as possible (maximum: number)
+                var size = Math.Min(hashFollowers.Count, number);
+                var accountListToReturn = AccountsFromGuidCollection(hashFollowers, size, Storage);
+
+                output = new Answer(accountListToReturn);
+            }
+
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            return Serialize(output);
         }
 
         
-        protected Answer AnswerSubscriptionsEitherPublicOrAll(Guid accountId, int numberOfSubscriptions, bool withPrivate)
+        //
+        // GET : /account/subscribedaccounts/{accountName}/{number}
+        // GET: /account/subscribedaccounts/name={accountName}/{number}
+        // GET: /account/subscribedaccounts/id={accountId}/{number}
+        public ActionResult SubscribedAccounts(string accountName, Guid? accountId, int number)
         {
-            // get the public lists followed by the given account
-            var followedLists = Storage.List.GetAccountFollowedLists(accountId, withPrivate);
-            var accountsInLists = new HashSet<Guid>();
-            foreach (var followedList in followedLists)
+            Answer output;
+
+            try
             {
-                accountsInLists.UnionWith(Storage.List.GetAccounts(followedList));
+                var realId = accountId ?? Storage.Account.GetId(accountName);
+
+                // we check if the user is authenticated and authorized to know whether to show private lists
+                var authentication = Authorized(realId);
+                if (authentication.Failed)
+                    output = new Answer(new Error(authentication.ErrorMessage()));
+                else
+                {
+                    // get the public lists followed by the given account
+                    var followedLists = Storage.List.GetAccountFollowedLists(realId, authentication.HasRights);
+                    var accountsInLists = new HashSet<Guid>();
+                    foreach (var followedList in followedLists)
+                    {
+                        accountsInLists.UnionWith(Storage.List.GetAccounts(followedList));
+                    }
+
+                    // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
+                    var size = Math.Min(accountsInLists.Count, number);
+                    var accountListToReturn = AccountsFromGuidCollection(accountsInLists, size, Storage);
+
+                    output = new Answer(accountListToReturn);
+                }
             }
 
-            // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
-            var size = Math.Min(accountsInLists.Count, numberOfSubscriptions);
-            var accountListToReturn = BuildAccountListFromGuidCollection(accountsInLists, size, Storage);
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
 
-            return new Answer(accountListToReturn);
+            return Serialize(output);
         }
 
 
-        protected Answer AnswerSubscribedListsEitherPublicOrAll(Guid accountId, int numberofLists, bool withPrivate)
+        //
+        // GET : /account/subscribedlists/{accountName}/{number}
+        // GET: /account/subscribedlists/name={accountName}/{number}
+        // GET: /account/subscribedlists/id={accountId}/{number}
+        public ActionResult SubscribedListsEitherPublicOrAll(string accountName, Guid? accountId, int number)
         {
-            // get the public lists followed by the given account
-            var followedLists = Storage.List.GetAccountFollowedLists(accountId, withPrivate);
+            Answer output;
 
-            // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
-            var size = Math.Min(followedLists.Count, numberofLists);
-            var listsToReturn = BuildListsFromGuidCollection(followedLists, size, Storage);
+            try
+            {
+                var realId = accountId ?? Storage.Account.GetId(accountName);
 
-            return new Answer(listsToReturn);
+                // we check if the user is authenticated and authorized to know whether to show private lists
+                var authentication = Authorized(realId);
+                if (authentication.Failed)
+                    output = new Answer(new Error(authentication.ErrorMessage()));
+                else
+                {
+                    // get the public lists followed by the given account
+                    var followedLists = Storage.List.GetAccountFollowedLists(realId, authentication.HasRights);
+
+                    // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
+                    var size = Math.Min(followedLists.Count, number);
+                    var listsToReturn = ListsFromGuidCollection(followedLists, size, Storage);
+
+                    output = new Answer(listsToReturn);
+                }
+            }
+
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            return Serialize(output);
         }
 
 
-        protected Answer AnswerSubscriberLists(Guid accountId, int numberOfSubscribers)
+        //
+        // GET : /account/subscriberlists/{accountName}/{number}
+        // GET: /account/subscriberlists/name={accountName}/{number}
+        // GET: /account/subscriberlists/id={accountId}/{number}
+        public ActionResult SubscriberLists(string accountName, Guid? accountId, int number)
         {
-            // get lasts followers of user name 's list
-            var followingLists = Storage.List.GetFollowingLists(accountId);
+            Answer output;
 
-            // Get as many subscribers as possible (maximum: number)
-            var size = Math.Min(followingLists.Count, numberOfSubscribers);
-            var accountListToReturn = BuildAccountListFromGuidCollection(followingLists, size, Storage);
+            try
+            {
+                var realId = accountId ?? Storage.Account.GetId(accountName);
 
-            return new Answer(accountListToReturn);
+                // get lasts followers of user name 's list
+                var followingLists = Storage.List.GetFollowingLists(realId);
+
+                // Get as many subscribers as possible (maximum: number)
+                var size = Math.Min(followingLists.Count, number);
+                var accountListToReturn = AccountsFromGuidCollection(followingLists, size, Storage);
+
+                output = new Answer(accountListToReturn);
+            }
+
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            return Serialize(output);
         }
 
 
-        protected Answer AnswerOwnedListsEitherPublicOrAll(Guid accountId, int numberOfLists, bool withPrivate)
+        //
+        // GET : /account/ownedlists/{accountName}/{number}
+        // GET: /account/ownedlists/name={accountName}/{number}
+        // GET: /account/ownedlists/id={accountId}/{number}
+        public ActionResult OwnedListsEitherPublicOrAll(string accountName, Guid? accountId, int number)
         {
-            // get the public lists owned by the given account
-            var ownedLists = Storage.List.GetAccountOwnedLists(accountId, withPrivate);
-            
-            // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
-            var size = Math.Min(ownedLists.Count, numberOfLists);
-            var listsToReturn = BuildListsFromGuidCollection(ownedLists, size, Storage);
+            Answer output;
 
-            return new Answer(listsToReturn);
+            try
+            {
+                var realId = accountId ?? Storage.Account.GetId(accountName);
+
+                // we check if the user is authenticated and authorized to know whether to show private lists
+                var authentication = Authorized(realId);
+                if (authentication.Failed)
+                    output = new Answer(new Error(authentication.ErrorMessage()));
+                else
+                {
+                    // get the public lists owned by the given account
+                    var ownedLists = Storage.List.GetAccountOwnedLists(realId, authentication.HasRights);
+
+                    // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
+                    var size = Math.Min(ownedLists.Count, number);
+                    var listsToReturn = ListsFromGuidCollection(ownedLists, size, Storage);
+
+                    output = new Answer(listsToReturn);
+                }
+            }
+
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            return Serialize(output);
         }
 
 
-        protected Answer AnswerMainInfo(Guid accountId)
+        //
+        // GET : /account/maininfo/{accountName}
+        // GET: /account/maininfo/name={accountName}/{number}
+        // GET: /account/maininfo/id={accountId}/{number}
+        public ActionResult MainInfo(string accountName, Guid? accountId)
         {
-            // get the informations of the given account
-            var accountInfo = Storage.Account.GetInfo(accountId);
-            var accountToReturn = new Account(accountId, accountInfo.Name, accountInfo.Description);
-            return new Answer(accountToReturn);
+            Answer output;
+
+            try
+            {
+                var realId = accountId ?? Storage.Account.GetId(accountName);
+
+                // get the informations of the given account
+                var accountInfo = Storage.Account.GetInfo(realId);
+                var accountToReturn = new Account(realId, accountInfo.Name, accountInfo.Description);
+                output = new Answer(accountToReturn);
+            }
+
+            catch (StorageLibException exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(new Error(exception.Code.ToString()));
+            }
+
+            return Serialize(output);
         }
 
     }

@@ -81,8 +81,7 @@
                                     <b class="caret"></b>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a>item1</a></li>
-                                    <li><a>item2</a></li>
+                                    <li>@Html.ActionLink("Accounts", "List", "Account")</li>
                                     <li class="divider"></li>
                                     <li>@Html.ActionLink("Disconnect", "LogOut", "User")</li>
                                 </ul>
@@ -100,11 +99,23 @@
         <section class="modal hide" id="addAccountModal">
             @Html.Partial("_CreateAccountPartial", new AccountCreationViewModel())
         </section>
+        
+        <section class="modal hide" id="editListModal">
+            @Html.Partial("_EditListModal", new EditListViewModel())
+        </section>
 
+        <section class="modal hide" id="editAccountModal">
+            @Html.Partial("_EditAccountModal", new AccountEditViewModel())
+        </section>
+        
+        <section class="modal hide" id="deleteListModal">
+            @Html.Partial("_ConfirmDeleteModal", null)
+        </section>
+       
         <div class="container-fluid">
             <section id="main"> 
                 <section class="span2 leftInfos">
-                    @RenderSection("LeftInfos",false)
+                    @RenderSection("LeftInfos", false)
                 </section>
 
                 <section class="span5">

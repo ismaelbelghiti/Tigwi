@@ -5,14 +5,13 @@ namespace Tigwi.API.Models
 {
     // Models for request bodies
 
-    [Serializable]
-    [XmlRootAttribute("Write")]
-    public class MsgToWrite
+    public class BaseRequest
     {
         public string AccountName { get; set; }
         public Guid? AccountId { get; set; }
-        public MsgToPost Message { get; set; }
     }
+
+    // Add a message
 
     [Serializable]
     [XmlTypeAttribute("Message")]
@@ -22,16 +21,28 @@ namespace Tigwi.API.Models
     }
 
     [Serializable]
-    public class ActionOnMessage
+    [XmlRootAttribute("Write")]
+    public class MsgToWrite:BaseRequest
     {
-        public string AccountName { get; set; }
-        public Guid? AccountId { get; set; }
-        public Guid? MessageId { get; set; }
+        public MsgToPost Message { get; set; }
     }
+
+    // Remove a message
 
     [Serializable]
     [XmlRootAttribute("Delete")]
-    public class MsgToDelete : ActionOnMessage{}
+    public class MsgToDelete
+    {
+        public Guid? MessageId { get; set; }
+    }
+
+    // Other actions on messages
+
+    [Serializable]
+    public class ActionOnMessage:BaseRequest
+    {
+        public Guid? MessageId { get; set; }
+    }
 
     [Serializable]
     [XmlRootAttribute("Copy")]
@@ -41,13 +52,13 @@ namespace Tigwi.API.Models
     public class Tag : ActionOnMessage{}
 
     [Serializable]
-    public class Untag : ActionOnMessage { }
+    public class Untag : ActionOnMessage{}
+
+    // Subscribe/Create list
 
     [Serializable]
-    public class SubscribeList
+    public class SubscribeList:BaseRequest
     {
-        public string AccountName { get; set; }
-        public Guid? AccountId { get; set; }
         public Guid? Subscription { get; set; }
     }
 
@@ -60,37 +71,8 @@ namespace Tigwi.API.Models
     }
 
     [Serializable]
-    public class CreateList
+    public class CreateList:BaseRequest
     {
-        public string AccountName { get; set; }
-        public Guid? AccountId { get; set; }
         public ListInfo ListInfo { get; set; }
     }
-
-    [Serializable]
-    public class ChangeDescription
-    {
-        public string AccountName { get; set; }
-        public Guid? AccountId { get; set; }
-        public string Description { get; set; }
-    }
-
-    [Serializable]
-    public class AccountUser
-    {
-        public string AccountName { get; set; }
-        public Guid? AccountId { get; set; }
-        public string UserLogin { get; set; }
-        public Guid? UserId { get; set; }
-    }
-
-    [Serializable]
-    public class AddUser : AccountUser{}
-
-    [Serializable]
-    public class RemoveUser : AccountUser{}
-
-    [Serializable]
-    public class ChangeAdministrator : AccountUser { }
-
 }

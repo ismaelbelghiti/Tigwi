@@ -7,6 +7,11 @@
 @section LeftInfos
 {
         <p>Oh Hai @Model.Name</p>
+        @if(User.Identity.IsAuthenticated)
+        {
+            @Html.Partial("_FollowPerson", Model)
+            @Html.Partial("_AccountFollowedPublicLists", Model)
+        }
 }
 
 @Html.Partial("_ViewPostList", Model.PersonalList.PostsAfter(DateTime.MinValue, 10))

@@ -79,7 +79,7 @@ namespace Tigwi.Storage.Library
         void Remove(Guid listId, Guid accountId);
 
         /// <summary>
-        /// Get the lits created by the given account
+        /// Get the lists created by the given account
         /// </summary>
         /// <exception cref="AccountNotFound">no account has this Id</exception>
         HashSet<Guid> GetAccountOwnedLists(Guid accountId, bool withPrivate);

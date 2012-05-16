@@ -9,7 +9,7 @@ namespace Tigwi.API.Controllers
     public class InfoListController : ApiController
     {
         //
-        // GET : /infolist/subscriptions/{idOfList}/{number}
+        // GET : /list/subscriptions/{idOfList}/{number}
 
         public ActionResult Subscriptions(Guid idOfList, int number)
         {
@@ -21,7 +21,7 @@ namespace Tigwi.API.Controllers
                 var followedAccounts = Storage.List.GetAccounts(idOfList);
 
                 var numberToReturn = Math.Min(number, followedAccounts.Count);
-                var followedAccountsToReturn = BuildAccountListFromGuidCollection(followedAccounts, numberToReturn, Storage);
+                var followedAccountsToReturn = AccountsFromGuidCollection(followedAccounts, numberToReturn, Storage);
 
                 output = new Answer(followedAccountsToReturn);
             }
@@ -35,7 +35,7 @@ namespace Tigwi.API.Controllers
         }
 
         //
-        // GET : /infolist/subscribers/{idOfList}/{number}
+        // GET : /list/subscribers/{idOfList}/{number}
 
         public ActionResult Subscribers(Guid idOfList, int number)
         {
@@ -47,7 +47,7 @@ namespace Tigwi.API.Controllers
                 var listSuscriberAccounts = Storage.List.GetFollowingAccounts(idOfList);
 
                 var numberToReturn = Math.Min(number, listSuscriberAccounts.Count);
-                var listSuscribersOutputToReturn = BuildAccountListFromGuidCollection(listSuscriberAccounts, numberToReturn, Storage);
+                var listSuscribersOutputToReturn = AccountsFromGuidCollection(listSuscriberAccounts, numberToReturn, Storage);
 
                 output = new Answer(listSuscribersOutputToReturn);
             }
@@ -85,7 +85,7 @@ namespace Tigwi.API.Controllers
         }
 
         //
-        // GET : /infolist/messages/{idOfList}/{number}
+        // GET : /list/messages/{idOfList}/{number}
 
         public ActionResult Messages(Guid idOfList, int number)
         {
