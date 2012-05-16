@@ -24,13 +24,13 @@ namespace SetUp
                 BlobFactory blobFactory = new BlobFactory(azureAccountName, azureAccountKey);
                 blobFactory.InitStorage();
                 Console.WriteLine("Le compte storage a été réinitialisé");
-                Console.ReadKey();
             }
             else
             {
                 Console.WriteLine("Rien n'a été fait.");
-                Console.ReadKey();
             }
+            Console.WriteLine("Appuyer sur une touche pour quitter.");
+            Console.ReadKey();
         }
     }
 }
