@@ -35,7 +35,9 @@ GET
 ###URL
 
 http://api.tigwi.com/account/messages/_accountName_/_numberOfMessages_
+
 http://api.tigwi.com/account/messages/name=_accountName_/_numberOfMessages_
+
 http://api.tigwi.com/account/messages/id=_accountId_/_numberOfMessages_
 
 ###Response
@@ -94,7 +96,9 @@ Or, if an error occured, for example you thought the account name was Bush_Georg
 ###URL
 
 http://api.tigwi.com/account/taggedmessages/_accountName_/_numberOfMessages_
+
 http://api.tigwi.com/account/taggedmessages/name=_accountName_/_numberOfMessages_
+
 http://api.tigwi.com/account/taggedmessages/id=_accountId_/_numberOfMessages_
 
 
@@ -112,7 +116,9 @@ GET
 
 ###URL
 http://api.tigwi.com/account/subscriberaccounts/_accountName_/_numberOfSubscriptions_
+
 http://api.tigwi.com/subscriberaccounts/name=_accountName_/_numberOfSubscriptions_
+
 http://api.tigwi.com/subscriberaccounts/id=_accountId_/_numberOfSubscriptions_
 
 
@@ -142,7 +148,9 @@ GET
 ###URL
 
 http://api.tigwi.com/account/subscribedaccounts/_accountName_/_numberOfSubscribers_
+
 http://api.tigwi.com/account/subscribedaccounts/name=_accountName_/_numberOfSubscribers_
+
 http://api.tigwi.com/account/subscribedaccounts/id=_accountId_/_numberOfSubscribers_
 
 ###Response
@@ -171,7 +179,9 @@ GET
 
 ###URL
 http://api.tigwi.com/account/subscribedlists/_accountName_/_numberOfLists_
+
 http://api.tigwi.com/account/subscribedlists/name=_accountName_/_numberOfLists_
+
 http://api.tigwi.com/account/subscribedlists/id=_accountId_/_numberOfLists_
 
 ###Response
@@ -198,7 +208,9 @@ GET
 
 ###URL
 http://api.tigwi.com/account/subscriberlists/_accountName_/_numberOfLists_
+
 http://api.tigwi.com/account/subscriberlists/name=_accountName_/_numberOfLists_
+
 http://api.tigwi.com/account/subscriberlists/id=_accountId_/_numberOfLists_
 
 ###Response
@@ -222,7 +234,9 @@ GET
 
 ###URL
 http://api.tigwi.com/account/ownedlists/_accountName_/_numberOfLists_
+
 http://api.tigwi.com/account/ownedlists/name=_accountName_/_numberOfLists_
+
 http://api.tigwi.com/account/ownedlists/id=_accountId_/_numberOfLists_
 
 ###Response
@@ -246,7 +260,9 @@ GET
 
 ###URL
 http://api.tigwi.com/account/maininfo/_accountName_
+
 http://api.tigwi.com/account/maininfo/name=_accountName_
+
 http://api.tigwi.com/account/maininfo/id=_accountId_
 
 ###Response
@@ -270,9 +286,17 @@ http://api.tigwi.com/account/write
 
 ###Request examples
 
+    <Write>
+     <AccountName>George_Bush</AccountName>
+     <Message>I love Tigwi</Message>
+    </Write>
 
 ###Response example
 
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Content xsi:type="ObjectCreated" Id="7a2a8d74-621a-455c-bfc3-8552474cc735" />
+    </Answer>
 
 ###Information
 * You **must** be authenticated as an authorized user of account _nameOfAccount_ to post a message.
