@@ -70,12 +70,12 @@
     }); 
 </script>
 
-<h5>Public followed lists :</h5>
+<h5>Public Owned lists :</h5>
 <section class="listView">
     <ul>
         @{
             var listsOfMember = new Dictionary<Guid, HashSet<Guid>>();
-            foreach (var list in Model.PublicFollowedLists)
+            foreach (var list in Model.PublicOwnedLists)
             {
                 foreach (var member in list.Members)
                 {
