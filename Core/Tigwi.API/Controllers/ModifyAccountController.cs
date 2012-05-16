@@ -146,7 +146,6 @@ namespace Tigwi.API.Controllers
         //
         // POST : /account/tag
 
-        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Tag()
         {
@@ -164,10 +163,17 @@ namespace Tigwi.API.Controllers
                 {
                     var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
 
-                    Storage.Msg.Tag(accountId, msg.MessageId.GetValueOrDefault());
+                    // Check if the user is authenticated and has rights
+                    var authentication = Authorized(accountId);
+                    if (authentication.HasRights)
+                    {
+                        Storage.Msg.Tag(accountId, msg.MessageId.GetValueOrDefault());
 
-                    //Result is an empty error
-                    error = new Error();
+                        //Result is an empty error
+                        error = new Error();
+                    }
+                    else
+                        error = new Error(authentication.ErrorMessage());                    
                 }
             }
             catch (StorageLibException exception)
@@ -187,7 +193,6 @@ namespace Tigwi.API.Controllers
         //
         // POST : /account/untag
 
-        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Untag()
         {
@@ -205,10 +210,17 @@ namespace Tigwi.API.Controllers
                 {
                     var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
 
-                    Storage.Msg.Untag(accountId, msg.MessageId.GetValueOrDefault());
+                    // Check if the user is authenticated and has rights
+                    var authentication = Authorized(accountId);
+                    if (authentication.HasRights)
+                    {
+                        Storage.Msg.Untag(accountId, msg.MessageId.GetValueOrDefault());
+                        //Result is an empty error
+                        error = new Error();
+                    }
+                    else
+                        error = new Error(authentication.ErrorMessage());
 
-                    //Result is an empty error
-                    error = new Error();
                 }
             }
             catch (StorageLibException exception)
