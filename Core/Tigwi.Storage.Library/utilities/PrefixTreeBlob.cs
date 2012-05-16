@@ -6,7 +6,7 @@ using Microsoft.WindowsAzure.StorageClient;
 
 namespace Tigwi.Storage.Library.Utilities
 {
-    class PrefixTreeBlob
+    public class PrefixTreeBlob
     {
         CloudBlobDirectory dir;
 

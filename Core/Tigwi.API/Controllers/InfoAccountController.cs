@@ -263,8 +263,8 @@ namespace Tigwi.API.Controllers
 
         //
         // GET : /account/maininfo/{accountName}
-        // GET: /account/maininfo/name={accountName}/{number}
-        // GET: /account/maininfo/id={accountId}/{number}
+        // GET: /account/maininfo/name={accountName}
+        // GET: /account/maininfo/id={accountId}
         public ActionResult MainInfo(string accountName, Guid? accountId)
         {
             Answer output;

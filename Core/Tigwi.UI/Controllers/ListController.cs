@@ -72,13 +72,19 @@ namespace Tigwi.UI.Controllers
             }
             catch (Tigwi.UI.Models.Storage.AccountNotFoundException ex)
             {
-                this.Storage.Lists.Delete(list);
+                if (edit == 0)
+                    this.Storage.Lists.Delete(list);
                 return this.RedirectToAction("Index", "Home", new { error = ex.Message });
             }
             catch (System.NullReferenceException)
             {
-                this.Storage.Lists.Delete(list);
+                if (edit == 0)
+                    this.Storage.Lists.Delete(list);
                 return this.RedirectToAction("Index", "Home", new { error = "The list is empty, it has been deleted" });
+            }
+            catch (Tigwi.Storage.Library.IsPersonnalList ex)
+            {
+                return this.RedirectToAction("Index", "Home", new { error = ex.Message });
             }
         }
 
@@ -119,8 +125,15 @@ namespace Tigwi.UI.Controllers
         {
             //TODO check whether or not it all went according to plan ...
             //TODO prevent other accounts from deleting your public lists ...
-            this.Storage.Lists.Delete(this.Storage.Lists.Find(id));
-            return this.RedirectToAction("Index", "Home");
+            try
+            {
+                this.Storage.Lists.Delete(this.Storage.Lists.Find(id));
+                return this.RedirectToAction("Index", "Home");
+            }
+            catch (Tigwi.Storage.Library.IsPersonnalList ex)
+            {
+                return this.RedirectToAction("Index", "Home", new { error = ex.Message });
+            }
         }
 
         [HttpPost]

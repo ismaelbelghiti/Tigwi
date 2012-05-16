@@ -77,6 +77,10 @@ namespace Tigwi.UI.Controllers
             {
                 return this.RedirectToAction("Index", "Home", new { error = ex.Message});
             }
+            catch (System.ArgumentNullException)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
         }
 
 
@@ -143,7 +147,7 @@ namespace Tigwi.UI.Controllers
                 }
             }
             //something went wrong
-            return this.View(accountCreation);
+            return this.PartialView("_CreateAccountPartial", accountCreation);
         }
 
 
@@ -217,9 +221,20 @@ namespace Tigwi.UI.Controllers
         /// <returns>The resulting view.</returns>
         public ActionResult Following(Guid id)
         {
-            IAccountModel account = this.Storage.Accounts.Find(id);
-            account.PersonalList.Followers.Add(CurrentAccount);
-            return this.View(account);
+            try
+            {
+                IAccountModel account = this.Storage.Accounts.Find(id);
+                account.PersonalList.Followers.Add(CurrentAccount);
+                return this.View(account);
+            }
+            catch(AccountNotFoundException)
+            {
+                return this.RedirectToAction("Index", "Home", new { error = "This account doesn't exist anymore!" });
+            }
+            catch
+            {
+                return this.RedirectToAction("Index", "Home", new { error = "Something went wrong!" });
+            }
         }
 
         /// <summary>
