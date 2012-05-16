@@ -1,10 +1,15 @@
 Tigwi - API Specification by L. de HARO, A. de MYTTENAERE and T. ZIMMERMANN 
 
 Notes :
+
 * Add short description of essential ressources.
-* Why should we need authentication to access accounts main infos ?
 * Currently, it is possible to subscribe a private list just knowing its Guid.
-* How to check if you have the rights on a message ?
+* The following method isn't documented.
+
+        //
+        // GET: /account/taggedmessages/{accountName}/{number}
+        // GET: /account/taggedmessages/name={accountName}/{number}
+        // GET: /account/taggedmessages/id={accountId}/{number}
 
 #Get informations about an _account_
 
@@ -97,11 +102,11 @@ Account format:
          <Description> <!-- Description of the account --> </Description>
      </Account>
 
-Error Type:  
+Error Type:
+
 *In case an error occurs:
 
     <Error Code="codeOfError"/>
-
 *Otherwise:
    
     <Error/>
