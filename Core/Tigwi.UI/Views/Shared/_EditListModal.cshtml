@@ -1,32 +1,5 @@
-﻿@model Tigwi.UI.Models.EditListViewModel
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#addAccountButton').click(function () {
-            $.ajax({
-                url: $(this).data("url"),
-                type: "POST",
-                dataType: 'json',
-                data: { 'account': $('#addAccount').val() },
-                cache: false,
-                success: function (data) {
-
-                    if (data.exists) {
-                        var toAppend = "<div class=\"alert alert-info span2\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>" + $('#addAccount').val() +
-                            '<input type="hidden" value="' + $('#addAccount').val() + '" name="AccountIds"/></div>';
-                        $("#accountAdded").append(toAppend);
-                    }
-                    else {
-                        // TODO
-                        alert("fuck you I won't do what you tell me !");
-                    }
-                }
-            });
-            return false;
-        });
-
-    });  
- </script>
+﻿@using Tigwi.UI.Models
+@model Tigwi.UI.Models.EditListViewModel
 
 <div class="modal-header modal-header-edit-list">
     <button class="close" data-dismiss="modal">×</button>
@@ -66,4 +39,5 @@
         
     </div>
 }
+
 

@@ -9,109 +9,108 @@
 }
 </div>*@
 
+<script type="text/javascript">
+    function isFollowed(listId,icon) {
+        $.ajax({
+            url: "@Url.Action("IsFollowed","Account")",
+            type: "POST",
+            dataType: 'json',
+            data: { 'listId': listId },
+            success: function(data) {
+                icon.removeClass('icon-star');
+                icon.removeClass('icon-star-empty');
+                if(data.Followed) {
+                    icon.addClass('icon-star');
+                }
+                else {
+                    icon.addClass('icon-star-empty');
+                }
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        $('.star').each(function() {
+            var name = $(this).next('div').attr('id');
+            var listId = name.substring(5, name.length);
+            isFollowed(listId, $(this));
+        });
+
+
+        $('.star').click(function(event) {
+            event.stopPropagation();
+
+            var name = $(this).next('div').attr('id');
+            var listId = name.substring(5, name.length);
+            var icon = $(this);
+            if ($(this).hasClass('icon-star-empty')) {
+                $.ajax({
+                    url: "@Url.Action("FollowList","List")",
+                    type: "POST",
+                    dataType: 'json',
+                    data: { 'id': listId },
+                    success: function(data) {
+                        alert("You are now following the public list :" + data.Name);
+                        isFollowed(listId, icon);
+                    }
+                });
+            } else {
+                $.ajax({
+                    url: "@Url.Action("UnfollowList","List")",
+                    type: "POST",
+                    dataType: 'json',
+                    data: { 'id': listId },
+                    success: function(data) {
+                        alert("You are not following the public list :" + data.Name + " anymore.");
+                        isFollowed(listId, icon);
+                    }
+                });
+            }
+        });
+    }); 
+</script>
+
 <h5>Public followed lists :</h5>
 <section class="listView">
     <ul>
-    @{
-        var listsOfMember = new Dictionary<Guid, HashSet<Guid>>();
-        foreach (var list in Model.PublicFollowedLists)
-        {
-            foreach (var member in list.Members)
+        @{
+            var listsOfMember = new Dictionary<Guid, HashSet<Guid>>();
+            foreach (var list in Model.PublicFollowedLists)
             {
-                HashSet<Guid> lists;
-                if (!listsOfMember.TryGetValue(member.Id, out lists))
+                foreach (var member in list.Members)
                 {
-                    lists = new HashSet<Guid>();
-                    listsOfMember.Add(member.Id, lists);
-                }
+                    HashSet<Guid> lists;
+                    if (!listsOfMember.TryGetValue(member.Id, out lists))
+                    {
+                        lists = new HashSet<Guid>();
+                        listsOfMember.Add(member.Id, lists);
+                    }
 
-                lists.Add(list.Id);
+                    lists.Add(list.Id);
+                }
             }
         }
-    }
-    <script type="text/javascript"> 
-        function isFollowed(listId,icon) {
-            $.ajax({
-                url: "@Url.Action("IsFollowed","Account")",
-                type: "POST",
-                dataType: 'json',
-                data: { 'listId': listId },
-                success: function(data) {
-                    icon.removeClass('icon-star');
-                    icon.removeClass('icon-star-empty');
-                    if(data.Followed) {
-                        icon.addClass('icon-star');
-                    }
-                    else {
-                        icon.addClass('icon-star-empty');
-                    }
-                }
-            });
-        }
-    </script>
-
-    <script type="text/javascript">
-            $(document).ready(function () {
-                $('.star').each(function () {
-                    var name = $(this).next('div').attr('id');
-                    var listId = name.substring(5, name.length);
-                    isFollowed(listId, $(this));
-                });
 
 
-                $('.star').click(function (event) {
-                    event.stopPropagation();
 
-                    var name=$(this).next('div').attr('id');
-                    var listId=name.substring(5,name.length);
-                    var icon = $(this);
-                    if ($(this).hasClass('icon-star-empty')) {
-                        $.ajax({
-                            url: "@Url.Action("FollowList","List")",
-                            type: "POST",
-                            dataType: 'json',
-                            data: { 'id': listId },
-                            success: function(data) {
-                                alert("You are now following the public list :" + data.Name);
-                                isFollowed(listId, icon);
+
+        @foreach (var list in Model.PublicFollowedLists)
+        {
+            <li>
+                <div class="listName accordion-toggle" data-toggle="collapse" href="#list-@list.Id">
+                    <i class="icon-folder-close"></i> @list.Name <i class="star pull-right"></i>
+                    <div id="list-@list.Id" class="accordion-body collapse">
+                        <ul class="list-user">
+                            @foreach (var member in list.Members)
+                            {
+                                <li><i class="icon-user"></i>@member.Name</li>
                             }
-                        });
-                    }
-                    else {
-                       $.ajax({
-                            url: "@Url.Action("UnfollowList","List")",
-                            type: "POST",
-                            dataType: 'json',
-                            data: { 'id': listId },
-                            success: function(data) {
-                                alert("You are not following the public list :" + data.Name + " anymore.");
-                                isFollowed(listId, icon);
-                            }
-                        }); 
-                    }
-                });
-            });     
-    </script>
-
-
-
-    @foreach (var list in Model.PublicFollowedLists)
-    {
-        <li>
-            <div class="listName accordion-toggle" data-toggle="collapse" href="#list-@list.Id">
-                <i class="icon-folder-close"></i> @list.Name <i class="star pull-right"></i>
-                <div id="list-@list.Id" class="accordion-body collapse">
-                    <ul class="list-user">
-                        @foreach (var member in list.Members)
-                        {
-                            <li><i class="icon-user"></i>@member.Name</li>
-                        }
-                    </ul>
+                        </ul>
+                    </div>
                 </div>
-            </div>
 
-        </li>
-    }
+            </li>
+        }
     </ul>
 
 </section>
