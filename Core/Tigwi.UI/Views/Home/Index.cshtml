@@ -30,23 +30,21 @@
     }
     
 }
-@section Main
-{
-    @if (ViewBag.error != null)
-    {
-        <div class="alert alert-error">
-            <button class="close" data-dismiss="alert">x</button>
-            @ViewBag.error
-        </div>
-    }
 
-    @if (User.Identity.IsAuthenticated)
-    {
-        <div>@Html.Partial("_WriteMessage", new WritePostViewModel())</div>
-        <div>@Html.Partial("_ViewPostList", Model.AllFollowedLists.PostsBefore(DateTime.MaxValue, 10))</div>
-    }
-    else
-    {
-        <p>Some interesting messages here ...</p>
-    }
+@if (ViewBag.error != null)
+{
+    <div class="alert alert-error">
+        <button class="close" data-dismiss="alert">x</button>
+        @ViewBag.error
+    </div>
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div>@Html.Partial("_WriteMessage", new WritePostViewModel())</div>
+    <div>@Html.Partial("_ViewPostList", Model.AllFollowedLists.PostsBefore(DateTime.MaxValue, 10))</div>
+}
+else
+{
+    <p>Some interesting messages here ...</p>
 }
