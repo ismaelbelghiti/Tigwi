@@ -102,9 +102,9 @@ namespace Tigwi.UI.Controllers
                     throw;
                 }
             }
-            catch (AccountNotFoundException)
+            catch (AccountNotFoundException ex)
             {
-                throw new NotImplementedException();
+                return this.RedirectToAction("Index", "Home", new { error = ex.Message });
             }
         }
 
@@ -142,7 +142,7 @@ namespace Tigwi.UI.Controllers
                     return this.RedirectToAction("Index", "Home", new { error = ex.Message });
                 }
             }
-            throw new NotImplementedException("model not valid");
+            //something went wrong
             return this.View(accountCreation);
         }
 
@@ -154,14 +154,25 @@ namespace Tigwi.UI.Controllers
         [HttpPost]
         public ActionResult Delete(Guid id)
         {
-            IAccountModel account = this.Storage.Accounts.Find(id);
-            this.Storage.Accounts.Delete(account);
-            this.Storage.SaveChanges();
-            if(id == CurrentAccount.Id)
+            try
             {
-               CurrentAccount = CurrentUser.Accounts.ElementAt(0);
+                IAccountModel account = this.Storage.Accounts.Find(id);
+                this.Storage.Accounts.Delete(account);
+                this.Storage.SaveChanges();
+                if (id == CurrentAccount.Id)
+                {
+                    CurrentAccount = CurrentUser.Accounts.ElementAt(0);
+                }
+                return this.RedirectToAction("List", "Account");
             }
-            return this.RedirectToAction("List", "Account");
+            catch (AccountNotFoundException)
+            {
+                return this.RedirectToAction("Index", "Home", new { error = "This account doesn't exist"});
+            }
+            catch
+            {
+                throw new NotImplementedException("Account.Delete");
+            }
         }
 
 
@@ -190,11 +201,14 @@ namespace Tigwi.UI.Controllers
         [ValidateInput(false)]
         public ActionResult Edit(AccountEditViewModel editAccount)
         {
-            IAccountModel account = this.Storage.Accounts.Find(editAccount.AccountId);
-            account.Description = editAccount.Description;
-            this.Storage.SaveChanges();
-            return this.RedirectToAction(editAccount.ReturnAction, editAccount.ReturnController);
-            //TODO : Catch Errors
+            if (ModelState.IsValid)
+            {
+                IAccountModel account = this.Storage.Accounts.Find(editAccount.AccountId);
+                account.Description = editAccount.Description;
+                this.Storage.SaveChanges();
+                return this.RedirectToAction(editAccount.ReturnAction, editAccount.ReturnController);
+            }
+            return this.RedirectToAction("Index", "Home", new { error = "Invalid attributes, try again !" });
         }
 
         /// <summary>
@@ -203,9 +217,20 @@ namespace Tigwi.UI.Controllers
         /// <returns>The resulting view.</returns>
         public ActionResult Following(Guid id)
         {
-            IAccountModel account = this.Storage.Accounts.Find(id);
-            account.PersonalList.Followers.Add(CurrentAccount);
-            return this.View(account);
+            try
+            {
+                IAccountModel account = this.Storage.Accounts.Find(id);
+                account.PersonalList.Followers.Add(CurrentAccount);
+                return this.View(account);
+            }
+            catch(AccountNotFoundException)
+            {
+                return this.RedirectToAction("Index", "Home", new { error = "This account doesn't exist anymore!" });
+            }
+            catch
+            {
+                return this.RedirectToAction("Index", "Home", new { error = "Something went wrong!" });
+            }
         }
 
         /// <summary>
