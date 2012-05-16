@@ -72,12 +72,14 @@ namespace Tigwi.UI.Controllers
             }
             catch (Tigwi.UI.Models.Storage.AccountNotFoundException ex)
             {
-                this.Storage.Lists.Delete(list);
+                if (edit == 0)
+                    this.Storage.Lists.Delete(list);
                 return this.RedirectToAction("Index", "Home", new { error = ex.Message });
             }
             catch (System.NullReferenceException)
             {
-                this.Storage.Lists.Delete(list);
+                if (edit == 0)
+                    this.Storage.Lists.Delete(list);
                 return this.RedirectToAction("Index", "Home", new { error = "The list is empty, it has been deleted" });
             }
             catch (Tigwi.Storage.Library.IsPersonnalList ex)
