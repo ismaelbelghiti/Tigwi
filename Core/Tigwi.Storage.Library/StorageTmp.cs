@@ -334,6 +334,12 @@
             Console.WriteLine("Accounts printed.");
         }
 
+        public HashSet<string> Autocompletion(string nameBegining, int maxNameNumber)
+        {
+            throw new NotImplementedException();
+        }
+
+
         #endregion
         
         #region Methods

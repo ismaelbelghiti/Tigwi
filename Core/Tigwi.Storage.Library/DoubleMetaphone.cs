@@ -1,4 +1,11 @@
-/*
+/* This code was found at :http://code.google.com/p/doublemetaphone/
+ *  It translate words into phonetics according to english pronontiation
+ *  it produce a code with symbols : 0BFHJKLMNPRSTWXY. 
+ *  The vowels AEIOU are also used but only at the begining of the code
+ */
+
+
+/* 
 Copyright (c) 2008 Anthony Tong Lee
 
 Permission is hereby granted, free of charge, to any person
@@ -22,12 +29,12 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 */
+
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
-
-namespace DoubleMetaphone
+namespace Tigwi.Storage.Library.DoubleMetaphone
 {
 	[SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Metaphone")]
 	public static class DoubleMetaphoneStringExtension

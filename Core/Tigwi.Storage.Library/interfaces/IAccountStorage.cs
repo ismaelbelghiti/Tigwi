@@ -72,5 +72,7 @@ namespace Tigwi.Storage.Library
         /// </summary>
         /// <returns>false if the name was already reserved, true overwise</returns>
         bool ReserveAccountName(string accountName);
+
+        HashSet<string> Autocompletion(string nameBegining, int maxNameNumber);
     }
 }
