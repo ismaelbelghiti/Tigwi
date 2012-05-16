@@ -146,6 +146,25 @@ namespace Tigwi.UI.Controllers
             return this.View(accountCreation);
         }
 
+
+        /// <summary>
+        /// Delete the account
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Delete(Guid id)
+        {
+            IAccountModel account = this.Storage.Accounts.Find(id);
+            this.Storage.Accounts.Delete(account);
+            this.Storage.SaveChanges();
+            if(id == CurrentAccount.Id)
+            {
+               CurrentAccount = CurrentUser.Accounts.ElementAt(0);
+            }
+            return this.RedirectToAction("List", "Account");
+        }
+
+
         [HttpPost]
         public ActionResult IsFollowed(Guid listId)
         {
@@ -235,7 +254,7 @@ namespace Tigwi.UI.Controllers
         public ActionResult GetAccount(Guid accountId)
         {
             IAccountModel account = this.Storage.Accounts.Find(accountId);
-            return Json(new { Descr = account.Description });
+            return Json(new { Descr = account.Description, Name = account.Name });
         }
     }
 }

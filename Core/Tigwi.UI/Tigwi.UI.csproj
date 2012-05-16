@@ -121,6 +121,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="MockStorage.cs" />
+    <Compile Include="Models\Account\AccountDeleteViewModel.cs" />
     <Compile Include="Models\Account\AccountEditViewModel.cs" />
     <Compile Include="Models\EditListViewModel.cs" />
     <Compile Include="Models\IAccountRepository.cs" />
@@ -336,6 +337,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\_ViewAccounts.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_ConfirmDeleteAccountModal.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

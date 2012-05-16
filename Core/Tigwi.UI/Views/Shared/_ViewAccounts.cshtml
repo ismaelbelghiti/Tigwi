@@ -27,6 +27,24 @@
                     }
                 });   
             });
+   
+         $('.deltAcc').click(function (event) {
+                event.stopPropagation();
+                $('#deleteAccountModal').modal('show');
+
+                var name=$(this).attr('id');
+                var accountId=name.substring(5,name.length);
+                $.ajax({
+                    url: "@Url.Action("getAccount","Account")",
+                    type: "POST",
+                    dataType: 'json',
+                    data: { 'accountId': accountId },
+                    success: function(data) {
+                        $('#deleteAccountName').html(data.Name);
+                        $('#deleteAccountId').val(accountId);        
+                    }
+                });
+            });
         });
 </script>
 
@@ -34,8 +52,19 @@
 {
     <li>
         <h2> @account.Name 
-        <button class="btn btn-primary editAcc" id="acct-@account.Id" ><b>Edit</b></h2>
-       
+        <button class="btn btn-primary editAcc" id="acct-@account.Id" ><b>Edit</b></button>
+        @if (@account.Admin.Id == CurrentUser.Id)
+        {
+            if (@account.Name != @CurrentUser.Login)
+            { 
+            <button class="btn btn-primary deltAcc" id="delt-@account.Id" ><b>Delete</b></button>
+            }       
+        }
+        else
+        {
+           <button class="btn btn-primary leavAcc" id="leav-@account.Id" ><b>Leave</b></button>
+           //TODO Write ConfirmLeaveModal
+        }
         <p><b>Description : </b> @account.Description</p>
     </li>
 }
