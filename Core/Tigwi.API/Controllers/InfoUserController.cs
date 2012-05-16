@@ -11,18 +11,18 @@ namespace Tigwi.API.Controllers
         // TODO : add "need authentication" in specs
         // TODO : add authentication
         //
-        // GET : /user/maininfo/{userLogin}
-        // GET : /user/maininfo/login={userLogin}
-        // GET : /user/maininfo/id={userId}
-        public ActionResult MainInfo(string userLogin, Guid? userId)
+        // GET : /user/maininfo
+        // The user you get the info depend on who you are according to authentication
+        /*
+        public ActionResult MainInfo()
         {
             Answer output;
 
             try
             {
-                var realId = userId ?? Storage.User.GetId(userLogin);
-                var userInfo = Storage.User.GetInfo(realId);
-                var userToReturn = new User(userInfo, realId);
+                var userId = ;
+                var userInfo = Storage.User.GetInfo(userId);
+                var userToReturn = new User(userInfo, userId);
                 output = new Answer(userToReturn);
             }
 
@@ -33,6 +33,6 @@ namespace Tigwi.API.Controllers
             }
 
             return Serialize(output);
-        }      
+        }*/
     }
 }

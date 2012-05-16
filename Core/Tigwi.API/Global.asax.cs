@@ -76,30 +76,11 @@ namespace Tigwi.API
 
             // routes to InfoUser
 
-            routes.MapRoute("InfoUserByLogin", 
-                            "user/{action}/login={userLogin}/{number}",
+            routes.MapRoute("InfoUser", 
+                            "user/{action}",
                             new
                             {
-                                controller = "InfoUser",
-                                number = "20"
-                            }
-                );
-
-            routes.MapRoute("InfoUserById",
-                            "user/{action}/id={userId}/{number}",
-                            new
-                            {
-                                controller = "InfoUser",
-                                number = "20"
-                            }
-                );
-
-            routes.MapRoute("InfoUserDefault",
-                            "user/{action}/{userLogin}/{number}",
-                            new
-                            {
-                                controller = "InfoUser",
-                                number = "20"
+                                controller = "InfoUser"
                             }
                 );
 		}
