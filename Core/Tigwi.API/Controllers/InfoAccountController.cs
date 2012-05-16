@@ -39,7 +39,6 @@ namespace Tigwi.API.Controllers
             return Serialize(output);
         }
 
-        // TODO : The following method isn't documented.
         
         //
         // GET: /account/taggedmessages/{accountName}/{number}
@@ -156,7 +155,7 @@ namespace Tigwi.API.Controllers
         // GET : /account/subscribedlists/{accountName}/{number}
         // GET: /account/subscribedlists/name={accountName}/{number}
         // GET: /account/subscribedlists/id={accountId}/{number}
-        public ActionResult SubscribedListsEitherPublicOrAll(string accountName, Guid? accountId, int number)
+        public ActionResult SubscribedLists(string accountName, Guid? accountId, int number)
         {
             Answer output;
 
@@ -227,7 +226,7 @@ namespace Tigwi.API.Controllers
         // GET : /account/ownedlists/{accountName}/{number}
         // GET: /account/ownedlists/name={accountName}/{number}
         // GET: /account/ownedlists/id={accountId}/{number}
-        public ActionResult OwnedListsEitherPublicOrAll(string accountName, Guid? accountId, int number)
+        public ActionResult OwnedLists(string accountName, Guid? accountId, int number)
         {
             Answer output;
 

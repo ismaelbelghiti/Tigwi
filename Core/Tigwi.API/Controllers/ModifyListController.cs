@@ -21,7 +21,7 @@ namespace Tigwi.API.Controllers
                 var subscribeAccount =
                     (ListAndAccount)(new XmlSerializer(typeof(ListAndAccount))).Deserialize(Request.InputStream);
 
-                if (subscribeAccount.Account == null)
+                if (subscribeAccount.AccountName == null && subscribeAccount.AccountId == null)
                     error = new Error("Account missing");
                 else if (subscribeAccount.List == null)
                     error = new Error("List missing");
@@ -33,7 +33,7 @@ namespace Tigwi.API.Controllers
 
                     if (authentication.HasRights)
                     {
-                        var accountId = Storage.Account.GetId(subscribeAccount.Account);
+                        var accountId = subscribeAccount.AccountId ?? Storage.Account.GetId(subscribeAccount.AccountName);
                         Storage.List.Add(subscribeAccount.List.GetValueOrDefault(), accountId);
 
                         // Result is an empty error XML element
@@ -69,7 +69,7 @@ namespace Tigwi.API.Controllers
                 var unsubscribeAccount =
                     (ListAndAccount) (new XmlSerializer(typeof (ListAndAccount))).Deserialize(Request.InputStream);
 
-                if (unsubscribeAccount.Account == null)
+                if (unsubscribeAccount.AccountName == null && unsubscribeAccount.AccountId == null)
                     error = new Error("Account missing");
                 else if (unsubscribeAccount.List == null)
                     error = new Error("List missing");
@@ -81,7 +81,7 @@ namespace Tigwi.API.Controllers
 
                     if (authentication.HasRights)
                     {
-                        var accountId = Storage.Account.GetId(unsubscribeAccount.Account);
+                        var accountId = unsubscribeAccount.AccountId ?? Storage.Account.GetId(unsubscribeAccount.AccountName);
                         Storage.List.Remove(unsubscribeAccount.List.GetValueOrDefault(), accountId);
 
                         // Result is an empty error XML element
