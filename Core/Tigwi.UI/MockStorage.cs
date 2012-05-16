@@ -492,6 +492,11 @@ namespace Tigwi.UI
                 throw new NotImplementedException("ReserveAccountName has not been implemented in MockStorage");
             }
 
+            public HashSet<string> Autocompletion(string nameBegining, int maxNameNumber)
+            {
+                throw new NotImplementedException("Autocompletion has not been implemented in MockStorage");
+            }
+
             #endregion
         }
 

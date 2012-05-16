@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Tigwi.Storage.Library;
 using Tigwi.Storage.Library.Utilities;
+using Tigwi.Storage.Library.DoubleMetaphone;
 
 namespace Tigwi.Storage.Library
 {
@@ -168,6 +169,11 @@ namespace Tigwi.Storage.Library
         {
             // TODO : implement
             throw new NotImplementedException();
+        }
+
+        public HashSet<string> Autocompletion(string name, int maxNameNumber)
+        {
+            return blobFactory.AAutocompletion().GetWithPrefix(name.GenerateDoubleMetaphone(), maxNameNumber);
         }
     }
 }
