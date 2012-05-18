@@ -147,7 +147,7 @@ namespace Tigwi.UI.Controllers
                 }
             }
             //something went wrong
-            return this.PartialView("_CreateAccountPartial", accountCreation);
+            return this.View(accountCreation);
         }
 
 
