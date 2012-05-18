@@ -23,7 +23,7 @@ namespace Tigwi.Storage.Library
         /// Set the infos related to the given user
         /// </summary>
         /// <exception cref="UserNotFound">if no user has this ID</exception>
-        void SetInfo(Guid userId, string email);
+        void SetInfo(Guid userId, string email, Guid mainAccountId);
 
         /// <summary>
         /// get the accounts where the user can post

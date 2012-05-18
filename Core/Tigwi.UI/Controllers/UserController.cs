@@ -102,10 +102,10 @@ namespace Tigwi.UI.Controllers
                     newUser.Password = registerViewModel.Password;
                     try
                     {
-                        var newAccount = this.Storage.Accounts.Create(newUser, registerViewModel.Login, string.Empty);
-
+                        var newAccount = this.Storage.Accounts.Create(newUser, registerViewModel.Login, "Write your description!");
                         this.AuthenticateUser(newUser, registerViewModel.RememberMe);
                         this.CurrentAccount = newAccount;
+                        newUser.MainAccountId = newAccount.Id;
                         this.Storage.SaveChanges();
                         return this.RedirectToAction("Index", "Home");
                     }

@@ -70,17 +70,18 @@ namespace StorageTest
         [ExpectedException(typeof(UserNotFound))]
         public void SetInfoUserNotFound()
         {
-            storage.User.SetInfo(Guid.NewGuid(), "babar@celeste.com");
+            storage.User.SetInfo(Guid.NewGuid(), "babar@celeste.com", new Guid());
         }
 
         [Test]
         public void SetInfoNormalBehaviour()
         {
             Guid userid = storage.User.GetId("userThatExists");
-            storage.User.SetInfo(userid, "userThatExists@notgmail.com");
+            IUserInfo info = storage.User.GetInfo(userid);
+            storage.User.SetInfo(userid, "userThatExists@notgmail.com", info.MainAccountId);
             IUserInfo newuserinfo = storage.User.GetInfo(userid);
             Assert.AreEqual(newuserinfo.Email, "userThatExists@notgmail.com");
-            storage.User.SetInfo(userid, "userThatExists@gmail.com");
+            storage.User.SetInfo(userid, "userThatExists@gmail.com", info.MainAccountId);
         }
 
 

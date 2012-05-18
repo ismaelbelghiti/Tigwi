@@ -52,7 +52,7 @@
                 <button class="btn btn-primary editAcc" id="acct-@account.Id" ><b>Edit</b></button>
                 @if (@account.Admin.Id == CurrentUser.Id)
                 {
-                    if (@account.Name != @CurrentUser.Login)
+                    if (@account.Id != @CurrentUser.MainAccountId)
                     { 
                         <button class="btn btn-primary deltAcc" id="delt-@account.Id" ><b>Delete</b></button>
                     }       
