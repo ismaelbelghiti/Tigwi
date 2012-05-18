@@ -146,8 +146,10 @@ namespace Tigwi.UI.Controllers
                     return this.RedirectToAction("Index", "Home", new { error = ex.Message });
                 }
             }
+            //TODO do sthing more intelligent
             //something went wrong
-            return this.View(accountCreation);
+
+            return this.PartialView("_CreateAccountModal", accountCreation);
         }
 
 

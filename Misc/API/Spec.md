@@ -2,7 +2,16 @@ Tigwi - API Specification by L. de HARO, A. de MYTTENAERE and T. ZIMMERMANN
 
 #General presentation of the Tigwi API
 
+##What you can do with our API
+
+If you're a smartphone developper, you may be willing to make your own application to access Tigwi from everywhere. The simpliest way to do that is to use our API. Your software will be able to join our servers to get recent sent messages, see who's following who and even to post some content.
+
+Our API provides a lot of functions. You can even create new lists, follow new people by adding them to one of your lists, follow public lists made by a complete stranger or tag messages you like the most.
+
+If you're a webmaster, you would like to show your last posts ? You can use our API to make a rather simple javascript application doing that.
+
 ##Note about authentication
+
 Some of our ressources require authentication. This is the case if you use any with a POST verb but also if you want to access to private data such as an user email, or an account private lists.
 
 To authenticate, you need to send an HTTP cookie named _key_ whose value should be the user login for the moment, along with the request.
@@ -10,18 +19,41 @@ This means that if you're writing requests manually you should write something l
 
     Cookie: key=George_Bush_login
 
-Notes :
+##Note about answers and errors
 
-* Add short description of essential ressources.
-* Currently, it is possible to subscribe a private list just knowing its Guid.
-* The following method isn't documented.
+All answers are wrapped in the XML root `<Answer> </Answer>` whose sons are `<Content> </Content>` and `<Error\>`. Only one of them will appear. In the case where there is no error but no content is expected in the answer, you will have an empty _Error_ tag :
 
-        //
-        // GET: /account/taggedmessages/{accountName}/{number}
-        // GET: /account/taggedmessages/name={accountName}/{number}
-        // GET: /account/taggedmessages/id={accountId}/{number}
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Error />
+    </Answer>
+When an error occured you will get a description of it in the attribute _Code_ :
 
-#Get informations about an _account_
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Error Code="Subscription missing" />
+    </Answer>
+
+Finally, if you have a successful request expecting a real answer you could have something like :
+
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Content xsi:type="NewObject" Id="312e2061-3a79-4f82-a53b-e77af1ff0e59" />
+    </Answer>
+
+or
+
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Content xsi:type="Lists" Size="1">
+      <List>
+       <Id>312e2061-3a79-4f82-a53b-e77af1ff0e59</Id>
+       <Name>Presidents of the US</Name>
+      </List>
+     </Content>
+    </Answer>
+
+#Get information about an _account_
 
 ##Read last messages wrote by someone
 
@@ -36,7 +68,9 @@ GET
 ###URL
 
 http://api.tigwi.com/account/messages/_accountName_/_numberOfMessages_
+
 http://api.tigwi.com/account/messages/name=_accountName_/_numberOfMessages_
+
 http://api.tigwi.com/account/messages/id=_accountId_/_numberOfMessages_
 
 ###Response
@@ -82,23 +116,32 @@ Or, if an error occured, for example you thought the account name was Bush_Georg
     </Answer>
 
 
-###Informations
+###Information
 
 * In **URL**, _accountName_ is the name of the account whose messages you want to get.
 * In **URL**, _accountId_ is the unique identifier of the account whose messages you want to get.
-* In **URL**, _numberOfMessages_ is the number of messages you want to get. It is optional and default is set to 20.
+* In **URL**, _numberOfMessages_ is the number of messages you want to get. It is optional and default value is set to 20.
 * In **Response**, _Size_ is the number of messages returned (different from _numberOfMessages_ if there are not enough messages to provide).
 
 
+##Read again the recent messages you tagged
+
+###URL
+
+http://api.tigwi.com/account/taggedmessages/_accountName_/_numberOfMessages_
+
+http://api.tigwi.com/account/taggedmessages/name=_accountName_/_numberOfMessages_
+
+http://api.tigwi.com/account/taggedmessages/id=_accountId_/_numberOfMessages_
 
 
 ##See to which accounts someone subscribed
 
 ###Purpose
 
-Get a number _numberOfSubscriptions_ of accounts in any of the account _accountName_'s followed lists. No special order provided.
+Get a number _numberOfSubscriptions_ of accounts in any of the lists followed by the account _accountName_ or _accountId_. No special order provided.
 
-If you're authenticated and you have rights on the account, you will see private subscriptions (from private lists) along with public ones.
+If you're authenticated and you have the rights on the account, you will see private subscriptions (from private lists) along with public ones.
 
 ###HTTP method
 
@@ -106,17 +149,19 @@ GET
 
 ###URL
 http://api.tigwi.com/account/subscriberaccounts/_accountName_/_numberOfSubscriptions_
+
 http://api.tigwi.com/subscriberaccounts/name=_accountName_/_numberOfSubscriptions_
+
 http://api.tigwi.com/subscriberaccounts/id=_accountId_/_numberOfSubscriptions_
 
 
 ###Response
 
  
-###Informations
+###Information
 * In **URL**, _accountName_ is the name of the account whose subscriptions you want to get.
 * In **URL**, _accountId_ is the unique identifier of the account whose subscriptions you want to get.
-* In **URL**, _numberOfSubscriptions_ is the number of subscriptions you want to get. It is optional and default is set to 20.
+* In **URL**, _numberOfSubscriptions_ is the number of subscriptions you want to get. It is optional and default value is set to 20.
 * In **Response**, _Size_ is the number of subscription returned (different from _numberOfSubscriptions_ if there are not enough subscriptions to provide).
 * If you're not authorized, you will only receive subscriptions from lists that the owner has declared public.
 
@@ -127,7 +172,7 @@ http://api.tigwi.com/subscriberaccounts/id=_accountId_/_numberOfSubscriptions_
 
 ###Purpose
 
-Get a number _numberOfSubsribers_ of accounts that have subscribed a public list in which you appear. No particular order provided
+Get a number _numberOfSubscribers_ of accounts that have subscribed a public list in which the account _accountName_ or _accountId_ appears. No special order provided
 
 ###HTTP method
 
@@ -136,16 +181,18 @@ GET
 ###URL
 
 http://api.tigwi.com/account/subscribedaccounts/_accountName_/_numberOfSubscribers_
+
 http://api.tigwi.com/account/subscribedaccounts/name=_accountName_/_numberOfSubscribers_
+
 http://api.tigwi.com/account/subscribedaccounts/id=_accountId_/_numberOfSubscribers_
 
 ###Response
 
  
-###Informations
+###Information
 * In **URL**, _accountName_ is the name of the account whose subscribers you want to get.
 * In **URL**, _accountId_ is the unique identifier of the account whose subscribers you want to get.
-* In **URL**, _numberOfSubscribers_ is the number of subscribers you want to get. It is optional and default is set to 20.
+* In **URL**, _numberOfSubscribers_ is the number of subscribers you want to get. It is optional and default value is set to 20.
 * In **Response**, _Size_ is the number of subscribers returned (different from _numberOfSubscribers_ if there are not enough subscribers to provide).
 
 
@@ -155,7 +202,9 @@ http://api.tigwi.com/account/subscribedaccounts/id=_accountId_/_numberOfSubscrib
 
 ###Purpose
 
-Get a number _numberOfLists_ of the account _accountName_ 's followed public lists. No particular order provided.
+Get a number _numberOfLists_ of the public lists followed by the account _accountName_ or _accountId_. No particular order provided.
+
+If you're authenticated and you have the rights on the account, you will see private lists along with public ones.
 
 ###HTTP method
 
@@ -163,12 +212,14 @@ GET
 
 ###URL
 http://api.tigwi.com/account/subscribedlists/_accountName_/_numberOfLists_
+
 http://api.tigwi.com/account/subscribedlists/name=_accountName_/_numberOfLists_
+
 http://api.tigwi.com/account/subscribedlists/id=_accountId_/_numberOfLists_
 
 ###Response
 
-###Informations
+###Information
 * In **URL**, _accountName_ is the name of the account whose publicly followed lists you want to get.
 * In **URL**, _accountId_ is the unique identifier of the account whose publicly followed lists you want to get.
 * In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default is set to 20.
@@ -178,86 +229,93 @@ http://api.tigwi.com/account/subscribedlists/id=_accountId_/_numberOfLists_
 
 
 
-##See in which list someone appears
+##See in which lists someone appears
 
 ###Purpose
 
-Obtain a number _numberOfSubsribers_ of public lists that subscribed to account _accountName_ .
-No particular order provided
+Obtain a number _numberOfLists_ of public lists where the account _accountName_ or _accountId_ appears. No particular order provided
 
 ###HTTP method
 
 GET
 
 ###URL
-http://api.tigwi.com/account/subscriberlists/accountName/numberOfSubscribers  
-or  
-http://api.tigwi.com/accountbyid/subscriberlists/accountId/numberOfSubscribers
+http://api.tigwi.com/account/subscriberlists/_accountName_/_numberOfLists_
+
+http://api.tigwi.com/account/subscriberlists/name=_accountName_/_numberOfLists_
+
+http://api.tigwi.com/account/subscriberlists/id=_accountId_/_numberOfLists_
 
 ###Response
 
-###Informations
-* In **URL**, _accountName_ is the name of the account whose subscribers you want to get.
-* In **URL**, _accountId_ is the unique identifier of the account whose subscribers you want to get.
-* In **URL**, _numberOfSubscribers_ is the number of subscribers you want to get. It is optional and default is set to 20.
-* In **Response**, _Size_ is the number of subscribers returned (different from _numberOfSubscribers_ if there are not enough subscribers to provide).
+###Information
+* In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default value is set to 20.
+* In **Response**, _Size_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
 * There is no way to get private lists who subscribed to an account.
 
-##See someone's owned public lists
+##See someone's owned lists
 
 ###Purpose
 
-Obtain a number _numberOfLists_ of the account _accountName_ 's owned public lists.
-No particular order provided
+Obtain a number _numberOfLists_ of the account _accountName_ or _accountId_'s owned lists. No particular order provided.
+
+If you're authenticated and you have the rights on the account, you will see private lists along with public ones.
 
 ###HTTP method
 
 GET
 
 ###URL
-http://api.tigwi.com/account/ownedpubliclists/accountName/numberOfLists  
-or  
-http://api.tigwi.com/accountbyid/ownedpubliclists/accountId/numberOfLists
+http://api.tigwi.com/account/ownedlists/_accountName_/_numberOfLists_
 
-###Response
+http://api.tigwi.com/account/ownedlists/name=_accountName_/_numberOfLists_
+
+http://api.tigwi.com/account/ownedlists/id=_accountId_/_numberOfLists_
+
+###Response example
+
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Content xsi:type="Lists" Size="1">
+      <List>
+       <Id>312e2061-3a79-4f82-a53b-e77af1ff0e59</Id>
+       <Name>Presidents of the US</Name>
+      </List>
+     </Content>
+    </Answer>
 
 
-###Informations
-* In **URL**, _accountName_ is the name of the account whose lists you want to get.
-* In **URL**, _accountId_ is the unique identifier of the account whose lists you want to get.
-* In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default is set to 20.
+###Information
+
+* In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default value is set to 20.
 * In **Response**, _Size_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
 * If you're not authorized, you will only receive lists that the owner has declared public.
-
-
 
 
 ##Get main information about one account
 
 ###Purpose
 
-Obtain the account _accountName_ 's main information.
-Authentication required.
+Obtain the account _accountName_ or _acountId_'s main information.
 
 ###HTTP method
 
 GET
 
 ###URL
-http://api.tigwi.com/account/maininfo/accountName  
-or  
-http://api.tigwi.com/accountbyid/maininfo/accountId
+http://api.tigwi.com/account/maininfo/_accountName_
+
+http://api.tigwi.com/account/maininfo/name=_accountName_
+
+http://api.tigwi.com/account/maininfo/id=_accountId_
 
 ###Response
 
 
 
-
 #Modifying an _account_
 
-Remember : since the following ressources are using the POST verb, they require authentication.
-
-
+**Remember :** since the following ressources use the POST verb, they require authentication.
 
 
 ##Write a message
@@ -270,48 +328,27 @@ POST
 
 http://api.tigwi.com/account/write
 
-###Request
+###Request examples
 
     <Write>
-	   <AccountName> accountName </AccountName>
-       // or you can use
-       <AccountId> accountId </AccountId>
- 
-       <Message>
-            <Content> <!-- your message --> </Content>
-       </Message>
+     <AccountName>George_Bush</AccountName>
+     <Message>I love Tigwi</Message>
     </Write>
 
-###Response
-General structure of the response :
+###Response example
 
-    <Answer>
-        <!-- Error Type -->
-        <Content xsi:type="ObjectCreated" 
-           Id="UniqueIdentifierOfCreatedObject" />
-    </Answer>    
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Content xsi:type="ObjectCreated" Id="7a2a8d74-621a-455c-bfc3-8552474cc735" />
+    </Answer>
 
-Error type:  
-*In case an error occurs:
-
-
-    <Error Code="codeOfError"/>
-
-
-*Otherwise:
-   
-    <Error/>
-
-
-###Informations
+###Information
 * You **must** be authenticated as an authorized user of account _nameOfAccount_ to post a message.
-* In **Request**, the size of your message is limited to 140 characters, but this limit is tested by the server. It raises an error if the message is too long.
-* In **Request**, _accountName_ is the name of the account where you intend to post a message.
-* In **Request**, _accountId_ is the unique identifier of the account where you intend to post a message.
+* In **Request**, the size of your message is limited to 140 characters and this limit is verified by the server. It raises an error if the message is too long.
+* In **Request**, `<AccountName>` is the name of the account where you intend to post a message.
+* In **Request**, `<AccountId>` is the unique identifier of the account where you intend to post a message.
 * In **Request**, if you use both `<AccountName>` and `<AccountId>`, only the `<AccountId>` will be used (particularly when they don't refer to the same account).
-* In **Response**, the identifier provided is the message created's one.
-
-
+* In **Response**, the identifier is the one of the new message.
 
 
 ##Copy a message
@@ -330,46 +367,16 @@ POST
 
 http://api.tigwi.com/account/copy
 
-###Request
+###Request examples
 
-    <Copy>
-	   <AccountName> nameOfAccount </AccountName>
-       // or you can use
-       <AccountId> idOfAccount </AccountId>
- 
-       <MessageId> idOfMessage </MessageId>
-    </Copy>
+###Response example
 
-###Response
-General structure of the response :
-
-
-    <Answer>
-        <!-- Error Type -->
-        <Content xsi:type="ObjectCreated" 
-           Id="UniqueIdentifierOfCreatedObject" />
-    </Answer>    
-
-
-Error type:  
-*In case an error occurs:
-
-
-    <Error Code="codeOfError"/>
-
-
-*Otherwise:
-   
-    <Error/>
-
-
-###Informations
+###Information
 * You **must** be authenticated as an authorized user of account _nameOfAccount_ to copy a message.
 * In **Request**, _accountName_ is the name of the account where you intend to copy a message.
 * In **Request**, _accountId_ is the unique identifier of the account where you intend to copy a message.
 * In **Request**, if you use both `<AccountName>` and `<AccountId>`, only the `<AccountId>` will be used (in particular when they don't refer to the same account).
-* In **Response**, the identifier provided is the message created's one (copying a message means creating a new one with the same content).
-
+* In **Response**, the identifier is the one of the new message.
 
 
 ##Remove a message
@@ -382,52 +389,40 @@ POST
 
 http://api.tigwi.com/account/delete
 
-###Request
-
-    <Delete>
-        <AccountName> accountName </AccountName>
-        // or you can use
-        <AccountId> accountId </AccountId>
-
-        <MessageId> messageId </MessageId>
-    </Delete>
+###Request example
 
 ###Response
-General structure of the response :
 
-
-    <Answer>
-        <!-- Error Type -->
-        <Content xsi:type="ObjectCreated" 
-           Id="UniqueIdentifierOfCreatedObject" />
-    </Answer>    
-
-
-Error type:  
-*In case an error occurs:
+In case an error occurs:
 
 
     <Error Code="codeOfError"/>
 
-
-*Otherwise:
+Otherwise:
    
     <Error/>
 
 
-###Informations
+###Information
 * You **must** be authenticated as an authorized user of the account which wrote the message.
 
 
 
 
 ##Add a message to an account's favorite
+
 ###Purpose
+
 To tag a message as one of _accountName_'s favorites. Authentication required.
+
 ###HTTP method
-*POST*
+
+POST
+
 ###URL
+
 http://api.tigwi.com/account/tag
+
 ###Request
 
     <Tag>
@@ -461,7 +456,7 @@ Error type:
     <Error/>
 
 
-###Informations
+###Information
 * You **must** be authenticated as an authorized user of _accountName_ to tag a message.
 * In **Request**, _accountName_ is the name of the account where you intend to tag a message.
 * In **Request**, _accountId_ is the unique identifier of the account where you intend to tag a message.
@@ -507,7 +502,7 @@ Error type:
     <Error/>
 
 
-###Informations
+###Information
 * You **must** be authenticated as an authorized user of account _accountName_ to remove a tagged message.
 * In **Request**, _accountName_ is the name of the account where you intend to untag a message.
 * In **Request**, _accountId_ is the unique identifier of the account where you intend to untag a message.
@@ -519,45 +514,31 @@ For someone to create a new, empty list.
 Authentication required.
 
 ###HTTP method
-*POST*
+
+POST
 
 ###URL
+
 http://api.tigwi.com/account/createlist/
 
-###Request
+###Request example
+
 	<CreateList>
-		<Account> nameOfSubscriber </Account>
-		<ListInfo>
-			<Name> nameOfList </Name>
-			<Description> aQuickDescription </Description>
-			<isPrivate> privateSetting </isPrivate>
-		</ListInfo>
-	</CreateList>
+     <AccountName>George_Bush</AccountName>
+     <ListInfo>
+      <Name>Presidents of the US</Name>
+      <Description>To keep touch</Description>
+     </ListInfo>
+    </CreateList>
 
-###Response
-General structure of the response :
+###Response example
 
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Content xsi:type="ObjectCreated" Id="312e2061-3a79-4f82-a53b-e77af1ff0e59" />
+    </Answer>
 
-    <Answer>
-        <!-- Error Type -->
-        <Content xsi:type="ObjectCreated" 
-           Id="UniqueIdentifierOfCreatedObject" />
-    </Answer>    
-
-
-Error type:  
-*In case an error occurs:
-
-
-    <Error Code="codeOfError"/>
-
-
-*Otherwise:
-   
-    <Error/>
-
-
-###Informations
+###Information
 * You **must** be authenticated and authorized to use account _nameOfSubscriber_ to use this method.
 
 * In **Request**, _nameOfSubscriber_ is the name of the account who wants to create the list _nameOfList_.
@@ -568,13 +549,21 @@ Error type:
 
 * In **Request**, _privateSetting_ value must be _false_ if you want the new list to be public or _true_ if only you can see that list.
 
+
 ##Make an account subscribe to a list
+
 ###Purpose
+
 For someone to distantly subscribe to a list. Authentication required.
+
 ###HTTP method
-*POST*
+
+POST
+
 ###URL
+
 http://api.tigwi.com/account/subscribelist/
+
 ###Request
     
     <SubscribeList>
@@ -608,12 +597,13 @@ Error type:
     <Error/>
 
 
-###Informations
+###Information
 * You **must** be authenticated as an authorized user of account _nameOfSubscriber_ to use this method.
 * In **Request**, _nameOfSubscriber_ is the name of the account who wants to follow the list _idOfSubscription_.
 * In **Request**, _idOfSubscriber_ is the unique identifier of the account who wants to follow the list _idOfSubscription_.
+* It is possible to subscribe a private list just knowing its Guid, even if you're not the owner.
 
-#Get informations about a _List_
+#Get information about a _List_
 
 ##Get accounts followed by the list
 ###Purpose
@@ -661,8 +651,8 @@ Error Type:
 
     <Error/>
 
-###Informations
-* In **URL**, _idOfList_ is the id of the list whose informations you want to get
+###Information
+* In **URL**, _idOfList_ is the id of the list whose information you want to get
 * In **URL**, _numberOfSubscriptions_ is the number of accounts you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of accounts returned (different from _numberOfSubscriptions_ if there are not enough accounts to provide).
 
@@ -712,12 +702,12 @@ Erro Type:
 
     <Error/>
 
-###Informations
+###Information
 * In **URL** _idOfList_ is the id of the list whose followers you want to get.
 * In **URL**, _numberOfFollowers_ is the number of accounts you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of accounts returned (different from _numberOfFollowers_ if there are not enough accounts to provide).
 
-##Get a list's owner informations
+##Get a list's owner information
 ###Purpose
 Obtain the name and id of list with id _idOfList_ 's owner.
 ###HTTP method
@@ -753,7 +743,7 @@ Error Type:
 
     <Error/>
 
-###Informations
+###Information
 * In **URL**, _idOfList_ is the id of the list whose owner you want to get.
 
 ##Get last messages sent to a list
@@ -802,7 +792,7 @@ Error Type:
 
     <Error/>
 
-###Informations
+###Information
 * In **URL**, _idOfList_ is the id of the list whose messages you want to get.
 * In **URL**, _numberOfMessages_ is the number of messages you want to get. It is optional and default is set to 20.
 * In **Response**, _sizeOfList_ is the number of messages returned (different from _numberOfMessages_ if there are not enough accounts to provide).
@@ -810,24 +800,28 @@ Error Type:
 
 #Modifying a _list_
 
-These methods require authentication. You must be authenticated as an user with appropriate autorization on the list you want to modify.
+**Remember :** since the following ressources use the POST verb, they require authentication. You must be authenticated as an user with appropriate autorization on the list you want to modify.
 
-##Make a list suscribe to an account
-###Purpose
-For a list to add a suscription to a given account. Authentication required.
+
+##Add an account to a list
 
 ###HTTP method
-*POST*
+
+POST
+
 ###URL
+
 http://api.tigwi.com/list/subscribeaccount/
-###Request
+
+###Request example
     
     <SubscribeAccount>
         <List> idOfSuscriber </List>
         <Subscription> nameOfSubscription </Suscription>
     </SubscribeAccount>
 
-###Response
+###Response example
+
 In case an error occurs
 
     <Error Code="codeOfError"/>
@@ -836,20 +830,22 @@ If no error occurs
 
     <Error/>
 	
-###Informations
+###Information
 * You **must** be authenticated and authorized to use the owner of the list with id _idOfSuscriber_ to use this method.
 * In **Request**, _idOfSuscriber_ is the id of the list who wants to follow the account _nameOfSubscription_.
 
 
 ##Delete an account from a list
-###Purpose
-Delete the suscription of the given account to the list. Authentication required.
 
 ###HTTP method
-*POST*
+
+POST
+
 ###URL
+
 http://api.tigwi.com/list/unsubscribeaccount/
-###Request
+
+###Request example
     
     <UnubscribeAccount>
         <List> idOfList </List>
@@ -857,6 +853,7 @@ http://api.tigwi.com/list/unsubscribeaccount/
     </UnsubscribeAccount>
 
 ###Response
+
 In case an error occurs
 
     <Error Code="codeOfError"/>
@@ -865,47 +862,28 @@ If no error occurs
 
     <Error/>
 
-#Get inofrmation about an _user_
 
-##Get an user's informations
+#Get information about an _user_
+
 ###Purpose
-Obtain main informations of user _userLogin_.
+
+Obtain main information of yourself as an user. Authentication required.
+
 ###HTTP method
-*GET*
+
+GET
+
 ###URL
-http://api.tigwi.com/user/maininfo/userLogin  
-or  
-http://api.tigwi.com/userbyid/maininfo/userId
-###Request
-_left empty_
-###Response
-General structure of the response :
 
-    <Answer>
-        <!-- Error Type -->
-		<Content> 
-            <!-- See below -->
-        </Content> 
-    </Answer>    
-  
-Content:
-   
-    <User>
-        <Login> ... </Login>
-        <Avatar> ... </Avatar>
-        <Email> ... </Emain>
-        <Id> ... </Id>
-    </User>
+http://api.tigwi.com/user/maininfo/
 
-Error type:  
-* In case an error occurs:
+###Response example
 
-    <Error Code="codeOfError"/>
-
-*Otherwise:
-   
-    <Error/>
-
-###Informations
-* In **URL**, _userLogin_ is the login of the user whose informations you want to get.
-* In **URL**, _userId_ is the unique identifier of the user whose informations you want to get.
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Content xsi:type="User">
+      <Login>George_Bush</Login>
+      <Email>falseaddress@yohoomail.com</Email>
+      <Id>f41d6ebf-4e50-48bc-acdb-ab24359455fc</Id>
+     </Content>
+    </Answer>
