@@ -35,6 +35,11 @@ namespace Tigwi.UI.Models
         string Email { get; set; }
 
         /// <summary>
+        /// Gets or sets the user's main account Id.
+        /// </summary>
+        Guid MainAccountId { get; set; }
+
+        /// <summary>
         /// Gets the user's ID.
         /// </summary>
         Guid Id { get; }

@@ -5,32 +5,6 @@
     ViewBag.Title = "Home Page";
 }
 
-<script type="text/javascript">
-       $(document).ready(function () {
-            $('.editAcc2').click(function (event) {
-                event.stopPropagation();
-                $('#editAccountModal').modal('show');
-                $('#isEdit').val(1);
-                $('.modal-header-edit-account > h3').html('Edit Account');
-                $('#submitEditAccountModalButton').html('Save Changes');
-
-                var name=$(this).attr('id');
-                var accountId=name.substring(5,name.length);
-                $.ajax({
-                    url: "@Url.Action("getAccount","Account")",
-                    type: "POST",
-                    dataType: 'json',
-                    data: { 'accountId': accountId },
-                    success: function(data) {
-                            $('#Description').val(data.Descr);
-                            $('#AccountId').val(accountId);
-                            $('#ReturnController').val("Home");
-                            $('#ReturnAction').val("Index");
-                    }
-                });   
-            });
-        });
-</script>
 
 @section LeftInfos
 {

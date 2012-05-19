@@ -25,6 +25,9 @@ namespace Tigwi.UI.Tests.Controllers
     [TestFixture]
     public class UserControllerTest
     {
+        const string azureAccountName = "ulyssestorage";
+        const string azureAccountKey = "fc2HTyfP0m2r3zlNYmMc3Pjvbfmy63ovoCP9Zkz0yoyuId3AeyrTswLcye2VDr3hzDvAQbdeKUlXBX3lFTcNWQ==";
+
         protected IStorageContext Storage { get; set; }
 
         protected UserController Controller { get; set; }
@@ -37,7 +40,7 @@ namespace Tigwi.UI.Tests.Controllers
             var builder = new TestControllerBuilder();
             builder.HttpContext.Request.Expect(r => r.Cookies).Return(new HttpCookieCollection());
             builder.HttpContext.Response.Expect(r => r.Cookies).Return(new HttpCookieCollection());
-            var storage = new StorageContext(new StorageTmp());
+            var storage = new StorageContext(new Storage(azureAccountName, azureAccountKey));
             var controller = builder.CreateController<UserController>(storage);
 
             this.Builder = builder;

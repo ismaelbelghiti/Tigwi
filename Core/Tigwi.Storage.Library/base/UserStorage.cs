@@ -37,11 +37,12 @@ namespace Tigwi.Storage.Library
             return blobFactory.UInfo(userId).GetIfExists(new UserNotFound());
         }
 
-        public void SetInfo(Guid userId, string email)
+        public void SetInfo(Guid userId, string email, Guid mainAccountId)
         {
             Blob<UserInfo> bInfo = blobFactory.UInfo(userId);
             UserInfo info = bInfo.GetIfExists(new UserNotFound());
             info.Email = email;
+            info.MainAccountId = mainAccountId;
             if (!bInfo.SetIfExists(info))
                 throw new UserNotFound();
         }
@@ -64,7 +65,7 @@ namespace Tigwi.Storage.Library
             // create the data
             Guid userId = Guid.NewGuid();
             // TODO : add the avatar
-            UserInfo info = new UserInfo(login, "", email);
+            UserInfo info = new UserInfo(login, "", email, new Guid());
             HashSet<Guid> accounts = new HashSet<Guid>();
 
             // init blobs

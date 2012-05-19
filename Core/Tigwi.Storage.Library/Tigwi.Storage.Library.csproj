@@ -80,7 +80,6 @@
     <Compile Include="datastructure\ByteArray.cs" />
     <Compile Include="DoubleMetaphone.cs" />
     <Compile Include="exception\InnerException.cs" />
-    <Compile Include="StorageTmp.cs" />
     <Compile Include="Utilities\BaseBlob.cs" />
     <Compile Include="Utilities\Hasher.cs" />
     <Compile Include="Utilities\HashSetBlob.cs" />

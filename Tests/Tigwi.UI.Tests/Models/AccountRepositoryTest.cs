@@ -17,12 +17,15 @@ namespace Tigwi.UI.Tests.Models
     {
         protected IStorageContext Storage { get; set; }
 
+        const string azureAccountName = "ulyssestorage";
+        const string azureAccountKey = "fc2HTyfP0m2r3zlNYmMc3Pjvbfmy63ovoCP9Zkz0yoyuId3AeyrTswLcye2VDr3hzDvAQbdeKUlXBX3lFTcNWQ==";
+
         #region SetUp / TearDown
 
         [SetUp]
         public void Init()
         {
-            this.Storage = new StorageContext(new StorageTmp());
+            this.Storage = new StorageContext(new Storage(azureAccountName, azureAccountKey));
         }
 
         [TearDown]

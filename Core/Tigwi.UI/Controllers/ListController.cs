@@ -13,6 +13,7 @@ namespace Tigwi.UI.Controllers
     public class ListController : HomeController
     {
 
+        //TODO Should we remove those 3 methods ?
         /// <summary>
         /// Shows the messages posted in the list.
         /// </summary>
@@ -54,6 +55,7 @@ namespace Tigwi.UI.Controllers
         public ActionResult Edit(EditListViewModel editList, int edit)
         {
             // TODO: This is NOT correct. There should be *TWO* distinct methods Edit and Create.
+            //TODO : Check whether or not currentAccount is authorized to edit this list
             IListModel list = null;
             list = edit == 0
                        ? this.Storage.Lists.Create(
@@ -100,6 +102,7 @@ namespace Tigwi.UI.Controllers
         [HttpPost]
         public ActionResult FollowList(Guid id)
         {
+            //TODO check whether or not it's a personnal list, catch errors, etc ...
             var list = this.Storage.Lists.Find(id);
             CurrentAccount.AllFollowedLists.Add(list);
             this.Storage.SaveChanges();
@@ -114,6 +117,7 @@ namespace Tigwi.UI.Controllers
         [HttpPost]
         public ActionResult UnfollowList(Guid id)
         {
+            //TODO check whether or not it's a personnal list, catch errors, etc ...
             var list = this.Storage.Lists.Find(id);
             CurrentAccount.AllFollowedLists.Remove(list);
             this.Storage.SaveChanges();
@@ -136,6 +140,7 @@ namespace Tigwi.UI.Controllers
             }
             catch (Tigwi.Storage.Library.IsPersonnalList ex)
             {
+                //TODO do we really want to redirect to home ?
                 return this.RedirectToAction("Index", "Home", new { error = ex.Message });
             }
         }
@@ -143,11 +148,13 @@ namespace Tigwi.UI.Controllers
         [HttpPost]
         public ActionResult GetList(Guid listId)
         {
+            //TODO some exceptions might be thrown, we are not currently catching any
             IListModel list = CurrentAccount.AllFollowedLists.Where(l => l.Id == listId).First();
             return Json(new { Name = list.Name,Descr = list.Description,Public = !list.IsPrivate, Members=list.Members.Select(account=>account.Name)});
             
         }
 
+        //TODO : remove those ?
         public ActionResult AddAccount()
         {
             throw new NotImplementedException("ListController.AddAccounts");

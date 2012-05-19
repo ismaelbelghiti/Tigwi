@@ -14,5 +14,7 @@ namespace Tigwi.Storage.Library
         string Avatar { get; set; }
 
         string Email { get; set; }
+
+        Guid MainAccountId { get; set; }
     }
 }

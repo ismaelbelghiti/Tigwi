@@ -81,6 +81,8 @@ namespace Tigwi.UI
 
             public string Email { get; set; }
 
+            public Guid MainAccountId { get; set; }
+
             #endregion
 
             public ISet<Guid> Accounts { get; set; }
@@ -139,9 +141,10 @@ namespace Tigwi.UI
                 return user;
             }
 
-            public void SetInfo(Guid userId, string email)
+            public void SetInfo(Guid userId, string email, Guid mainAccountId)
             {
                 this.GetMock(userId).Email = email;
+                this.GetMock(userId).MainAccountId = mainAccountId;
             }
 
             public HashSet<Guid> GetAccounts(Guid userId)
@@ -165,6 +168,7 @@ namespace Tigwi.UI
                             Accounts = new HashSet<Guid>(),
                             Avatar = string.Empty,
                             Email = email,
+                            MainAccountId = new Guid(),
                             Login = login,
                             Id = id,
                             Password = password,

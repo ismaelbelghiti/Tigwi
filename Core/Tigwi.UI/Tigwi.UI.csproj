@@ -164,6 +164,7 @@
     <Content Include="Content\bootstrap-responsive.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\images\bunny.png" />
     <Content Include="Content\images\default_profile_1_bigger.png" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
@@ -232,6 +233,7 @@
     <Content Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\writeMessageScript.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -283,13 +285,13 @@
     <Content Include="Views\Shared\_ViewPost.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Shared\_RegisterPartial.cshtml" />
+    <Content Include="Views\Shared\_RegisterModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\_Search.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Shared\_CreateAccountPartial.cshtml" />
+    <Content Include="Views\Shared\_CreateAccountModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Account\Create.cshtml" />

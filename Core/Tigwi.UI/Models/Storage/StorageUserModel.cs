@@ -19,6 +19,8 @@ namespace Tigwi.UI.Models.Storage
 
         private string email;
 
+        private Guid mainAccountId;
+
         private string login;
 
         #endregion
@@ -90,6 +92,25 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
+        public Guid MainAccountId
+        {
+            get
+            {
+                if (!this.MainAccountIdUpdated)
+                {
+                    this.Populate();
+                }
+
+                return this.mainAccountId;
+            }
+
+            set
+            {
+                this.mainAccountId = value;
+                this.MainAccountIdUpdated = true;
+            }
+        }
+
         public string Login
         {
             get
@@ -123,19 +144,22 @@ namespace Tigwi.UI.Models.Storage
 
         protected bool EmailUpdated { get; set; }
 
+        protected bool MainAccountIdUpdated { get; set; }
+
         protected bool IdFetched { get; set; }
 
         protected override bool InfosUpdated
         {
             get
             {
-                return this.AvatarUpdated || this.EmailUpdated;
+                return this.AvatarUpdated || this.EmailUpdated || this.MainAccountIdUpdated;
             }
 
             set
             {
                 this.AvatarUpdated = value;
                 this.EmailUpdated = value;
+                this.MainAccountIdUpdated = value;
             }
         }
 
@@ -164,7 +188,7 @@ namespace Tigwi.UI.Models.Storage
                 {
                     try
                     {
-                        this.Storage.User.SetInfo(this.Id, this.Email);
+                        this.Storage.User.SetInfo(this.Id, this.Email, this.mainAccountId);
                         this.InfosUpdated = false;
                     }
                     catch (StorageLibException)
@@ -194,6 +218,11 @@ namespace Tigwi.UI.Models.Storage
             if (!this.AvatarUpdated)
             {
                 this.avatar = userInfo.Avatar;
+            }
+
+            if (!this.MainAccountIdUpdated)
+            {
+                this.mainAccountId = userInfo.MainAccountId;
             }
 
             this.Populated = true;

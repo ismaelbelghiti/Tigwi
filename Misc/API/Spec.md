@@ -19,6 +19,39 @@ This means that if you're writing requests manually you should write something l
 
     Cookie: key=George_Bush_login
 
+##Note about answers and errors
+
+All answers are wrapped in the XML root `<Answer> </Answer>` whose sons are `<Content> </Content>` and `<Error\>`. Only one of them will appear. In the case where there is no error but no content is expected in the answer, you will have an empty _Error_ tag :
+
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Error />
+    </Answer>
+When an error occured you will get a description of it in the attribute _Code_ :
+
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Error Code="Subscription missing" />
+    </Answer>
+
+Finally, if you have a successful request expecting a real answer you could have something like :
+
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Content xsi:type="NewObject" Id="312e2061-3a79-4f82-a53b-e77af1ff0e59" />
+    </Answer>
+
+or
+
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Content xsi:type="Lists" Size="1">
+      <List>
+       <Id>312e2061-3a79-4f82-a53b-e77af1ff0e59</Id>
+       <Name>Presidents of the US</Name>
+      </List>
+     </Content>
+    </Answer>
 
 #Get information about an _account_
 
@@ -239,10 +272,21 @@ http://api.tigwi.com/account/ownedlists/name=_accountName_/_numberOfLists_
 
 http://api.tigwi.com/account/ownedlists/id=_accountId_/_numberOfLists_
 
-###Response
+###Response example
+
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Content xsi:type="Lists" Size="1">
+      <List>
+       <Id>312e2061-3a79-4f82-a53b-e77af1ff0e59</Id>
+       <Name>Presidents of the US</Name>
+      </List>
+     </Content>
+    </Answer>
 
 
 ###Information
+
 * In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default value is set to 20.
 * In **Response**, _Size_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
 * If you're not authorized, you will only receive lists that the owner has declared public.
@@ -470,43 +514,29 @@ For someone to create a new, empty list.
 Authentication required.
 
 ###HTTP method
-*POST*
+
+POST
 
 ###URL
+
 http://api.tigwi.com/account/createlist/
 
-###Request
+###Request example
+
 	<CreateList>
-		<Account> nameOfSubscriber </Account>
-		<ListInfo>
-			<Name> nameOfList </Name>
-			<Description> aQuickDescription </Description>
-			<isPrivate> privateSetting </isPrivate>
-		</ListInfo>
-	</CreateList>
+     <AccountName>George_Bush</AccountName>
+     <ListInfo>
+      <Name>Presidents of the US</Name>
+      <Description>To keep touch</Description>
+     </ListInfo>
+    </CreateList>
 
-###Response
-General structure of the response :
+###Response example
 
-
-    <Answer>
-        <!-- Error Type -->
-        <Content xsi:type="ObjectCreated" 
-           Id="UniqueIdentifierOfCreatedObject" />
-    </Answer>    
-
-
-Error type:  
-*In case an error occurs:
-
-
-    <Error Code="codeOfError"/>
-
-
-*Otherwise:
-   
-    <Error/>
-
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Content xsi:type="ObjectCreated" Id="312e2061-3a79-4f82-a53b-e77af1ff0e59" />
+    </Answer>
 
 ###Information
 * You **must** be authenticated and authorized to use account _nameOfSubscriber_ to use this method.
@@ -519,13 +549,21 @@ Error type:
 
 * In **Request**, _privateSetting_ value must be _false_ if you want the new list to be public or _true_ if only you can see that list.
 
+
 ##Make an account subscribe to a list
+
 ###Purpose
+
 For someone to distantly subscribe to a list. Authentication required.
+
 ###HTTP method
-*POST*
+
+POST
+
 ###URL
+
 http://api.tigwi.com/account/subscribelist/
+
 ###Request
     
     <SubscribeList>
@@ -762,24 +800,28 @@ Error Type:
 
 #Modifying a _list_
 
-These methods require authentication. You must be authenticated as an user with appropriate autorization on the list you want to modify.
+**Remember :** since the following ressources use the POST verb, they require authentication. You must be authenticated as an user with appropriate autorization on the list you want to modify.
 
-##Make a list suscribe to an account
-###Purpose
-For a list to add a suscription to a given account. Authentication required.
+
+##Add an account to a list
 
 ###HTTP method
-*POST*
+
+POST
+
 ###URL
+
 http://api.tigwi.com/list/subscribeaccount/
-###Request
+
+###Request example
     
     <SubscribeAccount>
         <List> idOfSuscriber </List>
         <Subscription> nameOfSubscription </Suscription>
     </SubscribeAccount>
 
-###Response
+###Response example
+
 In case an error occurs
 
     <Error Code="codeOfError"/>
@@ -794,14 +836,16 @@ If no error occurs
 
 
 ##Delete an account from a list
-###Purpose
-Delete the suscription of the given account to the list. Authentication required.
 
 ###HTTP method
-*POST*
+
+POST
+
 ###URL
+
 http://api.tigwi.com/list/unsubscribeaccount/
-###Request
+
+###Request example
     
     <UnubscribeAccount>
         <List> idOfList </List>
@@ -809,6 +853,7 @@ http://api.tigwi.com/list/unsubscribeaccount/
     </UnsubscribeAccount>
 
 ###Response
+
 In case an error occurs
 
     <Error Code="codeOfError"/>
@@ -817,9 +862,11 @@ If no error occurs
 
     <Error/>
 
+
 #Get information about an _user_
 
 ###Purpose
+
 Obtain main information of yourself as an user. Authentication required.
 
 ###HTTP method
@@ -831,3 +878,12 @@ GET
 http://api.tigwi.com/user/maininfo/
 
 ###Response example
+
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Content xsi:type="User">
+      <Login>George_Bush</Login>
+      <Email>falseaddress@yohoomail.com</Email>
+      <Id>f41d6ebf-4e50-48bc-acdb-ab24359455fc</Id>
+     </Content>
+    </Answer>
