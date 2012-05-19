@@ -95,12 +95,14 @@ a:visited {text-decoration:none;color: MenuText;}
 a:hover {text-decoration:none;color: MenuText;}
 a:active {text-decoration:none;color: MenuText;} 
 
-.listName {
+.listName 
+{
+    margin-top: 5px;
     padding: 5px;
     border-radius: 2px;
 }
 .listName:hover {
-    background: rgba(255,255,255,0.7);
+    background: rgba(255,255,255,0.5);
     cursor: pointer;
 }
 
@@ -111,3 +113,13 @@ a:active {text-decoration:none;color: MenuText;}
 .listName:hover > div>  .edit , .listName:hover > div > .delete {
     display: inline-block;
 } 
+
+.icon-clickable:hover {
+    background-color: rgba(0,0,0,0.25);
+    border-radius: 5px;
+    z-index: -9999;
+}
+
+.checked {
+    background-color: rgba(0,0,255,0.1)
+}

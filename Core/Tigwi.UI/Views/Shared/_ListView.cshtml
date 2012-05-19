@@ -3,13 +3,43 @@
 @using Tigwi.UI.Models.User
 
 @model ICollection<IListModel>
+           
+@{
+    var listsOfMember = new Dictionary<Guid, HashSet<Guid>>();
+    foreach (var list in Model)
+    {
+        foreach (var member in list.Members)
+        {
+            HashSet<Guid> lists;
+            if (!listsOfMember.TryGetValue(member.Id, out lists))
+            {
+                lists = new HashSet<Guid>();
+                listsOfMember.Add(member.Id, lists);
+            }
+
+            lists.Add(list.Id);
+        }
+    }
+}
+           
+<script type="text/javascript">
+    var lists = {
+                    @foreach (var pair in listsOfMember)
+                    {
+                        @Html.Raw("'" + pair.Key + "': [")
+                        foreach (var listId in pair.Value)
+                        {
+                            @Html.Raw("'" + listId + "', ")
+                        }
+                        @Html.Raw("], ")
+                    }
+                };
+</script>
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('.editAcc2').click(function (event) {
-            event.stopPropagation();
+        $('.editAcc2').click(function () {
             $('#editAccountModal').modal('show');
-
             var name=$(this).attr('id');
             var accountId=name.substring(5,name.length);
             $.ajax({
@@ -48,15 +78,23 @@
             return false;
         });
 
-        $('.checkboxfilter').change(function (event) {
-                event.stopPropagation();
+        $('.listName').click(function (event) {
+            //event.stopPropagation();
+            if(event.target.nodeName=='I')
+                return;
+            if($(this).hasClass('checked')){
+                $(this).removeClass('checked');
+            }
+            else {
+                $(this).addClass('checked');
+            }
             var id=0;
             for (var user in lists)
             {
                 var mustShow = false;
                 for (var list in lists[user])
                 {
-                    if ($('#checkBox-' + lists[user][list])[0].checked)
+                    if ($('#listName-' + lists[user][list]).hasClass('checked'))
                     {
                         mustShow = true;
                     }
@@ -74,7 +112,7 @@
             }
         }
         );
-
+        
         $('.edit').click(function (event) {
             event.stopPropagation();
             $('#editListModal').modal('show');
@@ -135,58 +173,19 @@
             $('.modal-header-edit-list > h3').html('Create a List');
             $('#submitEditModalButton').html('Create list');
         });
-
-        $('.editAcc').click(function (event) {
-            event.stopPropagation();
-            $('#editAccountModal').modal('show');
-            var name=$(this).attr('id');
-            var accountId=name.substring(5,name.length);
-            $.ajax({
-                url: "@Url.Action("getAccount", "Account")",
-                type: "POST",
-                dataType: 'json',
-                data: { 'accountId': accountId },
-                success: function(data) {
-                        $('#Description').val(data.Descr);
-                        $('#AccountId').val(accountId);
-                        $('#ReturnController').val("Account");
-                        $('#ReturnAction').val("List");
-                }
-            });   
+        $('.icon-chevron-right').live('click',function(e) {
+            $(this).removeClass('icon-chevron-right');
+            $(this).addClass('icon-chevron-down');
+            e.stopPropagation();
+        });
+        $('.icon-chevron-down').live('click',function(e) {
+            $(this).removeClass('icon-chevron-down');
+            $(this).addClass('icon-chevron-right');
+            e.stopPropagation();
         });
     });
 </script>
 
-@{
-    var listsOfMember = new Dictionary<Guid, HashSet<Guid>>();
-    foreach (var list in Model)
-    {
-        foreach (var member in list.Members)
-        {
-            HashSet<Guid> lists;
-            if (!listsOfMember.TryGetValue(member.Id, out lists))
-            {
-                lists = new HashSet<Guid>();
-                listsOfMember.Add(member.Id, lists);
-            }
-
-            lists.Add(list.Id);
-        }
-    }
-}
-<script type="text/javascript">
-        var lists = {
-                        @foreach (var pair in listsOfMember)
-                        {
-                            @Html.Raw("'" + pair.Key + "': [")
-                            foreach (var listId in pair.Value)
-                            {
-                                @Html.Raw("'" + listId + "', ")
-                            }
-                            @Html.Raw("], ")
-                        };
-                    };
-</script>
 
 <section class="listView">
     <ul>
@@ -196,15 +195,15 @@
             if (!list.IsPersonal)
             {
                 <li>
-                    <div class="listName accordion-toggle" data-toggle="collapse" href="#list-@list.Id">
+                    <div class="listName checked" id="listName-@list.Id">
                         <div class="row">  
-                            <i class="icon-folder-close"></i>
+                            <i class="icon-chevron-right icon-clickable accordion-toggle" data-toggle="collapse" href="#list-@list.Id"></i>
                             <div style="display:inline-block">
                                 <span class="truncated"> @list.Name </span>
                             </div>
                             @if (@list.Owner.Id == CurrentAccount.Id)
                             {
-                                <i class="delete icon-trash pull-right"></i><i class="edit icon-pencil pull-right"></i>
+                                <i class="delete icon-clickable icon-trash pull-right"></i><i class="edit icon-clickable icon-pencil pull-right"></i>
                             } 
                         </div>                               
                         <div id="list-@list.Id" class="accordion-body collapse row">
