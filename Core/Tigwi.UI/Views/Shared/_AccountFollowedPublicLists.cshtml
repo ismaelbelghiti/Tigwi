@@ -97,7 +97,7 @@
         @foreach (var list in Model.PublicFollowedLists)
         {
             <li>
-                <div class="listName accordion-toggle" data-toggle="collapse" href="#list-@list.Id">
+                <div class="listName accordion-toggle" data-toggle="collapse" data-target="#list-@list.Id">
                     <i class="icon-folder-close"></i> @list.Name <i class="star pull-right"></i>
                     <div id="list-@list.Id" class="accordion-body collapse">
                         <ul class="list-user">

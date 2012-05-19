@@ -298,8 +298,14 @@ namespace Tigwi.UI.Controllers
         [HttpPost]
         public ActionResult GetAccount(Guid accountId)
         {
-            IAccountModel account = this.Storage.Accounts.Find(accountId);
+            var account = this.Storage.Accounts.Find(accountId);
             return Json(new { Descr = account.Description, Name = account.Name });
+        }
+
+        [HttpPost]
+        public ActionResult AutoComplete(string partialAccountName)
+        {
+            return Json(this.RawStorage.Account.Autocompletion(partialAccountName, 10));
         }
     }
 }
