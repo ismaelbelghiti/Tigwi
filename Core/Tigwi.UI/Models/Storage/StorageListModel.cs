@@ -252,8 +252,10 @@
             this.Populated = true;
         }
 
-        internal override void Save()
+        internal override bool Save()
         {
+            var success = true;
+
             if (this.Deleted)
             {
                 this.Storage.List.Delete(this.Id);
@@ -262,19 +264,28 @@
             {
                 if (this.InfosUpdated)
                 {
-                    this.Storage.List.SetInfo(this.Id, this.Name, this.Description, this.IsPrivate);
+                    try
+                    {
+                        this.Storage.List.SetInfo(this.Id, this.Name, this.Description, this.IsPrivate);
+                    }
+                    catch (StorageLibException)
+                    {
+                        success = false;
+                    }
                 }
 
                 if (this.members != null)
                 {
-                    this.members.Save();
+                    success &= this.members.Save();
                 }
 
                 if (this.followers != null)
                 {
-                    this.followers.Save();
+                    success &= this.followers.Save();
                 }
             }
+
+            return success;
         }
 
         #endregion

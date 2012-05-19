@@ -78,7 +78,7 @@ namespace Tigwi.UI.Tests.Models
         {
             var repository = this.Repository;
 
-            var account = repository.Create("Elarnon", "cbasile06@gmail.com");
+            var account = repository.Create("Elarnon", "cbasile06@gmail.com", new byte[0]);
 
             Assert.That(account, Is.Not.Null);
             Assert.That(account.Login, Is.EqualTo("Elarnon"));
@@ -90,7 +90,7 @@ namespace Tigwi.UI.Tests.Models
         public void TestCreateCreatesAccount()
         {
             var storage = this.Storage;
-            var user = storage.Users.Create("Elarnon", "cbasile06@gmail.com");
+            var user = storage.Users.Create("Elarnon", "cbasile06@gmail.com", new byte[0]);
 
             Assert.DoesNotThrow(() => storage.Accounts.Find("Elarnon"));
             Assert.That(storage.Accounts.Find("Elarnon").Admin, Is.EqualTo(user));
@@ -101,7 +101,7 @@ namespace Tigwi.UI.Tests.Models
         {
             var repository = this.Repository;
 
-            var account = repository.Create("Elarnon", "cbasile06@gmail.com");
+            var account = repository.Create("Elarnon", "cbasile06@gmail.com", new byte[0]);
 
             Assert.That(repository.Find(account.Id), Is.EqualTo(account));
             Assert.That(repository.Find(account.Login), Is.EqualTo(account));
@@ -111,10 +111,10 @@ namespace Tigwi.UI.Tests.Models
         public void TestNameUnicity()
         {
             var storage = this.Storage;
-            var user = storage.Users.Create("Elarnon", "cbasile06@gmail.com");
+            var user = storage.Users.Create("Elarnon", "cbasile06@gmail.com", new byte[0]);
 
-            Assert.Throws<DuplicateUserException>(() => storage.Users.Create("Elarnon", "mail"));
-            Assert.DoesNotThrow(() => storage.Users.Create("Login", "cbasile06@gmail.com"));
+            Assert.Throws<DuplicateUserException>(() => storage.Users.Create("Elarnon", "mail", new byte[0]));
+            Assert.DoesNotThrow(() => storage.Users.Create("Login", "cbasile06@gmail.com", new byte[0]));
         }
 
         [Test]
@@ -122,7 +122,7 @@ namespace Tigwi.UI.Tests.Models
         {
             var repository = this.Repository;
 
-            var account = repository.Create("Elarnon", "cbasile06@gmail.com");
+            var account = repository.Create("Elarnon", "cbasile06@gmail.com", new byte[0]);
 
             Assert.Throws<NotImplementedException>(() => repository.Delete(account));
         }

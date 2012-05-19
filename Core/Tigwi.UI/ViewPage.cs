@@ -50,6 +50,15 @@ namespace Tigwi.UI
             }
         }
 
+        public string Error
+        {
+            get
+            {
+                var controller = this.ViewContext.Controller as HomeController;
+                return controller != null ? controller.Error : null;
+            }
+        }
+
         #endregion
     }
 

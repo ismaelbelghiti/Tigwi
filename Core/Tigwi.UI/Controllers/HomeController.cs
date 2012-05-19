@@ -65,7 +65,7 @@
             {
                 if (!this.TrySetCurrentAccount(value))
                 {
-                    // Account not valid
+                    // TODO: Account not valid
                     throw new NotImplementedException("Account not valid.");
                 }
             }
@@ -75,6 +75,8 @@
         /// Gets the current (logged in) user.
         /// </summary>
         public IUserModel CurrentUser { get; private set; }
+
+        public string Error { get; set; }
 
         #endregion
 
@@ -126,7 +128,6 @@
 
         #region Public Methods and Operators
 
-        [ValidateInput(false)]
         public ActionResult Index(string error)
         {
             ViewBag.error = error;

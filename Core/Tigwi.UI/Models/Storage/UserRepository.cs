@@ -11,6 +11,7 @@ namespace Tigwi.UI.Models.Storage
 {
     using System;
     using System.Data;
+    using System.Linq;
 
     using Tigwi.Storage.Library;
 
@@ -45,19 +46,36 @@ namespace Tigwi.UI.Models.Storage
         /// <param name="email">
         /// The new user's email.
         /// </param>
+        /// <param name="password">
+        /// The new user's password to create.
+        /// </param>
         /// <returns>
         /// A <see cref="IUserModel" /> representing the new user.
         /// </returns>
         /// <exception cref="DuplicateUserException">
         /// When there is already a user with the given login. 
         /// </exception>
-        public IUserModel Create(string login, string email)
+        public IUserModel Create(string login, string email, byte[] password)
         {
             try
             {
-                // Create a new user via medium-level storage calls, then find it by its ID.
-                // TODO: prepopulate ?
-                var id = this.Storage.User.Create(login, email, new byte[1]);
+                // Reserve account name
+                if (!this.Storage.Account.ReserveAccountName(login))
+                {
+                    throw new DuplicateAccountException(login, null);
+                }
+
+                // Creates a new user
+                var id = this.Storage.User.Create(login, email, password);
+
+                // Creates its main account
+                var accountId = this.Storage.Account.Create(id, login, string.Empty, bypassNameReservation: true);
+
+                // Set the main account 'cause we have circular dependencies and stuff
+                this.Storage.User.SetInfo(id, email, accountId);
+
+                // Find the account because we want single representation
+                // TODO: prepopulate it
                 return this.Find(id);
             }
             catch (UserAlreadyExists ex)
@@ -75,7 +93,7 @@ namespace Tigwi.UI.Models.Storage
         public void Delete(IUserModel user)
         {
             // TODO: fixme
-            Guid id = user.Id;
+            var id = user.Id;
 
             // Forget everything about him
             this.Storage.User.Delete(id);
@@ -165,12 +183,10 @@ namespace Tigwi.UI.Models.Storage
         /// <summary>
         /// Commit the changes.
         /// </summary>
-        internal void SaveChanges()
+        internal bool SaveChanges()
         {
-            foreach (var user in this.EntitiesMap)
-            {
-                user.Value.Save();
-            }
+            // Fold, yay!
+            return this.EntitiesMap.Aggregate(true, (current, user) => current & user.Value.Save());
         }
 
         #endregion

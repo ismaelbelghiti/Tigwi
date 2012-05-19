@@ -97,28 +97,22 @@ namespace Tigwi.UI.Controllers
             {
                 try
                 {
-                    // TODO: real authentication
-                    var newUser = this.Storage.Users.Create(registerViewModel.Login, registerViewModel.Email);
-                    newUser.Password = registerViewModel.Password;
-                    try
-                    {
-                        var newAccount = this.Storage.Accounts.Create(newUser, registerViewModel.Login, "Write your description!");
-                        this.AuthenticateUser(newUser, registerViewModel.RememberMe);
-                        this.CurrentAccount = newAccount;
-                        newUser.MainAccountId = newAccount.Id;
-                        this.Storage.SaveChanges();
-                        return this.RedirectToAction("Index", "Home");
-                    }
-                    catch (DuplicateAccountException ex)
-                    {
-                        this.Storage.Users.Delete(newUser);
-                        this.Storage.SaveChanges();
-                        ModelState.AddModelError("Login", ex.Message);
-                    }
+                    var hashedPass = Auth.PasswordAuth.HashPassword(registerViewModel.Password);
+                    
+                    // IUserRepository::Create creates a main account
+                    var newUser = this.Storage.Users.Create(registerViewModel.Login, registerViewModel.Email, hashedPass);
+                    this.AuthenticateUser(newUser, registerViewModel.RememberMe);
+                    this.CurrentAccount = newUser.MainAccount;
+                    this.Storage.SaveChanges();
+                    return this.RedirectToAction("Index", "Home");
                 }
                 catch (DuplicateUserException ex)
                 {
                     // TODO: We need more granularity (login failed ? email failed ? propositions ?)
+                    ModelState.AddModelError("Login", ex.Message);
+                }
+                catch (DuplicateAccountException ex)
+                {
                     ModelState.AddModelError("Login", ex.Message);
                 }
             }

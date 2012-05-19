@@ -6,6 +6,8 @@ using System.Web.Mvc;
 
 namespace Tigwi.UI.Controllers
 {
+    using System.Net;
+
     using Tigwi.UI.Models;
 
     public class ListController : HomeController
@@ -50,14 +52,15 @@ namespace Tigwi.UI.Controllers
         /// <returns></returns>
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Edit(EditListViewModel editList,int edit)
+        public ActionResult Edit(EditListViewModel editList, int edit)
         {
+            // TODO: This is NOT correct. There should be *TWO* distinct methods Edit and Create.
             //TODO : Check whether or not currentAccount is authorized to edit this list
             IListModel list = null;
-            if (edit == 0)
-                list = this.Storage.Lists.Create(CurrentAccount, editList.ListName, editList.ListDescription,!editList.ListPublic);
-            else
-                list = this.Storage.Lists.Find(editList.ListId);
+            list = edit == 0
+                       ? this.Storage.Lists.Create(
+                           this.CurrentAccount, editList.ListName, editList.ListDescription, !editList.ListPublic)
+                       : this.Storage.Lists.Find(editList.ListId);
             try
             {
                 list.Name = editList.ListName;
@@ -72,17 +75,18 @@ namespace Tigwi.UI.Controllers
                 this.Storage.SaveChanges();
                 return this.RedirectToAction("Index", "Home");
             }
-            catch (Tigwi.UI.Models.Storage.AccountNotFoundException ex)
+            catch (Models.Storage.AccountNotFoundException ex)
             {
                 if (edit == 0)
                     this.Storage.Lists.Delete(list);
-                return this.RedirectToAction("Index", "Home", new { error = ex.Message });
+                throw new HttpException((int)HttpStatusCode.NotFound, ex.Message);
             }
-            catch (System.NullReferenceException)
+            catch (NullReferenceException)
             {
+                // TODO: WTFF ?????????????????????????
                 if (edit == 0)
                     this.Storage.Lists.Delete(list);
-                return this.RedirectToAction("Index", "Home", new { error = "The list is empty, it has been deleted" });
+                throw new HttpException((int)HttpStatusCode.NotFound, "The list is empty, it has been deleted.");
             }
             catch (Tigwi.Storage.Library.IsPersonnalList ex)
             {

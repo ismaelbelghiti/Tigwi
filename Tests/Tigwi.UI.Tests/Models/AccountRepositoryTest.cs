@@ -40,7 +40,7 @@ namespace Tigwi.UI.Tests.Models
         public void TestCreate()
         {
             var storage = this.Storage;
-            var user = storage.Users.Create("Elarnon", "cbasile06@gmail.com");
+            var user = storage.Users.Create("Elarnon", "cbasile06@gmail.com", new byte[0]);
 
             var account = storage.Accounts.Create(user, "ElarnonAccount", "Elarnon's account");
 
@@ -54,7 +54,7 @@ namespace Tigwi.UI.Tests.Models
         public void TestFindUnicity()
         {
             var storage = this.Storage;
-            var user = storage.Users.Create("Elarnon", "cbasile06@gmail.com");
+            var user = storage.Users.Create("Elarnon", "cbasile06@gmail.com", new byte[0]);
             var account = storage.Accounts.Create(user, "ElarnonAccount", "Elarnon's account");
 
             Assert.That(storage.Accounts.Find(account.Id), Is.EqualTo(account));
@@ -65,7 +65,7 @@ namespace Tigwi.UI.Tests.Models
         public void TestNameUnicity()
         {
             var storage = this.Storage;
-            var user = storage.Users.Create("Elarnon", "cbasile06@gmail.com");
+            var user = storage.Users.Create("Elarnon", "cbasile06@gmail.com", new byte[0]);
             storage.Accounts.Create(user, "ElarnonAccount", "Elarnon's account");
 
             Assert.Throws<DuplicateAccountException>(() => storage.Accounts.Create(user, "ElarnonAccount", "."));

@@ -225,20 +225,37 @@ namespace Tigwi.UI.Models.Storage
             return this.Remove(item, responsible: false);
         }
 
-        internal void Save()
+        internal bool Save()
         {
+            var success = true;
             foreach (var item in this.CollectionAdded.Where(item => item.Value).Select(item => item.Key))
             {
-                this.SaveAdd(item);
+                try
+                {
+                    this.SaveAdd(item);
+                }
+                catch (StorageLibException)
+                {
+                    success = false;
+                }
             }
 
             foreach (var item in this.CollectionRemoved.Where(item => item.Value).Select(item => item.Key))
             {
-                this.SaveRemove(item);
+                try
+                {
+                    this.SaveRemove(item);
+                }
+                catch (StorageLibException)
+                {
+                    success = false;
+                }
             }
 
             this.CollectionAdded.Clear();
             this.CollectionRemoved.Clear();
+
+            return success;
         }
 
         protected void Add(TModel item, bool responsible)

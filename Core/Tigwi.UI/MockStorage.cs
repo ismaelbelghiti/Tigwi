@@ -396,9 +396,6 @@ namespace Tigwi.UI
 
             public Guid Create(Guid adminId, string name, string description, bool bypassNameReservation = false)
             {
-                if (bypassNameReservation)
-                    throw new NotImplementedException("Account name reservation has not been implemented in MockStorage");
-
                 var user = this.Storage.UserStorage.GetMock(adminId);
 
                 if (this.IdFromName.ContainsKey(name))
@@ -493,7 +490,7 @@ namespace Tigwi.UI
 
             public bool ReserveAccountName(string accountName)
             {
-                throw new NotImplementedException("ReserveAccountName has not been implemented in MockStorage");
+                return !this.IdFromName.ContainsKey(accountName);
             }
 
             public HashSet<string> Autocompletion(string nameBegining, int maxNameNumber)

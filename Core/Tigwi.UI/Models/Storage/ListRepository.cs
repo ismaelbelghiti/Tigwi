@@ -11,6 +11,7 @@ namespace Tigwi.UI.Models.Storage
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using Tigwi.Storage.Library;
 
@@ -133,12 +134,10 @@ namespace Tigwi.UI.Models.Storage
         /// <summary>
         /// Commit the changes.
         /// </summary>
-        internal void SaveChanges()
+        internal bool SaveChanges()
         {
-            foreach (var list in this.EntitiesMap)
-            {
-                list.Value.Save();
-            }
+            // Fold, yay!
+            return this.EntitiesMap.Aggregate(true, (current, list) => current & list.Value.Save());
         }
 
         #endregion
