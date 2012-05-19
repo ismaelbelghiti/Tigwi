@@ -19,7 +19,7 @@ namespace Tigwi.UI.Models.Storage
 
         private string email;
 
-        private Guid mainAccountId;
+        private StorageAccountModel mainAccount;
 
         private string login;
 
@@ -92,22 +92,25 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        public Guid MainAccountId
+        public IAccountModel MainAccount
         {
             get
             {
-                if (!this.MainAccountIdUpdated)
+                if (!this.MainAccountUpdated)
                 {
                     this.Populate();
                 }
 
-                return this.mainAccountId;
+                return this.mainAccount;
             }
 
             set
             {
-                this.mainAccountId = value;
-                this.MainAccountIdUpdated = true;
+                // TODO: consistency check
+                this.mainAccount = value is StorageAccountModel
+                                       ? value as StorageAccountModel
+                                       : this.StorageContext.InternalAccounts.InternalFind(value.Id);
+                this.MainAccountUpdated = true;
             }
         }
 
@@ -124,7 +127,7 @@ namespace Tigwi.UI.Models.Storage
         {
             set
             {
-                this.Storage.User.SetPassword(this.Id, Tigwi.Auth.PasswordAuth.HashPassword(value));
+                this.Storage.User.SetPassword(this.Id, Auth.PasswordAuth.HashPassword(value));
             }
         }
 
@@ -144,7 +147,7 @@ namespace Tigwi.UI.Models.Storage
 
         protected bool EmailUpdated { get; set; }
 
-        protected bool MainAccountIdUpdated { get; set; }
+        protected bool MainAccountUpdated { get; set; }
 
         protected bool IdFetched { get; set; }
 
@@ -152,14 +155,14 @@ namespace Tigwi.UI.Models.Storage
         {
             get
             {
-                return this.AvatarUpdated || this.EmailUpdated || this.MainAccountIdUpdated;
+                return this.AvatarUpdated || this.EmailUpdated || this.MainAccountUpdated;
             }
 
             set
             {
                 this.AvatarUpdated = value;
                 this.EmailUpdated = value;
-                this.MainAccountIdUpdated = value;
+                this.MainAccountUpdated = value;
             }
         }
 
@@ -188,7 +191,7 @@ namespace Tigwi.UI.Models.Storage
                 {
                     try
                     {
-                        this.Storage.User.SetInfo(this.Id, this.Email, this.mainAccountId);
+                        this.Storage.User.SetInfo(this.Id, this.Email, this.mainAccount.Id);
                         this.InfosUpdated = false;
                     }
                     catch (StorageLibException)
@@ -220,9 +223,9 @@ namespace Tigwi.UI.Models.Storage
                 this.avatar = userInfo.Avatar;
             }
 
-            if (!this.MainAccountIdUpdated)
+            if (!this.MainAccountUpdated)
             {
-                this.mainAccountId = userInfo.MainAccountId;
+                this.mainAccount = this.StorageContext.InternalAccounts.InternalFind(userInfo.MainAccountId);
             }
 
             this.Populated = true;

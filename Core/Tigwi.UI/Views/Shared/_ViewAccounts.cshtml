@@ -8,7 +8,7 @@
             var name = $(this).attr('id');
             var accountId = name.substring(5, name.length);
             $.ajax({
-                url: "@Url.Action("getAccount","Account")",
+                url: "@Url.Action("GetAccount", "Account")",
                 type: "POST",
                 dataType: 'json',
                 data: { 'accountId': accountId },
@@ -28,7 +28,7 @@
             var name = $(this).attr('id');
             var accountId = name.substring(5, name.length);
             $.ajax({
-                url: "@Url.Action("getAccount","Account")",
+                url: "@Url.Action("GetAccount","Account")",
                 type: "POST",
                 dataType: 'json',
                 data: { 'accountId': accountId },
@@ -48,11 +48,11 @@
         @foreach (var account in Model.Accounts)
         {
             <li>
-                <h2> @account.Name 
+                <h2> @account.Name </h2>
                 <button class="btn btn-primary editAcc" id="acct-@account.Id" ><b>Edit</b></button>
                 @if (@account.Admin.Id == CurrentUser.Id)
                 {
-                    if (@account.Id != @CurrentUser.MainAccountId)
+                    if (@account.Id != @CurrentUser.MainAccount.Id)
                     { 
                         <button class="btn btn-primary deltAcc" id="delt-@account.Id" ><b>Delete</b></button>
                     }       

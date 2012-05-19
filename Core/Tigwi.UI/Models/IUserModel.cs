@@ -37,7 +37,7 @@ namespace Tigwi.UI.Models
         /// <summary>
         /// Gets or sets the user's main account Id.
         /// </summary>
-        Guid MainAccountId { get; set; }
+        IAccountModel MainAccount { get; set; }
 
         /// <summary>
         /// Gets the user's ID.

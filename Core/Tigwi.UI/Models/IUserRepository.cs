@@ -29,13 +29,16 @@ namespace Tigwi.UI.Models
         /// <param name="email">
         /// The desired email address.
         /// </param>
+        /// <param name="password">
+        /// The hashed password.
+        /// </param>
         /// <returns>
         /// A <see cref="IUserModel"/> representing the newly created user.
         /// </returns>
         /// <exception cref="DuplicateUserException">
         /// When there is already a user with the given credentials.
         /// </exception>
-        IUserModel Create(string login, string email);
+        IUserModel Create(string login, string email, byte[] password);
 
         /// <summary>
         /// Deletes the given user and replaces it with a shallow "Deleted" object.
