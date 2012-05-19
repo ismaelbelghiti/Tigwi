@@ -35,8 +35,8 @@
                 success: function (data) {
 
                     if (data.exists) {
-                        var toAppend = "<div class=\"alert alert-info span2\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>" + $('#addAccount').val() +
-                            '<input type="hidden" value="' + $('#addAccount').val() + '" name="AccountIds"/></div>';
+                        var toAppend = "<div class=\"alert alert-info span2\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button><span class=\"truncated-shorter\">" + $('#addAccount').val() +
+                            '</span><input type="hidden" value="' + $('#addAccount').val() + '" name="AccountIds"/></div>';
                         $("#accountAdded").append(toAppend);
                     }
                     else {
@@ -82,7 +82,7 @@
             $('.modal-header-edit-list > h3').html('Edit a List');
             $('#submitEditModalButton').html('Edit list');
 
-            var name=$(this).next('div').attr('id');
+            var name=$(this).closest('div').next().attr('id');
             var listId=name.substring(5,name.length);
             $.ajax({
                 url: "@Url.Action("getList", "List")",
@@ -96,8 +96,8 @@
                     $('#ListPublic').attr('checked',data.Public);
                     $("#accountAdded").html('');
                     for (var i = 0; i < data.Members.length; i++) {
-                        var toAppend = "<div class=\"alert alert-info span2\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button>" + data.Members[i] +
-                            '<input type="hidden" value="' + data.Members[i] + '" name="AccountIds"/></div>';
+                        var toAppend = "<div class=\"alert alert-info span2\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button><span class=\"truncated-shorter\">" + data.Members[i] +
+                            '</span><input type="hidden" value="' + data.Members[i] + '" name="AccountIds"/></div>';
                         $("#accountAdded").append(toAppend);
                     }
                 }
@@ -108,7 +108,7 @@
             event.stopPropagation();
             $('#deleteListModal').modal('show');
 
-            var name=$(this).next().next('div').attr('id');
+            var name=$(this).closest('div').next().attr('id');
             var listId=name.substring(5,name.length);
             $.ajax({
                 url: "@Url.Action("getList", "List")",
@@ -176,15 +176,16 @@
 }
 <script type="text/javascript">
         var lists = {
-            @foreach (var pair in listsOfMember)
-            {
-                @Html.Raw("'" + pair.Key + "': [")
-                foreach (var listId in pair.Value)
-                {
-                    @Html.Raw("'" + listId + "', ")
-                }
-                @Html.Raw("], ")
-            };
+                        @foreach (var pair in listsOfMember)
+                        {
+                            @Html.Raw("'" + pair.Key + "': [")
+                            foreach (var listId in pair.Value)
+                            {
+                                @Html.Raw("'" + listId + "', ")
+                            }
+                            @Html.Raw("], ")
+                        };
+                    };
 </script>
 
 <section class="listView">
@@ -196,20 +197,31 @@
             {
                 <li>
                     <div class="listName accordion-toggle" data-toggle="collapse" href="#list-@list.Id">
-                        <input type="checkbox" checked="checked" id="checkBox-@list.Id" class="checkboxfilter"/>  
-                        <i class="icon-folder-close"></i> @list.Name 
-                        @if (@list.Owner.Id == CurrentAccount.Id)
-                        {
-                            <i class="delete icon-trash pull-right"></i><i class="edit icon-pencil pull-right"></i>
-                        }
-                        <div id="list-@list.Id" class="accordion-body collapse">
+                        <div class="row">  
+                            <i class="icon-folder-close"></i>
+                            <div style="display:inline-block">
+                                <span class="truncated"> @list.Name </span>
+                            </div>
+                            @if (@list.Owner.Id == CurrentAccount.Id)
+                            {
+                                <i class="delete icon-trash pull-right"></i><i class="edit icon-pencil pull-right"></i>
+                            } 
+                        </div>                               
+                        <div id="list-@list.Id" class="accordion-body collapse row">
                             <ul class="list-user">
                                 @foreach (var member in list.Members)
                                 {
-                                    <li><i class="icon-user"></i>@member.Name</li>
+                                    <li>
+                                        <i class="icon-user"></i>
+                                        <div style="display:inline-block">
+                                            <span class="truncated">@member.Name</span>
+                                        </div>
+                                    </li>
+                                    
                                 }
                             </ul>
                         </div>
+                    
                     </div>
                 </li>
             }

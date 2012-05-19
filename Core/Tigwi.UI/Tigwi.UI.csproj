@@ -123,6 +123,7 @@
     <Compile Include="MockStorage.cs" />
     <Compile Include="Models\Account\AccountDeleteViewModel.cs" />
     <Compile Include="Models\Account\AccountEditViewModel.cs" />
+    <Compile Include="Models\PolViewModel.cs" />
     <Compile Include="Models\EditListViewModel.cs" />
     <Compile Include="Models\IAccountRepository.cs" />
     <Compile Include="Models\IListModelCollection.cs" />
@@ -159,14 +160,17 @@
     <Compile Include="ViewPage.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\images\background.png" />
     <Content Include="Content\bootstrap-responsive.css" />
     <Content Include="Content\bootstrap-responsive.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\images\bunny.png" />
+    <Content Include="Content\images\clouds.png" />
     <Content Include="Content\images\default_profile_1_bigger.png" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
+    <Content Include="Content\images\grass.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -318,7 +322,7 @@
     <Content Include="Views\Shared\_FollowAccount.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Shared\_AccountFollowedPublicLists.cshtml" />
+    <Content Include="Views\Shared\_AccountPublicOwnedLists.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Account\Following.cshtml" />

@@ -6,7 +6,7 @@ namespace Tigwi.UI.Models
     public class WritePostViewModel
     {
         [Required]
-        [StringLength(100)]
+        [StringLength(140)]
         public string Content { get; set; }
     }
 }

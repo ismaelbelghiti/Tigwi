@@ -31,14 +31,6 @@
     
 }
 
-@if (ViewBag.error != null)
-{
-    <div class="alert alert-error">
-        <button class="close" data-dismiss="alert">x</button>
-        @ViewBag.error
-    </div>
-}
-
 @if (User.Identity.IsAuthenticated)
 {
     <div>@Html.Partial("_WriteMessage", new WritePostViewModel())</div>

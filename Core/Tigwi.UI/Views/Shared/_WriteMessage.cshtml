@@ -7,7 +7,7 @@
     @using (Html.BeginForm("Write", "Post",FormMethod.Post,new { id = "writeMessageForm"}))
     {
         <div class="row-fluid">
-            @Html.TextAreaFor(m => m.Content,new { @class="input-xlarge span12",id="inputMessage",style="resize:none",placeholder="Write a new message !"})
+            @Html.TextAreaFor(m => m.Content,new { @class="input-xlarge span11",id="inputMessage",style="resize:none;position:center;",placeholder="Write a new message !"})
             @Html.ValidationMessageFor(m => m.Content)
             <button type="submit" class="btn btn-primary" id="inputButton">Post !</button>
         </div>

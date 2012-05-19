@@ -70,7 +70,7 @@ namespace Tigwi.UI.Models
         IListModelEnumerable PublicOwnedLists { get; }
 
         /// <summary>
-        /// Gets all the users which can post to the account's timeline.
+        /// Gets all the users who can post to the account's timeline.
         /// </summary>
         ICollection<IUserModel> Users { get; }
 

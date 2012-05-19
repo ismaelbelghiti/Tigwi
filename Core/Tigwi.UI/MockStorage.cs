@@ -673,7 +673,7 @@ namespace Tigwi.UI
 
                 var owner = this.Storage.AccountStorage.GetMock(list.Owner);
                 owner.AllOwnedLists.Remove(id);
-                owner.PublicFollowedLists.Remove(id);
+                owner.PublicOwnedLists.Remove(id);
 
                 this.ListFromId.Remove(id);
             }

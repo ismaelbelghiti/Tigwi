@@ -17,13 +17,18 @@
         <script src="@Url.Content("~/Scripts/jquery-1.7.2.min.js")" type="text/javascript"></script>
         <script src="@Url.Content("~/Scripts/modernizr-2.5.3.js")" type="text/javascript"></script>
         <script src="@Url.Content("~/Scripts/bootstrap.js")" type="text/javascript"></script>
+        <script src="@Url.Content("~/Scripts/MicrosoftAjax.js")" type="text/javascript"></script>
+        <script src="@Url.Content("~/Scripts/MicrosoftMvcValidation.js")" type="text/javascript"></script>
 
         <script type="text/javascript">
-            $('.dropdown-toggle').dropdown();
+            $(document).ready(function() {
+                $('.dropdown-toggle').dropdown();
 
-            $('.dropdown input, .dropdown label').click(function (e) {
-                e.stopPropagation();
+                $('.menu-log *').click(function (e) {
+                    e.stopPropagation();
+                });
             });
+            
         </script>
         
     </head>
@@ -42,7 +47,9 @@
                                     <a href="#"
                                        class="dropdown-toggle"
                                        data-toggle="dropdown">
+                                        <span class="truncated-shortest">
                                         @CurrentAccount.Name
+                                        </span>
                                         <b class="caret"></b>
                                     </a>
                                     <ul class="dropdown-menu">
@@ -63,7 +70,7 @@
                                 <li><a data-toggle="modal" href="#registerModal" >Register</a></li>
                                 <li class="dropdown">
                                     <a class="dropdown-toggle" href="#" data-toggle="dropdown">Login</a>
-                                    <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
+                                    <div class="dropdown-menu menu-log" style="padding: 15px; padding-bottom: 0px;">
                                         @Html.Partial("_LogOnPartial", new UserLogOnViewModel())
                                     </div>
                                 </li>
@@ -82,7 +89,7 @@
                                             <i class="icon-cog icon-white"> </i>
                                             <b class="caret"></b>
                                         </a>
-                                        <ul class="dropdown-menu">
+                                        <ul class="dropdown-menu pull-right">
                                             <li>@Html.ActionLink("Accounts", "List", "Account")</li>
                                             <li class="divider"></li>
                                             <li>@Html.ActionLink("Disconnect", "LogOut", "User")</li>
@@ -99,24 +106,49 @@
 
         <div class="container">
             <div class="row">
-                <section class="span2 offset2">
+                <section class="span3 offset1">
                     <section class="leftInfos">
                         @RenderSection("LeftInfos", false)
                     </section>
                 </section>
-                <section class="span6">
-                    @RenderBody()
+                <section class="span7">
+                    @if (ViewBag.error != null)
+                    {
+                        <div class="alert alert-error">
+                            <button class="close" data-dismiss="alert">x</button>
+                            @ViewBag.error
+                        </div>
+                    }
+                    @if (ViewBag.success != null)
+                    {
+                        <div class="alert alert-success">
+                            <button class="close" data-dismiss="alert">x</button>
+                            @ViewBag.error
+                        </div>
+                    }
+                    @if (ViewBag.info != null)
+                    {
+                        <div class="alert alert-info">
+                            <button class="close" data-dismiss="alert">x</button>
+                            @ViewBag.error
+                        </div>
+                    }
+                    <section class="mainSection">
+                        @RenderBody()
+                    </section>
                 </section>
-
             </div>
 
+            
             <section class="modal hide" id="registerModal">
-                @Html.Partial("_RegisterModal", new RegisterViewModel())
-            </section>
+                    @Html.Partial("_RegisterModal", new RegisterViewModel())
+                </section>
+
             
             <section class="modal hide" id="addAccountModal">
                 @Html.Partial("_CreateAccountModal", new AccountCreationViewModel())
             </section>
+
             
             <section class="modal hide" id="deleteAccountModal">
                 @Html.Partial("_ConfirmDeleteAccountModal", null)

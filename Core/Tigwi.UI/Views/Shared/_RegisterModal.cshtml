@@ -8,6 +8,7 @@
 
 @using (Html.BeginForm("Register", "User", FormMethod.Post,new {id = "registerForm"}))
 {    
+    {Html.EnableClientValidation();}
     <div class="modal-body">
 
         @Html.ValidationSummary()
