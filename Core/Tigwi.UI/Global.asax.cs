@@ -21,6 +21,8 @@ namespace Tigwi.UI
     using System.Web.Routing;
     using System.Web.Security;
 
+    using Tigwi.UI.Controllers;
+
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
 
@@ -72,28 +74,13 @@ namespace Tigwi.UI
                 // URL with parameters
                 new { controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
                 );
+
+            routes.MapRoute("NotFound", "{*url}", new { controller = "Error", action = "Http404" });
         }
 
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Called when a request needs to be authenticated.
-        /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <param name="ev">
-        /// The evvent arguments.
-        /// </param>
-        /// This manually decrypts the FormsAuthentication cookie, in which the current user and account's IDs are stored,
-        /// then saves it in a custom IIdentity implementation.
-        /// Roles are currently not implemented.
-        protected void Application_AuthenticateRequest(object sender, EventArgs ev)
-        {
-            // TODO: parse ticket.UserData as user GUID.
-        }
 
         /// <summary>
         /// Called on application initialization (every page).
@@ -104,6 +91,33 @@ namespace Tigwi.UI
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+        }
+
+        protected void Application_Error(object sender, EventArgs ev)
+        {
+            var context = this.Context;
+            var ex = this.Server.GetLastError();
+            context.Response.Clear();
+            context.ClearError();
+            var httpException = ex as HttpException;
+
+            var routeData = new RouteData();
+            routeData.Values["controller"] = "Error";
+            routeData.Values["exception"] = ex;
+            routeData.Values["action"] = "Http500";
+
+            if (httpException != null)
+            {
+                switch (httpException.GetHttpCode())
+                {
+                    case 404:
+                        routeData.Values["action"] = "Http404";
+                        break;
+                }
+            }
+
+            IController controller = new ErrorController();
+            controller.Execute(new RequestContext(new HttpContextWrapper(context), routeData));
         }
 
         #endregion

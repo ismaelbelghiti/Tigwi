@@ -143,25 +143,43 @@ namespace Tigwi.UI.Models.Storage
 
         #region Methods
 
-        internal override void Save()
+        internal override bool Save()
         {
+            bool success = true;
+
             if (this.Deleted)
             {
-                this.Storage.User.Delete(this.Id);
+                try
+                {
+                    this.Storage.User.Delete(this.Id);
+                }
+                catch (StorageLibException)
+                {
+                    success = false;
+                }
             }
             else
             {
                 if (this.InfosUpdated)
                 {
-                    this.Storage.User.SetInfo(this.Id, this.Email);
-                    this.InfosUpdated = false;
+                    try
+                    {
+                        this.Storage.User.SetInfo(this.Id, this.Email);
+                        this.InfosUpdated = false;
+                    }
+                    catch (StorageLibException)
+                    {
+                        success = false;
+                    }
                 }
 
                 if (this.accounts != null)
                 {
-                    this.accounts.Save();
+                    success &= this.accounts.Save();
                 }
             }
+
+            return success;
         }
 
         internal override void Repopulate()

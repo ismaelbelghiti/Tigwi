@@ -131,7 +131,7 @@ namespace Tigwi.Storage.Library
             return new Blob<Guid>(accountContainer, A_ADMINID + accountId);
         }
 
-        public PrefixTreeBlob AAutocompletion()
+        internal PrefixTreeBlob AAutocompletion()
         {
             return new PrefixTreeBlob(accountContainer, A_AUTOCOMPLETION);
         }

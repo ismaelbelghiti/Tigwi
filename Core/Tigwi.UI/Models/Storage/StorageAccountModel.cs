@@ -365,8 +365,9 @@ namespace Tigwi.UI.Models.Storage
             this.Populated = true;
         }
 
-        internal override void Save()
+        internal override bool Save()
         {
+            var success = true;
             if (this.Deleted)
             {
                 this.Storage.Account.Delete(this.Id);
@@ -375,22 +376,38 @@ namespace Tigwi.UI.Models.Storage
             {
                 if (this.InfosUpdated)
                 {
-                    this.Storage.Account.SetInfo(this.Id, this.Description);
+                    try
+                    {
+                        this.Storage.Account.SetInfo(this.Id, this.Description);
+                    }
+                    catch (StorageLibException)
+                    {
+                        success = false;
+                    }
                 }
 
                 if (this.AdminUpdated)
                 {
-                    this.Storage.Account.SetAdminId(this.Id, this.Admin.Id);
+                    try
+                    {
+                        this.Storage.Account.SetAdminId(this.Id, this.Admin.Id);
+                    }
+                    catch (StorageLibException)
+                    {
+                        success = false;
+                    }
                 }
 
-                this.users.Save();
-                this.allFollowedLists.Save();
-                this.memberOfLists.Save();
+                success &= this.users.Save();
+                success &= this.allFollowedLists.Save();
+                success &= this.memberOfLists.Save();
                 if (this.personalList != null)
                 {
-                    this.personalList.Save();
+                    success &= this.personalList.Save();
                 }
             }
+
+            return success;
         }
 
         #endregion

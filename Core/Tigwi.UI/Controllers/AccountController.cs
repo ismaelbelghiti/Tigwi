@@ -9,6 +9,8 @@ using Tigwi.UI.Models;
 
 namespace Tigwi.UI.Controllers
 {
+    using System.Net;
+
     using Tigwi.UI.Models.Storage;
     using Tigwi.UI.Models.Account;
 
@@ -69,18 +71,30 @@ namespace Tigwi.UI.Controllers
         [ValidateInput(false)]
         public ActionResult ShowAccount(SearchViewModel search)
         {
+            IAccountModel account;
+
+            if (this.Storage.Accounts.TryFind(search.searchString, out account))
+            {
+                return this.View(account);
+            }
+            else
+            {
+                throw new HttpException(404, "Account not found");
+            }
+
+            /*
             try
             {
                 return this.View(this.Storage.Accounts.Find(search.searchString));
             }
-            catch(AccountNotFoundException ex)
+            catch (AccountNotFoundException ex)
             {
                 return this.RedirectToAction("Index", "Home", new { error = ex.Message});
             }
             catch (System.ArgumentNullException)
             {
                 return this.RedirectToAction("Index", "Home");
-            }
+            }*/
         }
 
 
@@ -143,7 +157,7 @@ namespace Tigwi.UI.Controllers
                 }
                 catch (DuplicateAccountException ex)
                 {
-                    return this.RedirectToAction("Index", "Home", new { error = ex.Message });
+                    throw new HttpException(404, ex.Message);
                 }
             }
             //something went wrong
@@ -251,13 +265,13 @@ namespace Tigwi.UI.Controllers
                 IAccountModel account = this.Storage.Accounts.Find(id);
                 list.Members.Add(account);
                 this.Storage.SaveChanges();
+                //Todo redirect to a dedicated view
                 return this.RedirectToAction("Index", "Home");
             }
-            catch (Tigwi.UI.Models.Storage.AccountNotFoundException ex)
+            catch (AccountNotFoundException ex)
             {
-                return this.RedirectToAction("Index", "Home", new { error = ex.Message });
+                throw new HttpException((int)HttpStatusCode.NotFound, ex.Message);
             }
-            //Todo redirect to a dedicated view
         }
 
         /// <summary>

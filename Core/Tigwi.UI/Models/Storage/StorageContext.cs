@@ -172,27 +172,31 @@ namespace Tigwi.UI.Models.Storage
         /// <summary>
         /// Commit the changes to the storage.
         /// </summary>
-        public void SaveChanges()
+        public bool SaveChanges()
         {
+            var success = true;
+
             if (this.users != null)
             {
-                this.users.SaveChanges();
+                success &= this.users.SaveChanges();
             }
 
             if (this.posts != null)
             {
-                this.posts.SaveChanges();
+                success &= this.posts.SaveChanges();
             }
 
             if (this.accounts != null)
             {
-                this.accounts.SaveChanges();
+                success &= this.accounts.SaveChanges();
             }
 
             if (this.lists != null)
             {
-                this.lists.SaveChanges();
+                success &= this.lists.SaveChanges();
             }
+
+            return success;
         }
 
         #endregion
