@@ -50,40 +50,22 @@ namespace Tigwi.UI
             }
         }
 
+        public string Error
+        {
+            get
+            {
+                var controller = this.ViewContext.Controller as HomeController;
+                return controller != null ? controller.Error : null;
+            }
+        }
+
         #endregion
     }
 
     /// <summary>
     /// The standard view page, for weakly typed views.
     /// </summary>
-    public abstract class ViewPage : WebViewPage
+    public abstract class ViewPage : ViewPage<object>
     {
-        #region Public Properties
-
-        /// <summary>
-        /// Gets the current account, loading it from the controller if needed and possible.
-        /// </summary>
-        public IAccountModel CurrentAccount
-        {
-            get
-            {
-                var controller = this.ViewContext.Controller as HomeController;
-                return controller != null ? controller.CurrentAccount : null;
-            }
-        }
-
-        /// <summary>
-        /// Gets the current user, loading it from the controller if needed and possible.
-        /// </summary>
-        public IUserModel CurrentUser
-        {
-            get
-            {
-                var controller = this.ViewContext.Controller as HomeController;
-                return controller != null ? controller.CurrentUser : null;
-            }
-        }
-
-        #endregion
     }
 }

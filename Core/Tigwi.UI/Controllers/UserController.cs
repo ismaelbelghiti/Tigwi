@@ -39,6 +39,7 @@ namespace Tigwi.UI.Controllers
         /// <param name="userLogOnViewModel"></param>
         /// <returns></returns>
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult LogOn(UserLogOnViewModel userLogOnViewModel)
         {
             if (ModelState.IsValid)
@@ -46,11 +47,17 @@ namespace Tigwi.UI.Controllers
                 try
                 {
                     // TODO: real authentication
+                    var auth = new Tigwi.Auth.PasswordAuth(RawStorage, userLogOnViewModel.Login, userLogOnViewModel.Password);
+                    Guid userId = auth.Authenticate();
                     var loggingUser = this.Storage.Users.Find(userLogOnViewModel.Login);
                     this.AuthenticateUser(loggingUser, userLogOnViewModel.RememberMe);
 
                     return this.RedirectToAction("Index", "Home");
                     // return this.RedirectToAction("Timeline", "Account");
+                }
+                catch (Tigwi.Auth.AuthFailedException)
+                {
+                    ModelState.AddModelError("Login", "Bad login/password");
                 }
                 catch (UserNotFoundException ex)
                 {
@@ -83,34 +90,29 @@ namespace Tigwi.UI.Controllers
         /// <param name="registerViewModel">A ViewModel containing the data useful for the user creation.</param>
         /// <returns></returns>
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult Register(RegisterViewModel registerViewModel)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    // TODO: real authentication
-                    var newUser = this.Storage.Users.Create(registerViewModel.Login, registerViewModel.Email);
-
-                    try
-                    {
-                        var newAccount = this.Storage.Accounts.Create(newUser, registerViewModel.Login, string.Empty);
-
-                        this.AuthenticateUser(newUser, registerViewModel.RememberMe);
-                        this.CurrentAccount = newAccount;
-                        this.Storage.SaveChanges();
-                        return this.RedirectToAction("Index", "Home");
-                    }
-                    catch (DuplicateAccountException ex)
-                    {
-                        this.Storage.Users.Delete(newUser);
-                        this.Storage.SaveChanges();
-                        ModelState.AddModelError("Login", ex.Message);
-                    }
+                    var hashedPass = Auth.PasswordAuth.HashPassword(registerViewModel.Password);
+                    
+                    // IUserRepository::Create creates a main account
+                    var newUser = this.Storage.Users.Create(registerViewModel.Login, registerViewModel.Email, hashedPass);
+                    this.AuthenticateUser(newUser, registerViewModel.RememberMe);
+                    this.CurrentAccount = newUser.MainAccount;
+                    this.Storage.SaveChanges();
+                    return this.RedirectToAction("Index", "Home");
                 }
                 catch (DuplicateUserException ex)
                 {
                     // TODO: We need more granularity (login failed ? email failed ? propositions ?)
+                    ModelState.AddModelError("Login", ex.Message);
+                }
+                catch (DuplicateAccountException ex)
+                {
                     ModelState.AddModelError("Login", ex.Message);
                 }
             }

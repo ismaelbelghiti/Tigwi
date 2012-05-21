@@ -11,7 +11,6 @@ namespace Tigwi.API.Controllers
         //
         // POST : /list/subscribeaccount/
 
-        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult SubscribeAccount()
         {
@@ -22,17 +21,26 @@ namespace Tigwi.API.Controllers
                 var subscribeAccount =
                     (ListAndAccount)(new XmlSerializer(typeof(ListAndAccount))).Deserialize(Request.InputStream);
 
-                if (subscribeAccount.Account == null)
+                if (subscribeAccount.AccountName == null && subscribeAccount.AccountId == null)
                     error = new Error("Account missing");
                 else if (subscribeAccount.List == null)
                     error = new Error("List missing");
                 else
                 {
-                    var accountId = Storage.Account.GetId(subscribeAccount.Account);
-                    Storage.List.Add(subscribeAccount.List.GetValueOrDefault(), accountId);
+                    var ownerId = Storage.List.GetOwner(subscribeAccount.List.GetValueOrDefault());
+                    // Check if the user is authenticated and has rights
+                    var authentication = Authorized(ownerId);
 
-                    // Result is an empty error XML element
-                    error = new Error();
+                    if (authentication.HasRights)
+                    {
+                        var accountId = subscribeAccount.AccountId ?? Storage.Account.GetId(subscribeAccount.AccountName);
+                        Storage.List.Add(subscribeAccount.List.GetValueOrDefault(), accountId);
+
+                        // Result is an empty error XML element
+                        error = new Error();
+                    }
+                    else
+                        error = new Error(authentication.ErrorMessage());
                 }
             }
             catch (StorageLibException exception)
@@ -51,7 +59,6 @@ namespace Tigwi.API.Controllers
         //
         // POST : /list/unsubscribeaccount/
 
-        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult UnsubscribeAccount()
         {
@@ -62,17 +69,26 @@ namespace Tigwi.API.Controllers
                 var unsubscribeAccount =
                     (ListAndAccount) (new XmlSerializer(typeof (ListAndAccount))).Deserialize(Request.InputStream);
 
-                if (unsubscribeAccount.Account == null)
+                if (unsubscribeAccount.AccountName == null && unsubscribeAccount.AccountId == null)
                     error = new Error("Account missing");
                 else if (unsubscribeAccount.List == null)
                     error = new Error("List missing");
                 else
                 {
-                    var accountId = Storage.Account.GetId(unsubscribeAccount.Account);
-                    Storage.List.Remove(unsubscribeAccount.List.GetValueOrDefault(), accountId);
+                    var ownerId = Storage.List.GetOwner(unsubscribeAccount.List.GetValueOrDefault());
+                    // Check if the user is authenticated and has rights
+                    var authentication = Authorized(ownerId);
 
-                    // Result is an empty error XML element
-                    error = new Error();
+                    if (authentication.HasRights)
+                    {
+                        var accountId = unsubscribeAccount.AccountId ?? Storage.Account.GetId(unsubscribeAccount.AccountName);
+                        Storage.List.Remove(unsubscribeAccount.List.GetValueOrDefault(), accountId);
+
+                        // Result is an empty error XML element
+                        error = new Error();
+                    }
+                    else
+                        error = new Error(authentication.ErrorMessage());
                 }
             }
             catch (StorageLibException exception)

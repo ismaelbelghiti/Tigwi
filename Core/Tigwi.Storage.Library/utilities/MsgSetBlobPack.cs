@@ -256,27 +256,27 @@ namespace Tigwi.Storage.Library.Utilities
                 b.Delete();
         }
 
-        // TODO : begin by the lasts msgs
         public bool UnionWith(MsgSetBlobPack other)
         {
-            DateTime progress = DateTime.MinValue;
+            DateTime progress = DateTime.MaxValue;
 
-            while (progress != DateTime.MaxValue)
+            while (progress != DateTime.MinValue)
             {
                 List<KeyValuePair<DateTime, CloudBlob>> blobsList = GetBlobs();
                 if (!blobsList.Any())
                     return false;
                 try
                 {
-                    for (int i = 0; i < blobsList.Count; i++)
+                    for (int i = blobsList.Count-1; i >=0 ; i--)
                     {
                         DateTime upperBound = (i + 1 < blobsList.Count) ? blobsList[i + 1].Key : DateTime.MaxValue;
-                        if (upperBound < progress)
+                        DateTime lowerBound = blobsList[i].Key;
+                        if (lowerBound > progress)
                             continue;
 
                         MessageSet set = GetMessageSet(new Blob<MessageSet>(blobsList[i].Value));
-                        set.UnionWith(other.GetMessagesBetween(blobsList[i].Key, upperBound));
-                        progress = upperBound;
+                        set.UnionWith(other.GetMessagesBetween(lowerBound, upperBound));
+                        progress = lowerBound;
                     }
                 }
                 catch (VersionHasChanged) { continue; }
@@ -285,27 +285,27 @@ namespace Tigwi.Storage.Library.Utilities
             return true;
         }
 
-        // TODO : begin by the lasts msgs
         public bool ExceptWith(MsgSetBlobPack other)
         {
-            DateTime progress = DateTime.MinValue;
+            DateTime progress = DateTime.MaxValue;
 
-            while (progress != DateTime.MaxValue)
+            while (progress != DateTime.MinValue)
             {
                 List<KeyValuePair<DateTime, CloudBlob>> blobsList = GetBlobs();
                 if (!blobsList.Any())
                     return false;
                 try
                 {
-                    for (int i = 0; i < blobsList.Count; i++)
+                    for (int i = blobsList.Count - 1; i >= 0; i--)
                     {
                         DateTime upperBound = (i + 1 < blobsList.Count) ? blobsList[i + 1].Key : DateTime.MaxValue;
-                        if (upperBound < progress)
+                        DateTime lowerBound = blobsList[i].Key;
+                        if (lowerBound > progress)
                             continue;
 
                         MessageSet set = GetMessageSet(new Blob<MessageSet>(blobsList[i].Value));
-                        set.ExceptWith(other.GetMessagesBetween(blobsList[i].Key, upperBound));
-                        progress = upperBound;
+                        set.ExceptWith(other.GetMessagesBetween(lowerBound, upperBound));
+                        progress = lowerBound;
                     }
                 }
                 catch (VersionHasChanged) { continue; }

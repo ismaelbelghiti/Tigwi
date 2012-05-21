@@ -9,11 +9,12 @@ namespace Tigwi.Storage.Library
     [ProtoContract]
     public class UserInfo : IUserInfo
     {
-        public UserInfo(string login, string avatar ,string email)
+        public UserInfo(string login, string avatar ,string email, Guid mainAccountId)
         {
             Login = login;
             Avatar = Avatar;
             Email = email;
+            MainAccountId = mainAccountId;
         }
 
         public UserInfo()
@@ -21,6 +22,7 @@ namespace Tigwi.Storage.Library
             Login = null;
             Avatar = null;
             Email = null;
+            MainAccountId = new Guid();
         }
 
         [ProtoMember(1)]
@@ -31,5 +33,8 @@ namespace Tigwi.Storage.Library
 
         [ProtoMember(3)]
         public string Email { get; set; }
+
+        [ProtoMember(4)]
+        public Guid MainAccountId { get; set; }
     }
 }

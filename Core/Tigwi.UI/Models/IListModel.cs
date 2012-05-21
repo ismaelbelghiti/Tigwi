@@ -25,6 +25,11 @@ namespace Tigwi.UI.Models
         string Description { get; set; }
 
         /// <summary>
+        /// Gets the list's owner.
+        /// </summary>
+        IAccountModel Owner { get; }
+
+        /// <summary>
         /// Gets the list's followers.
         /// </summary>
         ICollection<IAccountModel> Followers { get; }
@@ -69,7 +74,7 @@ namespace Tigwi.UI.Models
         /// </param>
         /// <returns>
         /// </returns>
-        ICollection<IPostModel> PostsAfter(DateTime date, int maximum = 100);
+        IEnumerable<IPostModel> PostsAfter(DateTime date, int maximum = 100);
 
         /// <summary>
         /// Gets a (truncated) collection of the posts posted before a given DateTime (excluded).
@@ -82,7 +87,7 @@ namespace Tigwi.UI.Models
         /// </param>
         /// <returns>
         /// </returns>
-        ICollection<IPostModel> PostsBefore(DateTime date, int maximum = 100);
+        IEnumerable<IPostModel> PostsBefore(DateTime date, int maximum = 100);
 
         #endregion
     }

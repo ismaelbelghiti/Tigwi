@@ -99,9 +99,11 @@ namespace Tigwi.UI.Models.Storage
         /// <summary>
         /// Commit the changes.
         /// </summary>
-        internal void SaveChanges()
+        internal bool SaveChanges()
         {
             // Nothing to do as posts can't change
+            // Thus, it's always a success
+            return true;
         }
 
         #endregion

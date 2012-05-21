@@ -45,6 +45,8 @@ namespace Tigwi.Storage.Library
 
             msgContainer.CreateIfNotExist();
             ClearContainer(msgContainer);
+
+            this.AAutocompletion().Init();
         }
 
         void ClearContainer(CloudBlobContainer c)
@@ -127,6 +129,11 @@ namespace Tigwi.Storage.Library
         public Blob<Guid> AAdminId(Guid accountId)
         {
             return new Blob<Guid>(accountContainer, A_ADMINID + accountId);
+        }
+
+        internal PrefixTreeBlob AAutocompletion()
+        {
+            return new PrefixTreeBlob(accountContainer, A_AUTOCOMPLETION);
         }
 
         // list blobs
@@ -225,6 +232,7 @@ namespace Tigwi.Storage.Library
         const string U_IDBYOPENIDURI = "idbyopeniduri/";
         const string U_PASSWORD = "password/";
 
+        const string A_AUTOCOMPLETION = "autocompletion/";
         const string A_IDBYNAME = "idbyname/";
         const string A_INFO = "info/";
         const string A_USERS = "users/";

@@ -65,22 +65,11 @@ PRIORITIES :
 
 
 FOR THIS WEEK :
-	- multithreads	or merge	F
-	- openwrite					F
-	- upload perfs				F
-	- solve bugs in auth		I
-	- tests for privates lists	I
-	- set list info				U private->public but not public->private
-	- tests for messages		I
 	- in auth, remove 
 		exception a desassoc	I
 	- invert except with/union
 		with in msgsetblobpack	U
 	- autocompletion			
 		double metaphone +		
-		prefix tree				?
+		prefix tree				U
 
-- main account in user info		?
-- main lists lfollowedlist		
-	 hashmap Guid->bool			U
-- suppress strg tmp				I

@@ -22,18 +22,30 @@ namespace Tigwi.API.Controllers
 
         // General methods used in any controller
 
-        protected bool CheckAuthentication(string key, Guid account)
+        protected Authentication Authorized(Guid account)
         {
-            try
+            // Key must be sent in a cookie
+            var keyCookie = Request.Cookies.Get("key");
+            
+            // Check if the cookie exist
+            var authentication = new Authentication {Tried = keyCookie != null};
+
+            if (keyCookie != null)
             {
-                var user = (new ApiKeyAuth(Storage, key)).Authenticate();
-                var users = Storage.Account.GetUsers(account);
-                return users.Contains(user);
+                try
+                {
+                    var user = (new ApiKeyAuth(Storage, keyCookie.Value)).Authenticate();
+                    var users = Storage.Account.GetUsers(account);
+                    authentication.HasRights = users.Contains(user);
+
+                }
+                catch (AuthFailedException)
+                {
+                    authentication.Failed = true;
+                }
             }
-            catch (AuthFailedException)
-            {
-                return false;
-            }
+
+            return authentication;
         }
 
         // TODO : look at IDisposable
@@ -67,5 +79,21 @@ namespace Tigwi.API.Controllers
 
         protected IStorage Storage;
 
+    }
+
+    public class Authentication
+    {
+        public bool Tried { get; set; }
+        public bool Failed { get; set; } // Cannot failed if not tried
+        public bool HasRights { get; set; }
+
+        public string ErrorMessage()
+        {
+            if (!Tried)
+                return "No key cookie was sent";
+            if (Failed)
+                return "Authentication failed";
+            return !HasRights ? "User hasn't rights on this account" : null;
+        }
     }
 }

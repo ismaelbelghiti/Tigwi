@@ -18,12 +18,16 @@ namespace Tigwi.UI.Tests.Models
 
         protected StorageContext Storage { get; set; }
 
+        const string azureAccountName = "ulyssestorage";
+        const string azureAccountKey = "fc2HTyfP0m2r3zlNYmMc3Pjvbfmy63ovoCP9Zkz0yoyuId3AeyrTswLcye2VDr3hzDvAQbdeKUlXBX3lFTcNWQ==";
+
+
         #region SetUp / TearDown
 
         [SetUp]
         public void Init()
         {
-            this.Storage = new StorageContext(new StorageTmp());
+            this.Storage = new StorageContext(new Storage(azureAccountName, azureAccountKey));
         }
 
         [TearDown]
@@ -39,7 +43,7 @@ namespace Tigwi.UI.Tests.Models
         {
             var storage = this.Storage;
 
-            var user = storage.Users.Create("Elarnon", "cbasile06@gmail.com");
+            var user = storage.Users.Create("Elarnon", "cbasile06@gmail.com", new byte[0]);
 
             Assert.That(user.Login, Is.EqualTo("Elarnon"));
             Assert.That(user.Email, Is.EqualTo("cbasile06@gmail.com"));
@@ -50,7 +54,7 @@ namespace Tigwi.UI.Tests.Models
         public void TestSetEmail()
         {
             var storage = this.Storage;
-            var user = storage.Users.Create("Elarnon", "cbasile06@gmail.com");
+            var user = storage.Users.Create("Elarnon", "cbasile06@gmail.com", new byte[0]);
 
             user.Email = "basile.clement@ens.fr";
             Assert.That(user.Email, Is.EqualTo("basile.clement@ens.fr"));
@@ -63,7 +67,7 @@ namespace Tigwi.UI.Tests.Models
         public void TestAccountsLink()
         {
             var storage = this.Storage;
-            var user = storage.Users.Create("Elarnon", "cbasile06@gmail.com");
+            var user = storage.Users.Create("Elarnon", "cbasile06@gmail.com", new byte[0]);
             // user.CreateAcccount ?
             var account = storage.Accounts.Create(user, "ElarnonAccount", "Elarnon's account");
 

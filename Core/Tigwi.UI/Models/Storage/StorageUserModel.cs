@@ -1,14 +1,10 @@
 namespace Tigwi.UI.Models.Storage
 {
-    #region
-
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
     using Tigwi.Storage.Library;
-
-    #endregion
 
     /// <summary>
     /// The user model adapter.
@@ -17,11 +13,13 @@ namespace Tigwi.UI.Models.Storage
     {
         #region Constants and Fields
 
-        private readonly AccountCollectionAdapter accounts;
+        private readonly StorageEntityCollection<StorageAccountModel, IAccountModel> accounts;
 
         private string avatar;
 
         private string email;
+
+        private StorageAccountModel mainAccount;
 
         private string login;
 
@@ -32,7 +30,16 @@ namespace Tigwi.UI.Models.Storage
         public StorageUserModel(IStorage storage, StorageContext storageContext, Guid id)
             : base(storage, storageContext, id)
         {
-            this.accounts = new AccountCollectionAdapter(storage, storageContext, this);
+            this.accounts = new StorageEntityCollection<StorageAccountModel, IAccountModel>(storageContext)
+                {
+                    FetchIdCollection = () => storage.User.GetAccounts(id),
+                    GetId = account => account.Id,
+                    GetModel = storageContext.InternalAccounts.InternalFind,
+                    ReverseAdd = account => account.InternalUsers.CacheAdd(this),
+                    ReverseRemove = account => account.InternalUsers.CacheRemove(this),
+                    SaveAdd = account => storage.Account.Add(account.Id, id),
+                    SaveRemove = account => storage.Account.Remove(account.Id, id),
+                };
         }
 
         #endregion
@@ -85,6 +92,28 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
+        public IAccountModel MainAccount
+        {
+            get
+            {
+                if (!this.MainAccountUpdated)
+                {
+                    this.Populate();
+                }
+
+                return this.mainAccount;
+            }
+
+            set
+            {
+                // TODO: consistency check
+                this.mainAccount = value is StorageAccountModel
+                                       ? value as StorageAccountModel
+                                       : this.StorageContext.InternalAccounts.InternalFind(value.Id);
+                this.MainAccountUpdated = true;
+            }
+        }
+
         public string Login
         {
             get
@@ -94,7 +123,15 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        internal AccountCollectionAdapter InternalAccounts
+        public string Password
+        {
+            set
+            {
+                this.Storage.User.SetPassword(this.Id, Auth.PasswordAuth.HashPassword(value));
+            }
+        }
+
+        internal StorageEntityCollection<StorageAccountModel, IAccountModel> InternalAccounts
         {
             get
             {
@@ -110,19 +147,22 @@ namespace Tigwi.UI.Models.Storage
 
         protected bool EmailUpdated { get; set; }
 
+        protected bool MainAccountUpdated { get; set; }
+
         protected bool IdFetched { get; set; }
 
         protected override bool InfosUpdated
         {
             get
             {
-                return this.AvatarUpdated || this.EmailUpdated;
+                return this.AvatarUpdated || this.EmailUpdated || this.MainAccountUpdated;
             }
 
             set
             {
                 this.AvatarUpdated = value;
                 this.EmailUpdated = value;
+                this.MainAccountUpdated = value;
             }
         }
 
@@ -130,25 +170,43 @@ namespace Tigwi.UI.Models.Storage
 
         #region Methods
 
-        internal override void Save()
+        internal override bool Save()
         {
+            bool success = true;
+
             if (this.Deleted)
             {
-                this.Storage.User.Delete(this.Id);
+                try
+                {
+                    this.Storage.User.Delete(this.Id);
+                }
+                catch (StorageLibException)
+                {
+                    success = false;
+                }
             }
             else
             {
                 if (this.InfosUpdated)
                 {
-                    this.Storage.User.SetInfo(this.Id, this.Email);
-                    this.InfosUpdated = false;
+                    try
+                    {
+                        this.Storage.User.SetInfo(this.Id, this.Email, this.mainAccount.Id);
+                        this.InfosUpdated = false;
+                    }
+                    catch (StorageLibException)
+                    {
+                        success = false;
+                    }
                 }
 
                 if (this.accounts != null)
                 {
-                    this.accounts.Save();
+                    success &= this.accounts.Save();
                 }
             }
+
+            return success;
         }
 
         internal override void Repopulate()
@@ -165,56 +223,14 @@ namespace Tigwi.UI.Models.Storage
                 this.avatar = userInfo.Avatar;
             }
 
+            if (!this.MainAccountUpdated)
+            {
+                this.mainAccount = this.StorageContext.InternalAccounts.InternalFind(userInfo.MainAccountId);
+            }
+
             this.Populated = true;
         }
 
         #endregion
-
-        internal class AccountCollectionAdapter : StorageEntityCollection<StorageUserModel, StorageAccountModel, IAccountModel>
-        {
-            #region Constructors and Destructors
-
-            public AccountCollectionAdapter(IStorage storage, StorageContext storageContext, StorageUserModel user)
-                : base(storage, storageContext, user, () => storage.User.GetAccounts(user.Id), account => account.Id)
-            {
-                this.GetModel = storageContext.InternalAccounts.InternalFind;
-            }
-
-            #endregion
-
-            #region Public Methods and Operators
-
-            internal override void Save()
-            {
-                if (!this.Parent.Deleted)
-                {
-                    // TODO: catch exceptions (?)
-                    foreach (var account in this.CollectionAdded.Where(item => item.Value && !item.Key.Deleted).Select(item => item.Key))
-                    {
-                        this.Storage.Account.Add(account.Id, this.Parent.Id);
-                    }
-
-                    foreach (var account in this.CollectionRemoved.Where(item => item.Value && !item.Key.Deleted).Select(item => item.Key))
-                    {
-                        this.Storage.Account.Remove(account.Id, this.Parent.Id);
-                    }
-                }
-
-                this.CollectionAdded.Clear();
-                this.CollectionRemoved.Clear();
-            }
-
-            protected override void ReverseAdd(StorageAccountModel item)
-            {
-                item.InternalUsers.CacheAdd(this.Parent);
-            }
-
-            protected override void ReverseRemove(StorageAccountModel item)
-            {
-                item.InternalUsers.CacheRemove(this.Parent);
-            }
-
-            #endregion
-        }
     }
 }

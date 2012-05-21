@@ -11,6 +11,7 @@ namespace Tigwi.UI.Models.Storage
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using Tigwi.Storage.Library;
 
@@ -59,15 +60,14 @@ namespace Tigwi.UI.Models.Storage
         /// </exception>
         public IListModel Create(IAccountModel account, string name, string description, bool isPrivate)
         {
-            // TODO: place in IAccountModel.CreateList()
             try
             {
-                Guid id = this.Storage.List.Create(account.Id, name, description, isPrivate);
+                var id = this.Storage.List.Create(account.Id, name, description, isPrivate);
                 return this.Find(id);
             }
             catch (AccountNotFound ex)
             {
-                throw new AccountNotFoundException(account.Name, ex);
+                throw new AccountNotFoundException(name, ex);
             }
         }
 
@@ -134,12 +134,10 @@ namespace Tigwi.UI.Models.Storage
         /// <summary>
         /// Commit the changes.
         /// </summary>
-        internal void SaveChanges()
+        internal bool SaveChanges()
         {
-            foreach (var list in this.EntitiesMap)
-            {
-                list.Value.Save();
-            }
+            // Fold, yay!
+            return this.EntitiesMap.Aggregate(true, (current, list) => current & list.Value.Save());
         }
 
         #endregion

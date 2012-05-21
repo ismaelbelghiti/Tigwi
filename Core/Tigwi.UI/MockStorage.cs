@@ -81,6 +81,8 @@ namespace Tigwi.UI
 
             public string Email { get; set; }
 
+            public Guid MainAccountId { get; set; }
+
             #endregion
 
             public ISet<Guid> Accounts { get; set; }
@@ -139,9 +141,10 @@ namespace Tigwi.UI
                 return user;
             }
 
-            public void SetInfo(Guid userId, string email)
+            public void SetInfo(Guid userId, string email, Guid mainAccountId)
             {
                 this.GetMock(userId).Email = email;
+                this.GetMock(userId).MainAccountId = mainAccountId;
             }
 
             public HashSet<Guid> GetAccounts(Guid userId)
@@ -165,6 +168,7 @@ namespace Tigwi.UI
                             Accounts = new HashSet<Guid>(),
                             Avatar = string.Empty,
                             Email = email,
+                            MainAccountId = new Guid(),
                             Login = login,
                             Id = id,
                             Password = password,
@@ -390,7 +394,7 @@ namespace Tigwi.UI
                 }
             }
 
-            public Guid Create(Guid adminId, string name, string description)
+            public Guid Create(Guid adminId, string name, string description, bool bypassNameReservation = false)
             {
                 var user = this.Storage.UserStorage.GetMock(adminId);
 
@@ -482,6 +486,16 @@ namespace Tigwi.UI
                 catch (AccountNotFound)
                 {
                 }
+            }
+
+            public bool ReserveAccountName(string accountName)
+            {
+                return !this.IdFromName.ContainsKey(accountName);
+            }
+
+            public HashSet<string> Autocompletion(string nameBegining, int maxNameNumber)
+            {
+                throw new NotImplementedException("Autocompletion has not been implemented in MockStorage");
             }
 
             #endregion
@@ -656,7 +670,7 @@ namespace Tigwi.UI
 
                 var owner = this.Storage.AccountStorage.GetMock(list.Owner);
                 owner.AllOwnedLists.Remove(id);
-                owner.PublicFollowedLists.Remove(id);
+                owner.PublicOwnedLists.Remove(id);
 
                 this.ListFromId.Remove(id);
             }
@@ -824,7 +838,7 @@ namespace Tigwi.UI
 
                 messages.Sort((msg1, msg2) => DateTime.Compare(msg1.Date, msg2.Date));
 
-                return messages.Take(msgNumber).ToList();
+                return messages.Distinct().Take(msgNumber).ToList();
             }
 
             public List<IMessage> GetListsMsgTo(HashSet<Guid> listsId, DateTime lastMsgDate, int msgNumber)
@@ -840,7 +854,7 @@ namespace Tigwi.UI
                 // Note the reversing of the parameters because we supposedly want the *lasts* messages first
                 messages.Sort((msg1, msg2) => DateTime.Compare(msg2.Date, msg1.Date));
 
-                return messages.Take(msgNumber).ToList();
+                return messages.Distinct().Take(msgNumber).ToList();
             }
 
             public void Tag(Guid accountId, Guid msgId)

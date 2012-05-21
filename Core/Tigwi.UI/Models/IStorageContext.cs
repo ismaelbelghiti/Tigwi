@@ -43,7 +43,8 @@ namespace Tigwi.UI.Models
         /// <summary>
         /// Commit the changes to the underlying data persistence.
         /// </summary>
-        void SaveChanges();
+        /// <returns>True when every changes were saved, false when at least one error occured.</returns>
+        bool SaveChanges();
 
         // TODO (later): Rollback()
 

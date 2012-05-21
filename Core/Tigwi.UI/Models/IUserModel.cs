@@ -35,6 +35,11 @@ namespace Tigwi.UI.Models
         string Email { get; set; }
 
         /// <summary>
+        /// Gets or sets the user's main account Id.
+        /// </summary>
+        IAccountModel MainAccount { get; set; }
+
+        /// <summary>
         /// Gets the user's ID.
         /// </summary>
         Guid Id { get; }
@@ -43,6 +48,11 @@ namespace Tigwi.UI.Models
         /// Gets the user's login.
         /// </summary>
         string Login { get; }
+
+        /// <summary>
+        /// Sets the user's password
+        /// </summary>
+        string Password { set; }
 
         #endregion
     }

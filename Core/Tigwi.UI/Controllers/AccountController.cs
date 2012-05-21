@@ -9,6 +9,8 @@ using Tigwi.UI.Models;
 
 namespace Tigwi.UI.Controllers
 {
+    using System.Net;
+
     using Tigwi.UI.Models.Storage;
     using Tigwi.UI.Models.Account;
 
@@ -42,7 +44,7 @@ namespace Tigwi.UI.Controllers
         {
             if (this.CurrentUser != null)
             {
-                return this.View(this.CurrentUser.Accounts);
+                return this.View(CurrentUser);
             }
 
             // User must be connected
@@ -50,20 +52,49 @@ namespace Tigwi.UI.Controllers
         }
 
         /// <summary>
+        ///  Checks Whether the account <paramref name="account"/> exists
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult AccountExists(string account)
+        {
+            //TODO check whether account exists or not <3
+            return Json(new { exists = true });
+        }
+
+        /// <summary>
         /// Shows a page listing all the posts of the user.
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
+        [ValidateInput(false)]
         public ActionResult ShowAccount(SearchViewModel search)
         {
+            IAccountModel account;
+
+            if (this.Storage.Accounts.TryFind(search.searchString, out account))
+            {
+                return this.View(account);
+            }
+            else
+            {
+                throw new HttpException(404, "Account not found");
+            }
+
+            /*
             try
             {
                 return this.View(this.Storage.Accounts.Find(search.searchString));
             }
-            catch(AccountNotFoundException error)
+            catch (AccountNotFoundException ex)
             {
-                return this.View("Error", new HandleErrorInfo(error,"Account","ShowAccount"));
+                return this.RedirectToAction("Index", "Home", new { error = ex.Message});
             }
+            catch (System.ArgumentNullException)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }*/
         }
 
 
@@ -72,6 +103,7 @@ namespace Tigwi.UI.Controllers
         /// </summary>
         /// <returns></returns>
         [Authorize]
+        [ValidateInput(false)]
         public ActionResult MakeActive(string accountName)
         {
             try
@@ -88,9 +120,9 @@ namespace Tigwi.UI.Controllers
                     throw;
                 }
             }
-            catch (AccountNotFoundException)
+            catch (AccountNotFoundException ex)
             {
-                throw new NotImplementedException();
+                return this.RedirectToAction("Index", "Home", new { error = ex.Message });
             }
         }
 
@@ -110,18 +142,65 @@ namespace Tigwi.UI.Controllers
         /// <param name="accountCreation"></param>
         /// <returns></returns>
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult Create(AccountCreationViewModel accountCreation)
         {
             if (ModelState.IsValid)
             {
-                var newAccount = this.Storage.Accounts.Create(CurrentUser, accountCreation.Name, accountCreation.Description);
-                this.CurrentAccount = newAccount;
-                //TODO
-                this.Storage.SaveChanges();
-                return this.RedirectToAction("Create",accountCreation);
+                try
+                {
+                    var newAccount = this.Storage.Accounts.Create(CurrentUser, accountCreation.Name, accountCreation.Description);
+                    this.CurrentAccount = newAccount;
+                    //TODO
+                    this.Storage.SaveChanges();
+                    return this.RedirectToAction("Create", accountCreation);
+                }
+                catch (DuplicateAccountException ex)
+                {
+                    throw new HttpException(404, ex.Message);
+                }
             }
-            throw new NotImplementedException("model not valid");
-            return this.View(accountCreation);
+            //TODO do sthing more intelligent
+            //something went wrong
+
+            return this.PartialView("_CreateAccountModal", accountCreation);
+        }
+
+
+        /// <summary>
+        /// Delete the account
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Delete(Guid id)
+        {
+            try
+            {
+                IAccountModel account = this.Storage.Accounts.Find(id);
+                this.Storage.Accounts.Delete(account);
+                this.Storage.SaveChanges();
+                if (id == CurrentAccount.Id)
+                {
+                    CurrentAccount = CurrentUser.Accounts.ElementAt(0);
+                }
+                return this.RedirectToAction("List", "Account");
+            }
+            catch (AccountNotFoundException)
+            {
+                return this.RedirectToAction("Index", "Home", new { error = "This account doesn't exist"});
+            }
+            catch
+            {
+                throw new NotImplementedException("Account.Delete");
+            }
+        }
+
+
+        [HttpPost]
+        public ActionResult IsFollowed(Guid listId)
+        {
+            //TODO Catch Exception
+            return Json(new {Followed = CurrentAccount.PublicFollowedLists.Select(list => list.Id).Contains(listId)});
         }
 
         /// <summary>
@@ -140,18 +219,39 @@ namespace Tigwi.UI.Controllers
         /// <param name="accountEdit"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Edit(/*AccountEditModel*/object accountEdit)
+        [ValidateInput(false)]
+        public ActionResult Edit(AccountEditViewModel editAccount)
         {
-            throw new NotImplementedException("AccountController.Edit");
+            if (ModelState.IsValid)
+            {
+                IAccountModel account = this.Storage.Accounts.Find(editAccount.AccountId);
+                account.Description = editAccount.Description;
+                this.Storage.SaveChanges();
+                return this.RedirectToAction(editAccount.ReturnAction, editAccount.ReturnController);
+            }
+            return this.RedirectToAction("Index", "Home", new { error = "Invalid attributes, try again !" });
         }
 
         /// <summary>
         /// Show all the people an account is following.
         /// </summary>
         /// <returns>The resulting view.</returns>
-        public ActionResult Following()
+        public ActionResult Following(Guid id)
         {
-            throw new NotImplementedException("AccountController.Following");
+            try
+            {
+                IAccountModel account = this.Storage.Accounts.Find(id);
+                account.PersonalList.Followers.Add(CurrentAccount);
+                return this.View(account);
+            }
+            catch(AccountNotFoundException)
+            {
+                return this.RedirectToAction("Index", "Home", new { error = "This account doesn't exist anymore!" });
+            }
+            catch
+            {
+                return this.RedirectToAction("Index", "Home", new { error = "Something went wrong!" });
+            }
         }
 
         /// <summary>
@@ -159,9 +259,22 @@ namespace Tigwi.UI.Controllers
         /// Idempotent.
         /// </summary>
         /// <returns>The resulting view.</returns>
-        public ActionResult Follow()
+        [HttpPost]
+        public ActionResult Follow(Guid id)
         {
-            throw new NotImplementedException("AccountController.Follow");
+            IListModel list = CurrentAccount.PersonalList;
+            try
+            {
+                IAccountModel account = this.Storage.Accounts.Find(id);
+                list.Members.Add(account);
+                this.Storage.SaveChanges();
+                //Todo redirect to a dedicated view
+                return this.RedirectToAction("Index", "Home");
+            }
+            catch (AccountNotFoundException ex)
+            {
+                throw new HttpException((int)HttpStatusCode.NotFound, ex.Message);
+            }
         }
 
         /// <summary>
@@ -181,6 +294,19 @@ namespace Tigwi.UI.Controllers
         public ActionResult Followers()
         {
             throw new NotImplementedException("AccountController.Followers");
+        }
+
+        [HttpPost]
+        public ActionResult GetAccount(Guid accountId)
+        {
+            var account = this.Storage.Accounts.Find(accountId);
+            return Json(new { Descr = account.Description, Name = account.Name });
+        }
+
+        [HttpPost]
+        public ActionResult AutoComplete(string partialAccountName)
+        {
+            return Json(this.RawStorage.Account.Autocompletion(partialAccountName, 10));
         }
     }
 }

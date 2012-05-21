@@ -1,7 +1,5 @@
 namespace Tigwi.UI.Models.Storage
 {
-    #region
-
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -9,9 +7,7 @@ namespace Tigwi.UI.Models.Storage
 
     using Tigwi.Storage.Library;
 
-    #endregion
-
-    public abstract class StorageEntityCollection<TParent, TModel, TInterface> : ICollection<TInterface>
+    internal class StorageEntityCollection<TModel, TInterface> : ICollection<TInterface>
         where TModel : StorageEntityModel, TInterface
     {
         #region Constants and Fields
@@ -20,27 +16,20 @@ namespace Tigwi.UI.Models.Storage
 
         private readonly IDictionary<TModel, bool> collectionRemoved;
 
-        private readonly ICollection<TModel> internalCollection;
+        private readonly IDictionary<Guid, TModel> internalCollection;
 
-        private readonly IStorage storage;
-
-        private readonly IStorageContext storageContext;
+        private readonly StorageContext storageContext;
 
         #endregion
 
         #region Constructors and Destructors
 
-        protected StorageEntityCollection(
-            IStorage storage, IStorageContext storageContext, TParent parent, Func<ICollection<Guid>> fetchIdCollection, Func<TInterface, Guid> getId)
+        internal StorageEntityCollection(StorageContext storageContext)
         {
-            this.FetchIdCollection = fetchIdCollection;
-            this.storage = storage;
             this.storageContext = storageContext;
-            this.Parent = parent;
-            this.internalCollection = new HashSet<TModel>();
+            this.internalCollection = new Dictionary<Guid, TModel>();
             this.collectionAdded = new Dictionary<TModel, bool>();
             this.collectionRemoved = new Dictionary<TModel, bool>();
-            this.GetId = getId;
         }
 
         #endregion
@@ -68,7 +57,21 @@ namespace Tigwi.UI.Models.Storage
 
         #region Properties
 
-        protected ICollection<TModel> CachedCollection
+        internal Func<ICollection<Guid>> FetchIdCollection { get; set; }
+
+        internal Func<TInterface, Guid> GetId { get; set; }
+
+        internal Func<Guid, TModel> GetModel { get; set; }
+
+        internal Action<TModel> ReverseAdd { get; set; }
+
+        internal Action<TModel> ReverseRemove { get; set; }
+
+        internal Action<TModel> SaveAdd { get; set; }
+
+        internal Action<TModel> SaveRemove { get; set; }
+
+        protected IDictionary<Guid, TModel> CachedCollection
         {
             get
             {
@@ -92,19 +95,13 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        protected Func<ICollection<Guid>> FetchIdCollection { get; private set; }
-
-        protected Func<Guid, TModel> GetModel { get; set; }
-
-        protected Func<TInterface, Guid> GetId { get; set; }
-
-        protected ICollection<TModel> InternalCollection
+        protected IDictionary<Guid, TModel> InternalCollection
         {
             get
             {
                 if (!this.InternalCollectionFetched)
                 {
-                    this.UpdateInternalCollection();
+                    this.FetchInternalCollection();
                     this.PatchInternalCollection();
 
                     this.InternalCollectionFetched = true;
@@ -118,17 +115,15 @@ namespace Tigwi.UI.Models.Storage
 
         protected bool InternalCollectionFetched { get; set; }
 
-        protected TParent Parent { get; private set; }
-
         protected IStorage Storage
         {
             get
             {
-                return this.storage;
+                return this.storageContext.StorageObj;
             }
         }
 
-        protected IStorageContext StorageContext
+        protected StorageContext StorageContext
         {
             get
             {
@@ -147,7 +142,7 @@ namespace Tigwi.UI.Models.Storage
 
         public void Clear()
         {
-            foreach (var item in this.InternalCollection)
+            foreach (var item in this.InternalCollection.Values)
             {
                 this.CollectionRemoved.Add(item, true);
                 this.ReverseRemove(item);
@@ -159,7 +154,7 @@ namespace Tigwi.UI.Models.Storage
 
         public bool Contains(TInterface item)
         {
-            return this.InternalCollection.Contains(item as TModel ?? this.GetModel(this.GetId(item)));
+            return this.InternalCollection.ContainsKey(this.GetId(item));
         }
 
         public void CopyTo(TInterface[] array, int arrayIndex)
@@ -175,7 +170,7 @@ namespace Tigwi.UI.Models.Storage
             }
 
             var i = arrayIndex;
-            foreach (var model in this.InternalCollection)
+            foreach (var model in this.InternalCollection.Values)
             {
                 array[i++] = model;
             }
@@ -183,23 +178,22 @@ namespace Tigwi.UI.Models.Storage
 
         public IEnumerator<TInterface> GetEnumerator()
         {
-            var toRemove = new HashSet<TModel>();
-            foreach (var entity in this.InternalCollection)
+            var toRemove = new HashSet<Guid>();
+            foreach (var entity in this.InternalCollection.Values)
             {
                 if (entity.Deleted)
                 {
-                    toRemove.Add(entity);
+                    toRemove.Add(entity.Id);
                 }
                 else
                 {
                     yield return entity;
-
                 }
             }
 
-            foreach (var entity in toRemove)
+            foreach (var id in toRemove)
             {
-                this.internalCollection.Remove(entity);
+                this.internalCollection.Remove(id);
             }
         }
 
@@ -228,16 +222,48 @@ namespace Tigwi.UI.Models.Storage
 
         internal bool CacheRemove(TModel item)
         {
-            return this.Remove(item, false);
+            return this.Remove(item, responsible: false);
         }
 
-        internal abstract void Save();
+        internal bool Save()
+        {
+            var success = true;
+            foreach (var item in this.CollectionAdded.Where(item => item.Value).Select(item => item.Key))
+            {
+                try
+                {
+                    this.SaveAdd(item);
+                }
+                catch (StorageLibException)
+                {
+                    success = false;
+                }
+            }
+
+            foreach (var item in this.CollectionRemoved.Where(item => item.Value).Select(item => item.Key))
+            {
+                try
+                {
+                    this.SaveRemove(item);
+                }
+                catch (StorageLibException)
+                {
+                    success = false;
+                }
+            }
+
+            this.CollectionAdded.Clear();
+            this.CollectionRemoved.Clear();
+
+            return success;
+        }
 
         protected void Add(TModel item, bool responsible)
         {
             this.CollectionRemoved.Remove(item);
             this.CollectionAdded.Add(item, responsible);
-            this.internalCollection.Add(item);
+            this.internalCollection.Add(item.Id, item);
+
             if (responsible)
             {
                 this.ReverseAdd(item);
@@ -246,16 +272,16 @@ namespace Tigwi.UI.Models.Storage
 
         protected void CleanInternalCollection()
         {
-            var toRemove = new HashSet<TModel>();
+            var toRemove = new HashSet<Guid>();
 
-            foreach (var entity in this.internalCollection.Where(entity => entity.Deleted))
+            foreach (var id in this.internalCollection.Where(entity => entity.Value.Deleted).Select(entity => entity.Key))
             {
-                toRemove.Add(entity);
+                toRemove.Add(id);
             }
 
-            foreach (var entity in toRemove)
+            foreach (var id in toRemove)
             {
-                this.internalCollection.Remove(entity);
+                this.internalCollection.Remove(id);
             }
         }
 
@@ -263,18 +289,18 @@ namespace Tigwi.UI.Models.Storage
         {
             foreach (var item in this.CollectionAdded.Where(item => !item.Key.Deleted).Select(item => item.Key))
             {
-                this.internalCollection.Add(item);
+                this.internalCollection.Add(item.Id, item);
             }
 
-            foreach (var item in this.CollectionRemoved.Select(item => item.Key))
+            foreach (var id in this.CollectionRemoved.Select(item => item.Key.Id))
             {
-                this.internalCollection.Remove(item);
+                this.internalCollection.Remove(id);
             }
         }
 
         protected bool Remove(TModel item, bool responsible)
         {
-            var result = this.internalCollection.Remove(item);
+            var result = this.internalCollection.Remove(item.Id);
 
             this.CollectionRemoved.Add(item, responsible);
             this.CollectionAdded.Remove(item);
@@ -287,19 +313,12 @@ namespace Tigwi.UI.Models.Storage
             return result;
         }
 
-        protected abstract void ReverseAdd(TModel item);
-
-        protected abstract void ReverseRemove(TModel item);
-
-        protected void UpdateInternalCollection()
+        protected void FetchInternalCollection()
         {
-            foreach (var guid in this.FetchIdCollection())
+            this.internalCollection.Clear();
+            foreach (var model in this.FetchIdCollection().Select(guid => this.GetModel(guid)).Where(model => !model.Deleted))
             {
-                var model = this.GetModel(guid);
-                if (!model.Deleted)
-                {
-                    this.internalCollection.Add(model);
-                }
+                this.internalCollection.Add(model.Id, model);
             }
         }
 

@@ -5,10 +5,23 @@
     ViewBag.Title = "Home Page";
 }
 
+
 @section LeftInfos
 {
     @if(User.Identity.IsAuthenticated)
     {
+        <ul>
+        <p>
+           <button class="btn btn-primary editAcc2" id="acct-@CurrentAccount.Id" ><b>Edit</b></button>
+        </p>
+      
+        @if(!String.Equals(CurrentAccount.Description, ""))
+        {    
+           <p><b>Description : </b> @CurrentAccount.Description</p>
+        }
+      
+        </ul>
+        
         @Html.Partial("_ListView", CurrentAccount.AllFollowedLists)
     }
     else
@@ -18,10 +31,10 @@
     
 }
 
-@if(User.Identity.IsAuthenticated)
+@if (User.Identity.IsAuthenticated)
 {
     <div>@Html.Partial("_WriteMessage", new WritePostViewModel())</div>
-    <div>@Html.Partial("_ViewPostList", Model.PersonalList.PostsBefore(DateTime.MaxValue, 10))</div>
+    <div>@Html.Partial("_ViewPostList", Model.AllFollowedLists.PostsBefore(DateTime.MaxValue, 10))</div>
 }
 else
 {

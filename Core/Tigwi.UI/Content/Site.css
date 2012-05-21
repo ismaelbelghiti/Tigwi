@@ -1,16 +1,69 @@
 ﻿body {
     padding-top: 60px;
     padding-bottom: 40px;
+    background-image: url(images/grass.png),url(images/clouds.png);
+    background-attachment: fixed;
+    background-position: bottom, top;
+    background-repeat: no-repeat;
+    background-color: #8cc2ff;
+}
+@media (min-width: 980px) {
+    .pull-center {
+        text-align: center;
+    }
+    .pull-center > .nav {
+        float:none;
+        display:inline-block;
+        height: 40px;
+    }
 }
 
-.leftInfos {
-    border-style: solid none none solid;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 5px;
-    border-width: 2px;
-    border-color: gainsboro;
-    padding-top: 10px;
-    padding-left: 5px;
+.truncated 
+{
+    float: left;
+    width: 120px;
+    overflow: hidden;
+    clear: left;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.truncated-shorter
+{
+    float: left;
+    width: 90px;
+    overflow: hidden;
+    clear: left;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.truncated-shortest
+{
+    float: left;
+    width: 60px;
+    overflow: hidden;
+    clear: left;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.center-bunny {
+    position: relative;
+    left: 18%;
+    margin-left: -27px;
+    height: 30px;
+    margin-top: 5px;
+}
+
+.leftInfos, .mainSection {
+    border-style: none;
+    border-radius: 10px;
+    padding: 10px;
+    background: rgba(255,255,255,0.5);
 }
 
 .listView ul {
@@ -21,23 +74,52 @@
     margin-right: 5px;
 }
 
-.listuser {
-    margin-left: 15px;
-}
-
-.message:nth-child(odd) {
+.shown {
     border-radius: 15px;
     margin: 10px;
     padding: 10px;
-    border-width: 5px;
-    border-style: none none none solid;
-    border-color: lightgray;
+    background: rgba(255, 255, 255, 0.5);
 }
-.message:nth-child(even) {
+/*
+.shown:nth-of-type(even) {
     border-radius: 15px;
     margin: 10px;
     padding: 10px;
     border-width: 5px;
     border-style: none solid none none;
     border-color: darkgray;
+}*/
+
+a:link {text-decoration:none;color: MenuText;}
+a:visited {text-decoration:none;color: MenuText;}
+a:hover {text-decoration:none;color: MenuText;}
+a:active {text-decoration:none;color: MenuText;} 
+
+.listName 
+{
+    margin-top: 5px;
+    padding: 5px;
+    border-radius: 2px;
+}
+.listName:hover {
+    background: rgba(255,255,255,0.5);
+    cursor: pointer;
+}
+
+.edit , .delete {
+    display: none;
+}
+
+.listName:hover > div>  .edit , .listName:hover > div > .delete {
+    display: inline-block;
+} 
+
+.icon-clickable:hover {
+    background-color: rgba(0,0,0,0.25);
+    border-radius: 5px;
+    z-index: -9999;
+}
+
+.checked {
+    background-color: rgba(0,0,255,0.1)
 }

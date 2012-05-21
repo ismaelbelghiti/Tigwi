@@ -78,6 +78,7 @@
     <Compile Include="base\Storage.cs" />
     <Compile Include="base\UserStorage.cs" />
     <Compile Include="datastructure\ByteArray.cs" />
+    <Compile Include="DoubleMetaphone.cs" />
     <Compile Include="exception\InnerException.cs" />
     <Compile Include="Utilities\BaseBlob.cs" />
     <Compile Include="Utilities\DictionaryBlob.cs" />
@@ -110,7 +111,7 @@
     <Compile Include="interfaces\IUser.cs" />
     <Compile Include="interfaces\IStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StorageTmp.cs" />
+    <Compile Include="Utilities\PrefixTreeBlob.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="StorageArchitecture.txt" />

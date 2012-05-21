@@ -29,13 +29,16 @@ namespace Tigwi.UI.Models
         /// <param name="email">
         /// The desired email address.
         /// </param>
+        /// <param name="password">
+        /// The hashed password.
+        /// </param>
         /// <returns>
         /// A <see cref="IUserModel"/> representing the newly created user.
         /// </returns>
         /// <exception cref="DuplicateUserException">
         /// When there is already a user with the given credentials.
         /// </exception>
-        IUserModel Create(string login, string email);
+        IUserModel Create(string login, string email, byte[] password);
 
         /// <summary>
         /// Deletes the given user and replaces it with a shallow "Deleted" object.
@@ -48,16 +51,13 @@ namespace Tigwi.UI.Models
         /// <summary>
         /// Finds a user with the given Id.
         /// </summary>
-        /// <param name="user">
+        /// <param name="userId">
         /// The Id of the user to retrieve.
         /// </param>
         /// <returns>
         /// A <see cref="IUserModel"/> representing the user with the given Id.
         /// </returns>
-        /// <exception cref="UserNotFoundException">
-        /// When there is no user with the given Id.
-        /// </exception>
-        IUserModel Find(Guid user);
+        IUserModel Find(Guid userId);
 
         /// <summary>
         /// Finds a user with the given login.
@@ -72,6 +72,8 @@ namespace Tigwi.UI.Models
         /// When there is no user with the given login.
         /// </exception>
         IUserModel Find(string login);
+
+        bool TryFind(string login, out IUserModel user);
 
         #endregion
     }

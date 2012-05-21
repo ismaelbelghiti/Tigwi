@@ -30,7 +30,7 @@ namespace Tigwi.UI.Models.Storage
             this.Deleted = true;
         }
 
-        internal abstract void Save();
+        internal abstract bool Save();
 
         internal void Populate()
         {

@@ -1,0 +1,9 @@
+﻿@model Tigwi.UI.Models.IAccountModel
+
+<div class="row-fluid">
+
+@using (Html.BeginForm("Follow", "Account", new { id = Model.Id }))
+{
+    <button type="submit" class="btn btn-primary" id="followButton">Follow !</button>
+}
+</div>

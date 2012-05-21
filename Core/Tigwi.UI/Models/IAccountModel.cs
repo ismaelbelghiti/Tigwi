@@ -32,7 +32,7 @@ namespace Tigwi.UI.Models
         /// <summary>
         /// Gets a collection of all the lists owned by the account.
         /// </summary>
-        IListModelCollection AllOwnedLists { get; }
+        IListModelEnumerable AllOwnedLists { get; }
 
         /// <summary>
         /// Gets or sets the account's description.
@@ -62,15 +62,15 @@ namespace Tigwi.UI.Models
         /// <summary>
         /// Gets the public lists followed by the account.
         /// </summary>
-        IListModelCollection PublicFollowedLists { get; }
+        IListModelEnumerable PublicFollowedLists { get; }
 
         /// <summary>
         /// Gets the public lists owned by the account.
         /// </summary>
-        IListModelCollection PublicOwnedLists { get; }
+        IListModelEnumerable PublicOwnedLists { get; }
 
         /// <summary>
-        /// Gets all the users which can post to the account's timeline.
+        /// Gets all the users who can post to the account's timeline.
         /// </summary>
         ICollection<IUserModel> Users { get; }
 

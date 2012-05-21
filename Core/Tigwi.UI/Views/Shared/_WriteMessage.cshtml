@@ -1,43 +1,20 @@
 ﻿@model Tigwi.UI.Models.WritePostViewModel
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        
-        $('#inputMessage').attr("rows", 1);
-        $('#inputButton').hide();
-        $('#inputMessage').focus(function () {
-            $(this).attr("rows", 5);
-            $('#inputButton').show();
-            if (this.value == this.defaultValue) {
-                this.value = '';
-            }
-            if (this.value != this.defaultValue) {
-                this.select();
-            }
-        });
-        $('#inputMessage').blur(function () {
-            if (this.value == this.defaultValue || this.value == '') {
-                $(this).attr("rows", 1);
-                $('#inputButton').hide();
-            }
-        });
-        
-        $('#inputButton').click(function() {
-            $('#writeMessageForm').submit();
-        });
-
-    });  
- </script>
+           
+<script src="@Url.Content("~/Scripts/writeMessageScript.js")" type="text/javascript"></script>
 
 <article>
-    <div class="row-fluid">
-        @using (Html.BeginForm("Write", "Post",FormMethod.Post,new { id = "writeMessageForm"}))
-        {
-            @Html.TextAreaFor(m => m.Content,new { @class="input-xlarge span11",id="inputMessage", placeholder="Write a new Tweet !"})
+
+    @using (Html.BeginForm("Write", "Post",FormMethod.Post,new { id = "writeMessageForm"}))
+    {
+        <div class="row-fluid">
+            @Html.TextAreaFor(m => m.Content,new { @class="input-xlarge span11",id="inputMessage",style="resize:none;position:center;",placeholder="Write a new message !"})
             @Html.ValidationMessageFor(m => m.Content)
             <button type="submit" class="btn btn-primary" id="inputButton">Post !</button>
-        }
-    </div>
+        </div>
+        
+    }
+
 </article>
+
 
  

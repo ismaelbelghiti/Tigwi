@@ -11,7 +11,6 @@ namespace Tigwi.API.Controllers
         //
         // POST : /account/write
 
-        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Write()
         {
@@ -23,16 +22,25 @@ namespace Tigwi.API.Controllers
 
                 if (msg.AccountId == null && msg.AccountName == null)
                     output = new Answer(new Error("AccountId or AccountName missing"));
-                else if (msg.Message == null) // TODO ? check more on message (size for example)
+                else if (msg.Message == null)
                     output = new Answer(new Error("Message missing"));
+                else if (msg.Message.Length > 140) // TODO ? check more on message
+                    output = new Answer(new Error("Message must not exceed 140 characters"));
                 else
                 {
                     var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
 
-                    var msgId = Storage.Msg.Post(accountId, msg.Message.Content);
+                    // Check if the user is authenticated and has rights
+                    var authentication = Authorized(accountId);
+                    if (authentication.HasRights)
+                    {
+                        var msgId = Storage.Msg.Post(accountId, msg.Message);
 
-                    // Result
-                    output = new Answer(new ObjectCreated(msgId));
+                        // Result
+                        output = new Answer(new NewObject(msgId));
+                    }
+                    else
+                        output = new Answer(new Error(authentication.ErrorMessage()));
                 }
             }
             catch (StorageLibException exception)
@@ -48,10 +56,9 @@ namespace Tigwi.API.Controllers
             return Serialize(output);
         }
 
-        // TODO : explain is specs : Is copying like retweeting ?
+
         // POST : /account/copy
 
-        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Copy()
         {
@@ -69,10 +76,17 @@ namespace Tigwi.API.Controllers
                 {
                     var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
 
-                    var msgId = Storage.Msg.Copy(accountId, msg.MessageId.GetValueOrDefault());
+                    // Check if the user is authenticated and has rights
+                    var authentication = Authorized(accountId);
+                    if (authentication.HasRights)
+                    {
+                        var msgId = Storage.Msg.Copy(accountId, msg.MessageId.GetValueOrDefault());
 
-                    //Result
-                    output = new Answer(new ObjectCreated(msgId));
+                        //Result
+                        output = new Answer(new NewObject(msgId));
+                    }
+                    else
+                        output = new Answer(new Error(authentication.ErrorMessage()));
                 }
             }
             catch (StorageLibException exception)
@@ -88,12 +102,12 @@ namespace Tigwi.API.Controllers
             return Serialize(output);
         }
 
+
         //
         // POST : /account/delete
         
-        // TODO : Authorize
-        // TODO : Rethink this method
-        /*
+        // TODO : Authentication when a method to get the owner is provided
+        // Note : This is not implemented by storage
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Delete()
         {
@@ -103,13 +117,11 @@ namespace Tigwi.API.Controllers
             {
                 var msg = (MsgToDelete) (new XmlSerializer(typeof (MsgToDelete))).Deserialize(Request.InputStream);
 
-                if (msg.AccountId == null && msg.AccountName == null)
-                    error = new Error("AccountId or AccountName missing");
-                else if (msg.MessageId == null)
+                if (msg.MessageId == null)
                     error = new Error("MessageId missing");
                 else
                 {
-                    var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
+                    //var ownerId = Storage.Msg.
 
                     Storage.Msg.Remove(msg.MessageId.GetValueOrDefault());
 
@@ -129,14 +141,11 @@ namespace Tigwi.API.Controllers
 
             return Serialize(new Answer(error));
         }
-        */
+        
 
         //
         // POST : /account/tag
 
-        // TODO : Authorize
-        // TODO : Rethink this method
-        /*
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Tag()
         {
@@ -154,10 +163,17 @@ namespace Tigwi.API.Controllers
                 {
                     var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
 
-                    Storage.Msg.Tag(accountId, msg.MessageId.GetValueOrDefault());
+                    // Check if the user is authenticated and has rights
+                    var authentication = Authorized(accountId);
+                    if (authentication.HasRights)
+                    {
+                        Storage.Msg.Tag(accountId, msg.MessageId.GetValueOrDefault());
 
-                    //Result is an empty error
-                    error = new Error();
+                        //Result is an empty error
+                        error = new Error();
+                    }
+                    else
+                        error = new Error(authentication.ErrorMessage());                    
                 }
             }
             catch (StorageLibException exception)
@@ -172,14 +188,11 @@ namespace Tigwi.API.Controllers
 
             return Serialize(new Answer(error));
         }
-        */
+
         
         //
         // POST : /account/untag
 
-        // TODO : Authorize
-        // TODO : Rethink this method
-        /*
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Untag()
         {
@@ -197,10 +210,17 @@ namespace Tigwi.API.Controllers
                 {
                     var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
 
-                    Storage.Msg.Untag(accountId, msg.MessageId.GetValueOrDefault());
+                    // Check if the user is authenticated and has rights
+                    var authentication = Authorized(accountId);
+                    if (authentication.HasRights)
+                    {
+                        Storage.Msg.Untag(accountId, msg.MessageId.GetValueOrDefault());
+                        //Result is an empty error
+                        error = new Error();
+                    }
+                    else
+                        error = new Error(authentication.ErrorMessage());
 
-                    //Result is an empty error
-                    error = new Error();
                 }
             }
             catch (StorageLibException exception)
@@ -215,12 +235,11 @@ namespace Tigwi.API.Controllers
 
             return Serialize(new Answer(error));
         }
-        */
+
         
         //
         // POST : /account/subscribelist
 
-        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult SubscribeList()
         {
@@ -239,10 +258,18 @@ namespace Tigwi.API.Controllers
                 {
                     var accountId = subscribe.AccountId ?? Storage.Account.GetId(subscribe.AccountName);
 
-                    Storage.List.Follow(subscribe.Subscription.GetValueOrDefault(), accountId);
+                    // Check if the user is authenticated and has rights
+                    var authentication = Authorized(accountId);
 
-                    // Result is an empty error XML element
-                    error = new Error();
+                    if (authentication.HasRights)
+                    {
+                        Storage.List.Follow(subscribe.Subscription.GetValueOrDefault(), accountId);
+
+                        // Result is an empty error XML element
+                        error = new Error();
+                    }
+                    else
+                        error = new Error(authentication.ErrorMessage());
                 }
             }
             catch (StorageLibException exception)
@@ -261,7 +288,6 @@ namespace Tigwi.API.Controllers
         //
         // POST /account/createlist
 
-        // TODO : Authorize
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult CreateList()
         {
@@ -283,13 +309,22 @@ namespace Tigwi.API.Controllers
                 else
                 {
                     var accountId = listCreation.AccountId ?? Storage.Account.GetId(listCreation.AccountName);
-                    var listToCreate = listCreation.ListInfo;
 
-                    var listId = Storage.List.Create(accountId, listToCreate.Name, listToCreate.Description,
-                                                     listToCreate.IsPrivate);
+                    // Check if the user is authenticated and has rights
+                    var authentication = Authorized(accountId);
 
-                    // Result is an empty error XML element
-                    output = new Answer(new ObjectCreated(listId));
+                    if (authentication.HasRights)
+                    {
+                        var listToCreate = listCreation.ListInfo;
+
+                        var listId = Storage.List.Create(accountId, listToCreate.Name, listToCreate.Description,
+                                                         listToCreate.IsPrivate);
+
+                        // Result is an empty error XML element
+                        output = new Answer(new NewObject(listId));
+                    }
+                    else
+                        output = new Answer(new Error(authentication.ErrorMessage()));
                 }
             }
             catch (StorageLibException exception)

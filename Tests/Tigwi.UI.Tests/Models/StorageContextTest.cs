@@ -14,6 +14,9 @@ namespace Tigwi.UI.Tests.Models
     [TestFixture]
     public class StorageContextTest
     {
+        const string azureAccountName = "ulyssestorage";
+        const string azureAccountKey = "fc2HTyfP0m2r3zlNYmMc3Pjvbfmy63ovoCP9Zkz0yoyuId3AeyrTswLcye2VDr3hzDvAQbdeKUlXBX3lFTcNWQ==";
+
         #region SetUp / TearDown
 
         [SetUp]
@@ -31,7 +34,7 @@ namespace Tigwi.UI.Tests.Models
         [Test]
         public void RepositoriesAreNotNull()
         {
-            var storageContext = new StorageContext(new StorageTmp());
+            var storageContext = new StorageContext(new Storage(azureAccountName, azureAccountKey));
 
             Assert.That(storageContext.Accounts, Is.Not.Null);
             Assert.That(storageContext.Lists, Is.Not.Null);

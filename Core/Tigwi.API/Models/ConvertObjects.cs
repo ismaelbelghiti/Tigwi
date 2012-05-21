@@ -153,10 +153,10 @@ namespace Tigwi.API.Models
     }
 
     [Serializable]
-    public class ObjectCreated : Content
+    public class NewObject : Content
     {
-        public ObjectCreated() {}
-        public ObjectCreated(Guid id)
+        public NewObject() {}
+        public NewObject(Guid id)
         {
             Id = id.ToString();
         }
@@ -189,7 +189,7 @@ namespace Tigwi.API.Models
     [XmlInclude(typeof(Accounts))]
     [XmlInclude(typeof(Lists))]
     [XmlInclude(typeof(User))]
-    [XmlInclude(typeof(ObjectCreated))]
+    [XmlInclude(typeof(NewObject))]
     public class Answer
     {
         public Answer()

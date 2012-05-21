@@ -1,0 +1,114 @@
+﻿@model Tigwi.UI.Models.IAccountModel
+
+@*
+<div class="row-fluid">
+
+@using (Html.BeginForm("Following", "Account", new { id = Model.Id }))
+{
+    <button type="submit" class="btn btn-primary" id="followedListsButton">Followed Lists !</button>
+}
+</div>*@
+
+<script type="text/javascript">
+    function isFollowed(listId,icon) {
+        $.ajax({
+            url: "@Url.Action("IsFollowed","Account")",
+            type: "POST",
+            dataType: 'json',
+            data: { 'listId': listId },
+            success: function(data) {
+                icon.removeClass('icon-star');
+                icon.removeClass('icon-star-empty');
+                if(data.Followed) {
+                    icon.addClass('icon-star');
+                }
+                else {
+                    icon.addClass('icon-star-empty');
+                }
+            }
+        });
+    }
+
+    $(document).ready(function() {
+
+
+        $('.star').click(function(event) {
+            event.stopPropagation();
+
+            var name = $(this).next('div').attr('id');
+            var listId = name.substring(5, name.length);
+            var icon = $(this);
+            if ($(this).hasClass('icon-star-empty')) {
+                $.ajax({
+                    url: "@Url.Action("FollowList","List")",
+                    type: "POST",
+                    dataType: 'json',
+                    data: { 'id': listId },
+                    success: function(data) {
+                        alert("You are now following the public list :" + data.Name);
+                        isFollowed(listId, icon);
+                    }
+                });
+            } else {
+                $.ajax({
+                    url: "@Url.Action("UnfollowList","List")",
+                    type: "POST",
+                    dataType: 'json',
+                    data: { 'id': listId },
+                    success: function(data) {
+                        alert("You are not following the public list :" + data.Name + " anymore.");
+                        isFollowed(listId, icon);
+                    }
+                });
+            }
+        });
+    }); 
+</script>
+
+<h5>Public Owned lists :</h5>
+<section class="listView">
+    <ul>
+        @{
+            var listsOfMember = new Dictionary<Guid, HashSet<Guid>>();
+            foreach (var list in Model.PublicOwnedLists)
+            {
+                foreach (var member in list.Members)
+                {
+                    HashSet<Guid> lists;
+                    if (!listsOfMember.TryGetValue(member.Id, out lists))
+                    {
+                        lists = new HashSet<Guid>();
+                        listsOfMember.Add(member.Id, lists);
+                    }
+
+                    lists.Add(list.Id);
+                }
+            }
+        }
+
+
+
+
+        @foreach (var list in Model.PublicOwnedLists)
+        {
+            <li>
+                <div class="listName accordion-toggle" data-toggle="collapse" href="#list-@list.Id">
+                    <i class="icon-folder-close"></i> <div style="display:inline-block"><span class="truncated-shorter">@list.Name</span></div> 
+                    <i class="star 
+                    @((CurrentAccount.PublicFollowedLists.Select(l => l.Id).Contains(list.Id)) ? Html.Raw("icon-star") : Html.Raw("icon-star-empty"))
+                     pull-right"></i>
+                    <div id="list-@list.Id" class="accordion-body collapse">
+                        <ul class="list-user">
+                            @foreach (var member in list.Members)
+                            {
+                                <li><i class="icon-user"></i>@member.Name</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+
+            </li>
+        }
+    </ul>
+
+</section>

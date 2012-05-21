@@ -14,26 +14,22 @@ namespace StorageTest
         const string azureAccountName = "ulyssestorage";
         const string azureAccountKey = "fc2HTyfP0m2r3zlNYmMc3Pjvbfmy63ovoCP9Zkz0yoyuId3AeyrTswLcye2VDr3hzDvAQbdeKUlXBX3lFTcNWQ==";
 
-        Guid listIdThatExists; 
+        private Guid accountId;
+        private Guid listIdThatExists;
+        private Guid otherAccountId;
 
         [SetUp]
         public void InitStorage()
         {
-            bool UseStorageTmp = false;
-            if (UseStorageTmp)
-                storage = new StorageTmp();
-            else
-            {
-                BlobFactory blobFactory = new BlobFactory(azureAccountName, azureAccountKey);
-                blobFactory.InitStorage();
-                storage = new Storage(azureAccountName, azureAccountKey);
-            }
+            BlobFactory blobFactory = new BlobFactory(azureAccountName, azureAccountKey);
+            blobFactory.InitStorage();
+            storage = new Storage(azureAccountName, azureAccountKey);
 
             Guid userId = storage.User.Create("userThatExists", "userThatExists@gmail.com", new Byte[1]);
-            Guid accountId = storage.Account.Create(userId, "accountThatExists", "accountThatExistsDesc");
+            accountId = storage.Account.Create(userId, "accountThatExists", "accountThatExistsDesc");
             storage.User.Create("otherUserThatExists", "otherUserThatExists@gmail.com", new Byte[1]);
-            Guid otherAccountId = storage.Account.Create(userId, "otherAccountThatExists", "otherAccountThatExistsDesc");
-            listIdThatExists = storage.List.Create(storage.Account.GetId("accountThatExists"), "listThatExists", "Yeah", false);
+            otherAccountId = storage.Account.Create(userId, "otherAccountThatExists", "otherAccountThatExistsDesc");
+            listIdThatExists = storage.List.Create(accountId, "listThatExists", "Yeah", false);
             storage.List.Add(listIdThatExists, accountId);
             storage.List.Add(listIdThatExists, otherAccountId);
             storage.List.Follow(listIdThatExists, accountId);
@@ -71,16 +67,34 @@ namespace StorageTest
         [ExpectedException(typeof(IsPersonnalList))]
         public void SetInfoIsPersonnalList()
         {
-            Guid idPersList = storage.List.GetPersonalList(storage.Account.GetId("accountThatExists"));
+            Guid idPersList = storage.List.GetPersonalList(accountId);
             storage.List.SetInfo(idPersList, "babar", "babar", false);
         }
 
         [Test]
-        public void SetInfoNormalBehaviour()
+        public void SetInfoNormalBehaviourDescription()
         {
             storage.List.SetInfo(listIdThatExists, "listThatExists", "Babar", false);
             Assert.AreEqual(storage.List.GetInfo(listIdThatExists).Description, "Babar");
         }
+
+        [Test]
+        public void SetInfoNormalBehaviourPrivacy()
+        {
+            storage.List.SetInfo(listIdThatExists, "listThatExists", "Yeah", true);
+            Assert.IsTrue(storage.List.GetInfo(listIdThatExists).IsPrivate);
+
+            storage.List.SetInfo(listIdThatExists,"listThatExists","Yeah",false);
+            Assert.IsFalse(storage.List.GetInfo(listIdThatExists).IsPrivate);
+        }
+
+        [Test]
+        public void SetInfoNormalBehaviourName()
+        {
+            storage.List.SetInfo(listIdThatExists, "newNameListThatExists", "Yeah", false);
+            Assert.AreEqual(storage.List.GetInfo(listIdThatExists).Name, "newNameListThatExists");
+        }
+
 
         #endregion
 
@@ -97,7 +111,7 @@ namespace StorageTest
         public void GetOwnerNormalBehaviour()
         {
             Guid ownerId = storage.List.GetOwner(listIdThatExists);
-            Assert.AreEqual(ownerId, storage.Account.GetId("accountThatExists"));
+            Assert.AreEqual(ownerId, accountId);
         }
 
         #endregion
@@ -292,11 +306,10 @@ namespace StorageTest
         [Test]
         public void RemoveNormalBehaviour()
         {
-            Guid accountThatExistsId = storage.Account.GetId("accountThatExists");
-            storage.List.Remove(listIdThatExists, accountThatExistsId);
+            storage.List.Remove(listIdThatExists, accountId);
             HashSet<Guid> accounts = storage.List.GetAccounts(listIdThatExists);
-            Assert.IsTrue(!accounts.Contains(accountThatExistsId));
-            storage.List.Add(listIdThatExists, accountThatExistsId);
+            Assert.IsTrue(!accounts.Contains(accountId));
+            storage.List.Add(listIdThatExists, accountId);
         }
 
         #endregion
@@ -320,8 +333,19 @@ namespace StorageTest
         [Test]
         public void GetAccountOwnedListsNormalBehaviour()
         {
-            HashSet<Guid> ownedLists = storage.List.GetAccountOwnedLists(storage.Account.GetId("accountThatExists"), false);
+            HashSet<Guid> ownedLists = storage.List.GetAccountOwnedLists(accountId, false);
+            Assert.AreEqual(ownedLists.Count(), 1);
             Assert.IsTrue(ownedLists.Contains(listIdThatExists));
+        }
+
+        [Test]
+        public void GetAccounOwnedListsNormalBehaviourWithPrivates()
+        {
+            var privateListId = storage.List.Create(accountId, "private", "this list is private", true);
+            
+            HashSet<Guid> ownedLists = storage.List.GetAccountOwnedLists(accountId, true);
+            Assert.AreEqual(ownedLists.Count(), 2);
+            Assert.IsTrue(ownedLists.Contains(privateListId)); 
         }
 
         #endregion
@@ -345,8 +369,21 @@ namespace StorageTest
         [Test]
         public void GetAccountFollowedListsNormalBehaviour()
         {
-            HashSet<Guid> followedList = storage.List.GetAccountFollowedLists(storage.Account.GetId("otherAccountThatExists"), false);
-            Assert.IsTrue(followedList.Contains(listIdThatExists));
+            HashSet<Guid> followedLists = storage.List.GetAccountFollowedLists(otherAccountId, false);
+            Assert.AreEqual(followedLists.Count(), 1);
+            Assert.IsTrue(followedLists.Contains(listIdThatExists));
+        }
+
+        [Test]
+        public void GetAccountFollowedListsNormalBehaviourWithPrivate()
+        {
+            var privateListId = storage.List.Create(accountId, "privateList", "This list is private", true);
+            storage.List.Follow(privateListId,otherAccountId);
+
+            HashSet<Guid> followedLists = storage.List.GetAccountFollowedLists(otherAccountId, true);
+            Assert.AreEqual(followedLists.Count(), 2);
+            Assert.IsTrue(followedLists.Contains(listIdThatExists));
+            Assert.IsTrue(followedLists.Contains(privateListId));
         }
 
         #endregion
@@ -363,7 +400,7 @@ namespace StorageTest
         [Test]
         public void GetFollowingListsNormalBehaviour()
         {
-            HashSet<Guid> followingLists = storage.List.GetFollowingLists(storage.Account.GetId("accountThatExists"));
+            HashSet<Guid> followingLists = storage.List.GetFollowingLists(accountId);
             Assert.IsTrue(followingLists.Contains(listIdThatExists));
         }
 
@@ -382,7 +419,7 @@ namespace StorageTest
         public void GetFollowingAccountsNormalBehaviour()
         {
             HashSet<Guid> followingAccounts = storage.List.GetFollowingAccounts(listIdThatExists);
-            Assert.IsTrue(followingAccounts.Contains(storage.Account.GetId("accountThatExists")));
+            Assert.IsTrue(followingAccounts.Contains(accountId));
         }
         #endregion
     }
