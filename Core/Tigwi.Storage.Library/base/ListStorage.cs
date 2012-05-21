@@ -55,7 +55,7 @@ namespace Tigwi.Storage.Library
             Blob<Guid> bOwner = blobFactory.LOwner(listId);
             HashSetBlob<Guid> bOwned = isPrivate ? blobFactory.LOwnedListsPrivate(ownerId) : blobFactory.LOwnedListsPublic(ownerId);
             Blob<HashSet<Guid>> bFollowingAccounts = blobFactory.LFollowingAccounts(listId);
-            Blob<HashSet<Guid>> bFollowedAccounts = blobFactory.LFollowedAccounts(listId);
+            DictionaryBlob<Guid> bFollowedAccounts = blobFactory.LFollowedAccounts(listId);
             HashSetBlob<Guid> bAddRmvMsgs = blobFactory.LAddRmvMsgs(listId);
             MsgSetBlobPack bMessages = blobFactory.MListMessages(listId);
 
@@ -63,7 +63,7 @@ namespace Tigwi.Storage.Library
             blobFactory.LInfo(listId).Set(info);
             bOwner.Set(ownerId);
             bFollowingAccounts.Set(followingAccounts);
-            bFollowedAccounts.Set(new HashSet<Guid>());
+            bFollowedAccounts.Set(new Dictionary<Guid,bool>());
             bAddRmvMsgs.Set(new HashSet<Guid>());
 
             bMessages.Init();
@@ -117,7 +117,18 @@ namespace Tigwi.Storage.Library
 
         public HashSet<Guid> GetAccounts(Guid listId)
         {
-            return blobFactory.LFollowedAccounts(listId).GetIfExists(new ListNotFound());
+            return new HashSet<Guid>(blobFactory.LFollowedAccounts(listId).GetIfExists(new ListNotFound()).Keys);
+        }
+
+        public HashSet<Guid> GetMainAccounts(Guid listId)
+        {
+            Dictionary<Guid, bool> dict = blobFactory.LFollowedAccounts(listId).GetIfExists(new ListNotFound());
+            return new HashSet<Guid>(dict.Keys.Where(account => dict[account]));
+        }
+
+        public void SetMain(Guid listId, Guid accountId, bool isMain)
+        {
+            blobFactory.LFollowedAccounts(listId).SetBool(accountId,isMain);
         }
 
         public HashSet<Guid> GetFollowingLists(Guid accountId)

@@ -433,6 +433,16 @@
             return this.GetFullInfo(listId).Members;
         }
 
+        public HashSet<Guid> GetMainAccounts(Guid listId)
+        {
+            return this.GetFullInfo(listId).Members;
+        }
+
+        public void SetMain(Guid listId,Guid accountId ,bool isMain)
+        {
+            throw new NotImplementedException();
+        }
+
         public HashSet<Guid> GetFollowingAccounts(Guid listId)
         {
             throw new NotImplementedException();

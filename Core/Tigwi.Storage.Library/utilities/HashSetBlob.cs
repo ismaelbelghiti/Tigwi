@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.WindowsAzure.StorageClient;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Tigwi.Storage.Library.Utilities
 {

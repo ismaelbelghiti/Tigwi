@@ -67,6 +67,17 @@ namespace Tigwi.Storage.Library
         HashSet<Guid> GetAccounts(Guid listId);
 
         /// <summary>
+        /// Get the main accounts that are in the given list
+        /// </summary>
+        /// <exception cref="ListNotFound">No list has this ID</exception>
+        HashSet<Guid> GetMainAccounts(Guid listId);
+
+        /// <summary>
+        /// Set an account to main or not main in the given list
+        /// </summary>
+        void SetMain(Guid listId, Guid accountId, bool isMain);
+
+        /// <summary>
         /// Add an account into the given list
         /// </summary>
         /// <exception cref="ListNotFound">no list has this ID</exception>

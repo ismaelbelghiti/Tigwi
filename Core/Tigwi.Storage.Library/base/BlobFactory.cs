@@ -185,9 +185,9 @@ namespace Tigwi.Storage.Library
             return new HashSetBlob<Guid>(listContainer, L_FOLLOWEDBY + accountId + ALL);
         }
 
-        public HashSetBlob<Guid> LFollowedAccounts(Guid listId)
+        public DictionaryBlob<Guid> LFollowedAccounts(Guid listId)
         {
-            return new HashSetBlob<Guid>(listContainer, L_FOLLOWEDACCOUNTS + listId);
+            return new DictionaryBlob<Guid>(listContainer, L_FOLLOWEDACCOUNTS + listId);
         }
 
         public HashSetBlob<Guid> LAddRmvMsgs(Guid listId)

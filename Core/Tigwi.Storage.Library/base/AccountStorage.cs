@@ -141,7 +141,7 @@ namespace Tigwi.Storage.Library
                 blobFactory.LInfo(personnalListId).Set(new ListInfo("", "", true, true));
                 blobFactory.LOwner(personnalListId).Set(accountId);
                 blobFactory.MListMessages(personnalListId).Init();
-                blobFactory.LFollowedAccounts(personnalListId).Set(new HashSet<Guid>());
+                blobFactory.LFollowedAccounts(personnalListId).Set(new Dictionary<Guid,bool>());
 
                 // we finish by unlocking the name
                 bIdByName.Set(accountId);
