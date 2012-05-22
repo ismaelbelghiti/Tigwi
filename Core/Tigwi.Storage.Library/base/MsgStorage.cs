@@ -120,7 +120,29 @@ namespace Tigwi.Storage.Library
         // NYI
         public Guid Copy(Guid accountId, Guid msgId)
         {
-            throw new NotImplementedException();
+            Message message = blobFactory.MMessage(msgId).GetIfExists(new MessageNotFound());
+             message.Content = message.Content + "\n\nretwiged by " + blobFactory.AInfo(accountId).GetIfExists(new AccountNotFound()).Name;
+            Guid messageId = new Guid();
+            Blob<Message> bMessage = blobFactory.MMessage(messageId);
+            try
+            {
+                Guid personnalListId = blobFactory.LPersonnalList(accountId).GetIfExists(new AccountNotFound());
+                MsgSetBlobPack bPersonnalListMsgs = blobFactory.MListMessages(personnalListId);
+
+                // Save the message
+                bMessage.Set(message);
+                if (!bPersonnalListMsgs.AddMessage(message))
+                    throw new AccountNotFound();
+
+                // Add in listMsg -- if a list is added during the foreach, then the message will be added by the addition of the list
+                foreach (Guid listId in blobFactory.LFollowedByAll(accountId).GetIfExists(new AccountNotFound()))
+                {
+                    try { blobFactory.MListMessages(listId).AddMessage(message); }
+                    catch { }
+                }
+            }
+            catch { bMessage.Delete(); }
+            return messageId;
         }
 
         // NYI
