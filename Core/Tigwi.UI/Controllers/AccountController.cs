@@ -262,13 +262,16 @@ namespace Tigwi.UI.Controllers
         [HttpPost]
         public ActionResult Follow(Guid id)
         {
-            IListModel list = CurrentAccount.PersonalList;
             try
             {
                 IAccountModel account = this.Storage.Accounts.Find(id);
+                
+                //Todo redirect to a dedicated view
+
+                IListModel list = this.Storage.Lists.Create(CurrentAccount, account.Name, "My friend " + account.Name, false);
                 list.Members.Add(account);
                 this.Storage.SaveChanges();
-                //Todo redirect to a dedicated view
+
                 return this.RedirectToAction("Index", "Home");
             }
             catch (AccountNotFoundException ex)
