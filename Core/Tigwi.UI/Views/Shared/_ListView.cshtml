@@ -39,7 +39,9 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('.editAcc2').click(function () {
+
             $('#editAccountModal').modal('show');
+
             var name=$(this).attr('id');
             var accountId=name.substring(5,name.length);
             $.ajax({
@@ -55,6 +57,7 @@
                 }
             });   
         });
+
         $('#addAccountButton').click(function () {
             $.ajax({
                 url: $(this).data("url"),
