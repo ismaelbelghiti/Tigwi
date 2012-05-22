@@ -51,6 +51,11 @@ namespace Tigwi.Storage.Library
             return TruncateMessages(msgList);
         }
 
+        public IMessage GetMessage(Guid msgId)
+        {
+            return blobFactory.MMessage(msgId).GetIfExists(new MessageNotFound());
+        }
+
         public void Tag(Guid accountId, Guid msgId)
         {
             // retrive the message
