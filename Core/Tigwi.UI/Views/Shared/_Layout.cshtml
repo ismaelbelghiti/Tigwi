@@ -78,7 +78,10 @@
                         </ul>
                         <img src="@Url.Content("~/Content/images/bunny.png")" class="center-bunny"/>
                         <div class="pull-right">
-                            @Html.Partial("_Search", new SearchViewModel())
+                            @if (@User.Identity.IsAuthenticated)
+                            {
+                               @Html.Partial("_Search", new SearchViewModel())
+                            }
                             <ul class="nav">
                                 @if (@User.Identity.IsAuthenticated)
                                 {
