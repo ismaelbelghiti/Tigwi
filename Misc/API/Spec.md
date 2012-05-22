@@ -62,7 +62,7 @@ If authentication went wrong, you would have a code of error among :
 
 ##Note about identifying an account
 
-For every ressource depending on an account, you can give its name or its unique identifier. For GET methods, the address isn't exactly the same ; for POST methods, you have two tags, `<AccountName>` and `<AccountId>`, and you must choose one of them. Access through unique identifier is more direct. Thus, if you fill both `<AccountName>` and `<AccountId>` tags, only `<AccountId>` will be taken into consideration.
+For every ressource depending on an account, you can give its name or its unique identifier. For GET methods, the address isn't exactly the same (see examples below) ; for POST methods, you have two tags, `<AccountName>` and `<AccountId>`, and you must choose one of them. Access through unique identifier is more direct. Thus, if you fill both `<AccountName>` and `<AccountId>` tags, only `<AccountId>` will be taken into consideration.
 
 
 #Get information about an _account_
@@ -79,11 +79,11 @@ GET
 
 ###URL
 
-http://api.tigwi.com/account/messages/_accountName_/_numberOfMessages_
+http://api.tigwi.com/account/messages/accountName/numberOfMessages
 
-http://api.tigwi.com/account/messages/name=_accountName_/_numberOfMessages_
+http://api.tigwi.com/account/messages/name=accountName/numberOfMessages
 
-http://api.tigwi.com/account/messages/id=_accountId_/_numberOfMessages_
+http://api.tigwi.com/account/messages/id=accountId/numberOfMessages
 
 ###Response
 
@@ -136,11 +136,11 @@ GET
 
 ###URL
 
-http://api.tigwi.com/account/taggedmessages/_accountName_/_numberOfMessages_
+http://api.tigwi.com/account/taggedmessages/accountName/numberOfMessages
 
-http://api.tigwi.com/account/taggedmessages/name=_accountName_/_numberOfMessages_
+http://api.tigwi.com/account/taggedmessages/name=accountName/numberOfMessages
 
-http://api.tigwi.com/account/taggedmessages/id=_accountId_/_numberOfMessages_
+http://api.tigwi.com/account/taggedmessages/id=accountId/numberOfMessages
 
 ###Response
 
@@ -186,11 +186,11 @@ GET
 
 ###URL
 
-http://api.tigwi.com/account/subscriberaccounts/_accountName_/_numberOfSubscriptions_
+http://api.tigwi.com/account/subscriberaccounts/accountName/numberOfSubscriptions
 
-http://api.tigwi.com/subscriberaccounts/name=_accountName_/_numberOfSubscriptions_
+http://api.tigwi.com/subscriberaccounts/name=accountName/numberOfSubscriptions
 
-http://api.tigwi.com/subscriberaccounts/id=_accountId_/_numberOfSubscriptions_
+http://api.tigwi.com/subscriberaccounts/id=accountId/numberOfSubscriptions
 
 
 ###Response example
@@ -217,11 +217,11 @@ GET
 
 ###URL
 
-http://api.tigwi.com/account/subscribedaccounts/_accountName_/_numberOfSubscribers_
+http://api.tigwi.com/account/subscribedaccounts/accountName/numberOfSubscribers
 
-http://api.tigwi.com/account/subscribedaccounts/name=_accountName_/_numberOfSubscribers_
+http://api.tigwi.com/account/subscribedaccounts/name=accountName/numberOfSubscribers
 
-http://api.tigwi.com/account/subscribedaccounts/id=_accountId_/_numberOfSubscribers_
+http://api.tigwi.com/account/subscribedaccounts/id=accountId/numberOfSubscribers
 
 ###Response example
 
@@ -240,11 +240,11 @@ If you're authenticated and you have the rights on the account, you will see pri
 GET
 
 ###URL
-http://api.tigwi.com/account/subscribedlists/_accountName_/_numberOfLists_
+http://api.tigwi.com/account/subscribedlists/accountName/numberOfLists
 
-http://api.tigwi.com/account/subscribedlists/name=_accountName_/_numberOfLists_
+http://api.tigwi.com/account/subscribedlists/name=accountName/numberOfLists
 
-http://api.tigwi.com/account/subscribedlists/id=_accountId_/_numberOfLists_
+http://api.tigwi.com/account/subscribedlists/id=accountId/numberOfLists
 
 ###Response example
 
@@ -281,11 +281,11 @@ Obtain a number _numberOfLists_ of public lists where the account _accountName_ 
 GET
 
 ###URL
-http://api.tigwi.com/account/subscriberlists/_accountName_/_numberOfLists_
+http://api.tigwi.com/account/subscriberlists/accountName/numberOfLists
 
-http://api.tigwi.com/account/subscriberlists/name=_accountName_/_numberOfLists_
+http://api.tigwi.com/account/subscriberlists/name=accountName/numberOfLists
 
-http://api.tigwi.com/account/subscriberlists/id=_accountId_/_numberOfLists_
+http://api.tigwi.com/account/subscriberlists/id=accountId/numberOfLists
 
 ###Response example
 
@@ -323,11 +323,11 @@ GET
 
 ###URL
 
-http://api.tigwi.com/account/ownedlists/_accountName_/_numberOfLists_
+http://api.tigwi.com/account/ownedlists/accountName/numberOfLists
 
-http://api.tigwi.com/account/ownedlists/name=_accountName_/_numberOfLists_
+http://api.tigwi.com/account/ownedlists/name=accountName/numberOfLists
 
-http://api.tigwi.com/account/ownedlists/id=_accountId_/_numberOfLists_
+http://api.tigwi.com/account/ownedlists/id=accountId/numberOfLists
 
 ###Response example
 
@@ -359,11 +359,11 @@ Obtain the account _accountName_ or _acountId_'s main information.
 GET
 
 ###URL
-http://api.tigwi.com/account/maininfo/_accountName_
+http://api.tigwi.com/account/maininfo/accountName
 
-http://api.tigwi.com/account/maininfo/name=_accountName_
+http://api.tigwi.com/account/maininfo/name=accountName
 
-http://api.tigwi.com/account/maininfo/id=_accountId_
+http://api.tigwi.com/account/maininfo/id=accountId
 
 ###Response example
 
@@ -678,7 +678,7 @@ GET
 
 ###URL
 
-http://api.tigwi.com/list/subscriptions/_idOfList_/_numberOfSubscriptions_
+http://api.tigwi.com/list/subscriptions/idOfList/numberOfSubscriptions
 
 ###Response
 
@@ -704,7 +704,7 @@ GET
 
 ###URL
 
-http://api.tigwi.com/list/subscribers/_idOfList_/_numberOfFollowers_
+http://api.tigwi.com/list/subscribers/idOfList/numberOfFollowers
 
 ###Response
 
@@ -728,7 +728,7 @@ GET
 
 ###URL
 
-http://api.tigwi.com/list/owner/_idOfList_
+http://api.tigwi.com/list/owner/idOfList
 
 ###Response
 
@@ -751,7 +751,7 @@ GET
 
 ###URL
 
-http://api.tigwi.com/list/messages/_idOfList_/_numberOfMessages_
+http://api.tigwi.com/list/messages/idOfList/numberOfMessages
 
 ###Response
 
