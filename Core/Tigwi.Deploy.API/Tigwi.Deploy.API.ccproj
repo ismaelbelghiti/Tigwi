@@ -38,11 +38,23 @@
     <AzureDeployment>false</AzureDeployment>
   </PropertyGroup>
   <!-- Azure Deployment properties -->
-  <PropertyGroup Condition=" '$(AzureDesployment)' == 'true' ">
+  <PropertyGroup Condition=" '$(AzureDeployment)' == 'true' ">
     <PackageName>$(AssemblyName).cspkg</PackageName>
     <ServiceConfigName>ServiceConfiguration.Cloud.cscfg</ServiceConfigName>
     <PackageForComputeEmulator>true</PackageForComputeEmulator>
   </PropertyGroup>
+  <ItemGroup>
+    <!-- Comment the next line to use storage emulator on your local machine -->
+    <ServiceConfigurationFiles Include="ServiceConfiguration.Local.cscfg" />
+    <ServiceConfigurationFiles Include="ServiceConfiguration.Cloud.cscfg" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Edit the list of files where to replace __AZURE_STORAGE_ACCOUNT_NAME and __AZURE_STORAGE_ACCOUNT_KEY by their values,
+		put the relative position to Tigwi.ccproj -->
+    <!-- Example : <ConnectionFiles Include="myfile.*" /> -->
+    <ConnectionFiles Include="..\Tigwi.API\Controllers\ApiController.cs" />
+    <ConnectionFiles Include="..\Tigwi.UI\Controllers\HomeController.cs" />
+  </ItemGroup>
   <!-- Items for the project -->
   <ItemGroup>
     <ServiceDefinition Include="ServiceDefinition.csdef" />

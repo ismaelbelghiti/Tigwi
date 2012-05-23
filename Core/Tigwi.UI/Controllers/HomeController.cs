@@ -27,7 +27,7 @@
         #region Constructors and Destructors
 
         public HomeController()
-            : this(MakeStorage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY"))
+            : this(MakeStorage("sefero", "GU0GjvcPoXKzDFgBSPFbWmCPQrIRHAT6fholbMnxtteY5vQVgYTcWKk/25i/F4m9MFoGHXNf4oYgeAKo+mFO5Q=="))
         {
         }
 
