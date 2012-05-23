@@ -12,7 +12,7 @@ namespace StorageTest
     {
         public IStorage storage;
         const string azureAccountName = "ulyssestorage";
-        const string azureAccountKey = "fc2HTyfP0m2r3zlNYmMc3Pjvbfmy63ovoCP9Zkz0yoyuId3AeyrTswLcye2VDr3hzDvAQbdeKUlXBX3lFTcNWQ==";
+        const string azureAccountKey = "73IH549/+HNKuXjF8LcIT2ad4v+acch8gn2Gm0GN1w9tRHFZGTm/fFOr8BRPV/1gHBKJ/1hLeB5IMdNGHv4VIA==";
 
         private Guid accountId;
         private Guid listIdThatExists;

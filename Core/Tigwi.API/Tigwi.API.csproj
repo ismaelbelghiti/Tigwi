@@ -39,17 +39,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Cloud-Debug' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\tmp\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AzureDeployment>true</AzureDeployment>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Cloud-Release' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Cloude' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\tmp\</OutputPath>
@@ -58,6 +48,18 @@
     <WarningLevel>4</WarningLevel>
     <AzureDeployment>true</AzureDeployment>
   </PropertyGroup>
+  <ItemGroup>
+    <!-- Comment the next line to use storage emulator on your local machine -->
+    <ServiceConfigurationFiles Include="ServiceConfiguration.Local.cscfg" />
+    <ServiceConfigurationFiles Include="ServiceConfiguration.Cloud.cscfg" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Edit the list of files where to replace __AZURE_STORAGE_ACCOUNT_NAME and __AZURE_STORAGE_ACCOUNT_KEY by their values,
+		put the relative position to Tigwi.ccproj -->
+    <!-- Example : <ConnectionFiles Include="myfile.*" /> -->
+    <ConnectionFiles Include="..\Tigwi.API\Controllers\ApiController.cs" />
+    <ConnectionFiles Include="..\Tigwi.UI\Controllers\HomeController.cs" />
+  </ItemGroup>
   <!-- Items needed for the project -->
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />

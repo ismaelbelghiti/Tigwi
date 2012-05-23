@@ -5,15 +5,19 @@ using Tigwi.UI.Models.Storage;
 
 namespace Tigwi.UI.Models
 {
+    using System.Web.Mvc;
+
     public class EditListViewModel
     {
         [Required]
         [StringLength(20)]
         [Display(Name = "List name")]
+        [AllowHtml]
         public string ListName { get; set; }
 
         [Required]
         [Display(Name = "List Description")]
+        [AllowHtml]
         public string ListDescription { get; set; }
 
         [Required]

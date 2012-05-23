@@ -31,7 +31,6 @@ namespace Tigwi.UI.Controllers
         /// </summary>
         /// <param name="listName"></param>
         /// <returns></returns>
-        [ValidateInput(false)]
         public ActionResult Members(string listName)
         {
             throw new NotImplementedException("ListController.Members");
@@ -51,7 +50,6 @@ namespace Tigwi.UI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [ValidateInput(false)]
         public ActionResult Edit(EditListViewModel editList, int edit)
         {
             // TODO: This is NOT correct. There should be *TWO* distinct methods Edit and Create.
