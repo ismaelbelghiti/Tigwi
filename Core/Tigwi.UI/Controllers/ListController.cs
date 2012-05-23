@@ -59,6 +59,8 @@ namespace Tigwi.UI.Controllers
                        ? this.Storage.Lists.Create(
                            this.CurrentAccount, editList.ListName, editList.ListDescription, !editList.ListPublic)
                        : this.Storage.Lists.Find(editList.ListId);
+            if (list == null)
+                throw new HttpException((int)HttpStatusCode.NotFound, "The list doesn't exists.");
             try
             {
                 list.Name = editList.ListName;
@@ -114,7 +116,6 @@ namespace Tigwi.UI.Controllers
         [HttpPost]
         public ActionResult UnfollowList(Guid id)
         {
-            //TODO check whether or not it's a personnal list, catch errors, etc ...
             var list = this.Storage.Lists.Find(id);
             CurrentAccount.AllFollowedLists.Remove(list);
             this.Storage.SaveChanges();
@@ -129,38 +130,29 @@ namespace Tigwi.UI.Controllers
         public ActionResult DeleteList(Guid id)
         {
             //TODO check whether or not it all went according to plan ...
-            //TODO prevent other accounts from deleting your public lists ...
-            try
+            var list = this.Storage.Lists.Find(id);
+            if (list.Owner.Id == CurrentAccount.Id)
             {
-                this.Storage.Lists.Delete(this.Storage.Lists.Find(id));
-                return this.RedirectToAction("Index", "Home");
+                try
+                {
+                    this.Storage.Lists.Delete(this.Storage.Lists.Find(id));
+                }
+                catch (Tigwi.Storage.Library.IsPersonnalList ex)
+                {
+                    return this.RedirectToAction("Index", "Home", new { error = ex.Message });
+                }
             }
-            catch (Tigwi.Storage.Library.IsPersonnalList ex)
-            {
-                //TODO do we really want to redirect to home ?
-                return this.RedirectToAction("Index", "Home", new { error = ex.Message });
-            }
+            return this.RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
         public ActionResult GetList(Guid listId)
         {
-            // TODO: dafuq ???
-            //TODO some exceptions might be thrown, we are not currently catching any
             IListModel list = CurrentAccount.AllFollowedLists.Where(l => l.Id == listId).First();
+            if(list == null)
+                return this.RedirectToAction("Index", "Home", new { error = "This list does not exist anymore." });
             return Json(new { Name = list.Name,Descr = list.Description,Public = !list.IsPrivate, Members=list.Members.Select(account=>account.Name)});
             
-        }
-
-        //TODO : remove those ?
-        public ActionResult AddAccount()
-        {
-            throw new NotImplementedException("ListController.AddAccounts");
-        }
-
-        public ActionResult RemoveAccount()
-        {
-            throw new NotImplementedException("ListController.RemoveAccounts");
         }
     }
 }
