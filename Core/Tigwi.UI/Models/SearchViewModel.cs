@@ -5,11 +5,11 @@ using System.Collections.Generic;
 namespace Tigwi.UI.Models
 {
     using System.ComponentModel.DataAnnotations;
+    using System.Web.Mvc;
 
     public class SearchViewModel
     {
-        
-        public string searchString { get; set; }
-
+        [AllowHtml]
+        public string SearchString { get; set; }
     }
 }

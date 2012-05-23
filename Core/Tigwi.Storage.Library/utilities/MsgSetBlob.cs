@@ -23,7 +23,7 @@ namespace Tigwi.Storage.Library.Utilities
             {
                 Serializer.Serialize(stream, new MessageSet());
                 stream.Seek(0, SeekOrigin.Begin);
-                blob.BeginUploadFromStream(stream, blob.EndUploadFromStream, null);
+                blob.UploadFromStream(stream);
             }
         }
     }

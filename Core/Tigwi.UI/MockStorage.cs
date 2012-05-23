@@ -967,6 +967,11 @@ namespace Tigwi.UI
                 }
             }
 
+            public List<IMessage> GetLastMessages()
+            {
+                throw new NotImplementedException();
+            }
+
             #endregion
         }
     }

@@ -37,16 +37,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Cloud-Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Cloud-Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Cloud|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\</OutputPath>
@@ -54,6 +45,18 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <ItemGroup>
+    <!-- Comment the next line to use storage emulator on your local machine -->
+    <ServiceConfigurationFiles Include="ServiceConfiguration.Local.cscfg" />
+    <ServiceConfigurationFiles Include="ServiceConfiguration.Cloud.cscfg" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Edit the list of files where to replace __AZURE_STORAGE_ACCOUNT_NAME and __AZURE_STORAGE_ACCOUNT_KEY by their values,
+		put the relative position to Tigwi.ccproj -->
+    <!-- Example : <ConnectionFiles Include="myfile.*" /> -->
+    <ConnectionFiles Include="..\Tigwi.API\Controllers\ApiController.cs" />
+    <ConnectionFiles Include="..\Tigwi.UI\Controllers\HomeController.cs" />
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
@@ -112,8 +115,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\ListController.cs" />
     <Compile Include="Controllers\PostController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -304,7 +307,7 @@
     <Content Include="Views\Post\Write.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Account\ShowAccount.cshtml" />
+    <Content Include="Views\Account\Show.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Tigwi.Auth\Tigwi.Auth.csproj">

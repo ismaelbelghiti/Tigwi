@@ -75,6 +75,8 @@ namespace Tigwi.UI.Models
 
         bool TryFind(string login, out IUserModel user);
 
+        bool Exists(string login);
+
         #endregion
     }
 }

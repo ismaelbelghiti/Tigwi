@@ -149,6 +149,19 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
+        public bool Exists(string name)
+        {
+            try
+            {
+                this.Storage.Account.GetId(name);
+                return true;
+            }
+            catch (AccountNotFound)
+            {
+                return false;
+            }
+        }
+
         #endregion
 
         #region Methods

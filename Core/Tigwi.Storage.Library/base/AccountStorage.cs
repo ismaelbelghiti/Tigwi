@@ -147,6 +147,7 @@ namespace Tigwi.Storage.Library
                 blobFactory.LFollowedByPublic(accountId).Set(new HashSet<Guid>());
                 blobFactory.LFollowedListsLockInit(accountId);
                 blobFactory.MTaggedMessages(accountId).Init();
+                blobFactory.AAutocompletion().Add(new KeyValuePair<string, string>(name.GenerateDoubleMetaphone(), name));
 
                 // Setup the personnal list
                 blobFactory.LPersonnalList(accountId).Set(personnalListId);
