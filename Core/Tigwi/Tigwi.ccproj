@@ -26,7 +26,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AzureDeployment>false</AzureDeployment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,33 +34,34 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AzureDeployment>false</AzureDeployment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Cloud-Debug' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\tmp\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AzureDeployment>true</AzureDeployment>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Cloud-Release' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Cloud|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\tmp\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AzureDeployment>true</AzureDeployment>
   </PropertyGroup>
   <!-- Azure Deployment properties -->
-  <PropertyGroup Condition=" '$(AzureDesployment)' == 'true' ">
+  <PropertyGroup Condition=" '$(AzureDeployment)' == 'true' ">
     <PackageName>$(AssemblyName).cspkg</PackageName>
     <ServiceConfigName>ServiceConfiguration.Cloud.cscfg</ServiceConfigName>
     <PackageForComputeEmulator>true</PackageForComputeEmulator>
   </PropertyGroup>
+  <ItemGroup>
+    <!-- Comment the next line to use storage emulator on your local machine -->
+    <ServiceConfigurationFiles Include="ServiceConfiguration.Local.cscfg" />
+    <ServiceConfigurationFiles Include="ServiceConfiguration.Cloud.cscfg" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Edit the list of files where to replace __AZURE_STORAGE_ACCOUNT_NAME and __AZURE_STORAGE_ACCOUNT_KEY by their values,
+		put the relative position to Tigwi.ccproj -->
+    <!-- Example : <ConnectionFiles Include="myfile.*" /> -->
+    <ConnectionFiles Include="..\Tigwi.API\Controllers\ApiController.cs" />
+    <ConnectionFiles Include="..\Tigwi.UI\Controllers\HomeController.cs" />
+  </ItemGroup>
   <!-- Items for the project -->
   <ItemGroup>
     <ServiceDefinition Include="ServiceDefinition.csdef" />
@@ -94,19 +94,13 @@
   </PropertyGroup>
   <Import Project="$(CloudExtensionsDir)\Microsoft.WindowsAzure.targets" />
   <!-- Azure Deployment code -->
-  <Target Name="BeforeBuild" Condition=" '$(AzureStorageAccountKey)' != '' And '$(AzureStorageAccountName)' != '' And Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets')">
+  <Target Name="BeforeBuild" Condition=" '$(AzureDeployment)' == 'true' And '$(AzureStorageAccountKey)' != '' And '$(AzureStorageAccountName)' != '' And Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets')">
     <FileUpdate Files="@(ServiceConfigurationFiles)" Regex="UseDevelopmentStorage=true" ReplacementText="DefaultEndpointsProtocol=https;AccountName=$(AzureStorageAccountName);AccountKey=$(AzureStorageAccountKey)" />
-    <FileUpdate Files="@(ConnectionFiles)" Regex="__AZURE_STORAGE_ACCOUNT_NAME" ReplacementText="$(AzureStorageAccountName)" />
-    <FileUpdate Files="@(ConnectionFiles)" Regex="__AZURE_STORAGE_ACCOUNT_KEY" ReplacementText="$(AzureStorageAccountKey)" />
   </Target>
-  <!--
-  <Target Name="AzureDeploy" AfterTargets="Build" DependsOnTargets="CorePublish" Condition=" '$(AzureDeployment)' == 'true' ">
-    <Exec WorkingDirectory="$(MSBuildProjectDirectory)" Command=" $(windir)\system32\WindowsPowerShell\v1.0\powershell.exe -f \build\AzureDeploy.ps1 $(AzureSubscriptionID) $(AzureCertificateThumbprint) $(PublishDir) $(PackageName) $(ServiceConfigName) $(AzureHostedServiceName) $(AzureStorageAccountName)" />
-  </Target>
-  -->
-  <Target Name="AfterBuild" Condition=" '$(AzureStorageAccountKey)' != '' And '$(AzureStorageAccountName)' != '' And Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets')">
+  <Target Name="AfterBuild" Condition=" '$(AzureDeployment)' == 'true' And '$(AzureStorageAccountKey)' != '' And '$(AzureStorageAccountName)' != '' And Exists('$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets')">
     <FileUpdate Files="@(ServiceConfiguration)" Regex="DefaultEndpointsProtocol=https;AccountName=$(AzureStorageAccountName);AccountKey=$(AzureStorageAccountKey.Replace('+','\+'))" ReplacementText="UseDevelopmentStorage=true" />
-    <FileUpdate Files="@(ConnectionFiles)" Regex="$(AzureStorageAccountName)" ReplacementText="__AZURE_STORAGE_ACCOUNT_NAME" />
-    <FileUpdate Files="@(ConnectionFiles)" Regex="$(AzureStorageAccountKey.Replace('+','\+'))" ReplacementText="__AZURE_STORAGE_ACCOUNT_KEY" />
+  </Target>
+  <Target Name="AzureDeploy" AfterTargets="Build" DependsOnTargets="CorePublish" Condition=" '$(AzureDeployment)' == 'true' ">
+    <Exec WorkingDirectory="$(MSBuildProjectDirectory)"  Command=" $(windir)\system32\WindowsPowerShell\v1.0\powershell.exe -f bin\Release\AzureDeploy.ps1 $(AzureSubscriptionID) $(AzureCertificateThumbprint) $(PublishDir) $(PackageName) $(ServiceConfigName) $(AzureHostedServiceName) $(AzureStorageAccountName)" />
   </Target>
 </Project>

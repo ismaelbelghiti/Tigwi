@@ -40,15 +40,17 @@ namespace Tigwi.UI.Controllers
         /// Shows a page listing all the accounts of the active user.
         /// </summary>
         /// <returns></returns>
+        [Authorize]
         public ActionResult List()
         {
-            if (this.CurrentUser != null)
+            return this.View(CurrentUser);
+/*            if (this.CurrentUser != null)
             {
                 return this.View(CurrentUser);
             }
 
             // User must be connected
-            throw new NotImplementedException();
+            throw new NotImplementedException();*/
         }
 
         /// <summary>
@@ -57,7 +59,6 @@ namespace Tigwi.UI.Controllers
         /// <param name="account"></param>
         /// <returns></returns>
         [HttpPost]
-        [ValidateInput(false)]
         public ActionResult AccountExists(string account)
         {
             //TODO check whether account exists or not <3
@@ -65,45 +66,32 @@ namespace Tigwi.UI.Controllers
         }
 
         /// <summary>
-        /// Shows a page listing all the posts of the user.
+        /// Shows a page listing all the posts of the account.
         /// </summary>
         /// <returns></returns>
-        [ValidateInput(false)]
-        public ActionResult ShowAccount(SearchViewModel search)
+        public ActionResult Show(string accountName)
         {
             IAccountModel account;
 
-            if (this.Storage.Accounts.TryFind(search.searchString, out account))
+            if (string.IsNullOrEmpty(accountName) || !this.Storage.Accounts.TryFind(accountName, out account))
             {
-                return this.View(account);
-            }
-            else
-            {
-                throw new HttpException(404, "Account not found");
+                throw new HttpException((int)HttpStatusCode.NotFound, "Account was not found");
             }
 
-            /*
-            try
-            {
-                return this.View(this.Storage.Accounts.Find(search.searchString));
-            }
-            catch (AccountNotFoundException ex)
-            {
-                return this.RedirectToAction("Index", "Home", new { error = ex.Message});
-            }
-            catch (System.ArgumentNullException)
-            {
-                return this.RedirectToAction("Index", "Home");
-            }*/
+            return this.View("Show", account);
         }
 
+        public ActionResult Search(string searchString)
+        {
+            // TODO
+            return this.Show(searchString);
+        }
 
         /// <summary>
         /// Makes the given account active (the one which will post things by default, etc.)
         /// </summary>
         /// <returns></returns>
         [Authorize]
-        [ValidateInput(false)]
         public ActionResult MakeActive(string accountName)
         {
             try
@@ -142,7 +130,6 @@ namespace Tigwi.UI.Controllers
         /// <param name="accountCreation"></param>
         /// <returns></returns>
         [HttpPost]
-        [ValidateInput(false)]
         public ActionResult Create(AccountCreationViewModel accountCreation)
         {
             if (ModelState.IsValid)
@@ -219,7 +206,6 @@ namespace Tigwi.UI.Controllers
         /// <param name="accountEdit"></param>
         /// <returns></returns>
         [HttpPost]
-        [ValidateInput(false)]
         public ActionResult Edit(AccountEditViewModel editAccount)
         {
             if (ModelState.IsValid)

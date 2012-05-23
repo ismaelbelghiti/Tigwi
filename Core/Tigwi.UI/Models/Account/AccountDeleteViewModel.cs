@@ -12,6 +12,7 @@ namespace Tigwi.UI.Models.Account
     {
         //Not Required
         public Guid deleteAccountId { get; set; }
+        [AllowHtml]
         public string deleteAccountName { get; set; }
     }
 }

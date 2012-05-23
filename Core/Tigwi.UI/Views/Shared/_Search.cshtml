@@ -1,7 +1,7 @@
-﻿@model Tigwi.UI.Models.SearchViewModel
+﻿@model string
            
-@using (Html.BeginForm("ShowAccount", "Account", FormMethod.Get, new { @class = "navbar-search" }))
+@using (Html.BeginForm("Search", "Account", FormMethod.Post, new { @class = "navbar-search" }))
 {
-    @Html.TextBoxFor(m => m.searchString, new { @class="search-query", placeHolder="Search for an account"})
-    <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
+    @Html.TextBox("searchString", Model, new { @class = "search-query", placeHolder = "Search for an account" });
+    <input type="submit" style="display: none;"/>
 }

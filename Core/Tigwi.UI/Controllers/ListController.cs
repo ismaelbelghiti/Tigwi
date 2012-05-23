@@ -31,7 +31,6 @@ namespace Tigwi.UI.Controllers
         /// </summary>
         /// <param name="listName"></param>
         /// <returns></returns>
-        [ValidateInput(false)]
         public ActionResult Members(string listName)
         {
             throw new NotImplementedException("ListController.Members");
@@ -51,7 +50,6 @@ namespace Tigwi.UI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [ValidateInput(false)]
         public ActionResult Edit(EditListViewModel editList, int edit)
         {
             // TODO: This is NOT correct. There should be *TWO* distinct methods Edit and Create.
@@ -148,6 +146,7 @@ namespace Tigwi.UI.Controllers
         [HttpPost]
         public ActionResult GetList(Guid listId)
         {
+            // TODO: dafuq ???
             //TODO some exceptions might be thrown, we are not currently catching any
             IListModel list = CurrentAccount.AllFollowedLists.Where(l => l.Id == listId).First();
             return Json(new { Name = list.Name,Descr = list.Description,Public = !list.IsPrivate, Members=list.Members.Select(account=>account.Name)});

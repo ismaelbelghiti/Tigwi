@@ -37,25 +37,6 @@
     <WarningLevel>4</WarningLevel>
     <AzureDeployment>false</AzureDeployment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Cloud-Debug' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\tmp\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AzureDeployment>true</AzureDeployment>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Cloud-Release' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\tmp\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AzureDeployment>true</AzureDeployment>
-  </PropertyGroup>
   <!-- Azure Deployment properties -->
   <PropertyGroup Condition=" '$(AzureDesployment)' == 'true' ">
     <PackageName>$(AssemblyName).cspkg</PackageName>
@@ -76,6 +57,7 @@
     <PublishProfile Include="Profiles\seferoProduction1.azurePubxml" />
     <PublishProfile Include="Profiles\seferoProduction3.azurePubxml" />
     <PublishProfile Include="Profiles\seferoProduction4.azurePubxml" />
+    <PublishProfile Include="Profiles\tigwiapiProduction.azurePubxml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Tigwi.API\Tigwi.API.csproj">

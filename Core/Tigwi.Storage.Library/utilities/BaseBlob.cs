@@ -66,7 +66,7 @@ namespace Tigwi.Storage.Library.Utilities
                 {
                     Serializer.Serialize(stream, obj);
                     stream.Seek(0, SeekOrigin.Begin);
-                    blob.BeginUploadFromStream(stream,reqOpt,blob.EndUploadFromStream,null);
+                    blob.UploadFromStream(stream,reqOpt);
                 }
                 return true;
             }
@@ -90,7 +90,7 @@ namespace Tigwi.Storage.Library.Utilities
             {   
                 Serializer.Serialize(stream, obj);
                 stream.Seek(0, SeekOrigin.Begin);
-                blob.BeginUploadFromStream(stream, blob.EndUploadFromStream, null);
+                blob.UploadFromStream(stream);
             }
         }
 
@@ -119,7 +119,7 @@ namespace Tigwi.Storage.Library.Utilities
                 {
                     Serializer.Serialize(stream, obj);
                     stream.Seek(0, SeekOrigin.Begin);
-                    blob.BeginUploadFromStream(stream, reqOpt, blob.EndUploadFromStream, null);
+                    blob.UploadFromStream(stream, reqOpt);
                 }
                 return true;
             }
@@ -150,7 +150,7 @@ namespace Tigwi.Storage.Library.Utilities
                         {
                             Serializer.Serialize(stream, obj);
                             stream.Seek(0, SeekOrigin.Begin);
-                            blob.BeginUploadFromStream(stream, reqOpt, blob.EndUploadFromStream, null);
+                            blob.UploadFromStream(stream, reqOpt);
                         }
                         return true;
                     }
