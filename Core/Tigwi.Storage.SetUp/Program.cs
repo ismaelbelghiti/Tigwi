@@ -8,8 +8,8 @@ namespace SetUp
 {
     class Program
     {
-        const string azureAccountName = "__AZURE_STORAGE_ACCOUNT_NAME";
-        const string azureAccountKey = "__AZURE_STORAGE_ACCOUNT_KEY";
+        const string azureAccountName = "";
+        const string azureAccountKey = "";
  
         // Lauch this program to reinit the storage
         static void Main(string[] args)
@@ -23,7 +23,7 @@ namespace SetUp
             {
                 BlobFactory blobFactory = new BlobFactory(azureAccountName, azureAccountKey);
                 blobFactory.InitStorage();
-                Console.WriteLine("Le compte storage a été réinitialisé");
+                Console.Write("Le compte storage a été réinitialisé");
             }
             else
             {

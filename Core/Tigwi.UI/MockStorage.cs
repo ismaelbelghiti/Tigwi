@@ -708,6 +708,16 @@ namespace Tigwi.UI
                 return new HashSet<Guid>(this.GetMock(listId).Members);
             }
 
+            public void SetMain(Guid listId, Guid accountId, bool isMain)
+            {
+                throw new NotImplementedException();
+            }
+
+            public HashSet<Guid> GetMainAccounts(Guid listId)
+            {
+                throw new NotImplementedException();
+            }
+
             public void Add(Guid listId, Guid accountId)
             {
                 var account = this.Storage.AccountStorage.GetMock(accountId);

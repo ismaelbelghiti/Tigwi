@@ -81,6 +81,7 @@
     <Compile Include="DoubleMetaphone.cs" />
     <Compile Include="exception\InnerException.cs" />
     <Compile Include="Utilities\BaseBlob.cs" />
+    <Compile Include="Utilities\DictionaryBlob.cs" />
     <Compile Include="Utilities\Hasher.cs" />
     <Compile Include="Utilities\HashSetBlob.cs" />
     <Compile Include="Utilities\MessageSet.cs" />

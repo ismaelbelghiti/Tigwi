@@ -65,8 +65,8 @@ namespace Tigwi.Storage.Library.Utilities
                 using (stream = new MemoryStream())
                 {
                     Serializer.Serialize(stream, obj);
-                    byte[] data = stream.ToArray();
-                    blob.UploadByteArray(data);
+                    stream.Seek(0, SeekOrigin.Begin);
+                    blob.UploadFromStream(stream,reqOpt);
                 }
                 return true;
             }
@@ -83,14 +83,14 @@ namespace Tigwi.Storage.Library.Utilities
             stream.Close();
             return t;
         }
-
+                    
         public void Set(T obj)
         {
             using (MemoryStream stream = new MemoryStream())
             {   
                 Serializer.Serialize(stream, obj);
-                byte[] data = stream.ToArray();
-                blob.UploadByteArray(data);
+                stream.Seek(0, SeekOrigin.Begin);
+                blob.UploadFromStream(stream);
             }
         }
 
@@ -118,8 +118,8 @@ namespace Tigwi.Storage.Library.Utilities
                 using (MemoryStream stream = new MemoryStream())
                 {
                     Serializer.Serialize(stream, obj);
-                    byte[] data = stream.ToArray();
-                    blob.UploadByteArray(data, reqOpt);
+                    stream.Seek(0, SeekOrigin.Begin);
+                    blob.UploadFromStream(stream, reqOpt);
                 }
                 return true;
             }
@@ -149,8 +149,8 @@ namespace Tigwi.Storage.Library.Utilities
                         using (MemoryStream stream = new MemoryStream())
                         {
                             Serializer.Serialize(stream, obj);
-                            byte[] data = stream.ToArray();
-                            blob.UploadByteArray(data, reqOpt);
+                            stream.Seek(0, SeekOrigin.Begin);
+                            blob.UploadFromStream(stream, reqOpt);
                         }
                         return true;
                     }

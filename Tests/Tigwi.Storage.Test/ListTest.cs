@@ -226,7 +226,7 @@ namespace StorageTest
 
         #endregion
 
-        #region HashSet<Guid> GetAccounts(Guid listId)
+        #region Hashset<Guid> GetAccounts(Guid listId)
 
         [Test]
         [ExpectedException(typeof(ListNotFound))]
@@ -239,6 +239,44 @@ namespace StorageTest
         public void GetAccountsNormalBehaviour()
         {
             Assert.IsTrue(storage.List.GetAccounts(listIdThatExists).Contains(storage.Account.GetId("accountThatExists")));
+        }
+
+        #endregion
+
+        #region void SetMain(Guid listId, Guid accountId, bool isMain)
+
+        [Test]
+        [ExpectedException(typeof(ListNotFound))]
+        public void SetMainListNotFound()
+        {
+            storage.List.SetMain(new Guid(),new Guid(), true);
+        }
+
+        [Test]
+        public void SetMainNormalBehaviour()
+        {
+            Guid accountThatExistsId = storage.Account.GetId("accountThatExists");
+            storage.List.SetMain(listIdThatExists, accountThatExistsId, true);
+            Assert.IsTrue(storage.List.GetMainAccounts(listIdThatExists).Contains(accountThatExistsId));
+        }
+
+        #endregion
+
+        #region Hashset<Guid> GetMainAccounts(Guid listId)
+
+        [Test]
+        [ExpectedException(typeof(ListNotFound))]
+        public void GetMainAccountsListNotFound()
+        {
+            storage.List.GetMainAccounts(new Guid());
+        }
+
+        [Test]
+        public void GetMainAccountsNormalBehaviour()
+        {
+            Guid accountThatExistsId = storage.Account.GetId("accountThatExists");
+            storage.List.SetMain(listIdThatExists, accountThatExistsId, true);
+            Assert.IsTrue(storage.List.GetMainAccounts(listIdThatExists).Contains(storage.Account.GetId("accountThatExists")));
         }
 
         #endregion
