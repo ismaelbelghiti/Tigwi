@@ -69,5 +69,7 @@ namespace Tigwi.Storage.Library
         /// Don't do anything if the message doesn't exists
         /// </summary>
         void Remove(Guid id);
+
+        List<IMessage> GetLastMessages();
     }
 }

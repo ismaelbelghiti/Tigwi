@@ -168,5 +168,10 @@ namespace Tigwi.Storage.Library
             DateTime dateLimit = DateTime.Now - limitDateDiff;
             return msgs.TakeWhile(m => m.Date < dateLimit).ToList();    // TODO : improve performance
         }
+
+        public List<IMessage> GetLastMessages()
+        {
+            return new List<IMessage>(blobFactory.MLastMessage().Get());
+        }
     }
 }

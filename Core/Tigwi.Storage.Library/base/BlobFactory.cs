@@ -47,6 +47,7 @@ namespace Tigwi.Storage.Library
             ClearContainer(msgContainer);
 
             this.AAutocompletion().Init();
+            this.MLastMessage().Set(new List<Message>());
         }
 
         void ClearContainer(CloudBlobContainer c)
@@ -237,6 +238,11 @@ namespace Tigwi.Storage.Library
             return new MsgSetBlobPack(msgContainer, M_TAGGEDMESSAGES + AccountId);
         }
 
+        public Blob<List<Message>> MLastMessage()
+        {
+            return new Blob<List<Message>>(msgContainer, M_LASTMESSAGES);
+        }
+
         // paths
         const string DATA = "/data";
         const string LOCK = "/lock";
@@ -272,5 +278,6 @@ namespace Tigwi.Storage.Library
         const string M_LISTMESSAGES = "listmessages/";
         const string M_MESSAGE = "message/";
         const string M_TAGGEDMESSAGES = "taggedmessages/";
+        const string M_LASTMESSAGES = "lastmessages";
 	}
 }
