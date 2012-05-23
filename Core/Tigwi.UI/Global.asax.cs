@@ -53,20 +53,51 @@ namespace Tigwi.UI
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+            // routes.IgnoreRoute("favicon.ico");
 
-            // TODO: choose a routing scheme
-            /*
-            routes.MapRoute("Log in", "_login", new { controller = "User", action = "LogOn" });
-            routes.MapRoute("Register", "_register", new { controller = "User", action = "Register" });
-            routes.MapRoute("Deactivate", "_deactivate", new { controller = "User", action = "Deactivate" });
-
+            routes.MapRoute("Log in", "u/login", new { controller = "User", action = "LogOn" });
+            routes.MapRoute("Log out", "u/logout", new { controller = "User", action = "LogOut" });
+            routes.MapRoute("Register", "u/register", new { controller = "User", action = "Register" });
+            routes.MapRoute("Post", "p/write", new { controller = "Post", action = "Write" });
+            // TODO: l/{accountName}/{listName}/edit
+            routes.MapRoute("Edit list", "l/{accountName}/{listId}/edit", new { controller = "List", action = "Edit" });
+            routes.MapRoute("Create list", "a/{accountName}/lists/new", new { controller = "List", action = "Create" });
+            // TODO: l/{accountName}/{listName}/follow
+            // TODO: default route to follow user ?
             routes.MapRoute(
-                "User info",
-                "{userName}/{controller}/{action}",
-                new { controller = "Home", action = "Index" },
-                new { userName = @"[a-zA-Z0-9][a-zA-Z0-9_]*", controller = @"Followers|Followed|Tweets" }
-            );*/
-            routes.MapRoute("UsersAccounts", "{accountName}/Activate", new {controller = "Account", action = "MakeActive"});
+                "Follow list", "l/{accountName}/{id}/follow", new { controller = "List", action = "FollowList" });
+            routes.MapRoute(
+                "Unfollow list", "l/{accountName}/{id}/unfollow", new { controller = "List", action = "UnfollowList" });
+            routes.MapRoute(
+                "Delete list", "l/{accountName}/{id}/delete", new { controller = "List", action = "Delete" });
+            routes.MapRoute("List accounts", "u/accounts", new { controller = "Accounts", action = "List" });
+            routes.MapRoute(
+                "Make active", "a/{accountName}/select", new { controller = "Account", action = "MakeActive" });
+            routes.MapRoute("Create account", "u/accounts/new", new { controller = "Account", action = "Create" });
+            routes.MapRoute(
+                "Delete account", "a/{accountName}/delete", new { controller = "Account", action = "Delete" });
+            routes.MapRoute("Update account", "a/{accountName}/edit", new { controller = "Account", action = "Edit" });
+            routes.MapRoute(
+                "Following", "a/{accountName}/following", new { controller = "Account", action = "Following" });
+            routes.MapRoute("List posts", "{accountName}", new { controller = "Account", action = "Show" });
+            routes.MapRoute("Search accounts", "t/search", new { controller = "Account", action = "Search" });
+
+            // Ajax routes
+            routes.MapRoute("Validate login", "ajax/user/check", new { controller = "User", action = "ValidateLogin" });
+            routes.MapRoute(
+                "Validate name", "ajax/account/check", new { controller = "Account", action = "AccountExists" });
+            routes.MapRoute("Get list", "ajax/list", new { controller = "List", action = "GetList" });
+            routes.MapRoute(
+                "List followed?",
+                "ajax/list/{listId}/is_followed",
+                new { controller = "Account", action = "IsFollowed" });
+            routes.MapRoute(
+                "Ajax get account", "ajax/account/{accountId}", new { controller = "Account", action = "GetAccount" });
+            routes.MapRoute(
+                "Ajax autocomplete",
+                "ajax/account/{partialAccountName}/autocomplete",
+                new { controller = "Account", action = "AutoComplete" });
+
             routes.MapRoute(
                 "Default", 
                 // Route name
@@ -95,17 +126,39 @@ namespace Tigwi.UI
 
         protected void Application_Error(object sender, EventArgs ev)
         {
-            var context = this.Context;
+            // Declare variables
+            var context = HttpContext.Current;
             var ex = this.Server.GetLastError();
-            context.Response.Clear();
-            context.ClearError();
-            var httpException = ex as HttpException;
+            RouteData routeData;
+            RequestContext requestContext;
 
-            var routeData = new RouteData();
+            // Clear errors
+            // context.Response.Clear();
+            context.ClearError();
+
+            // Try to get the current context if possible
+            var mvcHandler = context.CurrentHandler as MvcHandler;
+            if (mvcHandler != null)
+            {
+                requestContext = mvcHandler.RequestContext;
+                routeData = requestContext.RouteData;
+            }
+            else
+            {
+                routeData = new RouteData();
+                requestContext = new RequestContext(new HttpContextWrapper(context), routeData);
+            }
+
+            // Updates route data
+            // TODO: 
+            routeData.Values["error"] = new HandleErrorInfo(
+                ex,
+                routeData.Values["controller"] as string ?? context.Request.Url.ToString(),
+                routeData.Values["action"] as string ?? context.Request.Url.ToString());
             routeData.Values["controller"] = "Error";
-            routeData.Values["exception"] = ex;
             routeData.Values["action"] = "Http500";
 
+            var httpException = ex as HttpException;
             if (httpException != null)
             {
                 switch (httpException.GetHttpCode())
@@ -116,8 +169,8 @@ namespace Tigwi.UI
                 }
             }
 
-            IController controller = new ErrorController();
-            controller.Execute(new RequestContext(new HttpContextWrapper(context), routeData));
+            var controller = ControllerBuilder.Current.GetControllerFactory().CreateController(requestContext, "Error");
+            controller.Execute(requestContext);
         }
 
         #endregion

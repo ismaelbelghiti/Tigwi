@@ -304,7 +304,7 @@
     <Content Include="Views\Post\Write.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Account\ShowAccount.cshtml" />
+    <Content Include="Views\Account\Show.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Tigwi.Auth\Tigwi.Auth.csproj">
