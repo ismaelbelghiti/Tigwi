@@ -100,7 +100,6 @@ namespace Tigwi.UI.Controllers
         [HttpPost]
         public ActionResult FollowList(Guid id)
         {
-            //TODO check whether or not it's a personnal list, catch errors, etc ...
             var list = this.Storage.Lists.Find(id);
             CurrentAccount.AllFollowedLists.Add(list);
             this.Storage.SaveChanges();
