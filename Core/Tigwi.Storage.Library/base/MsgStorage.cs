@@ -129,7 +129,6 @@ namespace Tigwi.Storage.Library
             return messageId;
         }
 
-        // NYI
         public Guid Copy(Guid accountId, Guid msgId)
         {
             Message message = blobFactory.MMessage(msgId).GetIfExists(new MessageNotFound());
