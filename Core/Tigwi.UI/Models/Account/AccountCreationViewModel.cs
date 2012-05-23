@@ -14,11 +14,13 @@ namespace Tigwi.UI.Models.Account
 
         [Required]
         [Display(Name = "Name")]
+        [AllowHtml]
         public string Name { get; set; }
 
         [Required]
         [StringLength(140, MinimumLength = 0)]
         [Display(Name = "Description")]
+        [AllowHtml]
         public string Description { get; set; }
     }
 }

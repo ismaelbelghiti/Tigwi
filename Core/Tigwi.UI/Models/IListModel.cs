@@ -22,7 +22,6 @@ namespace Tigwi.UI.Models
         /// <summary>
         /// Gets or sets the list's description.
         /// </summary>
-        [System.Web.Mvc.AllowHtml]
         string Description { get; set; }
 
         /// <summary>
@@ -58,7 +57,6 @@ namespace Tigwi.UI.Models
         /// <summary>
         /// Gets or sets the list's name.
         /// </summary>
-        [System.Web.Mvc.AllowHtml]
         string Name { get; set; }
 
         #endregion
