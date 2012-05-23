@@ -47,11 +47,13 @@ namespace Tigwi.UI.Models
         /// <summary>
         /// Gets the user's login.
         /// </summary>
+        [System.Web.Mvc.AllowHtml]
         string Login { get; }
 
         /// <summary>
         /// Sets the user's password
         /// </summary>
+        [System.Web.Mvc.AllowHtml]
         string Password { set; }
 
         #endregion

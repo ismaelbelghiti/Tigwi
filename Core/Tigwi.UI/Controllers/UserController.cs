@@ -39,7 +39,6 @@ namespace Tigwi.UI.Controllers
         /// <param name="userLogOnViewModel"></param>
         /// <returns></returns>
         [HttpPost]
-        [ValidateInput(false)]
         public ActionResult LogOn(UserLogOnViewModel userLogOnViewModel)
         {
             if (ModelState.IsValid)
@@ -90,7 +89,6 @@ namespace Tigwi.UI.Controllers
         /// <param name="registerViewModel">A ViewModel containing the data useful for the user creation.</param>
         /// <returns></returns>
         [HttpPost]
-        [ValidateInput(false)]
         public ActionResult Register(RegisterViewModel registerViewModel)
         {
             if (ModelState.IsValid)

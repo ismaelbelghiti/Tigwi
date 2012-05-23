@@ -21,6 +21,7 @@ namespace Tigwi.UI.Models
         /// <summary>
         /// Gets the post's content.
         /// </summary>
+        [System.Web.Mvc.AllowHtml]
         string Content { get; }
 
         /// <summary>

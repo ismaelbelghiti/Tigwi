@@ -57,7 +57,6 @@ namespace Tigwi.UI.Controllers
         /// <param name="account"></param>
         /// <returns></returns>
         [HttpPost]
-        [ValidateInput(false)]
         public ActionResult AccountExists(string account)
         {
             //TODO check whether account exists or not <3
@@ -68,7 +67,6 @@ namespace Tigwi.UI.Controllers
         /// Shows a page listing all the posts of the user.
         /// </summary>
         /// <returns></returns>
-        [ValidateInput(false)]
         public ActionResult ShowAccount(SearchViewModel search)
         {
             IAccountModel account;
@@ -103,7 +101,6 @@ namespace Tigwi.UI.Controllers
         /// </summary>
         /// <returns></returns>
         [Authorize]
-        [ValidateInput(false)]
         public ActionResult MakeActive(string accountName)
         {
             try
@@ -142,7 +139,6 @@ namespace Tigwi.UI.Controllers
         /// <param name="accountCreation"></param>
         /// <returns></returns>
         [HttpPost]
-        [ValidateInput(false)]
         public ActionResult Create(AccountCreationViewModel accountCreation)
         {
             if (ModelState.IsValid)
@@ -219,7 +215,6 @@ namespace Tigwi.UI.Controllers
         /// <param name="accountEdit"></param>
         /// <returns></returns>
         [HttpPost]
-        [ValidateInput(false)]
         public ActionResult Edit(AccountEditViewModel editAccount)
         {
             if (ModelState.IsValid)

@@ -57,7 +57,6 @@ namespace Tigwi.UI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [ValidateInput(false)]
         public ActionResult Write(WritePostViewModel post)
         {
             if (ModelState.IsValid)
