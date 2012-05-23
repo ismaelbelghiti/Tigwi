@@ -31,7 +31,7 @@ if ($hostedService.Status -ne $null)
 }
  
 Get-HostedService $servicename -Certificate $cert -SubscriptionId $sub |
-    New-Deployment Staging -package $package -configuration $config -label $buildLabel -serviceName $servicename -StorageServiceName $storageAccount |
+    New-Deployment -package $package -configuration $config -label $buildLabel -serviceName $servicename -StorageServiceName $storageAccount |
     Get-OperationStatus -WaitToComplete
  
 Get-HostedService $servicename -Certificate $cert -SubscriptionId $sub |

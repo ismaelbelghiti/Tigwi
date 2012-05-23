@@ -138,6 +138,52 @@ namespace Tigwi.Storage.Library
                 }
         }
 
+        public Guid GetIdByApiKey(Guid apiKey)
+        {
+            Blob<Guid> blob = blobFactory.UIdByApiKey(apiKey);
+            Guid id = blob.GetIfExists(new UserNotFound());
+            if (id.Equals(Guid.Empty))
+                throw new UserNotFound();
+            return id;
+        }
+
+        public Guid GenerateApiKey(Guid userId, string applicationName)
+        {
+            Guid apiKey = Guid.NewGuid();
+            using (blobFactory.UApiKeysLock(userId))
+            {
+                if (blobFactory.UApiKeysData(userId).Exists)
+                    blobFactory.UApiKeysData(userId).AddWithRetry(apiKey, applicationName);
+                else
+                {
+                    Dictionary<Guid, string> newset = new Dictionary<Guid, string>();
+                    newset.Add(apiKey, applicationName);
+                    blobFactory.UApiKeysData(userId).Set(newset);
+                }
+
+                blobFactory.UIdByApiKey(apiKey).Set(userId);
+            }
+
+            return apiKey;
+        }
+
+        public Dictionary<Guid, string> ListApiKeys(Guid userId)
+        {
+            if (!blobFactory.UApiKeysData(userId).Exists)
+                throw new UserNotFound();
+
+            return blobFactory.UApiKeysData(userId).Get();
+        }
+
+        public void DeactivateApiKey(Guid userId, Guid apiKey)
+        {
+                using (blobFactory.UApiKeysLock(userId))
+                {
+                    blobFactory.UApiKeysData(userId).RemoveWithRetry(apiKey);
+                    blobFactory.UIdByApiKey(apiKey).Delete();
+                }
+        }
+
         public Byte[] GetPassword(Guid userId)
         {
             return blobFactory.UPassword(userId).GetIfExists(new UserNotFound()).Bytes;
