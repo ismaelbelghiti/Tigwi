@@ -31,15 +31,7 @@ if ($hostedService.Status -ne $null)
 }
  
 Get-HostedService $servicename -Certificate $cert -SubscriptionId $sub |
-    New-Deployment Staging -package $package -configuration $config -label $buildLabel -serviceName $servicename -StorageServiceName $storageAccount |
+    Update-Deployment -package $package -configuration $config -label $buildLabel -serviceName $servicename -StorageServiceName $storageAccount |
     Get-OperationStatus -WaitToComplete
- 
-Get-HostedService $servicename -Certificate $cert -SubscriptionId $sub |
-    Get-Deployment -Slot Staging |
-    Set-DeploymentStatus 'Running' |
-    Get-OperationStatus -WaitToComplete
- 
-$Deployment = Get-HostedService $servicename -Certificate $cert -SubscriptionId $sub | Get-Deployment -Slot Staging
-Write-host Deployed to staging slot: $Deployment.Url
  
 if ($error) { exit 888 }
