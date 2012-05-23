@@ -114,9 +114,16 @@ namespace Tigwi.Storage.Library
                     try { blobFactory.MListMessages(listId).AddMessage(message); }
                     catch { }
                 }
+
+                List<Message> lastmessages = blobFactory.MLastMessage().Get();
+                lastmessages.Add(message);
+                lastmessages.Take(100);
+                
+                blobFactory.MLastMessage().Set(lastmessages);
             }
             catch { bMessage.Delete();  }
-            
+
+
             // TODO : Add in accountMsg
 
             return messageId;

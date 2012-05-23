@@ -11,6 +11,11 @@ namespace Tigwi.Storage.Library
     public interface IMsgStorage
     {
         /// <summary>
+        /// Return the message with specified id.
+        /// </summary>
+        IMessage GetMessage(Guid messageId);
+
+        /// <summary>
         /// Return the firsts msgNumber messages posted after firstMsgId contained into lists listsId.
         /// Does not include firstMsgDate
         /// </summary>
