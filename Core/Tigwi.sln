@@ -54,9 +54,9 @@ Global
 		{A2CDF8C9-AFF3-4ABD-80A4-B6D27D791929}.Release|x86.ActiveCfg = Release|Any CPU
 		{46428462-DB30-44D8-A6BB-7B83F3F211EC}.Cloud|Any CPU.ActiveCfg = Release|Any CPU
 		{46428462-DB30-44D8-A6BB-7B83F3F211EC}.Cloud|Any CPU.Build.0 = Release|Any CPU
-		{46428462-DB30-44D8-A6BB-7B83F3F211EC}.Cloud|Mixed Platforms.ActiveCfg = Cloud-Release|Any CPU
-		{46428462-DB30-44D8-A6BB-7B83F3F211EC}.Cloud|Mixed Platforms.Build.0 = Cloud-Release|Any CPU
-		{46428462-DB30-44D8-A6BB-7B83F3F211EC}.Cloud|x86.ActiveCfg = Cloud-Release|Any CPU
+		{46428462-DB30-44D8-A6BB-7B83F3F211EC}.Cloud|Mixed Platforms.ActiveCfg = Cloud|Any CPU
+		{46428462-DB30-44D8-A6BB-7B83F3F211EC}.Cloud|Mixed Platforms.Build.0 = Cloud|Any CPU
+		{46428462-DB30-44D8-A6BB-7B83F3F211EC}.Cloud|x86.ActiveCfg = Cloud|Any CPU
 		{46428462-DB30-44D8-A6BB-7B83F3F211EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{46428462-DB30-44D8-A6BB-7B83F3F211EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46428462-DB30-44D8-A6BB-7B83F3F211EC}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

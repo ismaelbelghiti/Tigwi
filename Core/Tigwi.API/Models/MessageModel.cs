@@ -3,13 +3,6 @@ using System.Xml.Serialization;
 
 namespace Tigwi.API.Models
 {
-    // Models for request bodies
-
-    public class BaseRequest
-    {
-        public string AccountName { get; set; }
-        public Guid? AccountId { get; set; }
-    }
 
     // Add a message
 
@@ -47,25 +40,5 @@ namespace Tigwi.API.Models
     [Serializable]
     public class Untag : ActionOnMessage{}
 
-    // Subscribe/Create list
-
-    [Serializable]
-    public class SubscribeList:BaseRequest
-    {
-        public Guid? Subscription { get; set; }
-    }
-
-    [Serializable]
-    public class ListInfo
-    {
-        public string Name;
-        public string Description;
-        public bool IsPrivate;
-    }
-
-    [Serializable]
-    public class CreateList:BaseRequest
-    {
-        public ListInfo ListInfo { get; set; }
-    }
+    
 }
