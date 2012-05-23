@@ -73,8 +73,10 @@
                         $("#accountAdded").append(toAppend);
                     }
                     else {
-                        // TODO
-                        alert("fuck you I won't do what you tell me !");
+                        var toAppend = "<div class=\"alert alert-error\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button> The account "
+                        + $('#addAccount').val()
+                        + ' doesn\'t exists.</div>';
+                        $("#error-account-doesnt-exists").append(toAppend);
                     }
                 }
             });
