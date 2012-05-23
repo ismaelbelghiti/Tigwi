@@ -826,6 +826,11 @@ namespace Tigwi.UI
 
             #region Implementation of IMsgStorage
 
+            public IMessage GetMessage(Guid messageId)
+            {
+                throw new NotImplementedException();
+            }
+            
             public List<IMessage> GetListsMsgFrom(HashSet<Guid> listsId, DateTime firstMsgDate, int msgNumber)
             {
                 var messages = new List<IMessage>();

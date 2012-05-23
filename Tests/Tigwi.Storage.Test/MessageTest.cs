@@ -671,5 +671,17 @@ namespace StorageTest
         }
 
         #endregion
+
+        #region Guid GetLastMessages(Guid accountId, string content)
+
+        [Test]
+        public void GetLastMessagesNormalBehaviour()
+        {
+            Guid id = storage.Msg.Post(_accountId, Hw);
+            List<IMessage> lastmessages = storage.Msg.GetLastMessages();
+            Assert.Contains(storage.Msg.GetMessage(id),lastmessages);
+        }
+
+        #endregion
     }        
 }
