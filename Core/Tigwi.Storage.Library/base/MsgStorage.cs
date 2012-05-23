@@ -117,8 +117,8 @@ namespace Tigwi.Storage.Library
 
                 List<Message> lastmessages = blobFactory.MLastMessage().Get();
                 lastmessages.Add(message);
-                lastmessages.Remove(lastmessages.FindLast(x => true));
-
+                lastmessages.Take(100);
+                
                 blobFactory.MLastMessage().Set(lastmessages);
             }
             catch { bMessage.Delete();  }

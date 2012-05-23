@@ -679,7 +679,7 @@ namespace StorageTest
         {
             Guid id = storage.Msg.Post(_accountId, Hw);
             List<IMessage> lastmessages = storage.Msg.GetLastMessages();
-            Assert.Contains(storage.Msg.GetMessage(id),lastmessages);
+            Assert.AreEqual(id,lastmessages[0].Id);
         }
 
         #endregion
