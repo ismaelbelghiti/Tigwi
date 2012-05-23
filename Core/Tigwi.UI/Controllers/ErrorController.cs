@@ -8,8 +8,15 @@ namespace Tigwi.UI.Controllers
     using System.Net;
     using System.Web.Mvc;
 
+    using Tigwi.Storage.Library;
+
     public class ErrorController : HomeController
     {
+        public ErrorController(IStorage storage)
+            : base(storage)
+        {
+        }
+
         #region Http 404
 
         public ActionResult Http404(string url, HandleErrorInfo error)

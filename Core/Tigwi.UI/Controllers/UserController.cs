@@ -16,12 +16,10 @@ namespace Tigwi.UI.Controllers
 
     public class UserController : HomeController
     {
-        public UserController()
-        {}
-
-        public UserController(StorageContext storage)
+        public UserController(IStorage storage)
             : base(storage)
-        {}
+        {
+        }
 
         /// <summary>
         /// Show a page proposing the user to log in.

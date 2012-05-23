@@ -6,17 +6,14 @@ using System.Web.Mvc;
 
 namespace Tigwi.UI.Controllers
 {
+    using Tigwi.Storage.Library;
     using Tigwi.UI.Models;
     using Tigwi.UI.Models.Storage;
 
     public class PostController : HomeController
     {
-        public PostController()
-        {
-        }
-
-        public PostController(IStorageContext storageContext)
-            : base(storageContext)
+        public PostController(IStorage storage)
+            : base(storage)
         {
         }
 

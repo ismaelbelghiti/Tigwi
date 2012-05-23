@@ -14,12 +14,12 @@
         <p>
            <button class="btn btn-primary editAcc2" id="acct-@CurrentAccount.Id" ><b>Edit</b></button>
         </p>
-      
-        @if(!String.Equals(CurrentAccount.Description, ""))
-        {    
+
+        @if(!string.IsNullOrEmpty(CurrentAccount.Description))
+        {
            <p><b>Description : </b> @CurrentAccount.Description</p>
         }
-      
+
         </ul>
         
         @Html.Partial("_ListView", CurrentAccount.AllFollowedLists)

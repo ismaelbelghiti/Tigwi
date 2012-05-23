@@ -18,33 +18,15 @@
 
         private IAccountModel currentAccount;
 
-        private IStorage rawStorage;
-
-        private IStorageContext storage;
-
         #endregion
 
         #region Constructors and Destructors
 
-        public HomeController()
-            : this(MakeStorage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY"))
-        {
-        }
-
         public HomeController(IStorage storage)
         {
-            if (storage == null)
-            {
-                return;
-            }
-
-            this.rawStorage = storage;
-            this.storage = new StorageContext(storage);
-        }
-
-        public HomeController(IStorageContext storageContext)
-        {
-            this.storage = storageContext;
+            Contract.Assert(storage != null);
+            this.RawStorage = storage;
+            this.Storage = new StorageContext(storage);
         }
 
         #endregion
@@ -82,47 +64,9 @@
 
         #region Properties
 
-        protected IStorage RawStorage
-        {
-            get
-            {
-                // Berk
-                if (this.rawStorage == null)
-                {
-                    if (this.Session["Storage"] == null)
-                    {
-                        this.Session["Storage"] = new MockStorage();
-                    }
+        protected IStorage RawStorage { get; private set; }
 
-                    var storageContext = new StorageContext(this.Session["Storage"] as IStorage);
-                    this.rawStorage = storageContext.StorageObj;
-                    this.storage = storageContext;
-                }
-
-                return this.rawStorage;
-            }
-        }
-
-        protected IStorageContext Storage
-        {
-            get
-            {
-                // Hack because we are using a StorageTmp
-                if (this.storage == null)
-                {
-                    if (this.Session["Storage"] == null)
-                    {
-                        this.Session["Storage"] = new MockStorage();
-                    }
-
-                    var storageContext = new StorageContext(this.Session["Storage"] as IStorage);
-                    this.rawStorage = storageContext.StorageObj;
-                    this.storage = storageContext;
-                }
-
-                return this.storage;
-            }
-        }
+        protected IStorageContext Storage { get; private set; }
 
         #endregion
 

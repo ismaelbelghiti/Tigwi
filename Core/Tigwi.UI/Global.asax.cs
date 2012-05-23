@@ -21,7 +21,9 @@ namespace Tigwi.UI
     using System.Web.Routing;
     using System.Web.Security;
 
+    using Tigwi.Storage.Library;
     using Tigwi.UI.Controllers;
+    using Tigwi.UI.Models.Storage;
 
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
@@ -118,6 +120,10 @@ namespace Tigwi.UI
         /// </summary>
         protected void Application_Start()
         {
+            IStorage storage = new Storage("sefero", "GU0GjvcPoXKzDFgBSPFbWmCPQrIRHAT6fholbMnxtteY5vQVgYTcWKk/25i/F4m9MFoGHXNf4oYgeAKo+mFO5Q==");
+
+            ControllerBuilder.Current.SetControllerFactory(new DefaultControllerFactory(new ControllerActivator(storage)));
+
             AreaRegistration.RegisterAllAreas();
 
             RegisterGlobalFilters(GlobalFilters.Filters);
