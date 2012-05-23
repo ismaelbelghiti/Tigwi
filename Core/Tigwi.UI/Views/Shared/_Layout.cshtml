@@ -80,7 +80,7 @@
                         <div class="pull-right">
                             @if (@User.Identity.IsAuthenticated)
                             {
-                               @Html.Partial("_Search", new SearchViewModel())
+                               @Html.Partial("_Search", string.Empty)
                             }
                             <ul class="nav">
                                 @if (@User.Identity.IsAuthenticated)

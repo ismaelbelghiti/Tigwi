@@ -148,6 +148,7 @@ namespace Tigwi.UI.Controllers
         [HttpPost]
         public ActionResult GetList(Guid listId)
         {
+            // TODO: dafuq ???
             //TODO some exceptions might be thrown, we are not currently catching any
             IListModel list = CurrentAccount.AllFollowedLists.Where(l => l.Id == listId).First();
             return Json(new { Name = list.Name,Descr = list.Description,Public = !list.IsPrivate, Members=list.Members.Select(account=>account.Name)});

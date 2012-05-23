@@ -121,6 +121,12 @@ namespace Tigwi.UI.Controllers
             return this.View(registerViewModel);
         }
 
+        [HttpPost]
+        public ActionResult ValidateLogin(string login)
+        {
+            return Json(this.Storage.Users.Exists(login));
+        }
+
         public ActionResult Welcome()
         {
             throw new NotImplementedException("UserController.Welcome");

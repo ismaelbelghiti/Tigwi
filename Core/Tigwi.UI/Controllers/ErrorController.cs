@@ -12,8 +12,9 @@ namespace Tigwi.UI.Controllers
     {
         #region Http 404
 
-        public ActionResult Http404(string url, HttpException exception)
+        public ActionResult Http404(string url, HandleErrorInfo error)
         {
+            var exception = error.Exception;
             Response.StatusCode = (int)HttpStatusCode.NotFound;
 
             // If the url is relative ('NotFound' route), replace with Requested path
@@ -41,6 +42,17 @@ namespace Tigwi.UI.Controllers
             public string ReferrerUrl { get; set; }
 
             public string Message { get; set; }
+        }
+
+        #endregion
+
+        #region Http 500
+
+        public ActionResult Http500(string url, HandleErrorInfo error)
+        {
+            Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            // TODO:
+            return this.View("Error", error);
         }
 
         #endregion
