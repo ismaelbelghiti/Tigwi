@@ -152,16 +152,5 @@ namespace Tigwi.UI.Controllers
             return Json(new { Name = list.Name,Descr = list.Description,Public = !list.IsPrivate, Members=list.Members.Select(account=>account.Name)});
             
         }
-
-        //TODO : remove those ?
-        public ActionResult AddAccount()
-        {
-            throw new NotImplementedException("ListController.AddAccounts");
-        }
-
-        public ActionResult RemoveAccount()
-        {
-            throw new NotImplementedException("ListController.RemoveAccounts");
-        }
     }
 }
