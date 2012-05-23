@@ -186,8 +186,16 @@ namespace Tigwi.UI.Controllers
         [HttpPost]
         public ActionResult IsFollowed(Guid listId)
         {
-            //TODO Catch Exception
-            return Json(new {Followed = CurrentAccount.PublicFollowedLists.Select(list => list.Id).Contains(listId)});
+            bool followed;
+            try
+            {
+                followed = CurrentAccount.PublicFollowedLists.Select(list => list.Id).Contains(listId);
+            }
+            catch
+            {
+                followed = false;
+            }
+            return Json(new {Followed = followed});
         }
 
         /// <summary>
