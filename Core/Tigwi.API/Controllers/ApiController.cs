@@ -16,7 +16,7 @@ namespace Tigwi.API.Controllers
         // Initialize storage when instanciating a controller
         protected ApiController ()
         {
-            Storage = new Storage.Library.Storage("sefero", "GU0GjvcPoXKzDFgBSPFbWmCPQrIRHAT6fholbMnxtteY5vQVgYTcWKk/25i/F4m9MFoGHXNf4oYgeAKo+mFO5Q==");
+            Storage = new Storage.Library.Storage("__AZURE_STORAGE_ACCOUNT_NAME", "__AZURE_STORAGE_ACCOUNT_KEY");
         }
 
 
