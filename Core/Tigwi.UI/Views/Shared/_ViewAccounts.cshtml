@@ -40,6 +40,25 @@
                 }
             });
         });
+
+        $('.leavAcc').click(function(event) {
+            event.stopPropagation();
+            $('#leaveAccountModal').modal('show');
+
+            var name = $(this).attr('id');
+            var accountId = name.substring(5, name.length);
+            $.ajax({
+                url: "@Url.Action("GetAccount","Account")",
+                type: "POST",
+                dataType: 'json',
+                data: { 'accountId': accountId },
+                success: function(data) {
+                    $('#leaveAccountName').html(data.Name);
+                    $('#leaveAccountId').val(accountId);
+                }
+            });
+        });
+
     });
 
 </script>
@@ -62,7 +81,6 @@
                 else
                 {
                     <button class="btn btn-primary leavAcc" id="leav-@account.Id" ><b>Leave</b></button>
-                    //TODO Write ConfirmLeaveModal
                 }
                 <p><b>Description : </b> @account.Description</p>
             </li>

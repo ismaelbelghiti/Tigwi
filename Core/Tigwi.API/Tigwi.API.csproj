@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
+  <Import Project="..\..\ConnectionFiles.xml" Condition="Exists('..\..\ConnectionFiles.xml')" />
   <Import Project="..\..\ConnectionInfo.xml" Condition="Exists('..\..\ConnectionInfo.xml')" />
   <!-- Global/Default Configuration -->
   <PropertyGroup>
@@ -48,18 +49,6 @@
     <WarningLevel>4</WarningLevel>
     <AzureDeployment>true</AzureDeployment>
   </PropertyGroup>
-  <ItemGroup>
-    <!-- Comment the next line to use storage emulator on your local machine -->
-    <ServiceConfigurationFiles Include="ServiceConfiguration.Local.cscfg" />
-    <ServiceConfigurationFiles Include="ServiceConfiguration.Cloud.cscfg" />
-  </ItemGroup>
-  <ItemGroup>
-    <!-- Edit the list of files where to replace __AZURE_STORAGE_ACCOUNT_NAME and __AZURE_STORAGE_ACCOUNT_KEY by their values,
-		put the relative position to Tigwi.ccproj -->
-    <!-- Example : <ConnectionFiles Include="myfile.*" /> -->
-    <ConnectionFiles Include="..\Tigwi.API\Controllers\ApiController.cs" />
-    <ConnectionFiles Include="..\Tigwi.UI\Controllers\HomeController.cs" />
-  </ItemGroup>
   <!-- Items needed for the project -->
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -97,17 +86,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\ApiController.cs" />
-    <Compile Include="Controllers\InfoUserController.cs" />
-    <Compile Include="Controllers\ModifyListController.cs" />
-    <Compile Include="Controllers\InfoAccountController.cs" />
-    <Compile Include="Controllers\InfoListController.cs" />
-    <Compile Include="Controllers\ModifyAccountController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ListController.cs" />
+    <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ConvertObjects.cs" />
-    <Compile Include="Models\ModifyListModel.cs" />
-    <Compile Include="Models\ModifyAccountModel.cs" />
+    <Compile Include="Models\ListModel.cs" />
+    <Compile Include="Models\MessageModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

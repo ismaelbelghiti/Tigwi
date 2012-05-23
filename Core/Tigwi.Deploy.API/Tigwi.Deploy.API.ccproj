@@ -2,6 +2,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" />
+  <Import Project="..\..\ConnectionFiles.xml" Condition="Exists('..\..\ConnectionFiles.xml')" />
   <Import Project="..\..\ConnectionInfo.xml" Condition="Exists('..\..\ConnectionInfo.xml')" />
   <!-- Global/Default configuration -->
   <PropertyGroup>
@@ -43,18 +44,6 @@
     <ServiceConfigName>ServiceConfiguration.Cloud.cscfg</ServiceConfigName>
     <PackageForComputeEmulator>true</PackageForComputeEmulator>
   </PropertyGroup>
-  <ItemGroup>
-    <!-- Comment the next line to use storage emulator on your local machine -->
-    <ServiceConfigurationFiles Include="ServiceConfiguration.Local.cscfg" />
-    <ServiceConfigurationFiles Include="ServiceConfiguration.Cloud.cscfg" />
-  </ItemGroup>
-  <ItemGroup>
-    <!-- Edit the list of files where to replace __AZURE_STORAGE_ACCOUNT_NAME and __AZURE_STORAGE_ACCOUNT_KEY by their values,
-		put the relative position to Tigwi.ccproj -->
-    <!-- Example : <ConnectionFiles Include="myfile.*" /> -->
-    <ConnectionFiles Include="..\Tigwi.API\Controllers\ApiController.cs" />
-    <ConnectionFiles Include="..\Tigwi.UI\Controllers\HomeController.cs" />
-  </ItemGroup>
   <!-- Items for the project -->
   <ItemGroup>
     <ServiceDefinition Include="ServiceDefinition.csdef" />
