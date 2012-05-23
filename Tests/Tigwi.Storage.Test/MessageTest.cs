@@ -81,7 +81,10 @@ namespace StorageTest
         public void CopyNormalBehaviour()
         {
             var messageId = storage.Msg.Post(_accountId, Hw);
-            storage.Msg.Copy(_otherAccountId, messageId);
+            var copyId = storage.Msg.Copy(_otherAccountId, messageId);
+            Assert.AreEqual(storage.Msg.GetMessage(messageId).Content + "\n\nretwiged by " + 
+                storage.Account.GetInfo(_accountId).Name,
+                storage.Msg.GetMessage(copyId).Content);
         }
 
         [Test]
@@ -683,5 +686,5 @@ namespace StorageTest
         }
 
         #endregion
-    }        
+    }
 }

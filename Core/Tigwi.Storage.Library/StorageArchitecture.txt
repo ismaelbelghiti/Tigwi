@@ -73,3 +73,15 @@ FOR THIS WEEK :
 		double metaphone +		
 		prefix tree				U
 
+
+Tests qui passent pas:
+	-SetInfoList
+	-SetMainListNotFound
+	-List RemoveNormalBehavior
+	-GetListMsgFromNormalBehaviourOnDates
+	-GetListMsgFromNormalBehaviourTestCopy
+	-GetListMsgFromNormalBehaviourTestCopyDelete
+	-GetListMsgFromNormalBehaviourTestRemove
+	-GetListMsgToNormalBehaviourTest2
+	-GetListMsgToNormalBehaviourTest3
+	-GetListMsgToNormalBehaviourTest4
