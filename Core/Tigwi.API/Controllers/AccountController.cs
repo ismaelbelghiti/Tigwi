@@ -6,7 +6,7 @@ using Tigwi.Storage.Library;
 
 namespace Tigwi.API.Controllers
 {
-    public class InfoAccountController : ApiController
+    public class AccountController : ApiController
     {
 
         //
@@ -74,7 +74,7 @@ namespace Tigwi.API.Controllers
         // GET : /account/subscriberaccounts/{accountName}/{number}
         // GET: /account/subscriberaccounts/name={accountName}/{number}
         // GET: /account/subscriberaccounts/id={accountId}/{number}
-        public ActionResult SubscribersAccounts(string accountName, Guid? accountId, int number)
+        public ActionResult SubscriberAccounts(string accountName, Guid? accountId, int number)
         {
             Answer output;
 
