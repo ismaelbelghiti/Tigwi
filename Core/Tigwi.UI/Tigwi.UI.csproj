@@ -123,7 +123,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="HomeController.cs" />
     <Compile Include="MockStorage.cs" />
     <Compile Include="Models\Account\AccountDeleteViewModel.cs" />
     <Compile Include="Models\Account\AccountEditViewModel.cs" />
