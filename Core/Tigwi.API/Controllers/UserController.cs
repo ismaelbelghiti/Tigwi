@@ -5,7 +5,7 @@ using Tigwi.Storage.Library;
 
 namespace Tigwi.API.Controllers
 {
-    public class InfoUserController : ApiController
+    public class UserController : ApiController
     {
         //
         // GET : /user/maininfo

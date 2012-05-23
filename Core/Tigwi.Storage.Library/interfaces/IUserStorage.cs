@@ -69,7 +69,30 @@ namespace Tigwi.Storage.Library
         /// <exception cref="UserNotFound"> if no user has this id</exception>
         void DeassociateOpenIdUri(Guid userId, string openIdUri);
 
-        // TODO : implement this
+        /// <summary>
+        /// Get a user id by api key
+        /// </summary>
+        /// <exception cref="UserNotFound"> if no user uses this api key</exception>
+        Guid GetIdByApiKey(Guid apiKey);
+
+        /// <summary>
+        /// Create a new API key for the given user
+        /// </summary>
+        /// <exception cref="UserNotFound"> if no user has this id</exception>
+        Guid GenerateApiKey(Guid userId, string applicationName);
+
+        /// <summary>
+        /// Lists the API keys associated to a given user
+        /// </summary>
+        /// <exception cref="UserNotFound"> if not user has this id</exception>
+        Dictionary<Guid, string> ListApiKeys(Guid userId);
+
+        /// <summary>
+        /// Deactivate an API key
+        /// </summary>
+        /// <exception cref="UserNotFound"> if no user has this id</exception>
+        void DeactivateApiKey(Guid userId, Guid apiKey);
+
         /// <summary>
         /// To be used to check a user password
         /// </summary>

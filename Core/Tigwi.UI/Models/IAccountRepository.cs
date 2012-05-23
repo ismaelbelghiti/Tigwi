@@ -78,6 +78,8 @@ namespace Tigwi.UI.Models
 
         bool TryFind(string name, out IAccountModel account);
 
+        bool Exists(string name);
+
         #endregion
     }
 }

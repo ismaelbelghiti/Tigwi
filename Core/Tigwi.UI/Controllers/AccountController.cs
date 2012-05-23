@@ -61,8 +61,8 @@ namespace Tigwi.UI.Controllers
         [HttpPost]
         public ActionResult AccountExists(string account)
         {
-            //TODO check whether account exists or not <3
-            return Json(new { exists = true });
+            bool exists = this.Storage.Accounts.Exists(account);
+            return Json(new { exists = exists });
         }
 
         /// <summary>

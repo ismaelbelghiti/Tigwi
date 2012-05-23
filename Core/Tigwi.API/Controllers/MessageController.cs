@@ -6,10 +6,10 @@ using Tigwi.API.Models;
 
 namespace Tigwi.API.Controllers
 {
-    public class ModifyAccountController : ApiController
+    public class MessageController : ApiController
     {
         //
-        // POST : /account/write
+        // POST : /message/write
 
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Write()
@@ -24,7 +24,7 @@ namespace Tigwi.API.Controllers
                     output = new Answer(new Error("AccountId or AccountName missing"));
                 else if (msg.Message == null)
                     output = new Answer(new Error("Message missing"));
-                else if (msg.Message.Length > 140) // TODO ? check more on message
+                else if (msg.Message.Length > 140)
                     output = new Answer(new Error("Message must not exceed 140 characters"));
                 else
                 {
@@ -57,7 +57,7 @@ namespace Tigwi.API.Controllers
         }
 
 
-        // POST : /account/copy
+        // POST : /message/copy
 
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Copy()
@@ -104,7 +104,7 @@ namespace Tigwi.API.Controllers
 
 
         //
-        // POST : /account/delete
+        // POST : /message/delete
         
         // TODO : Authentication when a method to get the owner is provided
         // Note : This is not implemented by storage
@@ -144,7 +144,7 @@ namespace Tigwi.API.Controllers
         
 
         //
-        // POST : /account/tag
+        // POST : /message/tag
 
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Tag()
@@ -191,7 +191,7 @@ namespace Tigwi.API.Controllers
 
         
         //
-        // POST : /account/untag
+        // POST : /message/untag
 
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Untag()
@@ -234,110 +234,6 @@ namespace Tigwi.API.Controllers
             }
 
             return Serialize(new Answer(error));
-        }
-
-        
-        //
-        // POST : /account/subscribelist
-
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult SubscribeList()
-        {
-            Error error;
-
-            try
-            {
-                var subscribe =
-                    (SubscribeList) (new XmlSerializer(typeof (SubscribeList))).Deserialize(Request.InputStream);
-
-                if (subscribe.AccountId == null && subscribe.AccountName == null)
-                    error = new Error("AccountId or AccountName missing");
-                else if (subscribe.Subscription == null)
-                    error = new Error("Subscription missing");
-                else
-                {
-                    var accountId = subscribe.AccountId ?? Storage.Account.GetId(subscribe.AccountName);
-
-                    // Check if the user is authenticated and has rights
-                    var authentication = Authorized(accountId);
-
-                    if (authentication.HasRights)
-                    {
-                        Storage.List.Follow(subscribe.Subscription.GetValueOrDefault(), accountId);
-
-                        // Result is an empty error XML element
-                        error = new Error();
-                    }
-                    else
-                        error = new Error(authentication.ErrorMessage());
-                }
-            }
-            catch (StorageLibException exception)
-            {
-                // Result is an non-empty error XML element
-                error = new Error(exception.Code.ToString());
-            }
-            catch (InvalidOperationException exception)
-            {
-                error = new Error(exception.Message + " " + exception.InnerException.Message);
-            }
-
-            return Serialize(new Answer(error));
-        }
-
-        //
-        // POST /account/createlist
-
-        [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult CreateList()
-        {
-            Answer output;
-
-            try
-            {
-                var listCreation =
-                    (CreateList) (new XmlSerializer(typeof (CreateList))).Deserialize(Request.InputStream);
-
-                if (listCreation.AccountId == null && listCreation.AccountName == null)
-                    output = new Answer(new Error("AccountId or AccountName missing"));
-                else if (listCreation.ListInfo == null)
-                    output = new Answer(new Error("ListInfo missing"));
-                else if (listCreation.ListInfo.Name == null) // TODO : More checks on Name
-                    output = new Answer(new Error("Name missing"));
-                else if (listCreation.ListInfo.Description == null) // TODO : More checks on Description
-                    output = new Answer(new Error("Description missing"));
-                else
-                {
-                    var accountId = listCreation.AccountId ?? Storage.Account.GetId(listCreation.AccountName);
-
-                    // Check if the user is authenticated and has rights
-                    var authentication = Authorized(accountId);
-
-                    if (authentication.HasRights)
-                    {
-                        var listToCreate = listCreation.ListInfo;
-
-                        var listId = Storage.List.Create(accountId, listToCreate.Name, listToCreate.Description,
-                                                         listToCreate.IsPrivate);
-
-                        // Result is an empty error XML element
-                        output = new Answer(new NewObject(listId));
-                    }
-                    else
-                        output = new Answer(new Error(authentication.ErrorMessage()));
-                }
-            }
-            catch (StorageLibException exception)
-            {
-                // Result is an non-empty error XML element
-                output = new Answer(new Error(exception.Code.ToString()));
-            }
-            catch (InvalidOperationException exception)
-            {
-                output = new Answer(new Error(exception.Message + " " + exception.InnerException.Message));
-            }
-
-            return Serialize(output);
         }
 
     }
