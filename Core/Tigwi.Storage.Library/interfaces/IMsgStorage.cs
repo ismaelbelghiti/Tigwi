@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Tigwi.Storage.Library
 {
-    // Be carefull : their is no warranty an all about time synchronisation between differents VM in azure
+    // Be carefull : there is no warranty an all about time synchronisation between differents VM in azure
     // To be sure messages come in the right order, we wait a few moments between the time they are posted and the time we show them
 
     public interface IMsgStorage

@@ -179,7 +179,7 @@ namespace Tigwi.API.Controllers
                     output = new Answer(new Error("AccountId or AccountName missing"));
                 else if (listCreation.ListInfo == null)
                     output = new Answer(new Error("ListInfo missing"));
-                else if (listCreation.ListInfo.Name == null) // TODO : More checks on Name
+                else if (listCreation.ListInfo.Name == null)
                     output = new Answer(new Error("Name missing"));
                 else if (listCreation.ListInfo.Description == null)
                     output = new Answer(new Error("Description missing"));
