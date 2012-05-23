@@ -182,6 +182,34 @@ namespace Tigwi.UI.Controllers
             }
         }
 
+        /// <summary>
+        /// Remove the current user from account
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Remove(Guid id)
+        {
+            try
+            {
+                IAccountModel account = this.Storage.Accounts.Find(id);
+                account.Users.Remove(CurrentUser);
+                this.Storage.SaveChanges();
+                if (id == CurrentAccount.Id)
+                {
+                    CurrentAccount = CurrentUser.Accounts.ElementAt(0);
+                }
+                return this.RedirectToAction("List", "Account");
+            }
+            catch (AccountNotFoundException)
+            {
+                return this.RedirectToAction("Index", "Home", new { error = "This account doesn't exist" });
+            }
+            catch
+            {
+                throw new NotImplementedException("Account.Delete");
+            }
+            //TODO : Catch the good exceptions of Remove 
+        }
 
         [HttpPost]
         public ActionResult IsFollowed(Guid listId)
