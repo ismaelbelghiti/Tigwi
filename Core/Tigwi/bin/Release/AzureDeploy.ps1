@@ -31,7 +31,7 @@ if ($hostedService.Status -ne $null)
 }
  
 Get-HostedService $servicename -Certificate $cert -SubscriptionId $sub |
-    Upgrade-Deployment -package $package -configuration $config -label $buildLabel -serviceName $servicename -StorageServiceName $storageAccount |
+    Update-Deployment -package $package -configuration $config -label $buildLabel -serviceName $servicename -StorageServiceName $storageAccount |
     Get-OperationStatus -WaitToComplete
  
 if ($error) { exit 888 }
