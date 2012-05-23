@@ -6,8 +6,16 @@ using System.Xml.Serialization;
 
 namespace Tigwi.API.Models
 {
+    // Models for request bodies
 
-    // models to answer to requests
+    public class BaseRequest
+    {
+        public string AccountName { get; set; }
+        public Guid? AccountId { get; set; }
+    }
+
+    // Models to answer to requests
+    
     [Serializable]
     public abstract class Content
     {}
