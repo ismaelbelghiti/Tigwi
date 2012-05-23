@@ -33,6 +33,10 @@ namespace Tigwi.API.Controllers
             {
                 // Result is an non-empty error XML element
                 output = new Answer(new Error(exception.Code.ToString()));
+
+                // In the case of a "not found" exception we change the HTTP status
+                if (exception.Code == StrgLibErr.MessageNotFound || exception.Code == StrgLibErr.ListNotFound || exception.Code == StrgLibErr.UserNotFound || exception.Code == StrgLibErr.AccountNotFound)
+                    Response.StatusCode = 404;
             }
             catch (AuthFailedException)
             {
