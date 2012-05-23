@@ -89,6 +89,8 @@ namespace Tigwi.UI
 
             public ISet<string> OpenIdUri { get; set; }
 
+            public IDictionary<Guid, string> ApiKey { get; set; }
+
             public byte[] Password { get; set; }
         }
 
@@ -100,6 +102,7 @@ namespace Tigwi.UI
                 this.IdFromLogin = new Dictionary<string, Guid>();
                 this.UserFromId = new Dictionary<Guid, MockUser>();
                 this.IdFromOpenId = new Dictionary<string, Guid>();
+                this.IdFromApiKey = new Dictionary<Guid, Guid>();
             }
 
             protected IDictionary<string, Guid> IdFromLogin { get; set; }
@@ -107,6 +110,8 @@ namespace Tigwi.UI
             protected IDictionary<Guid, MockUser> UserFromId { get; set; }
 
             protected IDictionary<string, Guid> IdFromOpenId { get; set; }
+
+            protected IDictionary<Guid, Guid> IdFromApiKey { get; set; }
 
             protected MockStorage Storage { get; set; }
 
@@ -252,6 +257,48 @@ namespace Tigwi.UI
                 this.IdFromOpenId.Remove(openIdUri);
             }
 
+            public Guid GetIdByApiKey(Guid apiKey)
+            {
+                Guid id;
+
+                if (!this.IdFromApiKey.TryGetValue(apiKey, out id))
+                {
+                    throw new UserNotFound();
+                }
+
+                return id;
+            }
+
+            public Guid GenerateApiKey(Guid userId, string applicationName)
+            {
+                Guid apiKey = Guid.NewGuid();
+
+                var user = this.GetMock(userId);
+                user.ApiKey.Add(apiKey, applicationName);
+                this.IdFromApiKey.Add(apiKey, userId);
+
+                return apiKey;
+            }
+
+            public Dictionary<Guid, string> ListApiKeys(Guid userId)
+            {
+                return new Dictionary<Guid, string>(this.GetMock(userId).ApiKey);
+            }
+
+            public void DeactivateApiKey(Guid userId, Guid apiKey)
+            {
+                Guid associated;
+
+                this.GetMock(userId).ApiKey.Remove(apiKey);
+
+                if (!this.IdFromApiKey.TryGetValue(apiKey, out associated))
+                {
+                    return;
+                }
+
+                this.IdFromApiKey.Remove(apiKey);
+            }
+
             public byte[] GetPassword(Guid userId)
             {
                 return this.GetMock(userId).Password;
@@ -260,30 +307,6 @@ namespace Tigwi.UI
             public void SetPassword(Guid userId, byte[] password)
             {
                 this.GetMock(userId).Password = password;
-            }
-
-            #endregion
-
-            #region Unimplemented methods
-
-            public Guid GenerateApiKey(Guid userId, string applicationName)
-            {
-                throw new NotImplementedException();
-            }
-
-            public Guid GetIdByApiKey(Guid apiKey)
-            {
-                throw new NotImplementedException();
-            }
-
-            public Dictionary<Guid, string> ListApiKeys(Guid userId)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void DeactivateApiKey(Guid apiKey, Guid userId)
-            {
-                throw new NotImplementedException();
             }
 
             #endregion
