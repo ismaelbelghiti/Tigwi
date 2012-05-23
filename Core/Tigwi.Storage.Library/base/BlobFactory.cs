@@ -70,6 +70,11 @@ namespace Tigwi.Storage.Library
             return new Blob<Guid>(userContainer, U_IDBYOPENIDURI + openIdUriHash);
         }
 
+        public Blob<Guid> UIdByApiKey(Guid apiKey)
+        {
+            return new Blob<Guid>(userContainer, U_IDBYAPIKEY + apiKey);
+        }
+
         public Blob<UserInfo> UInfo(Guid userId)
         {
             return new Blob<UserInfo>(userContainer, U_INFO + userId);
@@ -90,6 +95,20 @@ namespace Tigwi.Storage.Library
             Mutex.Init(userContainer, U_OPENIDS + userId + LOCK);
         }
 
+        public DictionaryBlob<Guid, string> UApiKeysData(Guid userId)
+        {
+            return new DictionaryBlob<Guid, String>(userContainer, U_APIKEYS + userId + DATA);
+        }
+
+        public Mutex UApiKeysLock(Guid userId)
+        {
+            return new Mutex(userContainer, U_APIKEYS + userId + LOCK, new UserNotFound());
+        }
+
+        public void UApiKeysLockInit(Guid userId)
+        {
+            Mutex.Init(userContainer, U_APIKEYS + userId + LOCK);
+        }
         public Blob<ByteArray> UPassword(Guid userId)
         {
             return new Blob<ByteArray>(userContainer, U_PASSWORD + userId);
@@ -228,8 +247,10 @@ namespace Tigwi.Storage.Library
         const string U_INFO = "info/";
         const string U_ACCOUNTS = "accounts/";
         const string U_OPENIDS = "openids/";
+        const string U_APIKEYS = "apikeys/";
         const string U_IDBYLOGIN = "idbylogin/";
         const string U_IDBYOPENIDURI = "idbyopeniduri/";
+        const string U_IDBYAPIKEY = "idbyapikey/";
         const string U_PASSWORD = "password/";
 
         const string A_AUTOCOMPLETION = "autocompletion/";

@@ -263,6 +263,30 @@ namespace Tigwi.UI
             }
 
             #endregion
+
+            #region Unimplemented methods
+
+            public Guid GenerateApiKey(Guid userId, string applicationName)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Guid GetIdByApiKey(Guid apiKey)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Dictionary<Guid, string> ListApiKeys(Guid userId)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void DeactivateApiKey(Guid apiKey, Guid userId)
+            {
+                throw new NotImplementedException();
+            }
+
+            #endregion
         }
 
         protected class MockAccount : IAccountInfo
