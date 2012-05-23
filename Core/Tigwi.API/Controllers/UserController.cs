@@ -7,6 +7,7 @@ namespace Tigwi.API.Controllers
 {
     public class UserController : ApiController
     {
+        // TODO : handle authentication correctly
         //
         // GET : /user/maininfo
         // The user you get the info depend on who you are according to authentication
