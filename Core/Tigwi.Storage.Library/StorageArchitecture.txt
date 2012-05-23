@@ -85,3 +85,5 @@ Tests qui passent pas:
 	-GetListMsgToNormalBehaviourTest2
 	-GetListMsgToNormalBehaviourTest3
 	-GetListMsgToNormalBehaviourTest4
+	-PostAccountNotFound
+	-Remove msg
