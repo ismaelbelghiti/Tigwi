@@ -9,10 +9,11 @@ namespace Tigwi.Storage.Library
     [ProtoContract]
     public class Message : IMessage
     {
-        public Message(Guid id, Guid posterId, string PosterName, string PosterAvatar, DateTime date, string content)
+        public Message(Guid id, Guid posterId, string posterName, string PosterAvatar, DateTime date, string content)
         {
             Id = id;
             PosterId = posterId;
+            PosterName = posterName;
             Date = date;
             Content = content;
         }
@@ -24,6 +25,7 @@ namespace Tigwi.Storage.Library
             Date = DateTime.MinValue;
             Content = null;
             PosterAvatar = null;
+            PosterName = "";
         }
 
         [ProtoMember(1)]

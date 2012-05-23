@@ -59,6 +59,8 @@ namespace Tigwi.UI.Controllers
                        ? this.Storage.Lists.Create(
                            this.CurrentAccount, editList.ListName, editList.ListDescription, !editList.ListPublic)
                        : this.Storage.Lists.Find(editList.ListId);
+            if (list == null)
+                throw new HttpException((int)HttpStatusCode.NotFound, "The list doesn't exists.");
             try
             {
                 list.Name = editList.ListName;
@@ -146,9 +148,9 @@ namespace Tigwi.UI.Controllers
         [HttpPost]
         public ActionResult GetList(Guid listId)
         {
-            // TODO: dafuq ???
-            //TODO some exceptions might be thrown, we are not currently catching any
             IListModel list = CurrentAccount.AllFollowedLists.Where(l => l.Id == listId).First();
+            if(list == null)
+                return this.RedirectToAction("Index", "Home", new { error = "This list does not exist anymore." });
             return Json(new { Name = list.Name,Descr = list.Description,Public = !list.IsPrivate, Members=list.Members.Select(account=>account.Name)});
             
         }
