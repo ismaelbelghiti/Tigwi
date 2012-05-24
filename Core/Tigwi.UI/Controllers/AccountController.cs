@@ -310,12 +310,12 @@ namespace Tigwi.UI.Controllers
         }
 
         /// <summary>
-        /// Shows all the people that follow a given account.
+        /// Shows all the people that follow a list owned by the current account.
         /// </summary>
         /// <returns>The resulting view.</returns>
         public ActionResult Followers()
         {
-            throw new NotImplementedException("AccountController.Followers");
+            return this.View();           
         }
 
         [HttpPost]
