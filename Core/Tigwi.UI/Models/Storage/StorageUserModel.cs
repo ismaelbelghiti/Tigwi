@@ -15,6 +15,8 @@ namespace Tigwi.UI.Models.Storage
 
         private readonly StorageEntityCollection<StorageAccountModel, IAccountModel> accounts;
 
+        private IDictionary<Guid, string> apiKeys;
+
         private string avatar;
 
         private string email;
@@ -45,6 +47,18 @@ namespace Tigwi.UI.Models.Storage
         #endregion
 
         #region Public Properties
+
+        public IDictionary<Guid, string> ApiKeys
+        {
+            get
+            {
+                if (!this.ApiKeysPopulated)
+                {
+                    this.PopulateApiKeys();
+                }
+                return this.apiKeys;
+            }
+        }
 
         public ICollection<IAccountModel> Accounts
         {
@@ -151,6 +165,8 @@ namespace Tigwi.UI.Models.Storage
 
         protected bool IdFetched { get; set; }
 
+        protected bool ApiKeysPopulated { get; set; }
+
         protected override bool InfosUpdated
         {
             get
@@ -169,6 +185,37 @@ namespace Tigwi.UI.Models.Storage
         #endregion
 
         #region Methods
+
+        public Guid GenerateApiKey(string applicationName)
+        {
+            if (!this.ApiKeysPopulated)
+            {
+              this.PopulateApiKeys();
+            }
+            Guid newKey = this.Storage.User.GenerateApiKey(this.Id, applicationName);
+            this.apiKeys.Add(newKey, applicationName);
+            return newKey;
+        }
+
+        public void DeactivateApiKey(Guid apiKey)
+        {
+            // TODO : Better error checking
+            if (!this.ApiKeysPopulated)
+            {
+              this.PopulateApiKeys();
+            }
+
+            if (!this.apiKeys.ContainsKey(apiKey)) return;
+
+            this.Storage.User.DeactivateApiKey(this.Id, apiKey);
+            this.apiKeys.Remove(apiKey);
+        }
+
+        internal void PopulateApiKeys()
+        {
+            this.apiKeys = this.Storage.User.ListApiKeys(this.Id);
+            this.ApiKeysPopulated = true;
+        }
 
         internal override bool Save()
         {

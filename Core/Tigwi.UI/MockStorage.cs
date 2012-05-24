@@ -177,7 +177,8 @@ namespace Tigwi.UI
                             Login = login,
                             Id = id,
                             Password = password,
-                            OpenIdUri = new HashSet<string>()
+                            OpenIdUri = new HashSet<string>(),
+                            ApiKey = new Dictionary<Guid, string>()
                         });
 
                 return id;

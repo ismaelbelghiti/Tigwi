@@ -54,6 +54,18 @@ namespace Tigwi.UI.Models
         /// </summary>
         string Password { set; }
 
+        /// <summary>
+        /// Gets the list of active API keys for this user
+        /// </summary>
+        IDictionary<Guid, string> ApiKeys { get; }
+
         #endregion
+
+        /// <summary>
+        /// Generate and return a new api key
+        /// </summary>
+        /// <param name="applicationName">Name of the application that will use the key</param>
+        /// <returns></returns>
+        Guid GenerateApiKey(string applicationName);
     }
 }
