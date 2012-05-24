@@ -29,12 +29,20 @@ namespace Tigwi.Storage.Library
             // autorisation passage publique/privé
             // si passage publique privé : pseudo-suppression
 
-            ListInfo infos = blobFactory.LInfo(listId).GetIfExists(new ListNotFound());
-            infos.Description = description;
-            infos.Name = name;
-            if (infos.IsPersonnal)
-                throw new IsPersonnalList();
-            blobFactory.LInfo(listId).Set(infos);
+            //ListInfo infos = blobFactory.LInfo(listId).GetIfExists(new ListNotFound());
+            //infos.Description = description;
+            //infos.Name = name;
+            //if (infos.IsPersonnal)
+            //    throw new IsPersonnalList();
+            //blobFactory.LInfo(listId).Set(infos);
+
+            Blob<ListInfo> bInfo = blobFactory.LInfo(listId); 
+            ListInfo info = bInfo.GetIfExists(new ListNotFound());
+            info.Description = description;
+            info.Name = name;
+            info.IsPrivate = isPrivate;
+            if (!bInfo.SetIfExists(info))
+                throw new ListNotFound();
         }
 
         public Guid GetOwner(Guid listId)
