@@ -1,0 +1,21 @@
+﻿@model IDictionary<Guid, string>
+
+@{
+    ViewBag.Title = "Manage your API Keys";
+}
+
+<h2>Manage your API keys</h2>
+<form method="post" action="/User/GenerateApiKey">
+<label for="ApplicationName">Application Name</label>
+<input type="text" name="ApplicationName" id="ApplicationName" />
+
+<button type="submit">Generate a key !</button>
+</form>
+
+
+<ul>
+@foreach(var key in Model)
+{    
+ <li>@key.Value : @key.Key</li>
+}    
+</ul>

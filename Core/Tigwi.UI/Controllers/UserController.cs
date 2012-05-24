@@ -45,7 +45,6 @@ namespace Tigwi.UI.Controllers
             {
                 try
                 {
-                    // TODO: real authentication
                     var auth = new Tigwi.Auth.PasswordAuth(RawStorage, userLogOnViewModel.Login, userLogOnViewModel.Password);
                     Guid userId = auth.Authenticate();
                     var loggingUser = this.Storage.Users.Find(userLogOnViewModel.Login);
@@ -151,6 +150,22 @@ namespace Tigwi.UI.Controllers
         public ActionResult Deactivate(int id, FormCollection collection)
         {
             throw new NotImplementedException("UserController.Deactivate[POST]");
+        }
+
+        public ActionResult ListApiKeys()
+        {
+            return this.View(CurrentUser.ApiKeys);
+        }
+
+        [HttpPost]
+        public ActionResult GenerateApiKey(GenerateApiKeyViewModel model)
+        {
+            if(ModelState.IsValid)
+            {
+                this.CurrentUser.GenerateApiKey(model.ApplicationName);
+            }
+
+            return new RedirectResult("/User/ListApiKeys");
         }
     }
 }
