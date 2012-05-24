@@ -152,5 +152,17 @@ namespace Tigwi.UI.Controllers
         {
             throw new NotImplementedException("UserController.Deactivate[POST]");
         }
+
+        /// <summary>
+        ///  Checks Whether the user <paramref name="user"/> exists
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult UserExists(string user)
+        {
+            bool exists = this.Storage.Users.Exists(user);
+            return Json(new { exists = exists });
+        }
     }
 }

@@ -17,6 +17,9 @@ namespace Tigwi.UI.Models.Account
         [AllowHtml]
         public string Description { get; set; }
 
+        [Required]
+        public IEnumerable<string> UserIds { get; set; }
+
         //Not required 
         public Guid AccountId { get; set; }
 
