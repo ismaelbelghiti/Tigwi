@@ -19,8 +19,38 @@
                     $('#AccountId').val(accountId);
                     $('#ReturnController').val("Account");
                     $('#ReturnAction').val("List");
+                    for (var i = 0; i < data.Users.length; i++) {
+                        var toAppend = "<div class=\"alert alert-info span2\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button><span class=\"truncated-shorter\">" + data.Users[i] +
+                            '</span><input type="hidden" value="' + data.Users[i] + '" name="UserIds"/></div>';
+                        $("#userAdded").append(toAppend);
+                        }
                 }
             });
+        });
+
+        $('#addUserButton').click(function () {
+            $.ajax({
+                url: $(this).data("url"),
+                type: "POST",
+                dataType: 'json',
+                data: { 'user': $('#addUser').val() },
+                cache: false,
+                success: function (data) {
+
+                    if (data.exists) {
+                        var toAppend = "<div class=\"alert alert-info span2\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button><span class=\"truncated-shorter\">" + $('#addUser').val() +
+                            '</span><input type="hidden" value="' + $('#addUser').val() + '" name="UserIds"/></div>';
+                        $("#userAdded").append(toAppend);
+                    }
+                    else {
+                        var toAppend = "<div class=\"alert alert-error\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button> The user "
+                        + $('#addUser').val()
+                        + ' doesn\'t exists.</div>';
+                        $("#error-user-doesnt-exists").append(toAppend);
+                    }
+                }
+            });
+            return false;
         });
 
         $('.deltAcc').click(function(event) {

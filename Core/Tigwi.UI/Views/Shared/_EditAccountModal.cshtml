@@ -21,6 +21,14 @@
         @Html.HiddenFor(m => m.ReturnController)
         @Html.HiddenFor(m => m.ReturnAction)
 
+        <label for="addAAUser">Add another user</label>
+        <input type="text" class="text-box single-line" id="addUser"/>
+        <input type="hidden" name="editAcc2" id="isEdit"/>
+        <button type="button" class="btn" data-url="@Url.Action("UserExists","User")" id="addUserButton"> add user</button>
+        <div id="error-user-doesnt-exists"></div>
+        <h5>Current users in the account</h5>
+        <div id="userAdded"></div>
+
     </div>
     
     

@@ -245,6 +245,13 @@ namespace Tigwi.UI.Controllers
             {
                 IAccountModel account = this.Storage.Accounts.Find(editAccount.AccountId);
                 account.Description = editAccount.Description;
+
+                foreach (var member in editAccount.UserIds)
+                {
+                    IUserModel user = this.Storage.Users.Find(member);
+                    account.Users.Add(user);
+                }
+
                 this.Storage.SaveChanges();
                 return this.RedirectToAction(editAccount.ReturnAction, editAccount.ReturnController);
             }
@@ -310,19 +317,19 @@ namespace Tigwi.UI.Controllers
         }
 
         /// <summary>
-        /// Shows all the people that follow a given account.
+        /// Shows all the people that follow a list owned by the current account.
         /// </summary>
         /// <returns>The resulting view.</returns>
         public ActionResult Followers()
         {
-            throw new NotImplementedException("AccountController.Followers");
+            return this.View();           
         }
 
         [HttpPost]
         public ActionResult GetAccount(Guid accountId)
         {
             var account = this.Storage.Accounts.Find(accountId);
-            return Json(new { Descr = account.Description, Name = account.Name });
+            return Json(new { Descr = account.Description, Name = account.Name, Users = account.Users.Select(user => user.Login) });
         }
 
         [HttpPost]
