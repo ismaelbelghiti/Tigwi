@@ -165,7 +165,7 @@ namespace Tigwi.UI.Controllers
                 this.CurrentUser.GenerateApiKey(model.ApplicationName);
             }
 
-            return new RedirectResult("/User/ListApiKeys");
+            return this.RedirectToAction("ListApiKeys","User");
         }
 
         [HttpPost]
@@ -176,11 +176,11 @@ namespace Tigwi.UI.Controllers
                 this.CurrentUser.DeactivateApiKey(model.ApiKey);
             }
 
-            return new RedirectResult("/User/ListApiKeys");
+            return this.RedirectToAction("ListApiKeys","User");
         }
 
         /// <summary>
-        ///  Checks Whether the user <paramref name="user"/> exists
+        ///  Checks whether the user <paramref name="user"/> exists
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
