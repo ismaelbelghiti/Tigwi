@@ -115,13 +115,17 @@ namespace Tigwi.Storage.Library
                     catch { }
                 }
 
-                List<Message> lastmessages = blobFactory.MLastMessage().Get();
+                List<Message> lastmessages = blobFactory.MLastMessage().GetWithDefault(new List<Message>());
                 lastmessages.Add(message);
+                // TODO: Take does *NOT* modify lastmessages :-)
                 lastmessages.Take(100);
                 
                 blobFactory.MLastMessage().Set(lastmessages);
             }
-            catch { bMessage.Delete();  }
+            catch {
+                bMessage.Delete();
+                throw;
+            }
 
 
             // TODO : Add in accountMsg
@@ -177,7 +181,7 @@ namespace Tigwi.Storage.Library
 
         public List<IMessage> GetLastMessages()
         {
-            return new List<IMessage>(blobFactory.MLastMessage().Get());
+            return new List<IMessage>(this.blobFactory.MLastMessage().GetWithDefault(new List<Message>()));
         }
     }
 }

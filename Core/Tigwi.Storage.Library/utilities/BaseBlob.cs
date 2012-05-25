@@ -109,6 +109,18 @@ namespace Tigwi.Storage.Library.Utilities
             }
         }
 
+        public T GetWithDefault(T defaultValue)
+        {
+            try
+            {
+                return this.Get();
+            }
+            catch (Exception)
+            {
+                return defaultValue;
+            }
+        }
+
         public bool SetIfNotExists(T obj)
         {
             BlobRequestOptions reqOpt = new BlobRequestOptions();
