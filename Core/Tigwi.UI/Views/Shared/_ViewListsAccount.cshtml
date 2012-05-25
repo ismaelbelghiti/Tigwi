@@ -1,0 +1,21 @@
+﻿@using Tigwi.UI.Models
+@using Tigwi.UI.Models.Account
+@using Tigwi.UI.Models.User
+
+<h3>Owned Lists</h3>
+
+<ul>
+@foreach(var list in CurrentAccount.AllOwnedLists)
+{
+    <li>
+    <h4>@list.Name</h4>
+    
+    <p><b>Followers :</b></p>
+    
+    @foreach (var account in list.Followers)
+    {
+        <li>@account.Name</li>
+    } 
+    </li>
+}
+</ul>

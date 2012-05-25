@@ -1,0 +1,32 @@
+﻿@model IDictionary<Guid, string>
+
+@{
+    ViewBag.Title = "Manage your API Keys";
+}
+
+@section LeftInfos
+{
+<p>API keys allow an external application to interact with Tigwi in your name.</p>
+<p>For your safety, never give your password to anyone, and don't give a key to more than one application.</p>
+<p>Don't forget to deactivate the keys you don't need !</p>
+}
+
+<form method="post" action="/User/GenerateApiKey" class="form-inline">
+<input type="text" name="ApplicationName" id="ApplicationName" placeholder="Application name"/>
+
+<button type="submit" class="btn btn-primary"><i class="icon-plus"></i> Generate a key !</button>
+</form>
+
+
+<dl>
+@foreach(var key in Model)
+{    
+ <dt>@key.Value 
+ <form method="post" action="/User/DeactivateApiKey" class="form-inline" style="display: inline">
+   <input type="hidden" name="ApiKey" value="@key.Key"/>
+   <button class="close" type="submit" style="display: inline-block; float: none">&times;</button>
+ </form>
+ </dt>
+ <dd>@key.Key</dd>
+}    
+</dl>

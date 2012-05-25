@@ -47,6 +47,10 @@ namespace Tigwi.API.Controllers
             {
                 // Result is an non-empty error XML element
                 output = new Answer(new Error(exception.Code.ToString()));
+
+                // In the case of a "not found" exception we change the HTTP status
+                if (exception.Code == StrgLibErr.MessageNotFound || exception.Code == StrgLibErr.ListNotFound || exception.Code == StrgLibErr.UserNotFound || exception.Code == StrgLibErr.AccountNotFound)
+                    Response.StatusCode = 404;
             }
             catch (InvalidOperationException exception)
             {
@@ -93,6 +97,10 @@ namespace Tigwi.API.Controllers
             {
                 // Result is an non-empty error XML element
                 output = new Answer(new Error(exception.Code.ToString()));
+
+                // In the case of a "not found" exception we change the HTTP status
+                if (exception.Code == StrgLibErr.MessageNotFound || exception.Code == StrgLibErr.ListNotFound || exception.Code == StrgLibErr.UserNotFound || exception.Code == StrgLibErr.AccountNotFound)
+                    Response.StatusCode = 404;
             }
             catch (InvalidOperationException exception)
             {
@@ -106,8 +114,6 @@ namespace Tigwi.API.Controllers
         //
         // POST : /message/delete
         
-        // TODO : Authentication when a method to get the owner is provided
-        // Note : This is not implemented by storage
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Delete()
         {
@@ -121,18 +127,29 @@ namespace Tigwi.API.Controllers
                     error = new Error("MessageId missing");
                 else
                 {
-                    //var ownerId = Storage.Msg.
+                    var ownerId = Storage.Msg.GetMessage(msg.MessageId.GetValueOrDefault()).PosterId;
+                    
+                    // Check if the user is authenticated and has rights
+                    var authentication = Authorized(ownerId);
+                    if (authentication.HasRights)
+                    {
+                        Storage.Msg.Remove(msg.MessageId.GetValueOrDefault());
 
-                    Storage.Msg.Remove(msg.MessageId.GetValueOrDefault());
-
-                    // Result is an empty error XML element
-                    error = new Error();
+                        // Result is an empty error XML element
+                        error = new Error();
+                    }
+                    else
+                        error = new Error(authentication.ErrorMessage());
                 }
             }
             catch (StorageLibException exception)
             {
                 // Result is an non-empty error XML element
                 error = new Error(exception.Code.ToString());
+
+                // In the case of a "not found" exception we change the HTTP status
+                if (exception.Code == StrgLibErr.MessageNotFound || exception.Code == StrgLibErr.ListNotFound || exception.Code == StrgLibErr.UserNotFound || exception.Code == StrgLibErr.AccountNotFound)
+                    Response.StatusCode = 404;
             }
             catch (InvalidOperationException exception)
             {
@@ -180,6 +197,10 @@ namespace Tigwi.API.Controllers
             {
                 // Result is an non-empty error XML element
                 error = new Error(exception.Code.ToString());
+
+                // In the case of a "not found" exception we change the HTTP status
+                if (exception.Code == StrgLibErr.MessageNotFound || exception.Code == StrgLibErr.ListNotFound || exception.Code == StrgLibErr.UserNotFound || exception.Code == StrgLibErr.AccountNotFound)
+                    Response.StatusCode = 404;
             }
             catch (InvalidOperationException exception)
             {
@@ -227,6 +248,10 @@ namespace Tigwi.API.Controllers
             {
                 // Result is an non-empty error XML element
                 error = new Error(exception.Code.ToString());
+
+                // In the case of a "not found" exception we change the HTTP status
+                if (exception.Code == StrgLibErr.MessageNotFound || exception.Code == StrgLibErr.ListNotFound || exception.Code == StrgLibErr.UserNotFound || exception.Code == StrgLibErr.AccountNotFound)
+                    Response.StatusCode = 404;
             }
             catch (InvalidOperationException exception)
             {

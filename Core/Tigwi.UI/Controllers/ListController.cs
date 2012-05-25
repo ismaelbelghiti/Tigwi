@@ -59,6 +59,8 @@ namespace Tigwi.UI.Controllers
                        ? this.Storage.Lists.Create(
                            this.CurrentAccount, editList.ListName, editList.ListDescription, !editList.ListPublic)
                        : this.Storage.Lists.Find(editList.ListId);
+            if (list == null)
+                throw new HttpException((int)HttpStatusCode.NotFound, "The list doesn't exists.");
             try
             {
                 list.Name = editList.ListName;

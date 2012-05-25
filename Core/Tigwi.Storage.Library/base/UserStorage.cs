@@ -150,38 +150,34 @@ namespace Tigwi.Storage.Library
         public Guid GenerateApiKey(Guid userId, string applicationName)
         {
             Guid apiKey = Guid.NewGuid();
-            using (blobFactory.UApiKeysLock(userId))
-            {
-                if (blobFactory.UApiKeysData(userId).Exists)
-                    blobFactory.UApiKeysData(userId).AddWithRetry(apiKey, applicationName);
-                else
-                {
-                    Dictionary<Guid, string> newset = new Dictionary<Guid, string>();
-                    newset.Add(apiKey, applicationName);
-                    blobFactory.UApiKeysData(userId).Set(newset);
-                }
 
-                blobFactory.UIdByApiKey(apiKey).Set(userId);
-            }
+            var keysblob = blobFactory.UApiKeysData(userId);
+            var newdict = new Dictionary<Guid, string> { { apiKey, applicationName } };
+            if (!keysblob.SetIfNotExists(newdict))
+                blobFactory.UApiKeysData(userId).AddWithRetry(apiKey, applicationName);
+            
+            blobFactory.UIdByApiKey(apiKey).Set(userId);
 
             return apiKey;
         }
 
         public Dictionary<Guid, string> ListApiKeys(Guid userId)
         {
-            if (!blobFactory.UApiKeysData(userId).Exists)
-                throw new UserNotFound();
+            if (!blobFactory.UInfo(userId).Exists)
+                    throw new UserNotFound();
 
-            return blobFactory.UApiKeysData(userId).Get();
+            var blob = blobFactory.UApiKeysData(userId);
+
+            if (!blob.Exists)
+                return new Dictionary<Guid, string>();
+            else
+                return blobFactory.UApiKeysData(userId).Get();
         }
 
         public void DeactivateApiKey(Guid userId, Guid apiKey)
         {
-                using (blobFactory.UApiKeysLock(userId))
-                {
-                    blobFactory.UApiKeysData(userId).RemoveWithRetry(apiKey);
-                    blobFactory.UIdByApiKey(apiKey).Delete();
-                }
+            blobFactory.UApiKeysData(userId).RemoveWithRetry(apiKey);
+            blobFactory.UIdByApiKey(apiKey).Delete();
         }
 
         public Byte[] GetPassword(Guid userId)

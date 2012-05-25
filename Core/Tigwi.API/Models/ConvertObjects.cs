@@ -220,4 +220,13 @@ namespace Tigwi.API.Models
         public Error Error;
         public Content Content;
     }
+
+    // A class with to generate the key for API authentication
+    [Serializable]
+    public class identityForApiKey
+    {
+        public string accountName;
+        public string password;
+        public string applicationName;
+    }
 }
