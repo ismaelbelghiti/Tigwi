@@ -176,11 +176,8 @@ namespace Tigwi.Storage.Library
 
         public void DeactivateApiKey(Guid userId, Guid apiKey)
         {
-                using (blobFactory.UApiKeysLock(userId))
-                {
-                    blobFactory.UApiKeysData(userId).RemoveWithRetry(apiKey);
-                    blobFactory.UIdByApiKey(apiKey).Delete();
-                }
+            blobFactory.UApiKeysData(userId).RemoveWithRetry(apiKey);
+            blobFactory.UIdByApiKey(apiKey).Delete();
         }
 
         public Byte[] GetPassword(Guid userId)
