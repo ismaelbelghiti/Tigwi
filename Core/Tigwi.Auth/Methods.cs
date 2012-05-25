@@ -21,10 +21,10 @@ namespace Tigwi.Auth
     /// </summary>
     public class ApiKeyAuth
     {
-        private string apiKey;
+        private Guid apiKey;
         private IStorage storage;
 
-        public ApiKeyAuth(IStorage storage, string apiKey)
+        public ApiKeyAuth(IStorage storage, Guid apiKey)
         {
             this.apiKey = apiKey;
             this.storage = storage;
@@ -35,7 +35,7 @@ namespace Tigwi.Auth
             // Pour l'instant, apikey == username
             try
             {
-                Guid userId = this.storage.User.GetId(this.apiKey);
+                Guid userId = this.storage.User.GetIdByApiKey(apiKey);
                 return userId;
             }
             catch ( UserNotFound )
