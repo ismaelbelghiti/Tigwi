@@ -152,11 +152,13 @@ namespace Tigwi.UI.Controllers
             throw new NotImplementedException("UserController.Deactivate[POST]");
         }
 
+        [Authorize]
         public ActionResult ListApiKeys()
         {
             return this.View(CurrentUser.ApiKeys);
         }
 
+        [Authorize]
         [HttpPost]
         public ActionResult GenerateApiKey(GenerateApiKeyViewModel model)
         {
@@ -168,6 +170,7 @@ namespace Tigwi.UI.Controllers
             return this.RedirectToAction("ListApiKeys","User");
         }
 
+        [Authorize]
         [HttpPost]
         public ActionResult DeactivateApiKey(DeactivateApiKeyViewModel model)
         {
