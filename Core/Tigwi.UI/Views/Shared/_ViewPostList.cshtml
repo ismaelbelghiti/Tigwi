@@ -1,7 +1,7 @@
 ﻿@using Tigwi.UI.Models
 @model IEnumerable<IPostModel>
       
-@foreach( var post in Model)
+@foreach( var post in Model.Reverse())
 {
     @Html.Partial("_ViewPost", post)    
 }
