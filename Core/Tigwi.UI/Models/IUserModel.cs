@@ -67,5 +67,11 @@ namespace Tigwi.UI.Models
         /// <param name="applicationName">Name of the application that will use the key</param>
         /// <returns></returns>
         Guid GenerateApiKey(string applicationName);
+
+        /// <summary>
+        /// Deactivate an api key belonging to the user
+        /// </summary>
+        /// <param name="apiKey"></param>
+        void DeactivateApiKey(Guid apiKey);
     }
 }

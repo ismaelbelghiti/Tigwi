@@ -4,18 +4,29 @@
     ViewBag.Title = "Manage your API Keys";
 }
 
-<h2>Manage your API keys</h2>
-<form method="post" action="/User/GenerateApiKey">
-<label for="ApplicationName">Application Name</label>
-<input type="text" name="ApplicationName" id="ApplicationName" />
+@section LeftInfos
+{
+<p>API keys allow an external application to interact with Tigwi in your name.</p>
+<p>For your safety, never give your password to anyone, and don't give a key to more than one application.</p>
+<p>Don't forget to deactivate the keys you don't need !</p>
+}
 
-<button type="submit">Generate a key !</button>
+<form method="post" action="/User/GenerateApiKey" class="form-inline">
+<input type="text" name="ApplicationName" id="ApplicationName" placeholder="Application name"/>
+
+<button type="submit" class="btn btn-primary"><i class="icon-plus"></i> Generate a key !</button>
 </form>
 
 
-<ul>
+<dl>
 @foreach(var key in Model)
 {    
- <li>@key.Value : @key.Key</li>
+ <dt>@key.Value 
+ <form method="post" action="/User/DeactivateApiKey" class="form-inline" style="display: inline">
+   <input type="hidden" name="ApiKey" value="@key.Key"/>
+   <button class="close" type="submit" style="display: inline-block; float: none">&times;</button>
+ </form>
+ </dt>
+ <dd>@key.Key</dd>
 }    
-</ul>
+</dl>

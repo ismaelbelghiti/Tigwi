@@ -168,6 +168,17 @@ namespace Tigwi.UI.Controllers
             return new RedirectResult("/User/ListApiKeys");
         }
 
+        [HttpPost]
+        public ActionResult DeactivateApiKey(DeactivateApiKeyViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                this.CurrentUser.DeactivateApiKey(model.ApiKey);
+            }
+
+            return new RedirectResult("/User/ListApiKeys");
+        }
+
         /// <summary>
         ///  Checks Whether the user <paramref name="user"/> exists
         /// </summary>

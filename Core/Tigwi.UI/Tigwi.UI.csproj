@@ -117,7 +117,8 @@
     <Compile Include="Models\Account\AccountDeleteViewModel.cs" />
     <Compile Include="Models\Account\AccountEditViewModel.cs" />
     <Compile Include="Models\Account\AccountLeaveViewModel.cs" />
-    <Compile Include="Models\GenerateApiKeyViewModel.cs" />
+    <Compile Include="Models\User\DeactivateApiKeyViewModel.cs" />
+    <Compile Include="Models\User\GenerateApiKeyViewModel.cs" />
     <Compile Include="Models\PolViewModel.cs" />
     <Compile Include="Models\EditListViewModel.cs" />
     <Compile Include="Models\IAccountRepository.cs" />
