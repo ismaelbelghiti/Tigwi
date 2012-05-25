@@ -29,7 +29,7 @@ namespace Tigwi.API.Controllers
                     output = new Answer(new Error("No key cookie was sent"));
                 else
                 {
-                    var userId = (new ApiKeyAuth(Storage, keyCookie.Value)).Authenticate();
+                    var userId = (new ApiKeyAuth(Storage, new Guid(keyCookie.Value))).Authenticate();
                     var userInfo = Storage.User.GetInfo(userId);
                     var userToReturn = new User(userInfo, userId);
                     output = new Answer(userToReturn);

@@ -34,7 +34,7 @@ namespace Tigwi.API.Controllers
             {
                 try
                 {
-                    var user = (new ApiKeyAuth(Storage, keyCookie.Value)).Authenticate();
+                    var user = (new ApiKeyAuth(Storage, new Guid(keyCookie.Value))).Authenticate();
                     var users = Storage.Account.GetUsers(account);
                     authentication.HasRights = users.Contains(user);
 
