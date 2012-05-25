@@ -11,17 +11,14 @@ namespace Tigwi.UI.Controllers
 {
     using System.Net;
 
+    using Tigwi.Storage.Library;
     using Tigwi.UI.Models.Storage;
     using Tigwi.UI.Models.Account;
 
     public class AccountController : HomeController
     {
-        public AccountController()
-        {
-        }
-
-        public AccountController(IStorageContext storageContext)
-            : base(storageContext)
+        public AccountController(IStorage storage)
+            : base(storage)
         {
         }
         

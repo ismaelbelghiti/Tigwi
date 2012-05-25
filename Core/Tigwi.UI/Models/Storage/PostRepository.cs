@@ -10,6 +10,8 @@
 namespace Tigwi.UI.Models.Storage
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
     using Tigwi.Storage.Library;
 
@@ -76,7 +78,17 @@ namespace Tigwi.UI.Models.Storage
             }
         }
 
-        /// <summary>
+        public IPostModel Find(Guid id)
+        {
+            return new StoragePostModel(this.StorageContext, this.Storage.Msg.GetMessage(id));
+        }
+
+        public IEnumerable<IPostModel> LastPosts()
+        {
+            return this.Storage.Msg.GetLastMessages().Select(msg => new StoragePostModel(this.StorageContext, msg));
+        }
+
+                /// <summary>
         /// Delete the given post.
         /// </summary>
         /// <param name="post">

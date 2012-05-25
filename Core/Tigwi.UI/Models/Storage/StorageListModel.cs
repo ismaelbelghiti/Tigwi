@@ -92,6 +92,11 @@
 
             set
             {
+                if (value == this.description)
+                {
+                    return;
+                }
+
                 this.UpdatedDescription = true;
                 this.description = value;
             }
@@ -139,6 +144,11 @@
 
             set
             {
+                if (this.isPrivate == value)
+                {
+                    return;
+                }
+
                 this.UpdatedPrivacy = true;
                 this.isPrivate = value;
             }
@@ -166,6 +176,11 @@
 
             set
             {
+                if (this.name != value)
+                {
+                    return;
+                }
+
                 this.UpdatedName = true;
                 this.name = value;
             }

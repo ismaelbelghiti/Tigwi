@@ -66,7 +66,7 @@
 
         protected IStorage RawStorage { get; private set; }
 
-        protected IStorageContext Storage { get; private set; }
+        internal IStorageContext Storage { get; private set; }
 
         #endregion
 

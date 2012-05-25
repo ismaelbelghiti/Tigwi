@@ -26,7 +26,7 @@
     }
     else
     {
-        <p>Tigwi is fun and better than Twitter, which we copied entirely ! Cheers !</p>
+        <p>Tigwi is an awesome microblogging platform. Try it out!</p>
     }
     
 }
@@ -38,5 +38,5 @@
 }
 else
 {
-    <p>Some interesting messages here ...</p>
+    @Html.Partial("_ViewPostList", Storage.Posts.LastPosts())
 }

@@ -8,10 +8,15 @@ namespace Tigwi.UI.Controllers
 {
     using System.Net;
 
+    using Tigwi.Storage.Library;
     using Tigwi.UI.Models;
 
     public class ListController : HomeController
     {
+        public ListController(IStorage storage)
+            : base(storage)
+        {
+        }
 
         //TODO Should we remove those 3 methods ?
         /// <summary>
@@ -148,11 +153,21 @@ namespace Tigwi.UI.Controllers
         [HttpPost]
         public ActionResult GetList(Guid listId)
         {
-            IListModel list = CurrentAccount.AllFollowedLists.Where(l => l.Id == listId).First();
-            if(list == null)
+            var list = this.CurrentAccount.AllFollowedLists.First(l => l.Id == listId);
+            if (list == null)
+            {
                 return this.RedirectToAction("Index", "Home", new { error = "This list does not exist anymore." });
-            return Json(new { Name = list.Name,Descr = list.Description,Public = !list.IsPrivate, Members=list.Members.Select(account=>account.Name)});
-            
+            }
+
+            return
+                Json(
+                    new
+                        {
+                            Name = list.Name,
+                            Descr = list.Description,
+                            Public = !list.IsPrivate,
+                            Members = list.Members.Select(account => account.Name)
+                        });
         }
     }
 }

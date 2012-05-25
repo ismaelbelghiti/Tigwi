@@ -9,6 +9,9 @@
 
 namespace Tigwi.UI.Models
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// The interface specification for a post repository
     /// </summary>
@@ -28,6 +31,10 @@ namespace Tigwi.UI.Models
         /// <returns>
         /// </returns>
         IPostModel Create(IAccountModel poster, string content);
+
+        IPostModel Find(Guid id);
+
+        IEnumerable<IPostModel> LastPosts();
 
         /// <summary>
         /// Deletes the given post.

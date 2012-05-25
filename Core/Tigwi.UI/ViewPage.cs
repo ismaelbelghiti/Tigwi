@@ -50,6 +50,15 @@ namespace Tigwi.UI
             }
         }
 
+        public IStorageContext Storage
+        {
+            get
+            {
+                var controller = this.ViewContext.Controller as HomeController;
+                return controller != null ? controller.Storage : null;
+            }
+        }
+
         public string Error
         {
             get
