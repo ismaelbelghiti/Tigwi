@@ -18,7 +18,6 @@ namespace Tigwi.UI.Controllers
         {
         }
 
-        //TODO Should we remove those 3 methods ?
         /// <summary>
         /// Shows the messages posted in the list.
         /// </summary>

@@ -1,0 +1,30 @@
+﻿@model Tigwi.UI.Models.IListModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+@section LeftInfos
+{
+        <h3>List : @Model.Name</h3>
+        <p>Description : @Model.Description</p>
+        <p>Owner : @Model.Owner.Name</p>
+        
+        <h3>Account(s) :</h3>
+        <li>
+        @foreach(var account in Model.Members)
+        {
+            <i>@account.Name</i>
+        }
+        </li>
+
+        <h3>Follower(s) :</h3>
+        <li>
+        @foreach(var account in Model.Followers)
+        {
+            <i>@account.Name</i>
+        }
+        </li>
+}
+
+@Html.Partial("_ViewPostList", Model.PostsBefore(DateTime.MaxValue, 10))

@@ -92,8 +92,11 @@
         @foreach (var list in Model.PublicOwnedLists)
         {
             <li>
+
                 <div class="listName accordion-toggle" data-toggle="collapse" href="#list-@list.Id">
-                    <i class="icon-folder-close"></i> <div style="display:inline-block"><span class="truncated-shorter">@list.Name</span></div> 
+                       
+                    <i class="icon-folder-close"></i> <div style="display:inline-block">
+                    <span class="truncated-shorter">@list.Name</span></div> 
                     <i class="star 
                     @((CurrentAccount.PublicFollowedLists.Select(l => l.Id).Contains(list.Id)) ? Html.Raw("icon-star") : Html.Raw("icon-star-empty"))
                      pull-right"></i>
@@ -106,7 +109,7 @@
                         </ul>
                     </div>
                 </div>
-
+                <i>@Html.ActionLink("Watch " + @list.Name, "Details", "List", new { listId = list.Id }, null)</i>
             </li>
         }
     </ul>
