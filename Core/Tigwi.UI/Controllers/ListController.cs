@@ -104,6 +104,20 @@ namespace Tigwi.UI.Controllers
         /// </summary>
         /// <returns>The resulting view.</returns>
         [HttpPost]
+        public ActionResult Follow(Guid id)
+        {
+            var list = this.Storage.Lists.Find(id);
+            CurrentAccount.AllFollowedLists.Add(list);
+            this.Storage.SaveChanges();
+            return this.RedirectToAction("Details", "List", new { listId = id });
+        }
+
+        /// <summary>
+        /// Makes the active account follow the given list.
+        /// Idempotent.
+        /// </summary>
+        /// <returns>Json object.</returns>
+        [HttpPost]
         public ActionResult FollowList(Guid id)
         {
             var list = this.Storage.Lists.Find(id);

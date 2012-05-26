@@ -10,6 +10,11 @@
         <p>Description : @Model.Description</p>
         <p>Owner : @Model.Owner.Name</p>
         
+        @if(User.Identity.IsAuthenticated)
+        {
+            @Html.Partial("_Follow", Model)
+        }
+        
         <h3>Account(s) :</h3>
         <li>
         @foreach(var account in Model.Members)
