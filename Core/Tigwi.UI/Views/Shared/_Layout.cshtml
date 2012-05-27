@@ -40,7 +40,7 @@
                 <div class="container">
                     <div class="span8 offset2">
                         <ul class="nav">
-                            @if (@User.Identity.IsAuthenticated )
+                            @if (@User.Identity.IsAuthenticated)
                             {
                                 <li @((ViewContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString() == "Home") ? Html.Raw("class=\"active\"") : Html.Raw("class=\"\""))>@Html.ActionLink("Home", "Index", "Home")</li>
                                 <li class="dropdown">  
@@ -66,8 +66,7 @@
                                 <li @((ViewBag.Cur == "Favs") ? Html.Raw("class=\"active\"") : Html.Raw("class=\"\""))>@Html.ActionLink("Favs", "Index", "Home")</li>
                             }
                             else
-                            {     
-                                <li><a data-toggle="modal" href="#registerModal" >Register</a></li>
+                            {
                                 <li class="dropdown">
                                     <a class="dropdown-toggle" href="#" data-toggle="dropdown">Login</a>
                                     <div class="dropdown-menu menu-log" style="padding: 15px; padding-bottom: 0px;">
@@ -95,7 +94,7 @@
                                         <ul class="dropdown-menu pull-right">
                                             <li>@Html.ActionLink("Accounts", "List", "Account")</li>
                                             <li>@Html.ActionLink("Lists", "Followers", "Account")</li>
-                                            <li>@Html.ActionLink("API keys","ListApiKeys","User")</li>
+                                            <li>@Html.ActionLink("API keys", "ListApiKeys", "User")</li>
                                             <li class="divider"></li>
                                             <li>@Html.ActionLink("Disconnect", "LogOut", "User")</li>
                                         </ul>
@@ -115,6 +114,17 @@
                     <section class="leftInfos">
                         @RenderSection("LeftInfos", false)
                     </section>
+                    
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <section class="leftInfos" style="margin-top: 10px">
+                            @Html.Partial("_Register", new RegisterViewModel())
+                        </section>
+                    }
+                    
+                    <footer class="leftInfos pull-center" style="margin-top: 10px">
+                        <p>&copy; Tigwi 2012</p>
+                    </footer>
                 </section>
                 <section class="span7">
                     @if (ViewBag.error != null)
@@ -143,7 +153,6 @@
                     </section>
                 </section>
             </div>
-
             
             <section class="modal hide" id="registerModal">
                     @Html.Partial("_RegisterModal", new RegisterViewModel())
@@ -158,14 +167,6 @@
             <section class="modal hide" id="deleteAccountModal">
                 @Html.Partial("_ConfirmDeleteAccountModal", null)
             </section>
-
-            <div class="row">
-                <section class="span8 offset2">
-                    <footer style="padding-top: 40px; padding-left: 40px;">
-                        <p>&copy; Tigwi 2012</p>
-                    </footer>
-                </section>
-            </div>
         </div>
 
 

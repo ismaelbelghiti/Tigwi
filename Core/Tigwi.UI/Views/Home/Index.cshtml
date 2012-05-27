@@ -1,4 +1,5 @@
 ﻿@using Tigwi.UI.Models
+@using Tigwi.UI.Models.User
 @model Tigwi.UI.Models.IAccountModel
 
 @{
@@ -26,7 +27,9 @@
     }
     else
     {
-        <p>Tigwi is an awesome microblogging platform. Try it out!</p>
+        <p>
+            Tigwi is a super fun microbloging platform you should really use!
+        </p>
     }
     
 }
@@ -38,5 +41,6 @@
 }
 else
 {
+    <h4 class="pull-center">Last messages!</h4>
     @Html.Partial("_ViewPostList", Storage.Posts.LastPosts())
 }
