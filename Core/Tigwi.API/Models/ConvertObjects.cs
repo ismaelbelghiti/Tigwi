@@ -14,6 +14,16 @@ namespace Tigwi.API.Models
         public Guid? AccountId { get; set; }
     }
 
+    // Useful for request to generate the key for API authentication
+    [Serializable]
+    public class Identity
+    {
+        public string UserLogin { get; set; }
+        public Guid? UserId { get; set; }
+        public string Password;
+        public string ApplicationName;
+    }
+
     // Models to answer to requests
     
     [Serializable]
@@ -221,12 +231,4 @@ namespace Tigwi.API.Models
         public Content Content;
     }
 
-    // A class with to generate the key for API authentication
-    [Serializable]
-    public class identityForApiKey
-    {
-        public string accountName;
-        public string password;
-        public string applicationName;
-    }
 }

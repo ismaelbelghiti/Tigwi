@@ -79,7 +79,7 @@ http://api.tigwi.com/account/{action}/id={accountId}/{number (if needed)}
 For POST methods, you have two tags, `<AccountName>` and `<AccountId>`, and you must choose one of them. Access through unique identifier is more direct. Thus, if you fill both `<AccountName>` and `<AccountId>` tags, only `<AccountId>` will be taken into consideration.
 
 
-#Get information about an *account*
+#Information about an *account*
 
 ##Read last messages wrote by someone
 
@@ -159,6 +159,7 @@ The same kind as for account/messages
 ###Information
 
 * In **URL**, you should give the name or the unique identifier of the account whose favourites messages you want to get.
+* Then the number of messages you want to get. It is optional and default value is set to 20.
 * You **must** be authenticated as an authorized user of the account to see the tagged messages.
 
 
@@ -178,22 +179,30 @@ GET
 
 http://api.tigwi.com/account/subscriberaccounts/John_Smith/2
 
-http://api.tigwi.com/subscriberaccounts/name=John_Smith/2
+http://api.tigwi.com/account/subscriberaccounts/name=John_Smith/2
 
-http://api.tigwi.com/subscriberaccounts/id=d818d509-e7eb-45b6-a56d-f472f075f433/2
+http://api.tigwi.com/account/subscriberaccounts/id=d818d509-e7eb-45b6-a56d-f472f075f433/2
 
 
 ###Response
 
-
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Content xsi:type="Accounts" Size="1">
+      <Account>
+       <Id>a3e56af5-9991-428e-8d8f-0b31f7e80e40</Id>
+       <Name>Paul_Smith</Name>
+       <Description>I'm the brother of @John_Smith</Description>
+      </Account>
+     </Content>
+    </Answer>
  
 ###Information
 
-* In **URL**, _accountName_ is the name of the account whose subscriptions you want to get.
-* In **URL**, _accountId_ is the unique identifier of the account whose subscriptions you want to get.
-* In **URL**, _numberOfSubscriptions_ is the number of subscriptions you want to get. It is optional and default value is set to 20.
-* In **Response**, _Size_ is the number of subscription returned (different from _numberOfSubscriptions_ if there are not enough subscriptions to provide).
-* If you're not authorized, you will only receive subscriptions from lists that the owner has declared public.
+* In **URL**, you should give the name or the unique identifier of the account whose subscriptions you want to get.
+* Then the number of subscriptions you want to get. It is optional and default value is set to 20.
+* In **Response**, _Size_ is the number of subscription returned (different from the requested number if there are not enough subscriptions to provide).
+* If you're not authorized, you will only receive subscriptions from lists that the owner has set public.
 
 
 ##See which accounts are following someone
@@ -260,7 +269,7 @@ http://api.tigwi.com/account/subscribedlists/id=d818d509-e7eb-45b6-a56d-f472f075
 * In **URL**, _accountId_ is the unique identifier of the account whose publicly followed lists you want to get.
 * In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default is set to 20.
 * In **Response**, _Size_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
-* If you're not authorized, you will only receive lists that the owner has declared public.
+* If you're not authorized, you will only receive lists that the owner has set public.
 
 
 ##See in which lists someone appears
@@ -340,7 +349,7 @@ http://api.tigwi.com/account/ownedlists/id=d818d509-e7eb-45b6-a56d-f472f075f433/
 
 * In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default value is set to 20.
 * In **Response**, _Size_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
-* If you're not authorized, you will only receive lists that the owner has declared public.
+* If you're not authorized, you will only receive lists that the owner has set public.
 
 
 ##Get main information about one account
@@ -571,7 +580,32 @@ If everything went well :
 * In **Request**, if you use both `<AccountName>` and `<AccountId>`, only the `<AccountId>` will be used (in particular when they don't refer to the same account).
 * You **must** be authenticated as an authorized user of the account where you intend to untag a message.
 
-#Get information about a _List_
+#Information about a *list*
+
+##Get last messages sent to a list
+
+###Purpose
+
+Obtain a number _numberOfMessages_ of last messages sent to the list whose unique identifier is _idOfList_.
+
+###HTTP method
+
+GET
+
+###URL
+
+http://api.tigwi.com/list/messages/idOfList/numberOfMessages
+
+###Response
+
+
+
+###Information
+
+* In **URL**, _idOfList_ is the unique identifier of the list whose messages you want to get.
+* In **URL**, _numberOfMessages_ is the number of messages you want to get. It is optional and default is set to 20.
+* In **Response**, _Size_ is the number of messages returned (different from _numberOfMessages_ if there are not enough accounts to provide).
+
 
 ##Get accounts followed by the list
 
@@ -647,32 +681,7 @@ http://api.tigwi.com/list/owner/idOfList
 * In **URL**, _idOfList_ is the unique identifier of the list whose owner you want to get.
 
 
-##Get last messages sent to a list
-
-###Purpose
-
-Obtain a number _numberOfMessages_ of last messages sent to the list whose unique identifier is _idOfList_.
-
-###HTTP method
-
-GET
-
-###URL
-
-http://api.tigwi.com/list/messages/idOfList/numberOfMessages
-
-###Response
-
-
-
-###Information
-
-* In **URL**, _idOfList_ is the unique identifier of the list whose messages you want to get.
-* In **URL**, _numberOfMessages_ is the number of messages you want to get. It is optional and default is set to 20.
-* In **Response**, _Size_ is the number of messages returned (different from _numberOfMessages_ if there are not enough accounts to provide).
-
-
-#Modifying a _list_
+#Modifying a *list*
 
 **Remember :** since the following ressources use the POST verb, they require authentication. You must be authenticated as an user with appropriate autorization on the list you want to modify.
 
@@ -685,7 +694,7 @@ POST
 
 ###URL
 
-http://api.tigwi.com/list/subscribeaccount/
+http://api.tigwi.com/list/addaccount/
 
 ###Request example
     
@@ -709,7 +718,7 @@ If everything went well :
 * In **Request**, `<List>` is the unique identifier of the list who wants to follow the account `<Account>`.
 
 
-##Delete an account from a list
+##Remove an account from a list
 
 ###HTTP method
 
@@ -717,7 +726,7 @@ POST
 
 ###URL
 
-http://api.tigwi.com/list/unsubscribeaccount/
+http://api.tigwi.com/list/removeaccount/
 
 ###Request example
     
@@ -740,6 +749,7 @@ If everything went well :
 * You **must** be authenticated and authorized to use the owner of the list whose unique identifier is given by `<List>` to use this method.
 * In **Request**, `<List>` is the unique identifier of the list who wants to stop following the account `<Account>`.
 
+#Actions on a *list*
 
 ##Create a list
 
@@ -754,7 +764,7 @@ POST
 
 ###URL
 
-http://api.tigwi.com/account/createlist/
+http://api.tigwi.com/list/create/
 
 ###Request example
 
@@ -804,7 +814,7 @@ POST
 
 ###URL
 
-http://api.tigwi.com/account/subscribelist/
+http://api.tigwi.com/list/subscribe/
 
 ###Request
     
@@ -837,7 +847,7 @@ If everything went well :
 
 
 
-#Get information about an _user_
+#Get information about an *user*
 
 ###Purpose
 
