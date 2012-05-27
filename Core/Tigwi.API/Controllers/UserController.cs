@@ -52,34 +52,38 @@ namespace Tigwi.API.Controllers
             return Serialize(output);
         }
 
+
         //
-        // POST : user/key
-        // Method to generate API key given accountName, password and applicationName
+        // POST : user/generatekey
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult CreateKey()
+        public ActionResult GenerateKey()
         {
             try
             {
-                var idParameters = (identityForApiKey)(new XmlSerializer(typeof(identityForApiKey))).Deserialize(Request.InputStream);
-                Guid userId = Storage.User.GetId(idParameters.accountName);
+                var idParameters = (Identity)(new XmlSerializer(typeof(Identity))).Deserialize(Request.InputStream);
+                var userId = idParameters.UserId ?? Storage.User.GetId(idParameters.UserLogin);
 
                 // We catch the real password to verify if both are the same
-                PasswordAuth accountToAuthenticate = new PasswordAuth(Storage, idParameters.accountName, idParameters.password);
-                byte[] hashedPassword = Storage.User.GetPassword(userId);
-                byte[] otherHash = PasswordAuth.HashPassword(idParameters.password);
+                var hashedPassword = Storage.User.GetPassword(userId);
+                var otherHash = PasswordAuth.HashPassword(idParameters.Password);
 
                 // If both passwords are the same, we can generate the key
                 if (hashedPassword.SequenceEqual(otherHash)) 
                 {
-                    Guid key = Storage.User.GenerateApiKey(userId, idParameters.applicationName);
-                    Response.SetCookie(new HttpCookie("key =" + key.ToString()));
+                    var key = Storage.User.GenerateApiKey(userId, idParameters.ApplicationName);
+                    Response.SetCookie(new HttpCookie("key=" + key));
                 }
                 else 
                     throw new AuthFailedException();                
             }
-            catch(Exception)
+            catch (UserNotFound)
             {
-                throw new Exception();
+                // In the case of a "not found" exception we change the HTTP status
+                Response.StatusCode = 404;
+            }
+            catch (InvalidOperationException)
+            {
+                Response.StatusCode = 403; // TODO : check if this is the right code
             }
 
             return new EmptyResult();
