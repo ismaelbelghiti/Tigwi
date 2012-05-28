@@ -100,6 +100,11 @@ namespace Tigwi.UI.Controllers
                     this.CurrentAccount = newUser.MainAccount;
                     IListModel list = this.Storage.Lists.Create(CurrentAccount, CurrentAccount.Name, "Personal list of " + CurrentAccount.Name, false);
                     list.Members.Add(CurrentAccount);
+                    var tigwiAccount = this.Storage.Accounts.Find("Tigwi");
+
+                    IListModel listTigwi = this.Storage.Lists.Create(CurrentAccount, "Tigwi", "Welcome !", true);
+                    listTigwi.Members.Add(tigwiAccount);
+                    listTigwi.Followers.Add(CurrentAccount);
                     this.Storage.SaveChanges();
                     return this.RedirectToAction("Index", "Home");
                 }
