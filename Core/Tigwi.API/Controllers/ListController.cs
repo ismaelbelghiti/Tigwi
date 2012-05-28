@@ -29,11 +29,7 @@ namespace Tigwi.API.Controllers
 
             catch (StorageLibException exception)
             {
-                output = new Answer(new Error(exception.Code.ToString()));
-
-                // In the case of a "not found" exception we change the HTTP status
-                if (exception.Code == StrgLibErr.MessageNotFound || exception.Code == StrgLibErr.ListNotFound || exception.Code == StrgLibErr.UserNotFound || exception.Code == StrgLibErr.AccountNotFound)
-                    Response.StatusCode = 404;
+                output = new Answer(HandleError(exception));
             }
 
             return Serialize(output);
@@ -59,11 +55,7 @@ namespace Tigwi.API.Controllers
             }
             catch (StorageLibException exception)
             {
-                output = new Answer(new Error(exception.Code.ToString()));
-
-                // In the case of a "not found" exception we change the HTTP status
-                if (exception.Code == StrgLibErr.MessageNotFound || exception.Code == StrgLibErr.ListNotFound || exception.Code == StrgLibErr.UserNotFound || exception.Code == StrgLibErr.AccountNotFound)
-                    Response.StatusCode = 404;
+                output = new Answer(HandleError(exception));
             }
 
             return Serialize(output);
@@ -88,11 +80,7 @@ namespace Tigwi.API.Controllers
 
             catch (StorageLibException exception)
             {
-                output = new Answer(new Error(exception.Code.ToString()));
-
-                // In the case of a "not found" exception we change the HTTP status
-                if (exception.Code == StrgLibErr.MessageNotFound || exception.Code == StrgLibErr.ListNotFound || exception.Code == StrgLibErr.UserNotFound || exception.Code == StrgLibErr.AccountNotFound)
-                    Response.StatusCode = 404;
+                output = new Answer(HandleError(exception));
             }
 
             return Serialize(output);
@@ -118,11 +106,7 @@ namespace Tigwi.API.Controllers
             }
             catch (StorageLibException exception)
             {
-                output = new Answer(new Error(exception.Code.ToString()));
-
-                // In the case of a "not found" exception we change the HTTP status
-                if (exception.Code == StrgLibErr.MessageNotFound || exception.Code == StrgLibErr.ListNotFound || exception.Code == StrgLibErr.UserNotFound || exception.Code == StrgLibErr.AccountNotFound)
-                    Response.StatusCode = 404;
+                output = new Answer(HandleError(exception));
             }
 
             return Serialize(output);
@@ -143,9 +127,15 @@ namespace Tigwi.API.Controllers
                     (Subscribe)(new XmlSerializer(typeof(Subscribe))).Deserialize(Request.InputStream);
 
                 if (subscribe.AccountId == null && subscribe.AccountName == null)
+                {
                     error = new Error("AccountId or AccountName missing");
+                    Response.StatusCode = 400; // Bad Request
+                }
                 else if (subscribe.List == null)
+                {
                     error = new Error("Subscription missing");
+                    Response.StatusCode = 400; // Bad Request
+                }
                 else
                 {
                     var accountId = subscribe.AccountId ?? Storage.Account.GetId(subscribe.AccountName);
@@ -164,18 +154,10 @@ namespace Tigwi.API.Controllers
                         error = new Error(authentication.ErrorMessage());
                 }
             }
-            catch (StorageLibException exception)
+            catch (Exception exception)
             {
                 // Result is an non-empty error XML element
-                error = new Error(exception.Code.ToString());
-
-                // In the case of a "not found" exception we change the HTTP status
-                if (exception.Code == StrgLibErr.MessageNotFound || exception.Code == StrgLibErr.ListNotFound || exception.Code == StrgLibErr.UserNotFound || exception.Code == StrgLibErr.AccountNotFound)
-                    Response.StatusCode = 404;
-            }
-            catch (InvalidOperationException exception)
-            {
-                error = new Error(exception.Message + " " + exception.InnerException.Message);
+                error = HandleError(exception);
             }
 
             return Serialize(new Answer(error));
@@ -196,13 +178,25 @@ namespace Tigwi.API.Controllers
                     (Create)(new XmlSerializer(typeof(Create))).Deserialize(Request.InputStream);
 
                 if (listCreation.AccountId == null && listCreation.AccountName == null)
+                {
                     output = new Answer(new Error("AccountId or AccountName missing"));
+                    Response.StatusCode = 400; // Bad Request
+                }
                 else if (listCreation.ListInfo == null)
+                {
                     output = new Answer(new Error("ListInfo missing"));
+                    Response.StatusCode = 400; // Bad Request
+                }
                 else if (listCreation.ListInfo.Name == null)
+                {
                     output = new Answer(new Error("Name missing"));
+                    Response.StatusCode = 400; // Bad Request
+                }
                 else if (listCreation.ListInfo.Description == null)
+                {
                     output = new Answer(new Error("Description missing"));
+                    Response.StatusCode = 400; // Bad Request
+                }
                 else
                 {
                     var accountId = listCreation.AccountId ?? Storage.Account.GetId(listCreation.AccountName);
@@ -224,18 +218,10 @@ namespace Tigwi.API.Controllers
                         output = new Answer(new Error(authentication.ErrorMessage()));
                 }
             }
-            catch (StorageLibException exception)
+            catch (Exception exception)
             {
                 // Result is an non-empty error XML element
-                output = new Answer(new Error(exception.Code.ToString()));
-
-                // In the case of a "not found" exception we change the HTTP status
-                if (exception.Code == StrgLibErr.MessageNotFound || exception.Code == StrgLibErr.ListNotFound || exception.Code == StrgLibErr.UserNotFound || exception.Code == StrgLibErr.AccountNotFound)
-                    Response.StatusCode = 404;
-            }
-            catch (InvalidOperationException exception)
-            {
-                output = new Answer(new Error(exception.Message + " " + exception.InnerException.Message));
+                output = new Answer(HandleError(exception));
             }
 
             return Serialize(output);
@@ -256,9 +242,15 @@ namespace Tigwi.API.Controllers
                     (AddAccount)(new XmlSerializer(typeof(AddAccount))).Deserialize(Request.InputStream);
 
                 if (subscribeAccount.AccountName == null && subscribeAccount.AccountId == null)
+                {
                     error = new Error("Account missing");
+                    Response.StatusCode = 400; // Bad Request
+                }
                 else if (subscribeAccount.List == null)
+                {
                     error = new Error("List missing");
+                    Response.StatusCode = 400; // Bad Request
+                }
                 else
                 {
                     var ownerId = Storage.List.GetOwner(subscribeAccount.List.GetValueOrDefault());
@@ -277,18 +269,10 @@ namespace Tigwi.API.Controllers
                         error = new Error(authentication.ErrorMessage());
                 }
             }
-            catch (StorageLibException exception)
+            catch (Exception exception)
             {
                 // Result is an non-empty error XML element
-                error = new Error(exception.Code.ToString());
-
-                // In the case of a "not found" exception we change the HTTP status
-                if (exception.Code == StrgLibErr.MessageNotFound || exception.Code == StrgLibErr.ListNotFound || exception.Code == StrgLibErr.UserNotFound || exception.Code == StrgLibErr.AccountNotFound)
-                    Response.StatusCode = 404;
-            }
-            catch (InvalidOperationException exception)
-            {
-                error = new Error(exception.Message + " " + exception.InnerException.Message);
+                error = HandleError(exception);
             }
 
             return Serialize(new Answer(error));
@@ -309,9 +293,15 @@ namespace Tigwi.API.Controllers
                     (RemoveAccount)(new XmlSerializer(typeof(RemoveAccount))).Deserialize(Request.InputStream);
 
                 if (unsubscribeAccount.AccountName == null && unsubscribeAccount.AccountId == null)
+                {
                     error = new Error("Account missing");
+                    Response.StatusCode = 400; // Bad Request
+                }
                 else if (unsubscribeAccount.List == null)
+                {
                     error = new Error("List missing");
+                    Response.StatusCode = 400; // Bad Request
+                }
                 else
                 {
                     var ownerId = Storage.List.GetOwner(unsubscribeAccount.List.GetValueOrDefault());
@@ -330,18 +320,10 @@ namespace Tigwi.API.Controllers
                         error = new Error(authentication.ErrorMessage());
                 }
             }
-            catch (StorageLibException exception)
+            catch (Exception exception)
             {
                 // Result is an non-empty error XML element
-                error = new Error(exception.Code.ToString());
-
-                // In the case of a "not found" exception we change the HTTP status
-                if (exception.Code == StrgLibErr.MessageNotFound || exception.Code == StrgLibErr.ListNotFound || exception.Code == StrgLibErr.UserNotFound || exception.Code == StrgLibErr.AccountNotFound)
-                    Response.StatusCode = 404;
-            }
-            catch (InvalidOperationException exception)
-            {
-                error = new Error(exception.Message + " " + exception.InnerException.Message);
+                error = HandleError(exception);
             }
 
             return Serialize(new Answer(error));

@@ -76,6 +76,27 @@ namespace Tigwi.API.Controllers
             return new Lists(lists.ToList());
         }
 
+
+        protected Error HandleError(StorageLibException exception)
+        {
+            // In the case of a "Not Found" exception we change the answer HTTP status code
+            if (exception.Code == StrgLibErr.MessageNotFound || exception.Code == StrgLibErr.ListNotFound || exception.Code == StrgLibErr.UserNotFound || exception.Code == StrgLibErr.AccountNotFound)
+                Response.StatusCode = 404;
+
+            return new Error(exception.Code.ToString());
+        }
+
+        protected Error HandleError(InvalidOperationException exception)
+        {
+            Response.StatusCode = 400; // Bad Request
+            return new Error(exception.Message + " " + exception.InnerException.Message);
+        }
+
+        protected Error HandleError(Exception exception)
+        {
+            throw exception;
+        }
+
         protected IStorage Storage;
 
     }

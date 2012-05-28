@@ -45,6 +45,8 @@ or
      </Content>
     </Answer>
 
+Furthermore, for highly frequent errors, the answer HTTP status code will be changed from 200 (OK) to 404 (Not Found), 400 (Bad Request), 403 (Forbidden), 500 (Internal Server Error) or 501 (Not Implemented).
+
 ##Note about authentication
 
 Some of our ressources require authentication. This is the case if you use any with a POST verb but also if you want to access to private data such as an user email, or an account private lists.

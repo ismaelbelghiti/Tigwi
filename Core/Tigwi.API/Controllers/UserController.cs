@@ -12,10 +12,9 @@ namespace Tigwi.API.Controllers
 {
     public class UserController : ApiController
     {
-        // TODO : handle authentication correctly
         //
         // GET : /user/maininfo
-        // The user you get the info depend on who you are according to authentication
+        // The user you get the info depends on who you are according to authentication
         public ActionResult MainInfo()
         {
             Answer output;
@@ -35,18 +34,14 @@ namespace Tigwi.API.Controllers
                     output = new Answer(userToReturn);
                 }
             }
-            catch (StorageLibException exception)
-            {
-                // Result is an non-empty error XML element
-                output = new Answer(new Error(exception.Code.ToString()));
-
-                // In the case of a "not found" exception we change the HTTP status
-                if (exception.Code == StrgLibErr.MessageNotFound || exception.Code == StrgLibErr.ListNotFound || exception.Code == StrgLibErr.UserNotFound || exception.Code == StrgLibErr.AccountNotFound)
-                    Response.StatusCode = 404;
-            }
             catch (AuthFailedException)
             {
                 output = new Answer(new Error("Authentication failed"));
+            }
+            catch (Exception exception)
+            {
+                // Result is an non-empty error XML element
+                output = new Answer(HandleError(exception));
             }
 
             return Serialize(output);
@@ -78,12 +73,11 @@ namespace Tigwi.API.Controllers
             }
             catch (UserNotFound)
             {
-                // In the case of a "not found" exception we change the HTTP status
-                Response.StatusCode = 404;
+                Response.StatusCode = 404; // Not Found
             }
             catch (InvalidOperationException)
             {
-                Response.StatusCode = 403; // TODO : check if this is the right code
+                Response.StatusCode = 400; // Bad Request
             }
 
             return new EmptyResult();
