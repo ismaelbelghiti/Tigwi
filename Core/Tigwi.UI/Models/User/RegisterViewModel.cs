@@ -6,27 +6,27 @@ namespace Tigwi.UI.Models.User
     public class RegisterViewModel
     {
         [Key]
-        [Required]
+        [Required(ErrorMessage = "Username Required")]
         [Display(Name = "Username")]
         [AllowHtml]
         public string Login { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Email adress Required")]
         [DataType(DataType.EmailAddress)]
         [Display(Name = "Email address")]
         [AllowHtml]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Password Required")]
         [DataType(DataType.Password)]
-        [StringLength(100, MinimumLength = 6)]
+        [StringLength(20, MinimumLength = 6, ErrorMessage = "Password length must be between 6 and 20")]
         [Display(Name = "Password")]
         [AllowHtml]
         public string Password { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
-        [Compare("Password")]
+        [Compare("Password", ErrorMessage = "Passwords must match")]
         [Display(Name = "Confirm password")]
         [AllowHtml]
         public string ConfirmPassword { get; set; }

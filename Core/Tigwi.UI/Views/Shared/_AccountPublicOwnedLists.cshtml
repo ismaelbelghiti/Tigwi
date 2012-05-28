@@ -65,7 +65,10 @@
     }); 
 </script>
 
-<h5>Public Owned lists :</h5>
+@if(Model.PublicOwnedLists.Any()){
+    <h5>Public Owned lists :</h5>
+}
+
 <section class="listView">
     <ul>
         @{

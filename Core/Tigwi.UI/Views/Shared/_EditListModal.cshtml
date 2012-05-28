@@ -9,19 +9,23 @@
 @using (Html.BeginForm("Edit", "List", FormMethod.Post,null))
 {    
     <div class="modal-body">
+        @Html.ValidationSummary()
+        <div class="conrol-group">
+            @Html.LabelFor(m => m.ListName)
+            @Html.EditorFor(m => m.ListName)
+            @Html.ValidationMessageFor(m => m.ListName)
+        </div>
+        <div class="control-group">
+            @Html.LabelFor(m => m.ListDescription)
+            @Html.EditorFor(m => m.ListDescription)
+            @Html.ValidationMessageFor(m => m.ListDescription)
+        </div>
+        <div class="control-group">
+            @Html.LabelFor(m => m.ListPublic)
+            @Html.EditorFor(m => m.ListPublic)
+            @Html.ValidationMessageFor(m => m.ListPublic)
+        </div>
 
-        @Html.LabelFor(m => m.ListName)
-        @Html.EditorFor(m => m.ListName)
-        @Html.ValidationMessageFor(m => m.ListName)
-
-        @Html.LabelFor(m => m.ListDescription)
-        @Html.EditorFor(m => m.ListDescription)
-        @Html.ValidationMessageFor(m => m.ListDescription)
-        
-        @Html.LabelFor(m => m.ListPublic)
-        @Html.EditorFor(m => m.ListPublic)
-        @Html.ValidationMessageFor(m => m.ListPublic)
-        
         @Html.HiddenFor(m => m.ListId)
 
         <label for="addAnAccount">Add another account</label>

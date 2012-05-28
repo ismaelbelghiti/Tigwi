@@ -168,6 +168,7 @@
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
     <Content Include="Content\images\grass.png" />
+    <Content Include="Content\images\tigwi.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -314,9 +315,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\_EditListModal.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Shared\_FollowAccount.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\_AccountPublicOwnedLists.cshtml" />

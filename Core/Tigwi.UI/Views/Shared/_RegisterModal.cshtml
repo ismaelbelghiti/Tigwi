@@ -6,28 +6,31 @@
     <h3>Register</h3>
 </div>
 
-@using (Html.BeginForm("Register", "User", FormMethod.Post,new {id = "registerForm"}))
+@using (Html.BeginForm("Register", "User", FormMethod.Post, new { id = "registerForm" }))
 {    
-    {Html.EnableClientValidation();}
-    <div class="modal-body">
+    <div class="modal-body" id="registerModalBody">
 
         @Html.ValidationSummary()
-
-        @Html.LabelFor(m => m.Login)
-        @Html.EditorFor(m => m.Login)
-        @Html.ValidationMessageFor(m => m.Login)
-
-        @Html.LabelFor(m => m.Email)
-        @Html.EditorFor(m => m.Email)
-        @Html.ValidationMessageFor(m => m.Email)
-
-        @Html.LabelFor(m => m.Password)
-        @Html.EditorFor(m => m.Password)
-        @Html.ValidationMessageFor(m => m.Password)
-
-        @Html.LabelFor(m => m.ConfirmPassword)
-        @Html.EditorFor(m => m.ConfirmPassword)
-        @Html.ValidationMessageFor(m => m.ConfirmPassword)     
+        <div class="control-group">
+            @Html.LabelFor(m => m.Login)
+            @Html.EditorFor(m => m.Login)
+            @Html.ValidationMessageFor(m => m.Login)
+        </div>
+        <div class="control-group">
+            @Html.LabelFor(m => m.Email)
+            @Html.EditorFor(m => m.Email)
+            @Html.ValidationMessageFor(m => m.Email)
+        </div>
+        <div class="control-group">
+            @Html.LabelFor(m => m.Password)
+            @Html.EditorFor(m => m.Password)
+            @Html.ValidationMessageFor(m => m.Password)
+        </div>
+        <div class="control-group">
+            @Html.LabelFor(m => m.ConfirmPassword)
+            @Html.EditorFor(m => m.ConfirmPassword)
+            @Html.ValidationMessageFor(m => m.ConfirmPassword)
+        </div>   
     </div>
     
     

@@ -21,7 +21,7 @@
 .truncated 
 {
     float: left;
-    width: 120px;
+    max-width: 120px;
     overflow: hidden;
     clear: left;
     text-align: left;
@@ -32,7 +32,7 @@
 .truncated-shorter
 {
     float: left;
-    width: 90px;
+    max-width: 90px;
     overflow: hidden;
     clear: left;
     text-align: left;
@@ -43,7 +43,7 @@
 .truncated-shortest
 {
     float: left;
-    width: 60px;
+    max-width: 60px;
     overflow: hidden;
     clear: left;
     text-align: left;
@@ -53,7 +53,15 @@
 
 .center-bunny {
     position: relative;
-    left: 18%;
+    left: 13%;
+    margin-left: -27px;
+    height: 30px;
+    margin-top: 5px;
+}
+
+.center-logo {
+    position: relative;
+    left: 8%;
     margin-left: -27px;
     height: 30px;
     margin-top: 5px;
@@ -80,15 +88,6 @@
     padding: 10px;
     background: rgba(255, 255, 255, 0.5);
 }
-/*
-.shown:nth-of-type(even) {
-    border-radius: 15px;
-    margin: 10px;
-    padding: 10px;
-    border-width: 5px;
-    border-style: none solid none none;
-    border-color: darkgray;
-}*/
 
 a:link {text-decoration:none;color: MenuText;}
 a:visited {text-decoration:none;color: MenuText;}

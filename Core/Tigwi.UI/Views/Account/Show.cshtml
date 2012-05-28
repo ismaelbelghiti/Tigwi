@@ -4,15 +4,36 @@
     ViewBag.Title = "Show";
 }
 
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#followLink').click(function() {
+            $.ajax({
+                url: "@Url.Action("Follow", "Account")",
+                type: "POST",
+                dataType: 'json',
+                data: { 'id': @Model.Id },
+                success: function() {
+                   //TODO: maybe show something in green ...saying it all worked pretty well
+                }
+            });
+        });
+    });
+</script>        
+
 @section LeftInfos
 {
-        <h3>@Model.Name</h3>
-        <p>@Model.Description</p>
-        @if(User.Identity.IsAuthenticated)
-        {
-            @Html.Partial("_FollowPerson", Model)
-            @Html.Partial("_AccountPublicOwnedLists", Model)
-        }
+    <p><h3 align="center">@Model.Name </h3>
+    @if(User.Identity.IsAuthenticated){
+        @Html.Raw("<a href=\"#\" id=\"followLink\">( <i class=\"icon-eye-open\"></i> Follow</a> )")
+    }
+    </p>
+    
+    <p>@Model.Description</p>
+    @if (User.Identity.IsAuthenticated)
+    {
+            
+        @Html.Partial("_AccountPublicOwnedLists", Model)
+    }
 }
 
 @Html.Partial("_ViewPostList", Model.PersonalList.PostsBefore(DateTime.MaxValue, 10))

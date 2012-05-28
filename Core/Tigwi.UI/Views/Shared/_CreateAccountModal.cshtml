@@ -17,16 +17,16 @@
 
         @Html.ValidationSummary()
         
-        @*Html.Hidden("User", CurrentUser)*@
-
-        @Html.LabelFor(m => m.Name)
-        @Html.EditorFor(m => m.Name)
-        @Html.ValidationMessageFor(m => m.Name)
-
-        @Html.LabelFor(m => m.Description)
-        @Html.EditorFor(m => m.Description)
-        @Html.ValidationMessageFor(m => m.Description)
-   
+        <div class="control-group">
+            @Html.LabelFor(m => m.Name)
+            @Html.EditorFor(m => m.Name)
+            @Html.ValidationMessageFor(m => m.Name)
+        </div>
+        <div class="control-group">
+            @Html.LabelFor(m => m.Description)
+            @Html.EditorFor(m => m.Description)
+            @Html.ValidationMessageFor(m => m.Description)
+        </div>
     </div>
     
     

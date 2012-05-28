@@ -69,7 +69,7 @@ namespace Tigwi.UI.Controllers
         public ActionResult Show(string accountName)
         {
             IAccountModel account;
-
+            //TODO : catch this 
             if (string.IsNullOrEmpty(accountName) || !this.Storage.Accounts.TryFind(accountName, out account))
             {
                 throw new HttpException((int)HttpStatusCode.NotFound, "Account was not found");

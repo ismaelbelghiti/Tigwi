@@ -39,9 +39,6 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('.editAcc2').click(function () {
-
-            $('#editAccountModal').modal('show');
-
             var name=$(this).attr('id');
             var accountId=name.substring(5,name.length);
             $.ajax({
@@ -224,6 +221,14 @@
 
 
 <section class="listView">
+    <p>
+        <a data-toggle="modal" href="#editAccountModal" class="editAcc2" id="acct-@CurrentAccount.Id" ><i class="icon-pencil"></i> Edit account</a>
+    </p>
+
+    <p>
+        <a data-toggle="modal" href="#editListModal" id="addList" ><i class="icon-plus"></i> Add List</a>
+    </p>
+
     <ul>
         
         @foreach (var list in Model)
@@ -262,9 +267,7 @@
             }
         }
     </ul>
-    <ul>
-        <a data-toggle="modal" href="#editListModal" id="addList" ><i class="icon-plus"></i> Add List</a>
-    </ul>
+    
 
 </section>
 

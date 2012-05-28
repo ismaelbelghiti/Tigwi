@@ -15,8 +15,11 @@
         @*<link href="@Url.Content("~/Content/bootstrap-responsive.min.css")" rel="stylesheet"/>*@
         <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet"/>
         <script src="@Url.Content("~/Scripts/jquery-1.7.2.min.js")" type="text/javascript"></script>
+        <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+        <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
         <script src="@Url.Content("~/Scripts/modernizr-2.5.3.js")" type="text/javascript"></script>
         <script src="@Url.Content("~/Scripts/bootstrap.js")" type="text/javascript"></script>
+        <script src="@Url.Content("~/Scripts/MicrosoftMvcAjax.js")" type="text/javascript"></script>
         <script src="@Url.Content("~/Scripts/MicrosoftAjax.js")" type="text/javascript"></script>
         <script src="@Url.Content("~/Scripts/MicrosoftMvcValidation.js")" type="text/javascript"></script>
 
@@ -31,6 +34,32 @@
             
         </script>
         
+        <script type="text/javascript">
+            $.validator.setDefaults({
+                highlight: function (element) {
+                    $(element).closest(".control-group").addClass("error");
+                },
+                unhighlight: function (element) {
+                    $(element).closest(".control-group").removeClass("error");
+                }
+            });
+
+            $(document).ready(function () {
+                $('.form').validate({
+                    highlight: function (element) {
+                        $(element).closest(".control-group").addClass("error");
+                    },
+                    unhighlight: function (element) {
+                        $(element).closest(".control-group").removeClass("error");
+                    }
+                });
+                /*
+                $('#registerForm').submit(function () {
+
+                });*/
+            });
+
+        </script>
     </head>
 
     <body>
@@ -48,7 +77,7 @@
                                        class="dropdown-toggle"
                                        data-toggle="dropdown">
                                         <span class="truncated-shortest">
-                                        @CurrentAccount.Name
+                                            @CurrentAccount.Name
                                         </span>
                                         <b class="caret"></b>
                                     </a>
@@ -75,6 +104,7 @@
                                 </li>
                             }
                         </ul>
+                        <img src="@Url.Content("~/Content/images/tigwi.png")" class="center-logo"/>
                         <img src="@Url.Content("~/Content/images/bunny.png")" class="center-bunny"/>
                         <div class="pull-right">
                             @if (@User.Identity.IsAuthenticated)
