@@ -98,6 +98,8 @@ namespace Tigwi.UI.Controllers
                     var newUser = this.Storage.Users.Create(registerViewModel.Login, registerViewModel.Email, hashedPass);
                     this.AuthenticateUser(newUser, registerViewModel.RememberMe);
                     this.CurrentAccount = newUser.MainAccount;
+                    IListModel list = this.Storage.Lists.Create(CurrentAccount, CurrentAccount.Name, "Personal list of " + CurrentAccount.Name, false);
+                    list.Members.Add(CurrentAccount);
                     this.Storage.SaveChanges();
                     return this.RedirectToAction("Index", "Home");
                 }
