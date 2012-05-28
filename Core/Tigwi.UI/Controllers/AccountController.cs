@@ -135,6 +135,9 @@ namespace Tigwi.UI.Controllers
                 {
                     var newAccount = this.Storage.Accounts.Create(CurrentUser, accountCreation.Name, accountCreation.Description);
                     this.CurrentAccount = newAccount;
+
+                    IListModel list = this.Storage.Lists.Create(newAccount, newAccount.Name, "Personal list of " + newAccount.Name, true);
+                    list.Members.Add(newAccount);
                     this.Storage.SaveChanges();
                     return this.RedirectToAction("Create", accountCreation);
                 }
