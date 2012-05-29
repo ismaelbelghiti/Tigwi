@@ -1,9 +1,8 @@
-// -----------------------------------------------------------------------
-// <copyright file="MockStorage.cs" company="ENS Paris">
-// BSD
-// </copyright>
-// -----------------------------------------------------------------------
-
+#region copyright
+// Copyright (c) 2012, TIGWI
+// All rights reserved.
+// Distributed under  BSD 2-Clause license
+#endregion
 namespace Tigwi.UI
 {
     using System;

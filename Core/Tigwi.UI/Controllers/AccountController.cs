@@ -1,4 +1,9 @@
-﻿using System;
+﻿#region copyright
+// Copyright (c) 2012, TIGWI
+// All rights reserved.
+// Distributed under  BSD 2-Clause license
+#endregion
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -298,7 +303,7 @@ namespace Tigwi.UI.Controllers
                 list.Members.Add(account);
                 this.Storage.SaveChanges();
 
-                return this.RedirectToAction("Index", "Home");
+                return Json(new { ok=true });
             }
             catch (AccountNotFoundException ex)
             {

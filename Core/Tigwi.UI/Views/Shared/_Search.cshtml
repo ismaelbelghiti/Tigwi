@@ -2,6 +2,6 @@
            
 @using (Html.BeginForm("Search", "Account", FormMethod.Post, new { @class = "navbar-search" }))
 {
-    @Html.TextBox("searchString", Model, new { @class = "search-query", placeHolder = "Search for an account" });
+    @Html.TextBox("searchString", Model, new Dictionary<string, object> { { "class", "search-query typeahead" }, { "placeHolder", "Search for an account" }, { "data-provide", "typeahead" } });
     <input type="submit" style="display: none;"/>
 }

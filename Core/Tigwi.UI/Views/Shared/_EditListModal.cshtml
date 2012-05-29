@@ -29,7 +29,7 @@
         @Html.HiddenFor(m => m.ListId)
 
         <label for="addAnAccount">Add another account</label>
-        <input type="text" class="text-box single-line" id="addAccount"/>
+        <input type="text" class="typeahead text-box single-line" data-provide="typeahead" id="addAccount"/>
         <input type="hidden" name="edit" id="isEdit"/>
         <button type="button" class="btn" data-url="@Url.Action("AccountExists","Account")" id="addAccountButton"> add account</button>
         <div id="error-account-doesnt-exists"></div>

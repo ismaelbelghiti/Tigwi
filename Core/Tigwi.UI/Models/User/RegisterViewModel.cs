@@ -1,3 +1,8 @@
+#region copyright
+// Copyright (c) 2012, TIGWI
+// All rights reserved.
+// Distributed under  BSD 2-Clause license
+#endregion
 namespace Tigwi.UI.Models.User
 {
     using System.ComponentModel.DataAnnotations;
@@ -14,6 +19,7 @@ namespace Tigwi.UI.Models.User
         [Required(ErrorMessage = "Email adress Required")]
         [DataType(DataType.EmailAddress)]
         [Display(Name = "Email address")]
+        [RegularExpression("^[a-z0-9_\\+-]+(\\.[a-z0-9_\\+-]+)*@[a-z0-9]+(\\.[a-z0-9-]+)*\\.([a-z]{2,4})$",ErrorMessage = "Please enter a valid email")]
         [AllowHtml]
         public string Email { get; set; }
 

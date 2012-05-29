@@ -27,9 +27,20 @@
             $(document).ready(function() {
                 $('.dropdown-toggle').dropdown();
 
-                $('.menu-log *').click(function (e) {
+                $('.menu-log *').click(function(e) {
                     e.stopPropagation();
                 });
+                /*
+                $('.typeahead').typeahead({
+                    source: function(typeahead, query) {
+                        if (query.length > 0) {
+                            return $.ajax('@Url.Action("AutoComplete","Account")', { query: query }, function(data) {
+                                alert("fuck");
+                                return typeahead.process(data);
+                            });
+                        }
+                    }
+                });*/
             });
             
         </script>
