@@ -45,7 +45,7 @@
                     dataType: 'json',
                     data: { 'id': listId },
                     success: function(data) {
-                        alert("You are now following the public list : " + data.Name);
+                        $('#alert-space').append('<div class="alert"><button type="button" class="close" data-dismiss="alert">×</button>You are now following the list '+data.Name+'.</div>');
                         isFollowed(listId, icon);
                     }
                 });
@@ -56,7 +56,7 @@
                     dataType: 'json',
                     data: { 'id': listId },
                     success: function(data) {
-                        alert("You are not following the public list :" + data.Name + " anymore.");
+                        $('#alert-space').append('<div class="alert"><button type="button" class="close" data-dismiss="alert">×</button>You are no longer following the list '+data.Name+'.</div>');
                         isFollowed(listId, icon);
                     }
                 });

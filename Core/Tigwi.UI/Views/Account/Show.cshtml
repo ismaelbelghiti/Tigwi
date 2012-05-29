@@ -14,7 +14,7 @@
                 dataType: 'json',
                 data: { 'id': id },
                 success: function(data) {
-                    alert("You are now following this account");
+                    $('#alert-space').append('<div class="alert"><button type="button" class="close" data-dismiss="alert">×</button>You are now following @Model.Name.</div>');
                 }
             });
         });
