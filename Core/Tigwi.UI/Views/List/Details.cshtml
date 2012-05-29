@@ -6,9 +6,10 @@
 
 @section LeftInfos
 {
-        <h3>List : @Model.Name</h3>
+        <div class="inline">
+            <h3>@Model.Name </h3><span>(Owner : @Model.Owner.Name)</span>
+        </div>
         <p>Description : @Model.Description</p>
-        <p>Owner : @Model.Owner.Name</p>
         
         @if(User.Identity.IsAuthenticated)
         {

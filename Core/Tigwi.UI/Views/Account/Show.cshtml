@@ -7,11 +7,12 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $('#followLink').click(function() {
+            var id = "@Model.Id";
             $.ajax({
                 url: "@Url.Action("Follow", "Account")",
                 type: "POST",
                 dataType: 'json',
-                data: { 'id': @Model.Id },
+                data: { 'id': id },
                 success: function() {
                    //TODO: maybe show something in green ...saying it all worked pretty well
                 }
@@ -22,11 +23,11 @@
 
 @section LeftInfos
 {
-    <p><h3 align="center">@Model.Name </h3>
+    <div class="inline" align="center"><h3>@Model.Name </h3>
     @if(User.Identity.IsAuthenticated){
-        @Html.Raw("<a href=\"#\" id=\"followLink\">( <i class=\"icon-eye-open\"></i> Follow</a> )")
+        @Html.Raw("<a href=\"#\" id=\"followLink\">( <i class=\"icon-star\"></i> Follow</a> )")
     }
-    </p>
+    </div>
     
     <p>@Model.Description</p>
     @if (User.Identity.IsAuthenticated)

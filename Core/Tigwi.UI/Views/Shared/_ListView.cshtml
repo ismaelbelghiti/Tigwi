@@ -53,9 +53,9 @@
                         $('#ReturnAction').val("Index");
                         $("#userAdded").html('');
                         for (var i = 0; i < data.Users.length; i++) {
-                        var toAppend = "<div class=\"alert alert-info span2\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button><span class=\"truncated-shorter\">" + data.Users[i] +
-                            '</span><input type="hidden" value="' + data.Users[i] + '" name="UserIds"/></div>';
-                        $("#userAdded").append(toAppend);
+                            var toAppend = "<div class=\"alert alert-info span2\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button><span class=\"truncated-shorter\">" + data.Users[i] +
+                            '</span>    <input type="hidden" value="' + data.Users[i] + '" name="UserIds"/></div>';
+                            $("#userAdded").append(toAppend);
                         }
                 }
             });   
