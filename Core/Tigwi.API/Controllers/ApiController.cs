@@ -92,9 +92,16 @@ namespace Tigwi.API.Controllers
             return new Error(exception.Message + " " + exception.InnerException.Message);
         }
 
+        protected Error HandleError(NotImplementedException exception)
+        {
+            Response.StatusCode = 501; // Not Implemented
+            return new Error("Not Implemented");
+        }
+
         protected Error HandleError(Exception exception)
         {
-            throw exception;
+            Response.StatusCode = 500; // Internal Server Error
+            return new Error("Internal Server Error");
         }
 
         protected IStorage Storage;
