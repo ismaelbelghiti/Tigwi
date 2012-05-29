@@ -45,7 +45,7 @@ or
      </Content>
     </Answer>
 
-Furthermore, for highly frequent errors, the answer HTTP status code will be changed from 200 (OK) to 400 (Bad Request), 404 (Not Found), 500 (Internal Server Error - not so likely to happen) or 501 (Not Implemented).
+Furthermore, for highly frequent errors, the answer HTTP status code will be changed from 200 (OK) to 400 (Bad Request), 403 (Forbidden), 404 (Not Found), 500 (Internal Server Error - not so likely to happen) or 501 (Not Implemented).
 
 ##Note about authentication
 
@@ -180,25 +180,15 @@ GET
 
 ###Request URL example
 
-http://api.tigwi.com/account/subscriberaccounts/John_Smith/1
+http://api.tigwi.com/account/subscribedaccounts/John_Smith/2
 
-http://api.tigwi.com/account/subscriberaccounts/name=John_Smith/1
+http://api.tigwi.com/account/subscribedaccounts/name=John_Smith/2
 
-http://api.tigwi.com/account/subscriberaccounts/id=d818d509-e7eb-45b6-a56d-f472f075f433/1
-
+http://api.tigwi.com/account/subscribedaccounts/id=d818d509-e7eb-45b6-a56d-f472f075f433/2
 
 ###Response
 
-    <?xml version="1.0"?>
-    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-     <Content xsi:type="Accounts" Size="1">
-      <Account>
-       <Id>a3e56af5-9991-428e-8d8f-0b31f7e80e40</Id>
-       <Name>Paul_Smith</Name>
-       <Description>I'm the brother of @John_Smith</Description>
-      </Account>
-     </Content>
-    </Answer>
+
  
 ###Information
 
@@ -220,15 +210,24 @@ GET
 
 ###Request URL example
 
-http://api.tigwi.com/account/subscribedaccounts/John_Smith/2
+http://api.tigwi.com/account/subscriberaccounts/John_Smith/1
 
-http://api.tigwi.com/account/subscribedaccounts/name=John_Smith/2
+http://api.tigwi.com/account/subscriberaccounts/name=John_Smith/1
 
-http://api.tigwi.com/account/subscribedaccounts/id=d818d509-e7eb-45b6-a56d-f472f075f433/2
+http://api.tigwi.com/account/subscriberaccounts/id=d818d509-e7eb-45b6-a56d-f472f075f433/1
 
 ###Response
 
-
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Content xsi:type="Accounts" Size="1">
+      <Account>
+       <Id>a3e56af5-9991-428e-8d8f-0b31f7e80e40</Id>
+       <Name>Paul_Smith</Name>
+       <Description>I'm the brother of @John_Smith</Description>
+      </Account>
+     </Content>
+    </Answer>
 
 ###Information
 * In **URL**, you should give the name or the unique identifier of the account whose subscribers you want to see.
