@@ -146,12 +146,14 @@ namespace StorageTest
 
         [Test]
         [ExpectedException(typeof(IsPersonnalList))]
+        [Ignore("Not implemented")]
         public void DeleteIsPersonnalList()
         {
             storage.List.Delete(storage.List.GetPersonalList(storage.Account.GetId("accountThatExists")));
         }
 
         [Test]
+        [Ignore("Not implemented")]
         public void DeleteWithWrondId()
         {
             storage.List.Delete(new Guid());
@@ -159,6 +161,7 @@ namespace StorageTest
 
         [Test]
         [ExpectedException(typeof(ListNotFound))]
+        [Ignore("Not implemented")]
         public void DeleteNormalBehaviour()
         {
             Guid listTempId = storage.List.Create(storage.Account.GetId("accountThatExists"), "babar", "babar", false);

@@ -136,9 +136,10 @@ namespace Tigwi.Storage.Library
         public Guid Copy(Guid accountId, Guid msgId)
         {
             Message message = blobFactory.MMessage(msgId).GetIfExists(new MessageNotFound());
-             message.Content = message.Content + "\n\nretwiged by " + blobFactory.AInfo(accountId).GetIfExists(new AccountNotFound()).Name;
-            Guid messageId = new Guid();
-            Blob<Message> bMessage = blobFactory.MMessage(messageId);
+            message.Content = message.Content + "\n\nretwiged by " + blobFactory.AInfo(accountId).GetIfExists(new AccountNotFound()).Name;
+            message.Date = DateTime.Now;
+            message.Id = Guid.NewGuid();
+            Blob<Message> bMessage = blobFactory.MMessage(message.Id);
             try
             {
                 Guid personnalListId = blobFactory.LPersonnalList(accountId).GetIfExists(new AccountNotFound());
@@ -157,7 +158,7 @@ namespace Tigwi.Storage.Library
                 }
             }
             catch { bMessage.Delete(); }
-            return messageId;
+            return message.Id;
         }
 
         // NYI
