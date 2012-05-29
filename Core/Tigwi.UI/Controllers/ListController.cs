@@ -61,45 +61,46 @@ namespace Tigwi.UI.Controllers
         [HttpPost]
         public ActionResult Edit(EditListViewModel editList, int edit)
         {
-            // TODO: This is NOT correct. There should be *TWO* distinct methods Edit and Create.
-            //TODO : Check whether or not currentAccount is authorized to edit this list
-            IListModel list = null;
-            list = edit == 0
-                       ? this.Storage.Lists.Create(
-                           this.CurrentAccount, editList.ListName, editList.ListDescription, !editList.ListPublic)
-                       : this.Storage.Lists.Find(editList.ListId);
-            if (list == null)
-                throw new HttpException((int)HttpStatusCode.NotFound, "The list doesn't exists.");
-            try
+            if (editList.AccountIds == null)
             {
-                list.Name = editList.ListName;
-                list.Description = editList.ListDescription;
-                list.IsPrivate = !editList.ListPublic;
-                list.Members.Clear();
-                foreach (var member in editList.AccountIds)
+                ModelState.AddModelError("Members", "The list must contain at least one member.");
+                return this.View("_EditListModal", editList);
+            }
+            else
+            {
+                // TODO: This is NOT correct. There should be *TWO* distinct methods Edit and Create.
+                //TODO : Check whether or not currentAccount is authorized to edit this list
+                IListModel list = null;
+                list = edit == 0
+                           ? this.Storage.Lists.Create(
+                               this.CurrentAccount, editList.ListName, editList.ListDescription, !editList.ListPublic)
+                           : this.Storage.Lists.Find(editList.ListId);
+                if (list == null)
+                    throw new HttpException((int)HttpStatusCode.NotFound, "The list doesn't exists.");
+                try
                 {
-                    IAccountModel account = this.Storage.Accounts.Find(member);
-                    list.Members.Add(account);
+                    list.Name = editList.ListName;
+                    list.Description = editList.ListDescription;
+                    list.IsPrivate = !editList.ListPublic;
+                    list.Members.Clear();
+                    foreach (var member in editList.AccountIds)
+                    {
+                        IAccountModel account = this.Storage.Accounts.Find(member);
+                        list.Members.Add(account);
+                    }
+                    this.Storage.SaveChanges();
+                    return this.RedirectToAction("Index", "Home");
                 }
-                this.Storage.SaveChanges();
-                return this.RedirectToAction("Index", "Home");
-            }
-            catch (Models.Storage.AccountNotFoundException ex)
-            {
-                if (edit == 0)
-                    this.Storage.Lists.Delete(list);
-                throw new HttpException((int)HttpStatusCode.NotFound, ex.Message);
-            }
-            catch (NullReferenceException)
-            {
-                // TODO: WTFF ?????????????????????????
-                if (edit == 0)
-                    this.Storage.Lists.Delete(list);
-                throw new HttpException((int)HttpStatusCode.NotFound, "The list is empty, it has been deleted.");
-            }
-            catch (Tigwi.Storage.Library.IsPersonnalList ex)
-            {
-                return this.RedirectToAction("Index", "Home", new { error = ex.Message });
+                catch (Models.Storage.AccountNotFoundException ex)
+                {
+                    if (edit == 0)
+                        this.Storage.Lists.Delete(list);
+                    throw new HttpException((int)HttpStatusCode.NotFound, ex.Message);
+                }
+                catch (Tigwi.Storage.Library.IsPersonnalList ex)
+                {
+                    return this.RedirectToAction("Index", "Home", new { error = ex.Message });
+                }
             }
         }
 
