@@ -1,14 +1,8 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ViewPage.cs" company="ENS Paris">
-//   BSD
-// </copyright>
-// <summary>
-//   The custom view page allowing to have statically typed data available in every view.
-//   There could be a better way than duplicating the code for strongly and weakly typed views, but it works as it is,
-//   so I didn't feel the need to find a better way.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
+﻿#region copyright
+// Copyright (c) 2012, TIGWI
+// All rights reserved.
+// Distributed under  BSD 2-Clause license
+#endregion
 namespace Tigwi.UI
 {
     using System.Web.Mvc;

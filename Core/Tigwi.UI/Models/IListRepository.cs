@@ -1,12 +1,8 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IListRepository.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The interface specification for a list repository.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
+#region copyright
+// Copyright (c) 2012, TIGWI
+// All rights reserved.
+// Distributed under  BSD 2-Clause license
+#endregion
 namespace Tigwi.UI.Models
 {
     using System;

@@ -1,4 +1,9 @@
-﻿using System;
+﻿#region copyright
+// Copyright (c) 2012, TIGWI
+// All rights reserved.
+// Distributed under  BSD 2-Clause license
+#endregion
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Tigwi.Storage.Library;
@@ -139,14 +144,16 @@ namespace Tigwi.API.Models
     public class ListApi
     {
         public ListApi() { }
-        public ListApi(Guid id, string name)
+        public ListApi(Guid id, IListInfo info)
         {
             Id = id.ToString();
-            Name = name;
+            Name = info.Name;
+            Description = info.Description;
         }
 
         public string Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
     }
 
     [Serializable]

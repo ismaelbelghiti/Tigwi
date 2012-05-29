@@ -1,4 +1,9 @@
-﻿using System.Web.Mvc;
+﻿#region copyright
+// Copyright (c) 2012, TIGWI
+// All rights reserved.
+// Distributed under  BSD 2-Clause license
+#endregion
+using System.Web.Mvc;
 using Tigwi.API.Models;
 using Tigwi.Auth;
 using Tigwi.Storage.Library;
@@ -77,8 +82,7 @@ namespace Tigwi.API.Controllers
             }
             catch (UserNotFound)
             {
-                output = new Answer(new Error("Authentication failed"));
-                Response.StatusCode = 404; // Not Found
+                output = new Answer(new Error("Authentication failed")); // Not a 404 error then
             }
             catch (Exception exception)
             {

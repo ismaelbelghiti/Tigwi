@@ -1,4 +1,9 @@
-﻿using System;
+﻿#region copyright
+// Copyright (c) 2012, TIGWI
+// All rights reserved.
+// Distributed under  BSD 2-Clause license
+#endregion
+using System;
 
 namespace Tigwi.API.Models
 {
@@ -13,6 +18,9 @@ namespace Tigwi.API.Models
 
     [Serializable]
     public class Subscribe : ListAndAccount { }
+
+    [Serializable]
+    public class Unsubscribe : ListAndAccount { }
 
     [Serializable]
     public class AddAccount : ListAndAccount { }

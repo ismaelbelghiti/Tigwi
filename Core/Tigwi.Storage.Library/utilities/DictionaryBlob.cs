@@ -1,4 +1,9 @@
-﻿using System;
+﻿#region copyright
+// Copyright (c) 2012, TIGWI
+// All rights reserved.
+// Distributed under  BSD 2-Clause license
+#endregion
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,7 +30,8 @@ namespace Tigwi.Storage.Library.Utilities
                 }
                 catch { return false; }
 
-                dict.Add(key, value);
+
+                dict[key] = value;
                 
 
             } while (!base.TrySet(dict));
@@ -36,7 +42,7 @@ namespace Tigwi.Storage.Library.Utilities
         public void Add(S key, T value)
         {
             Dictionary<S,T> dict = base.Get();
-            dict.Add(key, value);
+            dict[key] = value;
             base.Set(dict);
         }
 

@@ -1,12 +1,8 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IListModel.cs" company="ENS Paris">
-//   BSD
-// </copyright>
-// <summary>
-//   The interface specification for a List.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
+#region copyright
+// Copyright (c) 2012, TIGWI
+// All rights reserved.
+// Distributed under  BSD 2-Clause license
+#endregion
 namespace Tigwi.UI.Models
 {
     using System;

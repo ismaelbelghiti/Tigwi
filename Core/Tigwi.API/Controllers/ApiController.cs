@@ -1,4 +1,9 @@
-﻿using System;
+﻿#region copyright
+// Copyright (c) 2012, TIGWI
+// All rights reserved.
+// Distributed under  BSD 2-Clause license
+#endregion
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Web.Mvc;
@@ -71,7 +76,7 @@ namespace Tigwi.API.Controllers
         protected static Lists ListsFromGuidCollection(ICollection<Guid> hashLists, int size, IStorage storage )
         {
             var lists = from listId in hashLists.Take(size)
-                        select new ListApi(listId, storage.List.GetInfo(listId).Name);
+                        select new ListApi(listId, storage.List.GetInfo(listId));
 
             return new Lists(lists.ToList());
         }
@@ -87,6 +92,9 @@ namespace Tigwi.API.Controllers
                 if (code == StrgLibErr.MessageNotFound || code == StrgLibErr.ListNotFound ||
                     code == StrgLibErr.UserNotFound || code == StrgLibErr.AccountNotFound)
                     Response.StatusCode = 404;
+
+                if (code == StrgLibErr.AccountIsOwner || code == StrgLibErr.IsPersonalList)
+                    Response.StatusCode = 403; // Forbidden
 
                 return new Error(code.ToString());
             }

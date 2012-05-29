@@ -45,7 +45,7 @@ or
      </Content>
     </Answer>
 
-Furthermore, for highly frequent errors, the answer HTTP status code will be changed from 200 (OK) to 404 (Not Found), 400 (Bad Request), 403 (Forbidden), 500 (Internal Server Error) or 501 (Not Implemented).
+Furthermore, for highly frequent errors, the answer HTTP status code will be changed from 200 (OK) to 400 (Bad Request), 403 (Forbidden), 404 (Not Found), 500 (Internal Server Error - not so likely to happen) or 501 (Not Implemented).
 
 ##Note about authentication
 
@@ -70,13 +70,13 @@ For every ressource depending on an account, you can give its name or its unique
 
 For GET methods, the URL for the ressource depend on if you use the account name or the its unique identifier. To use the account name, you have the following URL :
 
-http://api.tigwi.com/account/{action}/{accountName}/{number (if needed)}
+http://api.tigwi.com/account/{action}/{accountName}/{number_if_needed}
 
-http://api.tigwi.com/account/{action}/name={accountName}/{number (if needed)}
+http://api.tigwi.com/account/{action}/name={accountName}/{number_if_needed}
 
 And to use the unique identifier :
 
-http://api.tigwi.com/account/{action}/id={accountId}/{number (if needed)}
+http://api.tigwi.com/account/{action}/id={accountId}/{number_if_needed}
 
 For POST methods, you have two tags, `<AccountName>` and `<AccountId>`, and you must choose one of them. Access through unique identifier is more direct. Thus, if you fill both `<AccountName>` and `<AccountId>` tags, only `<AccountId>` will be taken into consideration.
 
@@ -132,7 +132,7 @@ Or, if an error occured, for example you thought the account name was Smith_John
 ###Information
 
 * In **URL**, you should give the name or the unique identifier of the account whose messages you want to get.
-* Then the number of messages you want to get. It is optional and default value is set to 20.
+* Then the number of messages. It is optional and default value is set to 20.
 * In **Response**, _Size_ is the number of messages returned (different from the requested number if there are not enough messages to provide).
 
 
@@ -161,7 +161,8 @@ The same kind as for account/messages
 ###Information
 
 * In **URL**, you should give the name or the unique identifier of the account whose favourites messages you want to get.
-* Then the number of messages you want to get. It is optional and default value is set to 20.
+* Then the number of messages. It is optional and default value is set to 20.
+* In **Response**, _Size_ is the number of messages returned (different from the requested number if there are not enough messages to provide).
 * You **must** be authenticated as an authorized user of the account to see the tagged messages.
 
 
@@ -179,12 +180,41 @@ GET
 
 ###Request URL example
 
-http://api.tigwi.com/account/subscriberaccounts/John_Smith/2
+http://api.tigwi.com/account/subscribedaccounts/John_Smith/2
 
-http://api.tigwi.com/account/subscriberaccounts/name=John_Smith/2
+http://api.tigwi.com/account/subscribedaccounts/name=John_Smith/2
 
-http://api.tigwi.com/account/subscriberaccounts/id=d818d509-e7eb-45b6-a56d-f472f075f433/2
+http://api.tigwi.com/account/subscribedaccounts/id=d818d509-e7eb-45b6-a56d-f472f075f433/2
 
+###Response
+
+
+ 
+###Information
+
+* In **URL**, you should give the name or the unique identifier of the account whose subscriptions you want to get.
+* Then the number of subscriptions. It is optional and default value is set to 20.
+* In **Response**, _Size_ is the number of subscriptions returned (different from the requested number if there are not enough subscriptions to provide).
+* If you're not authorized, you will only receive subscriptions from lists that the owner has set public.
+
+
+##See which accounts are following someone
+
+###Purpose
+
+Get the number you want to of accounts that have subscribed a public list in which the given account appears. No special order provided
+
+###HTTP method
+
+GET
+
+###Request URL example
+
+http://api.tigwi.com/account/subscriberaccounts/John_Smith/1
+
+http://api.tigwi.com/account/subscriberaccounts/name=John_Smith/1
+
+http://api.tigwi.com/account/subscriberaccounts/id=d818d509-e7eb-45b6-a56d-f472f075f433/1
 
 ###Response
 
@@ -198,35 +228,12 @@ http://api.tigwi.com/account/subscriberaccounts/id=d818d509-e7eb-45b6-a56d-f472f
       </Account>
      </Content>
     </Answer>
- 
+
 ###Information
-
-* In **URL**, you should give the name or the unique identifier of the account whose subscriptions you want to get.
-* Then the number of subscriptions you want to get. It is optional and default value is set to 20.
-* In **Response**, _Size_ is the number of subscription returned (different from the requested number if there are not enough subscriptions to provide).
-* If you're not authorized, you will only receive subscriptions from lists that the owner has set public.
-
-
-##See which accounts are following someone
-
-###Purpose
-
-Get a number _numberOfSubscribers_ of accounts that have subscribed a public list in which the account _accountName_ or _accountId_ appears. No special order provided
-
-###HTTP method
-
-GET
-
-###Request URL example
-
-http://api.tigwi.com/account/subscribedaccounts/John_Smith/2
-
-http://api.tigwi.com/account/subscribedaccounts/name=John_Smith/2
-
-http://api.tigwi.com/account/subscribedaccounts/id=d818d509-e7eb-45b6-a56d-f472f075f433/2
-
-###Response
-
+* In **URL**, you should give the name or the unique identifier of the account whose subscribers you want to see.
+* Then the number of subscribers. It is optional and default value is set to 20.
+* In **Response**, _Size_ is the number of subscribers returned (different from the requested number if there are not enough subscribers to provide).
+* There is no way to get accounts following you through private lists.
 
 
 ##See the lists followed by someone
