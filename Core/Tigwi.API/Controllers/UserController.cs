@@ -53,6 +53,8 @@ namespace Tigwi.API.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult GenerateKey()
         {
+            Answer output;
+
             try
             {
                 var idParameters = (Identity)(new XmlSerializer(typeof(Identity))).Deserialize(Request.InputStream);
@@ -66,21 +68,24 @@ namespace Tigwi.API.Controllers
                 if (hashedPassword.SequenceEqual(otherHash)) 
                 {
                     var key = Storage.User.GenerateApiKey(userId, idParameters.ApplicationName);
+                    // We set a cookie but we also return the key in the response body
                     Response.SetCookie(new HttpCookie("key=" + key));
+                    output = new Answer(new NewObject(key));
                 }
-                else 
-                    throw new AuthFailedException();                
+                else
+                    output = new Answer(new Error("Authentication failed"));
             }
             catch (UserNotFound)
             {
+                output = new Answer(new Error("Authentication failed"));
                 Response.StatusCode = 404; // Not Found
             }
-            catch (InvalidOperationException)
+            catch (Exception exception)
             {
-                Response.StatusCode = 400; // Bad Request
+                output = new Answer(HandleError(exception));
             }
 
-            return new EmptyResult();
+            return Serialize(output);
         }
     }
 }
