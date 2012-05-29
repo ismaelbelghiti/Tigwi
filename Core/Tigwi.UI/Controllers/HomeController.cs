@@ -85,6 +85,14 @@ namespace Tigwi.UI.Controllers
                        : this.View();
         }
 
+        public ActionResult Me(string error)
+        {
+            ViewBag.error = error;
+            return this.User.Identity.IsAuthenticated
+                       ? this.View(this.Storage.Accounts.Find(this.CurrentAccount.Name))
+                       : this.View();
+        }
+
         #endregion
 
         #region Methods

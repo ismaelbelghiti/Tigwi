@@ -79,6 +79,7 @@
                             @if (@User.Identity.IsAuthenticated)
                             {
                                 <li @((ViewContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString() == "Home") ? Html.Raw("class=\"active\"") : Html.Raw("class=\"\""))>@Html.ActionLink("Home", "Index", "Home")</li>
+                                <li @((ViewContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString() == "Home") ? Html.Raw("class=\"active\"") : Html.Raw("class=\"\""))>@Html.ActionLink("Me", "Me", "Home")</li>
                                 <li class="dropdown">  
                                     <a href="#"
                                        class="dropdown-toggle"
@@ -92,7 +93,7 @@
                                   
                                         @foreach (var acc in CurrentUser.Accounts)
                                         {
-                                            <li>@Html.ActionLink(acc.Name, "MakeActive", "Account", new { accountName = acc.Name },null)</li> 
+                                            <li>@Html.ActionLink(acc.Name, "MakeActive", "Account", new { accountName = acc.Name }, null)</li> 
                                         }
                                         <li class="divider"></li>
                                         <li><a data-toggle="modal" href="#addAccountModal" >Add Account</a></li>
