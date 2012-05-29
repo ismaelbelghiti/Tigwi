@@ -1,5 +1,42 @@
-﻿@{
+﻿@using Tigwi.UI.Models
+@using Tigwi.UI.Models.User
+@model Tigwi.UI.Models.IAccountModel
+
+@{
     ViewBag.Title = "Tigwi - Me";
 }
 
-<h2>@ViewBag.message</h2>
+@section LeftInfos
+{
+    @if(User.Identity.IsAuthenticated)
+    {
+
+
+        if(!string.IsNullOrEmpty(CurrentAccount.Description))
+        {
+           <p><b>Description : </b> @CurrentAccount.Description</p>
+        }
+        else
+        {
+            <p>No description added yet, please edit your account to add one.</p>
+        }
+    }
+    else
+    {
+        <p>
+            Tigwi is a super fun microbloging platform you should really use!
+        </p>
+    }
+    
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div>@Html.Partial("_WriteMessage", new WritePostViewModel())</div>
+    <div>@Html.Partial("_ViewPostList", Model.PersonalList.PostsBefore(DateTime.MaxValue, 10))</div>
+}
+else
+{
+    <h4 class="pull-center">Last messages!</h4>
+    @Html.Partial("_ViewPostList", Storage.Posts.LastPosts())
+}
