@@ -110,8 +110,13 @@
             {
                 <button class="btn btn-primary leavAcc" id="leav-@account.Id" ><b>Leave</b></button>
             }
-            <p><i>Description : </i> @account.Description</p>
-            
+            <p><b>Description : </b> @account.Description</p>
+            <p><b>Users</b> : 
+            @foreach (var user in @account.Users)
+            {
+                @(user.Login + " ")
+            }
+            </p>
         }
 </section>
 
