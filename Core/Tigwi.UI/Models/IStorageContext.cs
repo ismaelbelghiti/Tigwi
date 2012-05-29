@@ -1,12 +1,8 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IStorageContext.cs" company="ENS Paris">
-//   BSD
-// </copyright>
-// <summary>
-//   The interface specification for a UnitOfWork context.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
+#region copyright
+// Copyright (c) 2012, TIGWI
+// All rights reserved.
+// Distributed under  BSD 2-Clause license
+#endregion
 namespace Tigwi.UI.Models
 {
     /// <summary>

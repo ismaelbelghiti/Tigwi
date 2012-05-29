@@ -1,12 +1,8 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="UserRepository.cs" company="ENS Paris">
-//   BSD
-// </copyright>
-// <summary>
-//   An implementation of the <see cref="IUSerRepository" /> interface for Azure Storage.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
+#region copyright
+// Copyright (c) 2012, TIGWI
+// All rights reserved.
+// Distributed under  BSD 2-Clause license
+#endregion
 namespace Tigwi.UI.Models.Storage
 {
     using System;
