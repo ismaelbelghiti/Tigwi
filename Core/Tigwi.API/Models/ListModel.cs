@@ -15,6 +15,9 @@ namespace Tigwi.API.Models
     public class Subscribe : ListAndAccount { }
 
     [Serializable]
+    public class Unsubscribe : ListAndAccount { }
+
+    [Serializable]
     public class AddAccount : ListAndAccount { }
     
     [Serializable]

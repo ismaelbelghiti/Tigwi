@@ -62,6 +62,13 @@
                 });
             }
         });
+
+        $('.listName').click(function(event) {
+            if(event.target.nodeName=='I'){
+                event.stopPropagation();
+                return;
+            }
+        });
     }); 
 </script>
 
@@ -98,10 +105,15 @@
 
                 <div class="listName accordion-toggle" data-toggle="collapse" href="#list-@list.Id">
                        
-                    <i class="icon-folder-close"></i> <div style="display:inline-block">
-                    <span class="truncated-shorter">@list.Name</span></div> 
-                    <i class="star 
-                    @((CurrentAccount.PublicFollowedLists.Select(l => l.Id).Contains(list.Id)) ? Html.Raw("icon-star") : Html.Raw("icon-star-empty"))
+                    <i class="icon-folder-close"></i> 
+                    <div style="display:inline-block">                                                      
+                        <span class="truncated-shorter">@list.Name</span>
+                    </div> 
+
+                    <a href="@Url.Action("Details","List",new { listId = list.Id})"><i class="icon-eye-open icon-clickable pull-right"></i></a>
+
+                    <i class="star icon-clickable
+                    @((CurrentAccount.PublicOwnedLists.Select(l => l.Id).Contains(list.Id)) ? Html.Raw("icon-star") : Html.Raw("icon-star-empty"))
                      pull-right"></i>
                     <div id="list-@list.Id" class="accordion-body collapse">
                         <ul class="list-user">
@@ -112,9 +124,10 @@
                         </ul>
                     </div>
                 </div>
-                <i>@Html.ActionLink("Watch " + @list.Name, "Details", "List", new { listId = list.Id }, null)</i>
+                
             </li>
         }
     </ul>
+
 
 </section>
