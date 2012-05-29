@@ -24,7 +24,7 @@
             @Html.HiddenFor(m => m.ReturnAction)
         </div>
 
-        <label for="addAAUser">Add another user</label>
+        <label for="addAAUser">Advanced Settings : Allow other users to use this account</label>
         <input type="text" class="text-box single-line" id="addUser"/>
         <input type="hidden" name="editAcc2" id="isEdit"/>
         <button type="button" class="btn" data-url="@Url.Action("UserExists","User")" id="addUserButton"> add user</button>

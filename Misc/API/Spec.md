@@ -156,7 +156,25 @@ http://api.tigwi.com/account/taggedmessages/id=d818d509-e7eb-45b6-a56d-f472f075f
 
 ###Response
 
-The same kind as for account/messages
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Content xsi:type="Messages" Size="2">
+      <Message>
+       <Id>c1a5ff05-7b50-4265-9a21-a0fee3bcfb77</Id>
+       <PostTime>2012-05-29T10:46:57.4968697</PostTime>
+       <Poster>John_Smith</Poster>
+       <Content>I love Tigwi</Content>
+      </Message>
+      <Message>
+       <Id>9e844bcd-e966-4d32-8c41-cf4a25c758a0</Id>
+       <PostTime>2012-05-29T11:16:58.7093898</PostTime>
+       <Poster>John_Smith</Poster>
+       <Content>I love Tigwi
+
+       retwiged by John_Smith</Content>
+      </Message>
+     </Content>
+    </Answer>
 
 ###Information
 
@@ -407,7 +425,7 @@ POST
 
 http://api.tigwi.com/message/write
 
-###Request example
+###Request examples
 
     <Write>
      <AccountName>John_Smith</AccountName>
@@ -429,7 +447,7 @@ or
     </Answer>
 
 ###Information
-* In **Request**, the size of your message is limited to 140 characters and this limit is verified by the server. It raises an error if the message is too long.
+* In **Request**, the size of your message is limited to 140 characters and this limit is verified by the server.
 * In **Request**, `<AccountName>` is the name of the account where you intend to post a message.
 * In **Request**, `<AccountId>` is the unique identifier of the account where you intend to post a message.
 * In **Request**, if you use both `<AccountName>` and `<AccountId>`, only the `<AccountId>` will be used (particularly when they don't refer to the same account).
@@ -443,8 +461,6 @@ or
 
 To copy a message is to write a message with the same content. You can copy messages sent by others.
 
-Note : Not implemented
-
 ###HTTP method
 
 POST
@@ -455,19 +471,30 @@ http://api.tigwi.com/message/copy
 
 ###Request examples
 
+    <Copy>
+     <AccountName>John_Smith</AccountName>
+     <MessageId>c1a5ff05-7b50-4265-9a21-a0fee3bcfb77</MessageId>
+    </Copy>
 
+or
 
-###Response example
+    <Copy>
+     <AccountId>d818d509-e7eb-45b6-a56d-f472f075f433</AccountId>
+     <MessageId>c1a5ff05-7b50-4265-9a21-a0fee3bcfb77</MessageId>
+    </Copy>
+
+###Response
 
     <?xml version="1.0"?>
     <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-     <Content xsi:type="ObjectCreated" Id="7a2a8d74-621a-455c-bfc3-8552474cc735" />
+     <Content xsi:type="NewObject" Id="9e844bcd-e966-4d32-8c41-cf4a25c758a0" />
     </Answer>
 
 ###Information
-* In **Request**, `<AccountName>` is the name of the account where you intend to copy a message.
-* In **Request**, `<AccountId>` is the unique identifier of the account where you intend to copy a message.
+* In **Request**, `<AccountName>` is the name of the account where you want to copy a message.
+* In **Request**, `<AccountId>` is the unique identifier of the account where you want to copy a message.
 * In **Request**, if you use both `<AccountName>` and `<AccountId>`, only the `<AccountId>` will be used (in particular when they don't refer to the same account).
+* In **Request**, `<MessageId>` is the unique identifier of the message you want to copy a message.
 * You **must** be authenticated as an authorized user of the account to copy a message.
 
 
@@ -485,7 +512,9 @@ http://api.tigwi.com/message/delete
 
 ###Request example
 
-
+    <Delete>
+     <MessageId>c1a5ff05-7b50-4265-9a21-a0fee3bcfb77</MessageId>
+    </Delete>
 
 ###Response
 
@@ -518,15 +547,15 @@ http://api.tigwi.com/message/tag
 ###Request examples
 
     <Tag>
-        <AccountName>John_Smith</AccountName>
-        <MessageId>f41d6ebf-4e50-48bc-acdb-ab24359455fc</MessageId>
+     <AccountName>John_Smith</AccountName>
+     <MessageId>c1a5ff05-7b50-4265-9a21-a0fee3bcfb77</MessageId>
     </Tag>
 
 or
 
     <Tag>
-        <AccountId>312e2061-3a79-4f82-a53b-e77af1ff0e59</AccountId>
-        <MessageId>f41d6ebf-4e50-48bc-acdb-ab24359455fc</MessageId>
+     <AccountId>d818d509-e7eb-45b6-a56d-f472f075f433</AccountId>
+     <MessageId>c1a5ff05-7b50-4265-9a21-a0fee3bcfb77</MessageId>
     </Tag>
 
 ###Response
@@ -563,15 +592,15 @@ http://api.tigwi.com/message/untag
 ###Request
 
     <Untag>
-        <AccountName>John_Smith</AccountName>
-        <MessageId>f41d6ebf-4e50-48bc-acdb-ab24359455fc</MessageId>
+     <AccountName>John_Smith</AccountName>
+     <MessageId>c1a5ff05-7b50-4265-9a21-a0fee3bcfb77</MessageId>
     </Untag>
 
 or
 
     <Untag>
-        <AccountId>312e2061-3a79-4f82-a53b-e77af1ff0e59</AccountId>
-        <MessageId>f41d6ebf-4e50-48bc-acdb-ab24359455fc</MessageId>
+     <AccountId>d818d509-e7eb-45b6-a56d-f472f075f433</AccountId>
+     <MessageId>c1a5ff05-7b50-4265-9a21-a0fee3bcfb77</MessageId>
     </Untag>
 
 ###Response
@@ -590,105 +619,282 @@ If everything went well :
 * In **Request**, if you use both `<AccountName>` and `<AccountId>`, only the `<AccountId>` will be used (in particular when they don't refer to the same account).
 * You **must** be authenticated as an authorized user of the account where you intend to untag a message.
 
+
 #Information about a *list*
 
 ##Get last messages sent to a list
 
 ###Purpose
 
-Obtain a number _numberOfMessages_ of last messages sent to the list whose unique identifier is _idOfList_.
+Get the number you want to of last messages sent to the list given by its unique identifier.
 
 ###HTTP method
 
 GET
 
-###URL
+###Request URL example
 
-http://api.tigwi.com/list/messages/idOfList/numberOfMessages
+http://api.tigwi.com/list/messages/08a7f307-8ead-4b44-addc-ad9c482bdb26/1
 
 ###Response
 
-
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Content xsi:type="Messages" Size="1">
+      <Message>
+       <Id>8b85aa9c-1720-4cc7-ba41-c50d71841fbc</Id>
+       <PostTime>2012-05-29T11:29:36.3591577</PostTime>
+       <Poster>Global_daily</Poster>
+       <Content>Welcome to our new followers !</Content>
+      </Message>
+     </Content>
+    </Answer>
 
 ###Information
 
-* In **URL**, _idOfList_ is the unique identifier of the list whose messages you want to get.
-* In **URL**, _numberOfMessages_ is the number of messages you want to get. It is optional and default is set to 20.
-* In **Response**, _Size_ is the number of messages returned (different from _numberOfMessages_ if there are not enough accounts to provide).
+* In **URL**, you should give the unique identifier of the list whose messages you want to get.
+* Then the number of messages. It is optional and default value is set to 20.
+* In **Response**, _Size_ is the number of messages returned (different from the requested number if there are not enough messages to provide).
 
 
 ##Get accounts followed by the list
 
 ###Purpose
 
-Obtain a number _numberOfSubscriptions_ of accounts followed by list whose unique identifier is _idOfList_.
+Get the number you want to of accounts followed by the given list.
 No particular order provided
 
 ###HTTP method
 
 GET
 
-###URL
+###Request URL example
 
-http://api.tigwi.com/list/subscriptions/idOfList/numberOfSubscriptions
+http://api.tigwi.com/list/subscriptions/08a7f307-8ead-4b44-addc-ad9c482bdb26/1
 
 ###Response
 
-
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Content xsi:type="Accounts" Size="1">
+      <Account>
+       <Id>a3e56af5-9991-428e-8d8f-0b31f7e80e40</Id>
+       <Name>Paul_Smith</Name>
+       <Description>I'm the brother of @John_Smith</Description>
+      </Account>
+     </Content>
+    </Answer>
 
 ###Information
 
-* In **URL**, _idOfList_ is the id of the list whose information you want to get
-* In **URL**, _numberOfSubscriptions_ is the number of accounts you want to get. It is optional and default is set to 20.
-* In **Response**, _sizeOfList_ is the number of accounts returned (different from _numberOfSubscriptions_ if there are not enough accounts to provide).
+* In **URL**, you should give the unique identifier of the list whose subscriptions you want to get.
+* Then the number of subscriptions. It is optional and default value is set to 20.
+* In **Response**, _Size_ is the number of subscriptions returned (different from the requested number if there are not enough subscriptions to provide).
 
 
 ##Get the list of accounts following a given list
 
 ###Purpose
 
-Obtain a number _numberOfFollowers_ of accounts following the given list whose unique identifier is _idOfList_.
+Get the number you want to of accounts following the given list.
 No particular order provided
 
 ###HTTP method
 
 GET
 
-###URL
+###Request URL example
 
-http://api.tigwi.com/list/subscribers/idOfList/numberOfFollowers
+http://api.tigwi.com/list/subscribers/08a7f307-8ead-4b44-addc-ad9c482bdb26/1
 
 ###Response
 
-
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Content xsi:type="Accounts" Size="1">
+      <Account>
+       <Id>d818d509-e7eb-45b6-a56d-f472f075f433</Id>
+       <Name>John_Smith</Name>
+       <Description>My account to say how much I love Tigwi</Description>
+      </Account>
+     </Content>
+    </Answer>
 
 ###Information
-* In **URL** _idOfList_ is the unique identifier of the list whose followers you want to get.
-* In **URL**, _numberOfFollowers_ is the number of accounts you want to get. It is optional and default is set to 20.
-* In **Response**, _Size_ is the number of accounts returned (different from _numberOfFollowers_ if there are not enough accounts to provide).
+
+* In **URL**, you should give the unique identifier of the list whose subscribers you want to get.
+* Then the number of subscribers. It is optional and default value is set to 20.
+* In **Response**, _Size_ is the number of subscribers returned (different from the requested number if there are not enough subscribers to provide).
 
 
 ##Get a list's owner information
 
 ###Purpose
 
-Obtain information about the owner of list whose unique identifier is _idOfList_.
+Get information about the owner of the given list.
 
 ###HTTP method
 
 GET
 
-###URL
+###Request URL example
 
-http://api.tigwi.com/list/owner/idOfList
+http://api.tigwi.com/list/owner/08a7f307-8ead-4b44-addc-ad9c482bdb26
 
 ###Response
 
-
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Content xsi:type="Account">
+      <Id>d818d509-e7eb-45b6-a56d-f472f075f433</Id>
+      <Name>John_Smith</Name>
+      <Description>My account to say how much I love Tigwi</Description>
+     </Content>
+    </Answer>
 
 ###Information
 
-* In **URL**, _idOfList_ is the unique identifier of the list whose owner you want to get.
+* In **URL**, you should give the unique identifier of the list whose owner you want to get.
+
+
+#Actions on a *list*
+
+**Remember :** since the following ressources use the POST verb, they require authentication. You must be authenticated as an user authorized to use the given account.
+
+##Create a list
+
+###Purpose
+
+If you wish to follow people, you must before create a new, empty list.
+Authentication required.
+
+###HTTP method
+
+POST
+
+###URL
+
+http://api.tigwi.com/list/create/
+
+###Request example
+
+	<Create>
+     <AccountName>John_Smith</AccountName>
+     <ListInfo>
+      <Name>Presidents of the US</Name>
+      <Description>To keep touch</Description>
+	  <IsPrivate>false</IsPrivate>
+     </ListInfo>
+    </Create>
+or
+
+	<Create>
+     <AccountId>d818d509-e7eb-45b6-a56d-f472f075f433</AccountId>
+     <ListInfo>
+      <Name>Presidents of the US</Name>
+      <Description>To keep touch</Description>
+	  <IsPrivate>false</IsPrivate>
+     </ListInfo>
+    </Create>
+
+###Response example
+
+	<?xml version="1.0"?>
+	<Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	  <Content xsi:type="NewObject" Id="5af155a7-151e-4c6d-af3c-ec4af882aced" />
+	</Answer>
+
+###Information
+
+* You **must** be authenticated and authorized to use the account.
+* In **Request**, `<AccountName>` is the name of the account who wants to create the list _nameOfList_.
+* In **Request**, `<AccountId>` is the unique identifier of the account who wants to create the list _nameOfList_.
+* In **Request**, `<Name>` is the name you want to give to the new list.
+* In **Request**, `<Description>` is a short text to remember what the list is about.
+* In **Request**, `<IsPrivate>` value must be _false_ if you want the new list to be public or _true_ if only you should see that list.
+
+
+##Make an account subscribe to a list
+
+Authentication required.
+
+###HTTP method
+
+POST
+
+###URL
+
+http://api.tigwi.com/list/subscribe/
+
+###Request
+    
+    <Subscribe>
+     <List>08a7f307-8ead-4b44-addc-ad9c482bdb26</List>
+	 <AccountName>John_Smith</AccountName>
+    </Subscribe>
+
+or
+
+    <Subscribe>
+     <List>08a7f307-8ead-4b44-addc-ad9c482bdb26</List>
+     <AccountId>d818d509-e7eb-45b6-a56d-f472f075f433</AccountId>
+    </Subscribe>
+
+###Response
+
+If everything went well :
+
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Error />
+    </Answer>
+
+###Information
+* You **must** be authenticated as an authorized user of the given account to use this method.
+* In **Request**, `<AccountName>` is the name of the account who wants to follow the list whose unique identifier is `<List>`.
+* In **Request**, `<AccountId>` is the unique identifier of the account who wants to follow the list.
+* It is possible to subscribe a private list just knowing its unique identifier, even if you're not the owner.
+
+
+##Make an account unsubscribe from a list
+
+Authentication required.
+
+###HTTP method
+
+POST
+
+###URL
+
+http://api.tigwi.com/list/unsubscribe/
+
+###Request
+    
+    <Unsubscribe>
+     <List>08a7f307-8ead-4b44-addc-ad9c482bdb26</List>
+	 <AccountName>John_Smith</AccountName>
+    </Unsubscribe>
+
+or
+
+    <Unsubscribe>
+     <List>08a7f307-8ead-4b44-addc-ad9c482bdb26</List>
+     <AccountId>d818d509-e7eb-45b6-a56d-f472f075f433</AccountId>
+    </Unsubscribe>
+
+###Response
+
+If everything went well :
+
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Error />
+    </Answer>
+
+###Information
+* You **must** be authenticated as an authorized user of the given account to use this method.
+* In **Request**, `<AccountName>` is the name of the account who wants to stop following the list whose unique identifier is `<List>`.
+* In **Request**, `<AccountId>` is the unique identifier of the account who wants to stop following the list.
 
 
 #Modifying a *list*
@@ -708,10 +914,17 @@ http://api.tigwi.com/list/addaccount/
 
 ###Request example
     
-    <ListAndAccount>
-        <List>312e2061-3a79-4f82-a53b-e77af1ff0e59</List>
-        <Account>f41d6ebf-4e50-48bc-acdb-ab24359455fc</Account>
-    </ListAndAccount>
+    <AddAccount>
+     <List>08a7f307-8ead-4b44-addc-ad9c482bdb26</List>
+	 <AccountName>John_Smith</AccountName>
+    </AddAccount>
+
+or
+
+    <AddAccount>
+     <List>08a7f307-8ead-4b44-addc-ad9c482bdb26</List>
+     <AccountId>d818d509-e7eb-45b6-a56d-f472f075f433</AccountId>
+    </AddAccount>
 
 ###Response
 
@@ -739,11 +952,18 @@ POST
 http://api.tigwi.com/list/removeaccount/
 
 ###Request example
-    
-    <ListAndAccount>
-        <List>312e2061-3a79-4f82-a53b-e77af1ff0e59</List>
-        <Account>f41d6ebf-4e50-48bc-acdb-ab24359455fc</Account>
-    </ListAndAccount>
+
+    <RemoveAccount>
+     <List>08a7f307-8ead-4b44-addc-ad9c482bdb26</List>
+	 <AccountName>John_Smith</AccountName>
+    </RemoveAccount>
+
+or
+
+    <RemoveAccount>
+     <List>08a7f307-8ead-4b44-addc-ad9c482bdb26</List>
+     <AccountId>d818d509-e7eb-45b6-a56d-f472f075f433</AccountId>
+    </RemoveAccount>
 
 ###Response
 
@@ -759,109 +979,13 @@ If everything went well :
 * You **must** be authenticated and authorized to use the owner of the list whose unique identifier is given by `<List>` to use this method.
 * In **Request**, `<List>` is the unique identifier of the list who wants to stop following the account `<Account>`.
 
-#Actions on a *list*
-
-##Create a list
-
-###Purpose
-
-If you wish to follow people, you must before create a new, empty list.
-Authentication required.
-
-###HTTP method
-
-POST
-
-###URL
-
-http://api.tigwi.com/list/create/
-
-###Request example
-
-	<CreateList>
-     <AccountName>John_Smith</AccountName>
-     <ListInfo>
-      <Name>Presidents of the US</Name>
-      <Description>To keep touch</Description>
-     </ListInfo>
-    </CreateList>
-or
-
-	<CreateList>
-     <AccountId>312e2061-3a79-4f82-a53b-e77af1ff0e59</AccountId>
-     <ListInfo>
-      <Name>Presidents of the US</Name>
-      <Description>To keep touch</Description>
-     </ListInfo>
-    </CreateList>
-
-###Response example
-
-    <?xml version="1.0"?>
-    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-     <Content xsi:type="ObjectCreated" Id="312e2061-3a79-4f82-a53b-e77af1ff0e59" />
-    </Answer>
-
-###Information
-
-* You **must** be authenticated and authorized to use the account.
-* In **Request**, `<AccountName>` is the name of the account who wants to create the list _nameOfList_.
-* In **Request**, `<AccountId>` is the unique identifier of the account who wants to create the list _nameOfList_.
-* In **Request**, `<Name>` is the name you want to give to the new list.
-* In **Request**, `<Description>` is a short text to remember what the list is about.
-* In **Request**, _privateSetting_ value must be _false_ if you want the new list to be public or _true_ if only you can see that list.
-
-
-##Make an account subscribe to a list
-
-###Purpose
-
-For someone to distantly subscribe to a list. Authentication required.
-
-###HTTP method
-
-POST
-
-###URL
-
-http://api.tigwi.com/list/subscribe/
-
-###Request
-    
-    <SubscribeList>
-        <AccountName>John_Smith</AccountName>
-        <Subscription>312e2061-3a79-4f82-a53b-e77af1ff0e59</Suscription>
-    </SubscribeList>
-
-or
-
-    <SubscribeList>
-        <AccountId></AccountId>
-        <Subscription>312e2061-3a79-4f82-a53b-e77af1ff0e59</Suscription>
-    </SubscribeList>
-
-###Response
-
-If everything went well :
-
-    <?xml version="1.0"?>
-    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-     <Error />
-    </Answer>
-
-###Information
-* You **must** be authenticated as an authorized user of account _nameOfSubscriber_ to use this method.
-* In **Request**, `<AccountName>` is the name of the account who wants to follow the list whose unique identifier is `<Subscription>`.
-* In **Request**, `<AccountId>` is the unique identifier of the account who wants to follow the list whose unique identifier is `<Subscription>`.
-* It is possible to subscribe a private list just knowing its unique identifier, even if you're not the owner.
-
 
 
 #Get information about an *user*
 
 ###Purpose
 
-Obtain main information of yourself as an user. Authentication required.
+Get main information about yourself as an user. Authentication required.
 
 ###HTTP method
 
@@ -873,15 +997,71 @@ http://api.tigwi.com/user/maininfo/
 
 ###Response example
 
+	<?xml version="1.0"?>
+	<Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	  <Content xsi:type="User">
+	    <Login>John_Smith_login</Login>
+	    <Email>falseaddress@yohoomail.com</Email>
+	    <Id>c1881b11-aadb-4d3f-80c3-49d5b255ed7f</Id>
+	  </Content>
+	</Answer>
+
+###Information
+
+You don't need to give any detail on the user because you are identified through authentication.
+
+
+#Handle your API authentication keys
+
+##Generate a new API key
+
+###Purpose
+
+To allow a new application to access your data, you should first generate a new and unique API key.
+
+###HTTP method
+
+POST
+
+###URL
+
+http://api.tigwi.com/user/generatekey
+
+###Request example
+
+	<Identity>
+	  <UserLogin>John_Smith_login</UserLogin>
+	  <Password>not-the-real-password-don't-be-silly</Password>
+	  <ApplicationName>myApp</ApplicationName>
+	</Identity>
+
+or
+
+	<Identity>
+	  <UserId>c1881b11-aadb-4d3f-80c3-49d5b255ed7f</UserId>
+	  <Password>not-the-real-password-don't-be-silly</Password>
+	  <ApplicationName>myApp</ApplicationName>
+	</Identity>
+
+###Response
+
     <?xml version="1.0"?>
     <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-     <Content xsi:type="User">
-      <Login>John_Smith</Login>
-      <Email>falseaddress@yohoomail.com</Email>
-      <Id>f41d6ebf-4e50-48bc-acdb-ab24359455fc</Id>
-     </Content>
+     <Content xsi:type="NewObject" Id="312e2061-3a79-4f82-a53b-e77af1ff0e59" />
     </Answer>
 
 ###Information
 
-You don't need to give any detail on the user you want to have the information because you are identified through authentication.
+* This is the only ressource that asks for your login and password.
+* You will receive
+
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Error Code="Authentication failed" />
+    </Answer>
+
+if the login or the password were wrong.
+
+* A cookie will be set in the response headers beside giving the key into the response body.
+* You shouldn't give the same key to two different applications.
+* All keys can be desactivated on the website.
