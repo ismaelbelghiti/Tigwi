@@ -58,22 +58,41 @@ namespace Tigwi.API.Controllers
             try
             {
                 var idParameters = (Identity)(new XmlSerializer(typeof(Identity))).Deserialize(Request.InputStream);
-                var userId = idParameters.UserId ?? Storage.User.GetId(idParameters.UserLogin);
 
-                // We catch the real password to verify if both are the same
-                var hashedPassword = Storage.User.GetPassword(userId);
-                var otherHash = PasswordAuth.HashPassword(idParameters.Password);
-
-                // If both passwords are the same, we can generate the key
-                if (hashedPassword.SequenceEqual(otherHash)) 
+                if (idParameters.UserId == null && idParameters.UserLogin == null)
                 {
-                    var key = Storage.User.GenerateApiKey(userId, idParameters.ApplicationName);
-                    // We set a cookie but we also return the key in the response body
-                    Response.SetCookie(new HttpCookie("key=" + key));
-                    output = new Answer(new NewObject(key));
+                    output = new Answer(new Error("User missing"));
+                    Response.StatusCode = 400; // Bad Request
+                }
+                else if (idParameters.Password == null)
+                {
+                    output = new Answer(new Error("Password missing"));
+                    Response.StatusCode = 400; // Bad Request
+                }
+                else if (idParameters.ApplicationName == null)
+                {
+                    output = new Answer(new Error("ApplicationName missing"));
+                    Response.StatusCode = 400; // Bad Request
                 }
                 else
-                    output = new Answer(new Error("Authentication failed"));
+                {
+                    var userId = idParameters.UserId ?? Storage.User.GetId(idParameters.UserLogin);
+
+                    // We catch the real password to verify if both are the same
+                    var hashedPassword = Storage.User.GetPassword(userId);
+                    var otherHash = PasswordAuth.HashPassword(idParameters.Password);
+
+                    // If both passwords are the same, we can generate the key
+                    if (hashedPassword.SequenceEqual(otherHash))
+                    {
+                        var key = Storage.User.GenerateApiKey(userId, idParameters.ApplicationName);
+                        // We set a cookie but we also return the key in the response body
+                        Response.SetCookie(new HttpCookie("key=" + key));
+                        output = new Answer(new NewObject(key));
+                    }
+                    else
+                        output = new Answer(new Error("Authentication failed"));
+                }
             }
             catch (UserNotFound)
             {

@@ -20,11 +20,20 @@ namespace Tigwi.API.Controllers
                 var msg = (MsgToWrite)(new XmlSerializer(typeof(MsgToWrite))).Deserialize(Request.InputStream);
 
                 if (msg.AccountId == null && msg.AccountName == null)
+                {
                     output = new Answer(new Error("AccountId or AccountName missing"));
+                    Response.StatusCode = 400; // Bad Request
+                }
                 else if (msg.Message == null)
+                {
                     output = new Answer(new Error("Message missing"));
+                    Response.StatusCode = 400; // Bad Request
+                }
                 else if (msg.Message.Length > 140)
+                {
                     output = new Answer(new Error("Message must not exceed 140 characters"));
+                    Response.StatusCode = 403; // Forbidden
+                }
                 else
                 {
                     var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
@@ -64,9 +73,15 @@ namespace Tigwi.API.Controllers
                 var msg = (CopyMsg)(new XmlSerializer(typeof(CopyMsg))).Deserialize(Request.InputStream);
 
                 if (msg.AccountId == null && msg.AccountName == null)
+                {
                     output = new Answer(new Error("AccountId or AccountName missing"));
+                    Response.StatusCode = 400; // Bad Request
+                }
                 else if (msg.MessageId == null)
+                {
                     output = new Answer(new Error("MessageId missing"));
+                    Response.StatusCode = 400; // Bad Request
+                }
                 else
                 {
                     var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
@@ -107,7 +122,10 @@ namespace Tigwi.API.Controllers
                 var msg = (MsgToDelete)(new XmlSerializer(typeof(MsgToDelete))).Deserialize(Request.InputStream);
 
                 if (msg.MessageId == null)
+                {
                     error = new Error("MessageId missing");
+                    Response.StatusCode = 400; // Bad Request
+                }
                 else
                 {
                     var ownerId = Storage.Msg.GetMessage(msg.MessageId.GetValueOrDefault()).PosterId;
@@ -148,9 +166,15 @@ namespace Tigwi.API.Controllers
                 var msg = (Tag) (new XmlSerializer(typeof (Tag))).Deserialize(Request.InputStream);
 
                 if (msg.AccountId == null && msg.AccountName == null)
+                {
                     error = new Error("AccountId or AccountName missing");
+                    Response.StatusCode = 400; // Bad Request
+                }
                 else if (msg.MessageId == null)
+                {
                     error = new Error("MessageId missing");
+                    Response.StatusCode = 400; // Bad Request
+                }
                 else
                 {
                     var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);
@@ -165,7 +189,7 @@ namespace Tigwi.API.Controllers
                         error = new Error();
                     }
                     else
-                        error = new Error(authentication.ErrorMessage());                    
+                        error = new Error(authentication.ErrorMessage());
                 }
             }
             catch (Exception exception)
@@ -191,9 +215,15 @@ namespace Tigwi.API.Controllers
                 var msg = (Untag) (new XmlSerializer(typeof (Untag))).Deserialize(Request.InputStream);
 
                 if (msg.AccountId == null && msg.AccountName == null)
+                {
                     error = new Error("AccountId or AccountName missing");
+                    Response.StatusCode = 400; // Bad Request
+                }
                 else if (msg.MessageId == null)
+                {
                     error = new Error("MessageId missing");
+                    Response.StatusCode = 400; // Bad Request
+                }
                 else
                 {
                     var accountId = msg.AccountId ?? Storage.Account.GetId(msg.AccountName);

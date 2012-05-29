@@ -18,15 +18,23 @@ namespace Tigwi.API.Controllers
 
             try
             {
-                var realId = accountId ?? Storage.Account.GetId(accountName);
+                if (accountId == null && accountName == null)
+                {
+                    output = new Answer(new Error("Account missing"));
+                    Response.StatusCode = 400; // Bad Request
+                }
+                else
+                {
+                    var realId = accountId ?? Storage.Account.GetId(accountName);
 
-                // get lasts messages from account accoutName
-                var personalListId = Storage.List.GetPersonalList(realId);
-                var listMsgs = Storage.Msg.GetListsMsgTo(new HashSet<Guid> { personalListId }, DateTime.Now, number);
+                    // get lasts messages from account accoutName
+                    var personalListId = Storage.List.GetPersonalList(realId);
+                    var listMsgs = Storage.Msg.GetListsMsgTo(new HashSet<Guid> {personalListId}, DateTime.Now, number);
 
-                // convert, looking forward XML serialization
-                var listMsgsOutput = new Messages(listMsgs, Storage);
-                output = new Answer(listMsgsOutput);
+                    // convert, looking forward XML serialization
+                    var listMsgsOutput = new Messages(listMsgs, Storage);
+                    output = new Answer(listMsgsOutput);
+                }
             }
 
             catch (Exception exception)
@@ -49,21 +57,29 @@ namespace Tigwi.API.Controllers
 
             try
             {
-                var realId = accountId ?? Storage.Account.GetId(accountName);
-
-                // check if the user is authenticated and has rights
-                var authentication = Authorized(realId);
-                if (authentication.HasRights)
+                if (accountId == null && accountName == null)
                 {
-                    // get lasts messages from user name
-                    var listMsgs = Storage.Msg.GetTaggedTo(realId, DateTime.Now, number);
-
-                    // convert, looking forward XML serialization
-                    var listMsgsOutput = new Messages(listMsgs, Storage);
-                    output = new Answer(listMsgsOutput);
+                    output = new Answer(new Error("Account missing"));
+                    Response.StatusCode = 400; // Bad Request
                 }
                 else
-                    output = new Answer(new Error(authentication.ErrorMessage()));
+                {
+                    var realId = accountId ?? Storage.Account.GetId(accountName);
+
+                    // check if the user is authenticated and has rights
+                    var authentication = Authorized(realId);
+                    if (authentication.HasRights)
+                    {
+                        // get lasts messages from user name
+                        var listMsgs = Storage.Msg.GetTaggedTo(realId, DateTime.Now, number);
+
+                        // convert, looking forward XML serialization
+                        var listMsgsOutput = new Messages(listMsgs, Storage);
+                        output = new Answer(listMsgsOutput);
+                    }
+                    else
+                        output = new Answer(new Error(authentication.ErrorMessage()));
+                }
             }
 
             catch (Exception exception)
@@ -86,23 +102,30 @@ namespace Tigwi.API.Controllers
 
             try
             {
-                var realId = accountId ?? Storage.Account.GetId(accountName);
-
-                // get lasts followers of user name 's list
-                var followingLists = Storage.List.GetFollowingLists(realId);
-                var hashFollowers = new HashSet<Guid>();
-                foreach (var followingList in followingLists)
+                if (accountId == null && accountName == null)
                 {
-                    hashFollowers.UnionWith(Storage.List.GetFollowingAccounts(followingList));
+                    output = new Answer(new Error("Account missing"));
+                    Response.StatusCode = 400; // Bad Request
                 }
+                else
+                {
+                    var realId = accountId ?? Storage.Account.GetId(accountName);
 
-                // Get as many subscribers as possible (maximum: number)
-                var size = Math.Min(hashFollowers.Count, number);
-                var accountListToReturn = AccountsFromGuidCollection(hashFollowers, size, Storage);
+                    // get lasts followers of user name 's list
+                    var followingLists = Storage.List.GetFollowingLists(realId);
+                    var hashFollowers = new HashSet<Guid>();
+                    foreach (var followingList in followingLists)
+                    {
+                        hashFollowers.UnionWith(Storage.List.GetFollowingAccounts(followingList));
+                    }
 
-                output = new Answer(accountListToReturn);
+                    // Get as many subscribers as possible (maximum: number)
+                    var size = Math.Min(hashFollowers.Count, number);
+                    var accountListToReturn = AccountsFromGuidCollection(hashFollowers, size, Storage);
+
+                    output = new Answer(accountListToReturn);
+                }
             }
-
             catch (Exception exception)
             {
                 // Result is an non-empty error XML element
@@ -123,27 +146,35 @@ namespace Tigwi.API.Controllers
 
             try
             {
-                var realId = accountId ?? Storage.Account.GetId(accountName);
-
-                // we check if the user is authenticated and authorized to know whether to show private lists
-                var authentication = Authorized(realId);
-                if (authentication.Failed)
-                    output = new Answer(new Error(authentication.ErrorMessage()));
+                if (accountId == null && accountName == null)
+                {
+                    output = new Answer(new Error("Account missing"));
+                    Response.StatusCode = 400; // Bad Request
+                }
                 else
                 {
-                    // get the public lists followed by the given account
-                    var followedLists = Storage.List.GetAccountFollowedLists(realId, authentication.HasRights);
-                    var accountsInLists = new HashSet<Guid>();
-                    foreach (var followedList in followedLists)
+                    var realId = accountId ?? Storage.Account.GetId(accountName);
+
+                    // we check if the user is authenticated and authorized to know whether to show private lists
+                    var authentication = Authorized(realId);
+                    if (authentication.Failed)
+                        output = new Answer(new Error(authentication.ErrorMessage()));
+                    else
                     {
-                        accountsInLists.UnionWith(Storage.List.GetAccounts(followedList));
+                        // get the public lists followed by the given account
+                        var followedLists = Storage.List.GetAccountFollowedLists(realId, authentication.HasRights);
+                        var accountsInLists = new HashSet<Guid>();
+                        foreach (var followedList in followedLists)
+                        {
+                            accountsInLists.UnionWith(Storage.List.GetAccounts(followedList));
+                        }
+
+                        // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
+                        var size = Math.Min(accountsInLists.Count, number);
+                        var accountListToReturn = AccountsFromGuidCollection(accountsInLists, size, Storage);
+
+                        output = new Answer(accountListToReturn);
                     }
-
-                    // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
-                    var size = Math.Min(accountsInLists.Count, number);
-                    var accountListToReturn = AccountsFromGuidCollection(accountsInLists, size, Storage);
-
-                    output = new Answer(accountListToReturn);
                 }
             }
             catch (Exception exception)
@@ -166,25 +197,32 @@ namespace Tigwi.API.Controllers
 
             try
             {
-                var realId = accountId ?? Storage.Account.GetId(accountName);
-
-                // we check if the user is authenticated and authorized to know whether to show private lists
-                var authentication = Authorized(realId);
-                if (authentication.Failed)
-                    output = new Answer(new Error(authentication.ErrorMessage()));
+                if (accountId == null && accountName == null)
+                {
+                    output = new Answer(new Error("Account missing"));
+                    Response.StatusCode = 400; // Bad Request
+                }
                 else
                 {
-                    // get the public lists followed by the given account
-                    var followedLists = Storage.List.GetAccountFollowedLists(realId, authentication.HasRights);
+                    var realId = accountId ?? Storage.Account.GetId(accountName);
 
-                    // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
-                    var size = Math.Min(followedLists.Count, number);
-                    var listsToReturn = ListsFromGuidCollection(followedLists, size, Storage);
+                    // we check if the user is authenticated and authorized to know whether to show private lists
+                    var authentication = Authorized(realId);
+                    if (authentication.Failed)
+                        output = new Answer(new Error(authentication.ErrorMessage()));
+                    else
+                    {
+                        // get the public lists followed by the given account
+                        var followedLists = Storage.List.GetAccountFollowedLists(realId, authentication.HasRights);
 
-                    output = new Answer(listsToReturn);
+                        // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
+                        var size = Math.Min(followedLists.Count, number);
+                        var listsToReturn = ListsFromGuidCollection(followedLists, size, Storage);
+
+                        output = new Answer(listsToReturn);
+                    }
                 }
             }
-
             catch (Exception exception)
             {
                 // Result is an non-empty error XML element
@@ -205,18 +243,25 @@ namespace Tigwi.API.Controllers
 
             try
             {
-                var realId = accountId ?? Storage.Account.GetId(accountName);
+                if (accountId == null && accountName == null)
+                {
+                    output = new Answer(new Error("Account missing"));
+                    Response.StatusCode = 400; // Bad Request
+                }
+                else
+                {
+                    var realId = accountId ?? Storage.Account.GetId(accountName);
 
-                // get lasts followers of user name 's list
-                var followingLists = Storage.List.GetFollowingLists(realId);
+                    // get lasts followers of user name 's list
+                    var followingLists = Storage.List.GetFollowingLists(realId);
 
-                // Get as many subscribers as possible (maximum: number)
-                var size = Math.Min(followingLists.Count, number);
-                var accountListToReturn = AccountsFromGuidCollection(followingLists, size, Storage);
+                    // Get as many subscribers as possible (maximum: number)
+                    var size = Math.Min(followingLists.Count, number);
+                    var accountListToReturn = AccountsFromGuidCollection(followingLists, size, Storage);
 
-                output = new Answer(accountListToReturn);
+                    output = new Answer(accountListToReturn);
+                }
             }
-
             catch (Exception exception)
             {
                 // Result is an non-empty error XML element
@@ -237,25 +282,32 @@ namespace Tigwi.API.Controllers
 
             try
             {
-                var realId = accountId ?? Storage.Account.GetId(accountName);
-
-                // we check if the user is authenticated and authorized to know whether to show private lists
-                var authentication = Authorized(realId);
-                if (authentication.Failed)
-                    output = new Answer(new Error(authentication.ErrorMessage()));
+                if (accountId == null && accountName == null)
+                {
+                    output = new Answer(new Error("Account missing"));
+                    Response.StatusCode = 400; // Bad Request
+                }
                 else
                 {
-                    // get the public lists owned by the given account
-                    var ownedLists = Storage.List.GetAccountOwnedLists(realId, authentication.HasRights);
+                    var realId = accountId ?? Storage.Account.GetId(accountName);
 
-                    // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
-                    var size = Math.Min(ownedLists.Count, number);
-                    var listsToReturn = ListsFromGuidCollection(ownedLists, size, Storage);
+                    // we check if the user is authenticated and authorized to know whether to show private lists
+                    var authentication = Authorized(realId);
+                    if (authentication.Failed)
+                        output = new Answer(new Error(authentication.ErrorMessage()));
+                    else
+                    {
+                        // get the public lists owned by the given account
+                        var ownedLists = Storage.List.GetAccountOwnedLists(realId, authentication.HasRights);
 
-                    output = new Answer(listsToReturn);
+                        // Get as many subscriptions as possible (maximum: numberOfSubscriptions)
+                        var size = Math.Min(ownedLists.Count, number);
+                        var listsToReturn = ListsFromGuidCollection(ownedLists, size, Storage);
+
+                        output = new Answer(listsToReturn);
+                    }
                 }
             }
-
             catch (Exception exception)
             {
                 // Result is an non-empty error XML element
@@ -276,14 +328,21 @@ namespace Tigwi.API.Controllers
 
             try
             {
-                var realId = accountId ?? Storage.Account.GetId(accountName);
+                if (accountId == null && accountName == null)
+                {
+                    output = new Answer(new Error("Account missing"));
+                    Response.StatusCode = 400; // Bad Request
+                }
+                else
+                {
+                    var realId = accountId ?? Storage.Account.GetId(accountName);
 
-                // get the informations of the given account
-                var accountInfo = Storage.Account.GetInfo(realId);
-                var accountToReturn = new Account(realId, accountInfo.Name, accountInfo.Description);
-                output = new Answer(accountToReturn);
+                    // get the informations of the given account
+                    var accountInfo = Storage.Account.GetInfo(realId);
+                    var accountToReturn = new Account(realId, accountInfo.Name, accountInfo.Description);
+                    output = new Answer(accountToReturn);
+                }
             }
-
             catch (Exception exception)
             {
                 // Result is an non-empty error XML element

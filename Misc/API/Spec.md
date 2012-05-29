@@ -188,7 +188,21 @@ http://api.tigwi.com/account/subscribedaccounts/id=d818d509-e7eb-45b6-a56d-f472f
 
 ###Response
 
-
+    <?xml version="1.0"?>
+    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+     <Content xsi:type="Accounts" Size="2">
+      <Account>
+       <Id>ea4a4f69-fec3-4659-9235-0dcbcbd0d54f</Id>
+       <Name>tttt</Name>
+       <Description>I like turtles</Description>
+      </Account>
+      <Account>
+       <Id>a3e56af5-9991-428e-8d8f-0b31f7e80e40</Id>
+       <Name>Paul_Smith</Name>
+       <Description>I'm the brother of @John_Smith</Description>
+      </Account>
+     </Content>
+    </Answer>
  
 ###Information
 
@@ -240,7 +254,7 @@ http://api.tigwi.com/account/subscriberaccounts/id=d818d509-e7eb-45b6-a56d-f472f
 
 ###Purpose
 
-Get a number _numberOfLists_ of the public lists followed by the account _accountName_ or _accountId_. No particular order provided.
+Get the number you want to of lists followed by the given account. No particular order provided.
 
 If you're authenticated and you have the rights on the account, you will see private lists along with public ones.
 
@@ -260,32 +274,28 @@ http://api.tigwi.com/account/subscribedlists/id=d818d509-e7eb-45b6-a56d-f472f075
 
     <?xml version="1.0"?>
     <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-     <Content xsi:type="Lists" Size="2">
+     <Content xsi:type="Lists" Size="1">
       <List>
-       <Id>312e2061-3a79-4f82-a53b-e77af1ff0e59</Id>
-       <Name>Family</Name>
-      </List>
-      <List>
-       <Id>d89814c5-b61f-4820-b8c0-49fb179649f8</Id>
+       <Id>159e5dd6-4f65-43ac-aed9-f81348fc9b9d</Id>
        <Name>Work at Tigwi</Name>
+       <Description>Void</Description>
       </List>
      </Content>
     </Answer>
 
 ###Information
 
-* In **URL**, _accountName_ is the name of the account whose publicly followed lists you want to get.
-* In **URL**, _accountId_ is the unique identifier of the account whose publicly followed lists you want to get.
-* In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default is set to 20.
-* In **Response**, _Size_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
-* If you're not authorized, you will only receive lists that the owner has set public.
+* In **URL**, you should give the name or the unique identifier of the account whose subscriptions you want to get.
+* Then the number of subscriptions. It is optional and default value is set to 20.
+* In **Response**, _Size_ is the number of subscriptions returned (different from the requested number if there are not enough subscriptions to provide).
+* If you're not authorized, you will only receive subscribed lists that the owner has set public.
 
 
 ##See in which lists someone appears
 
 ###Purpose
 
-Obtain a number _numberOfLists_ of public lists where the account _accountName_ or _accountId_ appears. No particular order provided
+Get the number you want to of public lists where the given account appears. No particular order provided
 
 ###HTTP method
 
@@ -301,32 +311,21 @@ http://api.tigwi.com/account/subscriberlists/id=d818d509-e7eb-45b6-a56d-f472f075
 
 ###Response
 
-    <?xml version="1.0"?>
-    <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-     <Content xsi:type="Lists" Size="2">
-      <List>
-       <Id>312e2061-3a79-4f82-a53b-e77af1ff0e59</Id>
-       <Name>Family</Name>
-      </List>
-      <List>
-       <Id>d89814c5-b61f-4820-b8c0-49fb179649f8</Id>
-       <Name>Work at Tigwi</Name>
-      </List>
-     </Content>
-    </Answer>
+??
 
 ###Information
 
-* In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default value is set to 20.
-* In **Response**, _Size_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
-* There is no way to get private lists who subscribed to an account.
+* In **URL**, you should give the name or the unique identifier of the account whose subscribers you want to see.
+* Then the number of subscribers. It is optional and default value is set to 20.
+* In **Response**, _Size_ is the number of subscribers returned (different from the requested number if there are not enough subscribers to provide).
+* There is no way to see private lists which subscribed to an account.
 
 
 ##See someone's owned lists
 
 ###Purpose
 
-Obtain a number _numberOfLists_ of the account _accountName_ or _accountId_'s owned lists. No particular order provided.
+Get the number you want to of lists owned by the given account. No particular order provided.
 
 If you're authenticated and you have the rights on the account, you will see private lists along with public ones.
 
@@ -348,16 +347,18 @@ http://api.tigwi.com/account/ownedlists/id=d818d509-e7eb-45b6-a56d-f472f075f433/
     <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
      <Content xsi:type="Lists" Size="1">
       <List>
-       <Id>312e2061-3a79-4f82-a53b-e77af1ff0e59</Id>
-       <Name>Presidents of the US</Name>
+       <Id>159e5dd6-4f65-43ac-aed9-f81348fc9b9d</Id>
+       <Name>Work at Tigwi</Name>
+       <Description>Void</Description>
       </List>
      </Content>
     </Answer>
 
 ###Information
 
-* In **URL**, _numberOfLists_ is the number of lists you want to get. It is optional and default value is set to 20.
-* In **Response**, _Size_ is the number of lists returned (different from _numberOfLists_ if there are not enough lists to provide).
+* In **URL**, you should give the name or the unique identifier of the account whose lists you want to see.
+* Then the number of lists. It is optional and default value is set to 20.
+* In **Response**, _Size_ is the number of lists returned (different from the requested number if there are not enough lists to provide).
 * If you're not authorized, you will only receive lists that the owner has set public.
 
 
@@ -365,7 +366,7 @@ http://api.tigwi.com/account/ownedlists/id=d818d509-e7eb-45b6-a56d-f472f075f433/
 
 ###Purpose
 
-Obtain the account _accountName_ or _acountId_'s main information.
+Get main information about the given account.
 
 ###HTTP method
 
@@ -416,15 +417,15 @@ http://api.tigwi.com/message/write
 or
 
     <Write>
-     <AccountId>312e2061-3a79-4f82-a53b-e77af1ff0e59</AccountId>
+     <AccountId>d818d509-e7eb-45b6-a56d-f472f075f433</AccountId>
      <Message>I love Tigwi</Message>
     </Write>
 
-###Response example
+###Response
 
     <?xml version="1.0"?>
     <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-     <Content xsi:type="ObjectCreated" Id="7a2a8d74-621a-455c-bfc3-8552474cc735" />
+     <Content xsi:type="NewObject" Id="c1a5ff05-7b50-4265-9a21-a0fee3bcfb77" />
     </Answer>
 
 ###Information
