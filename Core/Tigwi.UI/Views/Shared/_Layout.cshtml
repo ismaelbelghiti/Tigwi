@@ -45,7 +45,7 @@
             });
 
             $(document).ready(function () {
-                $('.form').validate({
+                $('form').validate({
                     highlight: function (element) {
                         $(element).closest(".control-group").addClass("error");
                     },
@@ -53,10 +53,6 @@
                         $(element).closest(".control-group").removeClass("error");
                     }
                 });
-                /*
-                $('#registerForm').submit(function () {
-
-                });*/
             });
 
         </script>

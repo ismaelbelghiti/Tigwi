@@ -122,3 +122,6 @@ a:active {text-decoration:none;color: MenuText;}
 .checked {
     background-color: rgba(0,0,255,0.1)
 }
+
+div.inline > a,
+div.inline > h3  { display: inline; }
