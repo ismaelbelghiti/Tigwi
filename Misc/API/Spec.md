@@ -45,7 +45,7 @@ or
      </Content>
     </Answer>
 
-Furthermore, for highly frequent errors, the answer HTTP status code will be changed from 200 (OK) to 400 (Bad Request), 404 (Not Found), 500 (Internal Server Error - not so likely to happen) or 501 (Not Implemented).
+Furthermore, for highly frequent errors, the answer HTTP status code will be changed from 200 (OK) to 400 (Bad Request), 403 (Forbidden), 404 (Not Found), 500 (Internal Server Error - not so likely to happen) or 501 (Not Implemented).
 
 ##Note about authentication
 

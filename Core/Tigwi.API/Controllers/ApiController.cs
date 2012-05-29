@@ -88,6 +88,9 @@ namespace Tigwi.API.Controllers
                     code == StrgLibErr.UserNotFound || code == StrgLibErr.AccountNotFound)
                     Response.StatusCode = 404;
 
+                if (code == StrgLibErr.AccountIsOwner || code == StrgLibErr.IsPersonalList)
+                    Response.StatusCode = 403; // Forbidden
+
                 return new Error(code.ToString());
             }
 
