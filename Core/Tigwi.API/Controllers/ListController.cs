@@ -166,7 +166,7 @@ namespace Tigwi.API.Controllers
                 }
                 else if (subscribe.List == null)
                 {
-                    error = new Error("Subscription missing");
+                    error = new Error("List missing");
                     Response.StatusCode = 400; // Bad Request
                 }
                 else
@@ -217,7 +217,7 @@ namespace Tigwi.API.Controllers
                 }
                 else if (unsubscribe.List == null)
                 {
-                    error = new Error("Subscription missing");
+                    error = new Error("List missing");
                     Response.StatusCode = 400; // Bad Request
                 }
                 else
