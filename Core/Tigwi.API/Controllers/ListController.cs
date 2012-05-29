@@ -197,6 +197,57 @@ namespace Tigwi.API.Controllers
         }
 
 
+        // Unsubscribe from the list
+        // POST : /list/subscribe
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Unsubscribe()
+        {
+            Error error;
+
+            try
+            {
+                var unsubscribe =
+                    (Unsubscribe)(new XmlSerializer(typeof(Unsubscribe))).Deserialize(Request.InputStream);
+
+                if (unsubscribe.AccountId == null && unsubscribe.AccountName == null)
+                {
+                    error = new Error("AccountId or AccountName missing");
+                    Response.StatusCode = 400; // Bad Request
+                }
+                else if (unsubscribe.List == null)
+                {
+                    error = new Error("Subscription missing");
+                    Response.StatusCode = 400; // Bad Request
+                }
+                else
+                {
+                    var accountId = unsubscribe.AccountId ?? Storage.Account.GetId(unsubscribe.AccountName);
+
+                    // Check if the user is authenticated and has rights
+                    var authentication = Authorized(accountId);
+
+                    if (authentication.HasRights)
+                    {
+                        Storage.List.Unfollow(unsubscribe.List.GetValueOrDefault(), accountId);
+
+                        // Result is an empty error XML element
+                        error = new Error();
+                    }
+                    else
+                        error = new Error(authentication.ErrorMessage());
+                }
+            }
+            catch (Exception exception)
+            {
+                // Result is an non-empty error XML element
+                error = HandleError(exception);
+            }
+
+            return Serialize(new Answer(error));
+        }
+
+
         //
         // POST : /list/create
 

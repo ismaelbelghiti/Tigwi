@@ -77,8 +77,7 @@ namespace Tigwi.API.Controllers
             }
             catch (UserNotFound)
             {
-                output = new Answer(new Error("Authentication failed"));
-                Response.StatusCode = 404; // Not Found
+                output = new Answer(new Error("Authentication failed")); // Not a 404 error then
             }
             catch (Exception exception)
             {

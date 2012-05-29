@@ -51,12 +51,19 @@ namespace Tigwi.API.Controllers
             {
                 var realId = accountId ?? Storage.Account.GetId(accountName);
 
-                // get lasts messages from user name
-                var listMsgs = Storage.Msg.GetTaggedTo(realId, DateTime.Now, number);
+                // check if the user is authenticated and has rights
+                var authentication = Authorized(realId);
+                if (authentication.HasRights)
+                {
+                    // get lasts messages from user name
+                    var listMsgs = Storage.Msg.GetTaggedTo(realId, DateTime.Now, number);
 
-                // convert, looking forward XML serialization
-                var listMsgsOutput = new Messages(listMsgs, Storage);
-                output = new Answer(listMsgsOutput);
+                    // convert, looking forward XML serialization
+                    var listMsgsOutput = new Messages(listMsgs, Storage);
+                    output = new Answer(listMsgsOutput);
+                }
+                else
+                    output = new Answer(new Error(authentication.ErrorMessage()));
             }
 
             catch (Exception exception)
