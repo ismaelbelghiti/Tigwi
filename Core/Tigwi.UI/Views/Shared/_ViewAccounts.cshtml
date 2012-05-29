@@ -6,6 +6,7 @@
     $(document).ready(function() {
         $('.editAcc').click(function(event) {
             event.stopPropagation();
+            $('#userAdded').html('');
             $('#editAccountModal').modal('show');
             var name = $(this).attr('id');
             var accountId = name.substring(5, name.length);
@@ -53,8 +54,7 @@
             return false;
         });
 
-        $('.deltAcc').click(function(event) {
-            event.stopPropagation();
+        $('.deltAcc').click(function() {
             $('#deleteAccountModal').modal('show');
 
             var name = $(this).attr('id');
@@ -71,8 +71,7 @@
             });
         });
 
-        $('.leavAcc').click(function(event) {
-            event.stopPropagation();
+        $('.leavAcc').click(function() {
             $('#leaveAccountModal').modal('show');
 
             var name = $(this).attr('id');
@@ -94,28 +93,26 @@
 </script>
 
 <section class="accountsView">
-    <ul>
-
         @foreach (var account in Model.Accounts)
         {
-            <li>
-                <h2> @account.Name </h2>
-                <button class="btn btn-primary editAcc" id="acct-@account.Id" ><b>Edit</b></button>
-                @if (@account.Admin.Id == CurrentUser.Id)
-                {
-                    if (@account.Id != @CurrentUser.MainAccount.Id)
-                    { 
-                        @*<button class="btn btn-primary deltAcc" id="delt-@account.Id" ><b>Delete</b></button>*@
-                    }       
-                }
-                else
-                {
-                    <button class="btn btn-primary leavAcc" id="leav-@account.Id" ><b>Leave</b></button>
-                }
-                <p><b>Description : </b> @account.Description</p>
-            </li>
+            <div class="inline">    
+                <h3> @account.Name </h3>
+                <a data-toggle="modal" href="#editAccountModal" class="editAcc followButton" id="acct-@CurrentAccount.Id" > ( <i class="icon-pencil"></i> Edit )</a>
+            </div>
+            if (@account.Admin.Id == CurrentUser.Id)
+            {
+                if (@account.Id != @CurrentUser.MainAccount.Id)
+                { 
+                    @*<button class="btn btn-primary deltAcc" id="delt-@account.Id" ><b>Delete</b></button>*@
+                }       
+            }
+            else
+            {
+                <button class="btn btn-primary leavAcc" id="leav-@account.Id" ><b>Leave</b></button>
+            }
+            <p><i>Description : </i> @account.Description</p>
+            
         }
-    </ul>
 </section>
 
 <section class="modal hide" id="editAccountModal">

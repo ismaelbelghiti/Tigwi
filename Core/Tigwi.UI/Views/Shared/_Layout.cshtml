@@ -79,7 +79,6 @@
                             @if (@User.Identity.IsAuthenticated)
                             {
                                 <li @((ViewContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString() == "Home") ? Html.Raw("class=\"active\"") : Html.Raw("class=\"\""))>@Html.ActionLink("Home", "Index", "Home")</li>
-                                <li @((ViewContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString() == "Home") ? Html.Raw("class=\"active\"") : Html.Raw("class=\"\""))>@Html.ActionLink("Me", "Me", "Home")</li>
                                 <li class="dropdown">  
                                     <a href="#"
                                        class="dropdown-toggle"

@@ -41,6 +41,7 @@
         $('.editAcc2').click(function () {
             var name=$(this).attr('id');
             var accountId=name.substring(5,name.length);
+            $('#userAdded').html('');
             $.ajax({
                 url: "@Url.Action("getAccount", "Account")",
                 type: "POST",

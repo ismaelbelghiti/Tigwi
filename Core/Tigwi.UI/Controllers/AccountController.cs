@@ -250,7 +250,9 @@ namespace Tigwi.UI.Controllers
             {
                 IAccountModel account = this.Storage.Accounts.Find(editAccount.AccountId);
                 account.Description = editAccount.Description;
-
+                //TODO : we need to do a diff between those 2 lists ... there is no way we can remove users as is ...
+                //TODO : in the meantime, a temporary solution  :
+                account.Users.Clear();
                 foreach (var member in editAccount.UserIds)
                 {
                     IUserModel user = this.Storage.Users.Find(member);

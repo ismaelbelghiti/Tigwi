@@ -2,20 +2,23 @@
 @using Tigwi.UI.Models.Account
 @using Tigwi.UI.Models.User
 
-<h3>Owned Lists</h3>
+<h3>Followers of my owned Lists</h3>
 
-<ul>
 @foreach(var list in CurrentAccount.AllOwnedLists)
 {
-    <li>
-    <h4>@list.Name</h4>
+    <div class="listFollowers offset1">
+        <h5>@list.Name (@list.Followers.Count) :</h5>
+        <div class="listFollowers">
+            @foreach (var account in list.Followers)
+            {
+
+                <i>@account.Name </i>
+                if(account!=list.Followers.Last())
+                {
+                    @Html.Raw(" , ")
+                }
+            }
+        </div>
+    </div>
     
-    <p><b>Followers :</b></p>
-    
-    @foreach (var account in list.Followers)
-    {
-        <li>@account.Name</li>
-    } 
-    </li>
 }
-</ul>

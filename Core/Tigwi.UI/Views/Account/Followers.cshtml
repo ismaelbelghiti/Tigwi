@@ -2,11 +2,11 @@
     ViewBag.Title = "Followers";
 }
 
-<h2>Followers</h2>
-
 @section LeftInfos
 {
-        <p>Account : @CurrentAccount.Name</p>
+    <h3>Account : @CurrentAccount.Name</h3>
+    <p>Number of lists owned : @CurrentAccount.PublicOwnedLists.Count()</p>
+    <p>Number of Users : @CurrentAccount.Users.Count</p>
 }
 
 @Html.Partial("_ViewListsAccount")
