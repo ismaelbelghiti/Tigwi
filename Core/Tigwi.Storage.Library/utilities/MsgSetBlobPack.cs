@@ -269,13 +269,19 @@ namespace Tigwi.Storage.Library.Utilities
                 {
                     for (int i = blobsList.Count-1; i >=0 ; i--)
                     {
+                        Blob<MessageSet> currentBlob = new Blob<MessageSet>(blobsList[i].Value);
                         DateTime upperBound = (i + 1 < blobsList.Count) ? blobsList[i + 1].Key : DateTime.MaxValue;
                         DateTime lowerBound = blobsList[i].Key;
                         if (lowerBound > progress)
                             continue;
 
-                        MessageSet set = GetMessageSet(new Blob<MessageSet>(blobsList[i].Value));
-                        set.UnionWith(other.GetMessagesBetween(lowerBound, upperBound));
+                        MessageSet set;
+                        do
+                        {
+                            set = GetMessageSet(currentBlob);
+                            set.UnionWith(other.GetMessagesBetween(lowerBound, upperBound));
+                        } while (!currentBlob.TrySet(set));
+
                         progress = lowerBound;
                     }
                 }
