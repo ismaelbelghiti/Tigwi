@@ -13,8 +13,8 @@
                 type: "POST",
                 dataType: 'json',
                 data: { 'id': id },
-                success: function() {
-                   //TODO: maybe show something in green ...saying it all worked pretty well
+                success: function(data) {
+                    alert("You are now following this account");
                 }
             });
         });
@@ -25,7 +25,7 @@
 {
     <div class="inline" align="center"><h3>@Model.Name </h3>
     @if(User.Identity.IsAuthenticated){
-        @Html.Raw("<a href=\"#\" id=\"followLink\">( <i class=\"icon-star\"></i> Follow</a> )")
+        @Html.Raw("<a class=\"followButton\" href=\"#\" id=\"followLink\">( <i class=\"icon-star\"></i> Follow ) </a>")
     }
     </div>
     

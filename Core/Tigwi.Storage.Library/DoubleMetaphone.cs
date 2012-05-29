@@ -47,7 +47,7 @@ namespace Tigwi.Storage.Library.DoubleMetaphone
 			MetaphoneData metaphoneData = new MetaphoneData();
 			int current = 0;
 
-			if (self.Length < 1) {
+			if (String.IsNullOrEmpty(self)) {
 				return self;
 			}
 			int last = self.Length - 1; //zero based index

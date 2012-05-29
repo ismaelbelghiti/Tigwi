@@ -4,33 +4,47 @@
     ViewBag.Title = "Details";
 }
 
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#followLinkDetails').click(function() {
+            var id = "@Model.Id";
+            $.ajax({
+                url: "@Url.Action("Follow", "List")",
+                type: "POST",
+                dataType: 'json',
+                data: { 'id': id },
+                success: function(data) {
+                    alert("You are now following this account");
+                }
+            });
+        });
+    });
+</script> 
+
 @section LeftInfos
 {
-        <div class="inline">
+        <div class="inline center">
             <h3>@Model.Name </h3><span>(Owner : @Model.Owner.Name)</span>
         </div>
         <p>Description : @Model.Description</p>
         
         @if(User.Identity.IsAuthenticated)
         {
-            @Html.Partial("_Follow", Model)
+            
+            @Html.Raw("<p><a href=\"#\" id=\"followLinkDetails\" class=\"followButton\"><i class=\"icon-star\"></i> Follow this list </a></p>")
         }
         
-        <h3>Account(s) :</h3>
-        <li>
-        @foreach(var account in Model.Members)
+        <h5>Account(s) :</h5>
+        @foreach (var account in Model.Members)
         {
             <i>@account.Name</i>
         }
-        </li>
 
-        <h3>Follower(s) :</h3>
-        <li>
-        @foreach(var account in Model.Followers)
+        <h5>Follower(s) :</h5>
+        @foreach (var account in Model.Followers)
         {
             <i>@account.Name</i>
         }
-        </li>
 }
 
 @Html.Partial("_ViewPostList", Model.PostsBefore(DateTime.MaxValue, 10))

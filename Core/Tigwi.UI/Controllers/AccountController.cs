@@ -298,7 +298,7 @@ namespace Tigwi.UI.Controllers
                 list.Members.Add(account);
                 this.Storage.SaveChanges();
 
-                return this.RedirectToAction("Index", "Home");
+                return Json(new { ok=true });
             }
             catch (AccountNotFoundException ex)
             {
