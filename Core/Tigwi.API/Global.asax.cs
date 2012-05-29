@@ -56,7 +56,12 @@ namespace Tigwi.API
 
             // other routes
 
-            routes.MapRoute("Default", "{controller}/{action}");
+            routes.MapRoute("Default", "{controller}/{action}",
+                            new
+                            {
+                                number = "20"
+                            }
+                );
 		}
 
         protected void Application_Start()
