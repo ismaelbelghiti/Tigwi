@@ -77,29 +77,35 @@ namespace Tigwi.API.Controllers
         }
 
 
-        protected Error HandleError(StorageLibException exception)
-        {
-            // In the case of a "Not Found" exception we change the answer HTTP status code
-            if (exception.Code == StrgLibErr.MessageNotFound || exception.Code == StrgLibErr.ListNotFound || exception.Code == StrgLibErr.UserNotFound || exception.Code == StrgLibErr.AccountNotFound)
-                Response.StatusCode = 404;
-
-            return new Error(exception.Code.ToString());
-        }
-
-        protected Error HandleError(InvalidOperationException exception)
-        {
-            Response.StatusCode = 400; // Bad Request
-            return new Error(exception.Message + " " + exception.InnerException.Message);
-        }
-
-        protected Error HandleError(NotImplementedException exception)
-        {
-            Response.StatusCode = 501; // Not Implemented
-            return new Error("Not Implemented");
-        }
-
         protected Error HandleError(Exception exception)
         {
+            var storageException = exception as StorageLibException;
+            if (storageException != null)
+            {
+                var code = storageException.Code;
+                // In the case of a "Not Found" exception we change the answer HTTP status code
+                if (code == StrgLibErr.MessageNotFound || code == StrgLibErr.ListNotFound ||
+                    code == StrgLibErr.UserNotFound || code == StrgLibErr.AccountNotFound)
+                    Response.StatusCode = 404;
+
+                return new Error(code.ToString());
+            }
+
+            var badRequestException = exception as InvalidOperationException;
+            if (badRequestException != null)
+            {
+                Response.StatusCode = 400; // Bad Request
+                return new Error(badRequestException.Message + " " + badRequestException.InnerException.Message);
+            }
+
+            var notImplementedException = exception as NotImplementedException;
+            if (notImplementedException != null)
+            {
+                Response.StatusCode = 501; // Not Implemented
+                return new Error("Not Implemented");
+            }
+
+            // Unexpected exception
             Response.StatusCode = 500; // Internal Server Error
             return new Error("Internal Server Error");
         }
