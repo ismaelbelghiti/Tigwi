@@ -181,7 +181,7 @@ namespace Tigwi.UI.Models.Storage
 
             set
             {
-                if (this.name != value)
+                if (this.name == value)
                 {
                     return;
                 }
