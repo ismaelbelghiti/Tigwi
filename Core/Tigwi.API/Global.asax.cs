@@ -33,7 +33,7 @@ namespace Tigwi.API
                             "account/{action}/{accountName}/{number}",
                             new
                             {
-                                controller = "InfoAccount",
+                                controller = "Account",
                                 number = "20" 
                             }
                 );
@@ -44,7 +44,7 @@ namespace Tigwi.API
                             "list/{action}/{idOfList}/{number}",
                             new
                             {
-                                controller = "InfoList",
+                                controller = "List",
                                 number = "20"
                             }
                 );

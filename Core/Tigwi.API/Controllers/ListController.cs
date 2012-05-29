@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Xml.Serialization;
-using Tigwi.Storage.Library;
 using Tigwi.API.Models;
 
 namespace Tigwi.API.Controllers
@@ -12,22 +11,30 @@ namespace Tigwi.API.Controllers
         //
         // GET : /list/subscriptions/{idOfList}/{number}
 
-        public ActionResult Subscriptions(Guid idOfList, int number)
+        public ActionResult Subscriptions(Guid? idOfList, int number)
         {
             Answer output;
 
             try
             {
-                // get accounts followed by the given list 
-                var followedAccounts = Storage.List.GetAccounts(idOfList);
+                if (idOfList == null)
+                {
+                    output = new Answer(new Error("List id missing"));
+                    Response.StatusCode = 400; // Bad Request
+                }
+                else
+                {
+                    // get accounts followed by the given list 
+                    var followedAccounts = Storage.List.GetAccounts(idOfList.GetValueOrDefault());
 
-                var numberToReturn = Math.Min(number, followedAccounts.Count);
-                var followedAccountsToReturn = AccountsFromGuidCollection(followedAccounts, numberToReturn, Storage);
+                    var numberToReturn = Math.Min(number, followedAccounts.Count);
+                    var followedAccountsToReturn = AccountsFromGuidCollection(followedAccounts, numberToReturn, Storage);
 
-                output = new Answer(followedAccountsToReturn);
+                    output = new Answer(followedAccountsToReturn);
+                }
             }
 
-            catch (StorageLibException exception)
+            catch (Exception exception)
             {
                 output = new Answer(HandleError(exception));
             }
@@ -39,21 +46,30 @@ namespace Tigwi.API.Controllers
         //
         // GET : /list/subscribers/{idOfList}/{number}
 
-        public ActionResult Subscribers(Guid idOfList, int number)
+        public ActionResult Subscribers(Guid? idOfList, int number)
         {
             Answer output;
 
             try
             {
-                // get accounts following a given list 
-                var listSuscriberAccounts = Storage.List.GetFollowingAccounts(idOfList);
+                if (idOfList == null)
+                {
+                    output = new Answer(new Error("List id missing"));
+                    Response.StatusCode = 400; // Bad Request
+                }
+                else
+                {
+                    // get accounts following a given list 
+                    var listSuscriberAccounts = Storage.List.GetFollowingAccounts(idOfList.GetValueOrDefault());
 
-                var numberToReturn = Math.Min(number, listSuscriberAccounts.Count);
-                var listSuscribersOutputToReturn = AccountsFromGuidCollection(listSuscriberAccounts, numberToReturn, Storage);
+                    var numberToReturn = Math.Min(number, listSuscriberAccounts.Count);
+                    var listSuscribersOutputToReturn = AccountsFromGuidCollection(listSuscriberAccounts, numberToReturn,
+                                                                                  Storage);
 
-                output = new Answer(listSuscribersOutputToReturn);
+                    output = new Answer(listSuscribersOutputToReturn);
+                }
             }
-            catch (StorageLibException exception)
+            catch (Exception exception)
             {
                 output = new Answer(HandleError(exception));
             }
@@ -65,20 +81,28 @@ namespace Tigwi.API.Controllers
         //
         // GET : /list/owner/{idOfList}
 
-        public ActionResult Owner(Guid idOfList)
+        public ActionResult Owner(Guid? idOfList)
         {
             Answer output;
 
             try
             {
-                // get accounts following a given list 
-                var ownerId = Storage.List.GetOwner(idOfList);
-                var ownerInfo = Storage.Account.GetInfo(ownerId);
-                var ownerToReturn = new Account(ownerId, ownerInfo.Name, ownerInfo.Description);
-                output = new Answer(ownerToReturn);
+                if (idOfList == null)
+                {
+                    output = new Answer(new Error("List id missing"));
+                    Response.StatusCode = 400; // Bad Request
+                }
+                else
+                {
+                    // get accounts following a given list 
+                    var ownerId = Storage.List.GetOwner(idOfList.GetValueOrDefault());
+                    var ownerInfo = Storage.Account.GetInfo(ownerId);
+                    var ownerToReturn = new Account(ownerId, ownerInfo.Name, ownerInfo.Description);
+                    output = new Answer(ownerToReturn);
+                }
             }
 
-            catch (StorageLibException exception)
+            catch (Exception exception)
             {
                 output = new Answer(HandleError(exception));
             }
@@ -90,21 +114,30 @@ namespace Tigwi.API.Controllers
         //
         // GET : /list/messages/{idOfList}/{number}
 
-        public ActionResult Messages(Guid idOfList, int number)
+        public ActionResult Messages(Guid? idOfList, int number)
         {
             Answer output;
 
             try
             {
-                // get lasts messages from list defined by idOfList
-                var listMsgs = Storage.Msg.GetListsMsgTo(new HashSet<Guid> { idOfList }, DateTime.Now, number);
+                if (idOfList == null)
+                {
+                    output = new Answer(new Error("List id missing"));
+                    Response.StatusCode = 400; // Bad Request
+                }
+                else
+                {
+                    // get lasts messages from list defined by idOfList
+                    var listMsgs = Storage.Msg.GetListsMsgTo(new HashSet<Guid> {idOfList.GetValueOrDefault()},
+                                                             DateTime.Now, number);
 
-                // convert, looking forward XML serialization
-                var listMsgsOutput = new Messages(listMsgs, Storage);
+                    // convert, looking forward XML serialization
+                    var listMsgsOutput = new Messages(listMsgs, Storage);
 
-                output = new Answer(listMsgsOutput);
+                    output = new Answer(listMsgsOutput);
+                }
             }
-            catch (StorageLibException exception)
+            catch (Exception exception)
             {
                 output = new Answer(HandleError(exception));
             }

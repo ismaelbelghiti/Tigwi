@@ -23,7 +23,6 @@ namespace Tigwi.Storage.Library
             return blobFactory.LInfo(listId).GetIfExists(new ListNotFound());
         }
         
-        // NYI
         public void SetInfo(Guid listId, string name, string description, bool isPrivate)
         {
             // autorisation passage publique/privé
@@ -38,6 +37,8 @@ namespace Tigwi.Storage.Library
 
             Blob<ListInfo> bInfo = blobFactory.LInfo(listId); 
             ListInfo info = bInfo.GetIfExists(new ListNotFound());
+            if (info.IsPersonnal)
+                throw new IsPersonnalList();
             info.Description = description;
             info.Name = name;
             info.IsPrivate = isPrivate;
@@ -141,7 +142,8 @@ namespace Tigwi.Storage.Library
 
         public void SetMain(Guid listId, Guid accountId, bool isMain)
         {
-            blobFactory.LFollowedAccounts(listId).SetBool(accountId,isMain);
+            if (!blobFactory.LFollowedAccounts(listId).SetBool(accountId, isMain))
+                throw new ListNotFound();
         }
 
         public HashSet<Guid> GetFollowingLists(Guid accountId)
@@ -176,7 +178,6 @@ namespace Tigwi.Storage.Library
             bAddRmvMsgs.RemoveWithRetry(accountId);
         }
 
-        // TODO : remove messages
         public void Remove(Guid listId, Guid accountId)
         {
             try
@@ -192,7 +193,7 @@ namespace Tigwi.Storage.Library
                 }
 
                 blobFactory.LFollowedByAll(accountId).RemoveWithRetry(listId);
-                blobFactory.LFollowedAccounts(listId).RemoveWithRetry(listId);
+                blobFactory.LFollowedAccounts(listId).RemoveWithRetry(accountId);
 
                 blobFactory.MListMessages(listId).ExceptWith(blobFactory.MListMessages(blobFactory.LPersonnalList(accountId).Get()));
 

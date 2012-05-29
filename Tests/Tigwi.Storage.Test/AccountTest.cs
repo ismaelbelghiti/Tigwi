@@ -252,6 +252,7 @@ namespace StorageTest
         #region void Delete(Guid accountId)
 
         [Test]
+        [Ignore("Not implemented")]
         public void DeleteWithWrongAccountId()
         {
             storage.Account.Delete(new Guid());
@@ -259,6 +260,7 @@ namespace StorageTest
 
         [Test]
         [ExpectedException(typeof(AccountNotFound))]
+        [Ignore("Not implemented")]
         public void DeleteNormalBehaviour()
         {
             Guid otherAccountId = storage.Account.GetId("otherAccountThatExists");
