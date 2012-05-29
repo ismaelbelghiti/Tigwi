@@ -25,7 +25,8 @@ namespace Tigwi.Storage.Library.Utilities
                 }
                 catch { return false; }
 
-                dict.Add(key, value);
+
+                dict[key] = value;
                 
 
             } while (!base.TrySet(dict));
@@ -36,7 +37,7 @@ namespace Tigwi.Storage.Library.Utilities
         public void Add(S key, T value)
         {
             Dictionary<S,T> dict = base.Get();
-            dict.Add(key, value);
+            dict[key] = value;
             base.Set(dict);
         }
 
