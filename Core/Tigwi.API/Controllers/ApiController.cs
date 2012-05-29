@@ -71,7 +71,7 @@ namespace Tigwi.API.Controllers
         protected static Lists ListsFromGuidCollection(ICollection<Guid> hashLists, int size, IStorage storage )
         {
             var lists = from listId in hashLists.Take(size)
-                        select new ListApi(listId, storage.List.GetInfo(listId).Name);
+                        select new ListApi(listId, storage.List.GetInfo(listId));
 
             return new Lists(lists.ToList());
         }
