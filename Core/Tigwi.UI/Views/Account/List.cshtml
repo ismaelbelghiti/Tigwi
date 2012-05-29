@@ -6,7 +6,8 @@
 
 @section LeftInfos
 {
-        <p>User : @Model.Login</p>
+    <h3>User : @Model.Login</h3>
+    <p>Number of Accounts : @Model.Accounts.Count</p>
 }
 
 @Html.Partial("_ViewAccounts", Model)

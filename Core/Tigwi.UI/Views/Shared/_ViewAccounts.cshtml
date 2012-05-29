@@ -95,22 +95,22 @@
 <section class="accountsView">
         @foreach (var account in Model.Accounts)
         {
-            <div class="inline">    
-                <h3> @account.Name </h3>
-                <a data-toggle="modal" href="#editAccountModal" class="editAcc followButton" id="acct-@CurrentAccount.Id" > ( <i class="icon-pencil"></i> Edit )</a>
+            <div class="listFollowers offset1">
+                <div class="inline">    
+                    <h3> @account.Name </h3>
+                    <a data-toggle="modal" href="#editAccountModal" class="editAcc followButton" id="acct-@CurrentAccount.Id" > ( <i class="icon-pencil"></i> Edit )</a>
+                </div>
+
+                @if (@account.Admin.Id != CurrentUser.Id)
+                {
+                    <button class="btn btn-primary leavAcc" id="leav-@account.Id" ><b>Leave</b></button>       
+                }
+                <div class="listFollowers">
+                    <p><i>Description : </i> @account.Description</p>
+                </div>
+
             </div>
-            if (@account.Admin.Id == CurrentUser.Id)
-            {
-                if (@account.Id != @CurrentUser.MainAccount.Id)
-                { 
-                    @*<button class="btn btn-primary deltAcc" id="delt-@account.Id" ><b>Delete</b></button>*@
-                }       
-            }
-            else
-            {
-                <button class="btn btn-primary leavAcc" id="leav-@account.Id" ><b>Leave</b></button>
-            }
-            <p><i>Description : </i> @account.Description</p>
+
             
         }
 </section>
