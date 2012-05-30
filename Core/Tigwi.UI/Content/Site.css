@@ -17,6 +17,9 @@
         height: 40px;
     }
 }
+p {
+    word-wrap: break-word;
+}
 
 .truncated 
 {
