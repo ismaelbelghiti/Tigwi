@@ -8,7 +8,7 @@
              style="border-radius: 20px;" />
         <section class="span10">
             <h5>@Html.ActionLink(Model.Poster.Name, "Show", "Account", new { accountName = Model.Poster.Name }, null)</h5>
-            <p>@Model.Content</p>
+            <p>@MvcHtmlString.Create(Html.Encode(Model.Content).Replace(Environment.NewLine, "<br/>"))</p>
         </section>
             
     </div>
