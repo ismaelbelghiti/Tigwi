@@ -530,7 +530,7 @@ If everything went well :
 * You **must** be authenticated as an authorized user of the account which wrote the message.
 
 
-##Add a message to an account's favourite
+##Add a message to an account's favourites
 
 ###Purpose
 
@@ -575,7 +575,7 @@ If everything went well :
 * You **must** be authenticated as an authorized user of the account where you intend to tag a message.
 
 
-##Remove a message from an account's favourite
+##Remove a message from an account's favourites
 
 ###Purpose
 
@@ -1053,12 +1053,14 @@ or
 ###Information
 
 * This is the only ressource that asks for your login and password.
-* You will receive
+* You will receive :
+
 
     <?xml version="1.0"?>
     <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
      <Error Code="Authentication failed" />
     </Answer>
+
 
 if the login or the password were wrong.
 
