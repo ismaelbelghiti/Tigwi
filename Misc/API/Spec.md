@@ -1050,11 +1050,7 @@ or
      <Content xsi:type="NewObject" Id="312e2061-3a79-4f82-a53b-e77af1ff0e59" />
     </Answer>
 
-###Information
-
-* This is the only ressource that asks for your login and password.
-* You will receive :
-
+But if the login or the password were wrong, you will receive :
 
     <?xml version="1.0"?>
     <Answer xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -1062,8 +1058,9 @@ or
     </Answer>
 
 
-if the login or the password were wrong.
+###Information
 
+* This is the only ressource that asks for your login and password.
 * A cookie will be set in the response headers beside giving the key into the response body.
 * You shouldn't give the same key to two different applications.
 * All keys can be desactivated on the website.
